@@ -1,14 +1,16 @@
 #include "ofMain.h"
 #include "flowToolsApp.h"
+#include "ofAppGlutWindow.h"
 
 //========================================================================
 int main( ){
+	
+	// For some reason the visualization modes don't work this way :(
+	//	ofSetupOpenGL(1920, 1080, OF_WINDOW);
+	
+	ofAppGlutWindow window; // create a window
+	ofSetupOpenGL(&window, 1280, 720, OF_WINDOW);
 
-	ofSetupOpenGL(1280, 720, OF_WINDOW);			// <-------- setup the GL context
-
-	// this kicks off the running of my app
-	// can be OF_WINDOW or OF_FULLSCREEN
-	// pass in width and height too:
 	ofRunApp( new flowToolsApp());
 
 }

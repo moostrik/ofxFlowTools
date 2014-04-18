@@ -6,6 +6,8 @@ openframeworks addon. Combines 2D fluid simulation, optical flow and more using 
 
 INTRODUCTION
 
+http://vimeo.com/92334462
+
 For my interactive installations I was always attracted to fluid simulations. In the past I used the QuartzComposer fluid simulation, which I rewrote to openCL in Quartz Composer ( http://kineme.net/composition/MOostrik/AugmentedRealityinOpenCL ). Due to QC instability issues, especially with openCL (huge memory leaks) I decided to use my kernels in openframeworks using ofxMSAOpenCL. This worked quite nice (http://vimeo.com/46429663), but the process was quite difficult and debugging was a pain in the behind. When I was searching for alternatives, I started using ofxFX and ofxFluid, this convinced my to rewrite my openCl kernels to openGL shaders.
 
 The addon is meant for developers who like to use fluid simulation in combination with a live camera input to create psychedelic live visuals. This is the reason i added optical flow and a simple mask, based on this flow. 

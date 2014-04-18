@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>60.0058</FPS>
+		<FPS>73.9368</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -142,7 +142,7 @@
 			<force>2.7551</force>
 			<offset>3</offset>
 			<labda>0.01</labda>
-			<treshold>0.0877551</treshold>
+			<treshold>0.0204082</treshold>
 			<inverse_X>0</inverse_X>
 			<inverse_Y>0</inverse_Y>
 		<speed>24.4898</speed>
@@ -178,7 +178,7 @@
 				<Decay>0.1</Decay>
 				<Decay_Blur_Radius>2</Decay_Blur_Radius>
 			</time_blur>
-		<strength>23.9796</strength>
+		<strength>60.2041</strength>
 		</optical_flow>
 	<testColor>255, 255, 255, 255</testColor>
 	<velocity_field>
@@ -192,6 +192,7 @@
 		<blur_passes>3</blur_passes>
 			<blur_radius>5.10204</blur_radius>
 		<strength>3.36735</strength>
+		<saturation>2.83673</saturation>
 		</velocity_mask>
 	<fluid_solver>
 			<dissipation>0.00183673</dissipation>
@@ -216,7 +217,7 @@
 			</velocity_confinement>
 		<do_smoke_buoyancy>0</do_smoke_buoyancy>
 		<inverse_Beta>0.25</inverse_Beta>
-		<viscosity>0.244898</viscosity>
+		<viscosity>0.397959</viscosity>
 		<confinement_scale>0.117347</confinement_scale>
 		<speed>28.0612</speed>
 		<do_bounce_divergence>1</do_bounce_divergence>
@@ -228,12 +229,12 @@
 		<cell_size>1.25</cell_size>
 			<iterations>40</iterations>
 			<smoke_buoyancy>
-				<sigma>0.0203457</sigma>
+				<sigma>0</sigma>
 				<weight>0.0680966</weight>
 				<ambient_temperature>0</ambient_temperature>
 				<gravity>0, -0.274979</gravity>
 			</smoke_buoyancy>
-		<vorticity>0.362245</vorticity>
+		<vorticity>0.19898</vorticity>
 		<draw_forces>
 				<radius>0.02</radius>
 				<strength>0.02</strength>
@@ -246,7 +247,7 @@
 			<divergence>5</divergence>
 			<clampForce>0.0729279</clampForce>
 			</maximum>
-		<fade_density>-0.0102041</fade_density>
+		<fade_density>0.0122449</fade_density>
 		</fluid_solver>
 	<fgaussian_blur>
 			<radius>3.52041</radius>
@@ -383,16 +384,16 @@
 			<pressure>-33.6735</pressure>
 		<velocity_strength>1.17347</velocity_strength>
 		</draw_forces>
-	<MODE>Fluid Color</MODE>
+	<MODE>Fluid Color    (-)</MODE>
 	<particle_flow>
 			<force>100</force>
 		<bang_chance>0.1</bang_chance>
-		<lifespan>3.87755</lifespan>
+		<lifespan>7.2449</lifespan>
 		<point_size>3.57143</point_size>
 			<point_size_spread>0.97449</point_size_spread>
-		<lifespan_spread>0.341837</lifespan_spread>
+		<lifespan_spread>0.80102</lifespan_spread>
 			<mass>1.29592</mass>
-			<mass_spread>0</mass_spread>
+			<mass_spread>0.209184</mass_spread>
 			<size>2.14286</size>
 			<size_spread>0.994898</size_spread>
 		<speed>28.0612</speed>
@@ -400,7 +401,7 @@
 		<active>1</active>
 		<BC_Velocity_length>0.295918</BC_Velocity_length>
 		<birth_chance>0.362245</birth_chance>
-			<birth_velocity_chance>0.443878</birth_velocity_chance>
+			<birth_velocity_chance>0.19898</birth_velocity_chance>
 		</particle_flow>
 	<draw_force>
 			<type>1</type>
@@ -505,7 +506,7 @@
 			<draw_full_res>
 				<non_den_vel_tem_prs_ob>1</non_den_vel_tem_prs_ob>
 				<is_temporary>1</is_temporary>
-				<force>0.266887, 0.596257, 1, 0.564382</force>
+				<force>0.266887, 0.596257, 1, 1</force>
 				<strength>1</strength>
 				<radius>0.035</radius>
 				<edge>1</edge>
@@ -514,7 +515,7 @@
 			<draw_flow_res_1>
 				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
 				<is_temporary>1</is_temporary>
-				<force>-0.00208333, 0, 0, 1</force>
+				<force>0.0239583, -0.0074074, 0, 1</force>
 				<strength>1</strength>
 				<radius>0.0130571</radius>
 				<edge>1</edge>
@@ -534,7 +535,7 @@
 			<draw_full_res>
 				<non_den_vel_tem_prs_ob>1</non_den_vel_tem_prs_ob>
 				<is_temporary>0</is_temporary>
-				<force>1, 0, 0, 1</force>
+				<force>1, 0.490008, 0.341261, 0.723755</force>
 				<strength>1</strength>
 				<radius>0.035</radius>
 				<edge>1</edge>
@@ -543,9 +544,9 @@
 			<draw_flow_res_1>
 				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
 				<is_temporary>0</is_temporary>
-				<force>0, -0.00138885, 0, 1</force>
+				<force>0, -0.000925958, 0, 1</force>
 				<strength>1</strength>
-				<radius>0.035</radius>
+				<radius>0.0177426</radius>
 				<edge>1</edge>
 				<reset>0</reset>
 			</draw_flow_res_1>
@@ -554,7 +555,7 @@
 				<is_temporary>0</is_temporary>
 				<force>1, 0, 0, 1</force>
 				<strength>1</strength>
-				<radius>0.035</radius>
+				<radius>0.0281549</radius>
 				<edge>1</edge>
 				<reset>0</reset>
 			</draw_flow_res_2>
@@ -563,12 +564,16 @@
 			<display_scalar_scale>0.180867</display_scalar_scale>
 			<arrow_scale>0.612245</arrow_scale>
 			<temperature_scale>0.25</temperature_scale>
-			<line_smooth>0</line_smooth>
+			<line_smooth>1</line_smooth>
 		<show_scalar>1</show_scalar>
 			<show_field>1</show_field>
 		</visualisation>
 	<reset_draw_forces>0</reset_draw_forces>
 	<visualisation_mode>10</visualisation_mode>
 	<flip_camera>1</flip_camera>
+	<fullscreen__F_>1</fullscreen__F_>
+		<show_gui__G_>1</show_gui__G_>
+		<flip_camera__C_>1</flip_camera__C_>
+		<reset_draw_forces__D_>0</reset_draw_forces__D_>
 	</settings>
 </group>

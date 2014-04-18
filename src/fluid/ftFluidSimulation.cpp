@@ -246,6 +246,8 @@ namespace flowTools {
 			addVelocity(smokeBuoyancyBuffer.getTextureReference());
 	
 		}
+		else
+			temperatureSwapBuffer.clear();
 		
 		
 		// DIVERGENCE AND JACOBI

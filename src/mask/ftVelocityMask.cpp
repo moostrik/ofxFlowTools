@@ -38,14 +38,15 @@ namespace flowTools {
 		width = _width;
 		height = _height;
 		
-		colorMaskFbo.allocate(width, height, GL_RGBA);
-		colorMaskFbo.clear();
+		colorMaskSwapBuffer.allocate(width, height, GL_RGBA);
+		colorMaskSwapBuffer.clear();
 		
 		luminanceMaskFbo.allocate(width, height, GL_RGB);
 		luminanceMaskFbo.clear();
 		
 		parameters.setName("velocity mask");
 		parameters.add(strength.set("strength", 1, 0, 10));
+		parameters.add(saturation.set("saturation", 1, 1, 5));
 		parameters.add(blurPasses.set("blur passes", 1, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 6, 0, 10));
 		
@@ -54,13 +55,20 @@ namespace flowTools {
 	void ftVelocityMask::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		colorMaskFbo.clear();
+		colorMaskSwapBuffer.clear();
 		
-		VelocityMaskShader.update(colorMaskFbo, *densityTexture, *velocityTexture, strength.get());
+		VelocityMaskShader.update(*colorMaskSwapBuffer.src, *densityTexture, *velocityTexture, strength.get());
+		HSLShader.update(*colorMaskSwapBuffer.dst,
+						 colorMaskSwapBuffer.src->getTextureReference(),
+						 0,
+						 saturation.get(),
+						 1);
+		colorMaskSwapBuffer.swap();
+		
 		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-			gaussianBlurShader.update(colorMaskFbo, blurPasses.get(), blurRadius.get());
+			gaussianBlurShader.update(*colorMaskSwapBuffer.src, blurPasses.get(), blurRadius.get());
 		}
-		luminanceShader.update(luminanceMaskFbo, colorMaskFbo.getTextureReference());
+		luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTextureReference());
 		
 		ofPopStyle();
 	}

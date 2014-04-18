@@ -98,7 +98,8 @@ namespace flowTools {
 			shader.setUniformTexture("Density", _densityTexture, 3);
 			shader.setUniformTexture("Obstacle", _obstacleTexture, 4);
 			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
-			shader.setUniform1f("GlobalTime", ofGetElapsedTimef());
+			float modTime = 64.f; // little hack to prevent particle lines ( the random function in the shader does not behave as expected)
+			shader.setUniform1f("GlobalTime", modf(ofGetElapsedTimef(), &modTime));
 			shader.setUniform1f("DeltaTime", _deltaTime);
 			shader.setUniform1f("BirthChance", _birthChance * _deltaTime);
 			shader.setUniform1f("BirthVelocityChance", _birthVelocityChance);

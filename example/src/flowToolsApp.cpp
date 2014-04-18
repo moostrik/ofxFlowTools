@@ -244,7 +244,7 @@ void flowToolsApp::draw(){
 	int windowWidth = ofGetWindowWidth();
 	int windowHeight = ofGetWindowHeight();
 	ofClear(0,0);
-	
+
 	switch(visualisationMode.get()) {
 		case 0: // Source
 			cameraFbo.draw(0,0, windowWidth, windowHeight);
@@ -261,11 +261,13 @@ void flowToolsApp::draw(){
 				velocityField.setSource(opticalFlow.getOpticalFlowDecay());
 				velocityField.draw(0, 0, windowWidth, windowHeight);
 			}
+			ofPopStyle();
 			break;
 		case 2: // Optical Flow Mask
 			velocityMask.draw(0, 0, windowWidth, windowHeight);
 			break;
 		case 3: // Fluid Velocities
+			ofPushStyle();
 			if (showScalar.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 				displayScalar.setSource(fluid.getVelocity());
@@ -276,6 +278,7 @@ void flowToolsApp::draw(){
 				velocityField.setSource(fluid.getVelocity());
 				velocityField.draw(0, 0, windowWidth, windowHeight);
 			}
+			ofPopStyle();
 			break;
 		case 4: // Fluid Pressure
 			ofPushStyle();
@@ -328,6 +331,7 @@ void flowToolsApp::draw(){
 			}
 			if (showField.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_ADD);
+				ofSetColor(255, 255, 255, 255);
 				temperatureField.setSource(fluid.getConfinement());
 				temperatureField.draw(0, 0, windowWidth, windowHeight);
 			}
@@ -384,7 +388,6 @@ void flowToolsApp::draw(){
 			break;
 			
 	}
-	
 	
 	if (toggleGuiDraw) {
 		guiFPS = ofGetFrameRate();

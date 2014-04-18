@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "ofMain.h"
@@ -21,10 +20,10 @@ namespace flowTools {
 		void	update();
 		
 		ofTexture& getTextureReference() {return getColorMask();};
-		ofTexture& getColorMask() {return colorMaskFbo.getTextureReference();};
+		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTextureReference();};
 		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTextureReference();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
-		void	draw(int _x, int _y, int _width, int _height) {colorMaskFbo.draw(_x, _y, _width, _height);};
+		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.src->draw(_x, _y, _width, _height);};
 		
 		int		getWidth() {return width;};
 		int		getHeight(){return height;};
@@ -38,6 +37,7 @@ namespace flowTools {
 		
 	protected:
 		ofParameter<float>	strength;
+		ofParameter<float>	saturation;
 		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
 		
@@ -45,7 +45,7 @@ namespace flowTools {
 		int		height;
 		ofTexture* densityTexture;
 		ofTexture* velocityTexture;
-		ftFbo	colorMaskFbo;
+		ftSwapBuffer	colorMaskSwapBuffer;
 		ftFbo	luminanceMaskFbo;
 		ftVelocityMaskShader VelocityMaskShader;
 		

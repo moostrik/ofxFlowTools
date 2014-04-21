@@ -69,41 +69,50 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
-		simulationWidth = _simulationWidth; 
+	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool doFasterInternalFormat) {
+		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		densityWidth = (!_densityWidth)? simulationWidth : _densityWidth;
 		densityHeight = (!_densityHeight)? simulationHeight: _densityHeight;
 		
-		densitySwapBuffer.allocate(densityWidth,densityHeight,GL_RGBA32F);					// Preferrably GL_RGBA16F
+		int internalFormatDensity, internalFormatVelocity, interformatPressure, internalFormatObstacle;
+		if (doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
+			internalFormatDensity = GL_RGBA32F;
+			internalFormatVelocity = GL_RG32F;
+			interformatPressure = GL_R32F;
+			internalFormatObstacle = GL_RED;
+			
+		}
+		else {							 // This gives no errors
+			internalFormatDensity = GL_RGBA32F;
+			internalFormatVelocity = GL_RGBA32F;
+			interformatPressure = GL_RGBA32F;
+			internalFormatObstacle = GL_RGB;
+		}
+		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
 		densitySwapBuffer.clear();
-		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,GL_RGB32F);			// Preferrably GL_RG16F
+		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
 		velocitySwapBuffer.clear();
-		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,GL_RGB32F);			// Preferrably GL_R16F
+		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		//		temperatureSwapBuffer.clear(ambientTemperature.get());
 		temperatureSwapBuffer.clear();
-		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,GL_RGB32F);			// Preferrably GL_R16F
+		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		
-		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB);				// Preferrably GL_RED
+		obstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		obstacleBuffer.clear();
 		createEdgeImage(obstacleBuffer);
 		
-//		obstaclesDensityBuffer.allocate(_densityWidth, _densityHeight, GL_RGB);				// Preferrably GL_RED
-//		obstaclesDensityBuffer.clear();
-		divergenceBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);			// Preferrably GL_RG16F
-		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);			// Preferrably GL_RG16F
+		divergenceBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		smokeBuoyancyBuffer.clear();
-		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);	// Preferrably GL_RG16F
-		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);	// Preferrably GL_RG16F
-		addPressureBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);			// Preferrably GL_R16F
+		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		addPressureBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		addPressureBufferDidChange = false;
-		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB);			// Preferrably GL_RED
+		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		addTempObstacleBuffer.clear();
 		addTempObstacleBufferDidChange = false;
-//		addObstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB);				// Preferrably GL_RED
-//		addObstacleBufferDidChange = false;
-//		addObstacleBuffer.clear();
-		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB);			// Preferrably GL_RED
+		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		combinedObstacleBuffer.clear();
 		combinedObstacleBuffer.scaleIntoMe(obstacleBuffer);
 		

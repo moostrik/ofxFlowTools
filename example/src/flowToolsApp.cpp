@@ -16,7 +16,8 @@ void flowToolsApp::setup(){
 	velocityMask.setup(drawWidth, drawHeight);
 	
 	// Fluid
-	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight);
+	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, false); // true turns on faster mode, but gives errors from ofGLUtils
+	
 	flowToolsLogoImage.loadImage("flowtools.png");
 	fluid.addObstacle(flowToolsLogoImage.getTextureReference());
 	showLogo = true;

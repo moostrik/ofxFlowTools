@@ -37,6 +37,8 @@ namespace flowTools {
 			ofPushStyle();
 			
 			ofEnableAlphaBlending();
+			ofDisableAntiAliasing();
+			
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
 			}
@@ -50,6 +52,7 @@ namespace flowTools {
 				glDisable(GL_LINE_SMOOTH);
 			}
 			
+			ofEnableAntiAliasing();
 			ofPopStyle();
 			ofPopMatrix();
 		}

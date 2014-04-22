@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>64.8269</FPS>
+		<FPS>135.518</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -564,7 +564,7 @@
 			<display_scalar_scale>0.180867</display_scalar_scale>
 			<arrow_scale>0.612245</arrow_scale>
 			<temperature_scale>0.25</temperature_scale>
-			<line_smooth>1</line_smooth>
+			<line_smooth>0</line_smooth>
 		<show_scalar>1</show_scalar>
 			<show_field>1</show_field>
 		</visualisation>

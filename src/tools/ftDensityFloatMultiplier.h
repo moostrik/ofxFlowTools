@@ -7,9 +7,9 @@
 
 namespace flowTools {
 	
-	class ftPressureFadeDensity : public ftShader {
+	class ftDensityFloatMultiplier : public ftShader {
 	public:
-		ftPressureFadeDensity() {
+		ftDensityFloatMultiplier() {
 			
 			fragmentShader = STRINGIFY(uniform sampler2DRect Backbuffer;
 									   uniform sampler2DRect AddTexture;
@@ -21,8 +21,8 @@ namespace flowTools {
 										   vec2 st2 = st * Scale;
 										   
 										   vec4 color = texture2DRect(Backbuffer, st);
-										   float pressure = texture2DRect(AddTexture, st2).x * force;
-										   color.xyz *= 1.0 - min(pressure, 0.9);
+										   float multiplier = texture2DRect(AddTexture, st2).x * force;
+										   color.xyz *= 1.0 - min(multiplier, 0.9);
 										   
 										   gl_FragColor = color ;
 									   }

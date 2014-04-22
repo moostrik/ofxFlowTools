@@ -48,7 +48,7 @@ namespace flowTools {
 										   force = force * inversesqrt(magSqr);
 										   
 										   force *= ConfinementScale * voC * vec2(1., -1.);
-										   force *- TimeStep;
+										   force *= TimeStep;
 										   
 										   gl_FragColor = vec4(force, 0.0, 0.0);
 									   }

@@ -17,7 +17,8 @@
 #include "ftToScalarShader.h"
 #include "ftClampLengthShader.h"
 
-#include "ftPressureFadeDensity.h"
+#include "ftDensityVec2Multiplier.h"
+#include "ftDensityFloatMultiplier.h"
 
 
 namespace flowTools {
@@ -53,7 +54,6 @@ namespace flowTools {
 		int		getDensityHeight() {return densityHeight;}
 		
 		float getTimeStep() {return timeStep;}
-		float getFadeDensity() {return fadeDensity.get();}
 		float getSpeed() {return speed.get();}
 		float getCellSize() {return cellSize.get();}
 		float getNumJacobiIterations() {return numJacobiIterations.get();}
@@ -71,8 +71,10 @@ namespace flowTools {
 		float getMaxVelocity() {return maxVelocity.get();}
 		float getMaxDensity() {return maxDensity.get();}
 		float getMaxTemperature() {return maxTemperature.get();}
+		float getDensityFromVorticity() {return densityFromVorticity.get();}
+		float getDensityFromPressure() {return densityFromPressure.get();}
 		
-		void setFadeDensity(float value) {fadeDensity.set(value);}
+		void setDensityFromPressure() {return densityFromPressure.get();}
 		void setSpeed(float value) {speed.set(value);}
 		void setCellSize(float value) {cellSize.set(value);}
 		void setNumJacobiIterations(float value) {numJacobiIterations.set(value);}
@@ -90,10 +92,11 @@ namespace flowTools {
 		void setMaxVelocity(float value) {maxVelocity.set(value);}
 		void setMaxDensity(float value) {maxDensity.set(value);}
 		void setMaxTemperature(float value) {maxTemperature.set(value);}
+		void setDensityFromVorticity(float value) {densityFromVorticity.set(value);}
+		void setDensityFromPressure(float value) {densityFromPressure.set(value);}
 		
 		ofParameterGroup	parameters;
 	private:
-		ofParameter<float>	fadeDensity;
 		ofParameter<bool>	doReset;
 		ofParameter<float>	speed;
 		ofParameter<float>	cellSize;
@@ -115,6 +118,8 @@ namespace flowTools {
 		ofParameter<float>	maxVelocity;
 		ofParameter<float>	maxDensity;
 		ofParameter<float>	maxTemperature;
+		ofParameter<float>	densityFromPressure;
+		ofParameter<float>	densityFromVorticity;
 		
 		ftDiffuseShader			diffuseShader;
 		ftAdvectShader			advectShader;
@@ -126,7 +131,8 @@ namespace flowTools {
 		ftVorticitySecondPassShader vorticitySecondPassShader;
 		ftAddForceShader		addShader;
 		ftClampLengthShader		clampLengthShader;
-		ftPressureFadeDensity	pressureFadeDensity;
+		ftDensityFloatMultiplier	densityFloatMultiplierShader;
+		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 				
 		ftSwapBuffer	densitySwapBuffer;
 		ftSwapBuffer	velocitySwapBuffer;

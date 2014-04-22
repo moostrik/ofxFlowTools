@@ -333,8 +333,8 @@ void flowToolsApp::draw(){
 			if (showField.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_ADD);
 				ofSetColor(255, 255, 255, 255);
-				temperatureField.setSource(fluid.getConfinement());
-				temperatureField.draw(0, 0, windowWidth, windowHeight);
+				velocityField.setSource(fluid.getConfinement());
+				velocityField.draw(0, 0, windowWidth, windowHeight);
 			}
 			ofPopStyle();
 			break;
@@ -347,8 +347,8 @@ void flowToolsApp::draw(){
 			}
 			if (showField.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_ADD);
-				temperatureField.setSource(fluid.getSmokeBuoyancy());
-				temperatureField.draw(0, 0, windowWidth, windowHeight);
+				velocityField.setSource(fluid.getSmokeBuoyancy());
+				velocityField.draw(0, 0, windowWidth, windowHeight);
 			}
 			ofPopStyle();
 			break;

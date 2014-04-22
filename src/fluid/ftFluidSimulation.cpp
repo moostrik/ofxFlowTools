@@ -41,7 +41,6 @@ namespace flowTools {
 	ftFluidSimulation::ftFluidSimulation(){
 		
 		parameters.setName("fluid solver");
-		parameters.add(fadeDensity.set("fade density", 0, -0.1, 0.1));
 		parameters.add(doReset.set("reset", false));
 		parameters.add(speed.set("speed", 10, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
@@ -66,6 +65,8 @@ namespace flowTools {
 		maxValues.add(maxVelocity.set("velocity", 1,0,10));
 		maxValues.add(maxTemperature.set("temperature", 1,0,5));
 		parameters.add(maxValues);
+		parameters.add(densityFromPressure.set("density from pressure", 0, -0.1, 0.1));
+		parameters.add(densityFromVorticity.set("density from vorticity", 0, -0.5, 0.5));
 	}
 	
 	//--------------------------------------------------------------
@@ -276,15 +277,25 @@ namespace flowTools {
 			pressureSwapBuffer.swap();
 		}
 		
+		// Multiply density by pressure and or vorticity
+		if(densityFromPressure != 0) {
+			densityFloatMultiplierShader.update(*densitySwapBuffer.dst,
+												densitySwapBuffer.src->getTextureReference(),
+												pressureSwapBuffer.src->getTextureReference(),
+												densityFromPressure.get());
+			densitySwapBuffer.swap();
+		}
 		
-		pressureFadeDensity.update(*densitySwapBuffer.dst,
-								   densitySwapBuffer.src->getTextureReference(),
-								   pressureSwapBuffer.src->getTextureReference(),
-								   fadeDensity.get());
-		densitySwapBuffer.swap();
+		if(densityFromVorticity != 0) {
+			densityVec2MultiplierShader.update(*densitySwapBuffer.dst,
+											   densitySwapBuffer.src->getTextureReference(),
+											   vorticitySecondPassBuffer.getTextureReference(),
+											   -densityFromVorticity.get());
+			densitySwapBuffer.swap();
+		}
 		
 		
-		// Little Hack to add some drain in the fluid
+		// Drain some fluid
 		if(addPressureBufferDidChange == true) {
 			addPressureBufferDidChange = false;
 			addShader.update(*pressureSwapBuffer.dst,

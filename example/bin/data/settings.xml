@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>135.518</FPS>
+		<FPS>102.526</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -175,7 +175,7 @@
 			<do_time_blur>1</do_time_blur>
 			<time_blur>
 				<Passes>1</Passes>
-				<Decay>0.1</Decay>
+				<Decay>0.120158</Decay>
 				<Decay_Blur_Radius>2</Decay_Blur_Radius>
 			</time_blur>
 		<strength>29.0816</strength>
@@ -217,7 +217,7 @@
 			</velocity_confinement>
 		<do_smoke_buoyancy>0</do_smoke_buoyancy>
 		<inverse_Beta>0.25</inverse_Beta>
-		<viscosity>0.397959</viscosity>
+		<viscosity>0.387755</viscosity>
 		<confinement_scale>0.117347</confinement_scale>
 		<speed>28.0612</speed>
 		<do_bounce_divergence>1</do_bounce_divergence>
@@ -234,20 +234,22 @@
 				<ambient_temperature>0</ambient_temperature>
 				<gravity>0, -0.274979</gravity>
 			</smoke_buoyancy>
-		<vorticity>0.19898</vorticity>
+		<vorticity>0.612245</vorticity>
 		<draw_forces>
 				<radius>0.02</radius>
 				<strength>0.02</strength>
 				<color>1, 1, 1, 1</color>
 			</draw_forces>
 		<maximum>
-				<density>0.496668</density>
+				<density>0.965223</density>
 				<velocity>4.4294</velocity>
 				<temperature>2.33444</temperature>
 			<divergence>5</divergence>
 			<clampForce>0.0729279</clampForce>
 			</maximum>
 		<fade_density>0.0122449</fade_density>
+		<density_from_pressure>0</density_from_pressure>
+			<density_from_vorticity>-0.153061</density_from_vorticity>
 		</fluid_solver>
 	<fgaussian_blur>
 			<radius>3.52041</radius>
@@ -506,18 +508,18 @@
 			<draw_full_res>
 				<non_den_vel_tem_prs_ob>1</non_den_vel_tem_prs_ob>
 				<is_temporary>1</is_temporary>
-				<force>0.266887, 0.596257, 1, 1</force>
-				<strength>1</strength>
-				<radius>0.035</radius>
+				<force>0.266887, 0.596257, 1, 0.575007</force>
+				<strength>2.42295</strength>
+				<radius>0.0140983</radius>
 				<edge>1</edge>
 				<reset>0</reset>
 			</draw_full_res>
 			<draw_flow_res_1>
 				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
 				<is_temporary>1</is_temporary>
-				<force>-0.000520825, 0, 0, 1</force>
-				<strength>1</strength>
-				<radius>0.0130571</radius>
+				<force>-0.00520831, 0.00833333, 0, 1</force>
+				<strength>0.965223</strength>
+				<radius>0.0146189</radius>
 				<edge>1</edge>
 				<reset>0</reset>
 			</draw_flow_res_1>
@@ -544,7 +546,7 @@
 			<draw_flow_res_1>
 				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
 				<is_temporary>0</is_temporary>
-				<force>0, -0.000925958, 0, 1</force>
+				<force>0, -0.00185183, 0, 1</force>
 				<strength>1</strength>
 				<radius>0.0177426</radius>
 				<edge>1</edge>

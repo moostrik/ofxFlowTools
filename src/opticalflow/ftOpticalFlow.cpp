@@ -124,7 +124,7 @@ namespace flowTools {
 	ofVec2f* ftOpticalFlow::getFlowVectors(){
 		if (!flowVectorsDidUpdate) {
 			velocityBuffer.bind();
-			glReadPixels(0, 0, 128, 128, GL_RG, GL_FLOAT, flowFloats);
+			glReadPixels(0, 0, width, height, GL_RG, GL_FLOAT, flowFloats);
 			velocityBuffer.unbind();
 			
 			for (int i=0; i<width * height; i++) {

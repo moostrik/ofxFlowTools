@@ -16,7 +16,11 @@ void flowToolsApp::setup(){
 	velocityMask.setup(drawWidth, drawHeight);
 	
 	// Fluid
-	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, false); // true turns on faster mode, but gives errors from ofGLUtils
+#ifdef USE_FASTER_INTERNAL_FORMATS
+	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, true);
+#else
+	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, false);
+#endif
 	
 	flowToolsLogoImage.loadImage("flowtools.png");
 	fluid.addObstacle(flowToolsLogoImage.getTextureReference());
@@ -393,7 +397,6 @@ void flowToolsApp::draw(){
 			}
 			ofPopStyle();
 			break;
-			
 	}
 	
 	if (toggleGuiDraw) {

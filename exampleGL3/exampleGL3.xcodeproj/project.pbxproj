@@ -344,10 +344,10 @@
 			children = (
 				0B504C9F19D2D02E003C6F85 /* ftParticleFlow.cpp */,
 				0B504CA019D2D02E003C6F85 /* ftParticleFlow.h */,
-				0B504C9B19D2D02E003C6F85 /* ftAgeLifespanMassSizeParticleShader.h */,
-				0B504C9C19D2D02E003C6F85 /* ftDrawParticleShader.h */,
 				0B504C9D19D2D02E003C6F85 /* ftInitPositionShader.h */,
+				0B504C9B19D2D02E003C6F85 /* ftAgeLifespanMassSizeParticleShader.h */,
 				0B504C9E19D2D02E003C6F85 /* ftMoveParticleShader.h */,
+				0B504C9C19D2D02E003C6F85 /* ftDrawParticleShader.h */,
 			);
 			name = particles;
 			sourceTree = "<group>";

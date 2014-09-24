@@ -55,22 +55,14 @@ namespace flowTools {
 		numParticlesX = _numParticlesX;
 		numParticlesY = _numParticlesY;
 		numParticles = (numParticlesX * numParticlesY);
-		
-		ofVec2f* initPositions = new ofVec2f[numParticles];
-		
-		for(int x=0; x<numParticlesX; x++) {
-			for(int y=0; y<numParticlesY; y++) {
-				int index = x + y * numParticlesX;
-				initPositions[index].set(x, y);
+				
+		particleMesh.setMode(OF_PRIMITIVE_POINTS);
+		for(int x = 0; x < _numParticlesX; x++){
+			for(int y = 0; y < _numParticlesY; y++){
+				particleMesh.addVertex(ofVec3f(x,y));
+				particleMesh.addTexCoord(ofVec2f(x, y));
 			}
 		}
-		
-		glGenBuffersARB(1, &ParticleLutVbo);
-		glBindBufferARB(GL_ARRAY_BUFFER_ARB, ParticleLutVbo);
-		glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(ofVec2f) * numParticles, initPositions, GL_STREAM_COPY_ARB);
-		glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
-		
-		delete[] initPositions;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
@@ -111,7 +103,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
 			
-/*			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.dst,
+			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.dst,
 									   particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference(),
 									   particlePositionSwapBuffer.src->getTextureReference(),
 									   flowVelocitySwapBuffer.src->getTextureReference(),
@@ -134,7 +126,7 @@ namespace flowTools {
 									  timeStep,
 									  cellSize.get());
 			particlePositionSwapBuffer.swap();
-*/			
+			
 			ofPopStyle();
 	 
 			flowVelocitySwapBuffer.clear();
@@ -148,9 +140,9 @@ namespace flowTools {
 		ofPushView();
 		ofTranslate(_x, _y);
 		ofScale(_width / numParticlesX, _height / numParticlesY);
-		drawParticleShader.update(ParticleLutVbo, numParticles, particlePositionSwapBuffer.src->getTextureReference(), particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference());
+		drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.src->getTextureReference(), particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference());
+		
 		ofPopView();
-
 	}
 
 	void ftParticleFlow::addFlowVelocity(ofTexture & _tex, float _strength) {

@@ -20,7 +20,7 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			fragmentShader = GLSL(120,
+			vertexShader = GLSL(120,
 								  uniform sampler2DRect positionTexture;
 								  uniform sampler2DRect ALMSTexture;
 								  void main(){
@@ -35,12 +35,12 @@ namespace flowTools {
 									  float size = alms.w;
 									  gl_PointSize = size;
 									  vec4 color = (age > 0.0)? vec4(vec3(1.0), min (0.5 - (age / life) * 0.5,age * 5.)): vec4(0.0);
-									  gl_FrontColor = vec4(0.0,1.0,1.0,1.0);
+									  gl_FrontColor = color;
 									  
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, fragmentShader);
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.linkProgram();
 
 			
@@ -51,6 +51,7 @@ namespace flowTools {
 								uniform mat4 modelViewProjectionMatrix;
 								uniform mat4 textureMatrix;
 								uniform sampler2DRect positionTexture;
+								uniform sampler2DRect ALMSTexture;
 								
 								in vec4 position;
 								in vec2	texcoord;
@@ -68,50 +69,25 @@ namespace flowTools {
 									vec2 st = position.xy;
 									vec2 texPos = texture(positionTexture, st).xy;
 									gl_Position = modelViewProjectionMatrix * vec4(texPos, 0.0, 1.0);
-								//	gl_PointSize = 5;
 									
-									
-									
-									
-								//	gl_Position = modelViewProjectionMatrix * position;
+									vec4 alms = texture(ALMSTexture, st);
+									float age = alms.x;
+									float life = alms.y;
+									float size = alms.w;
+									gl_PointSize = size;
+									colorVarying = (age > 0.0)? vec4(vec3(1.0), min (0.5 - (age / life) * 0.5,age * 5.)): vec4(0.0);
 								}
 								);
 			
 			fragmentShader = GLSL(150,
+								  in vec4 colorVarying;
 								  out vec4 fragColor;
 								  
 								  void main()
 								  {
-									  fragColor = vec4(1.0,1.0,1.0,1.0);
+									  fragColor = colorVarying;
 								  }
 								  );
-			/*
-			fragmentShader = GLSL(150,
-								  uniform mat4 modelViewProjectionMatrix;
-								  uniform sampler2DRect positionTexture;
-								  uniform sampler2DRect ALMSTexture;
-								  
-								  in vec4 position;
-								  in vec2 texCoordVarying;
-								  out vec4 fragColor;
-								  
-								  void main(){
-									  
-									  vec2 st = position.xy;
-									  
-									  vec2 texPos = texture(positionTexture, st).xy;
-									  gl_Position = modelViewProjectionMatrix * vec4(texPos, 0.0, 1.0);
-									  vec4 alms = texture2DRect(ALMSTexture, st);
-									  float age = alms.x;
-									  float life = alms.y;
-									  float size = alms.w;
-									  gl_PointSize = size;
-									  vec4 color = (age > 0.0)? vec4(vec3(1.0), min (0.5 - (age / life) * 0.5,age * 5.)): vec4(0.0);
-									  fragColor = color;
-									  
-								  }
-								  );
-			*/
 			
 			
 			
@@ -123,27 +99,18 @@ namespace flowTools {
 		
 	public:
 		
-		void update(GLuint& particles, int _numParticles, ofTexture& _positionTexture, ofTexture& _ALMSTexture){
+		void update(ofVboMesh &particleVbo, int _numParticles, ofTexture& _positionTexture, ofTexture& _ALMSTexture){
 			shader.begin();
 			shader.setUniformTexture("positionTexture", _positionTexture, 0);
 			shader.setUniformTexture("ALMSTexture", _ALMSTexture, 1);
+			
+			bool dinges = true;
 			glEnable(GL_POINT_SMOOTH);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, particles);
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(2, GL_FLOAT, 0, 0);
-			
-			//		glBindBufferARB(GL_ARRAY_BUFFER_ARB, *myParticles.getColors());
-			//		glEnableClientState(GL_COLOR_ARRAY);
-			//		glColorPointer(4, GL_FLOAT, 0, 0);
-			
-			//		glBlendFunc(GL_DST_COLOR , GL_DST_COLOR);
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-			glDrawArrays(GL_POINTS, 0, _numParticles);
-			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			
-			glDisableClientState(GL_VERTEX_ARRAY);
-			//		glDisableClientState(GL_COLOR_ARRAY);
-			glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+			particleVbo.draw();
+			
+			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			glDisable(GL_POINT_SMOOTH);
 			shader.end();
 			

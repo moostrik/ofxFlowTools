@@ -79,7 +79,8 @@ namespace flowTools {
 		ofTexture *fluidVelocityTexture;
 		ofTexture *colorTexture;
 		
-		GLuint		ParticleLutVbo;
+//		GLuint		ParticleLutVbo;
+		ofVboMesh	particleMesh;
 		
 		ftSwapBuffer			particleAgeLifespanMassSizeSwapBuffer;
 		ftSwapBuffer			particlePositionSwapBuffer;

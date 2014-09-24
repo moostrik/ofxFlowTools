@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>77.4283</FPS>
+		<FPS>157.544</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -386,7 +386,7 @@
 			<pressure>-33.6735</pressure>
 		<velocity_strength>1.17347</velocity_strength>
 		</draw_forces>
-	<MODE>Fluid Velocity (3)</MODE>
+	<MODE>Fluid Color    (-)</MODE>
 	<particle_flow>
 			<force>100</force>
 		<bang_chance>0.1</bang_chance>
@@ -571,7 +571,7 @@
 			<show_field>1</show_field>
 		</visualisation>
 	<reset_draw_forces>0</reset_draw_forces>
-	<visualisation_mode>3</visualisation_mode>
+	<visualisation_mode>10</visualisation_mode>
 	<flip_camera>1</flip_camera>
 	<fullscreen__F_>1</fullscreen__F_>
 		<show_gui__G_>1</show_gui__G_>

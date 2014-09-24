@@ -1,3 +1,11 @@
+UPDATE 
+
+- Added possibility to switch the Fbos to different GL formats (GL_RGBA16F, GL_RG16F, GL_R, etc)
+- Added possibility to use the programmable GL renderer (OpenGL3 / GLSL150)
+
+
+
+
 ofxFlowTools
 ============
 
@@ -46,10 +54,6 @@ first:
 second:
 - Add Turing patterns: cake23.de/turing-fluid.html Beautiful!
 - Enhance mask to only use colours from the movement (not the background)
-
-later:
-- Switch the Fbos to different GL formats (GL_RGBA16F, GL_RG16F, GL_R, etc)
-- Switch to programmable GL renderer
 
 last but not least:
 - Create 3D fluid sim

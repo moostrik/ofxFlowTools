@@ -53,6 +53,7 @@ xcuserdata
 *.opensdf
 *.unsuccessfulbuild
 *.exe
+*.dll
 *.exp
 *.pdb
 ipch/

@@ -69,6 +69,8 @@ namespace flowTools {
 		
 		bool bSourceSet;
 		
+		ofTexture			velocityTexture;
+		
 		ftFbo				velocityBuffer;
 		ftFbo				decayBuffer;
 		ftSwapBuffer		sourceSwapBuffer;

@@ -11,40 +11,82 @@ namespace flowTools {
 	public:
 		ftAdvectShader() {
 			
-			fragmentShader = STRINGIFY(uniform sampler2DRect Backbuffer;
-									   uniform sampler2DRect Obstacle;
-									   uniform sampler2DRect Velocity;
-									   
-									   uniform float TimeStep;
-									   uniform float Dissipation;
-									   uniform float InverseCellSize;
-									   uniform vec2	Scale;
-									   
-									   void main(){
-										   vec2 st = gl_TexCoord[0].st;
-										   vec2 st2 = st * Scale;
-										   
-										   float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, st2).x - 0.5);
-
-									/*	   float solid = texture2DRect(Obstacle, st).r;
-										   
-										   if (solid > 0.9) {
-											   gl_FragColor = vec4(0.0,0.0,0.0,0.0);
-											   return;
-										   }
-									*/	   
-										   vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										   vec2 coord =  st - TimeStep * InverseCellSize * u;
-										   
-										   gl_FragColor = Dissipation * texture2DRect(Backbuffer, coord) * inverseSolid;
-										   
-									   }
-									   
-									   );
+			ofLogVerbose("init ftAdvectShader");
+			if (isProgrammableRenderer)
+				glThree();
+			else
+				glTwo();
+		}
+		
+	protected:
+		void glTwo() {
+			fragmentShader = GLSL(120,
+								  uniform sampler2DRect Backbuffer;
+								  uniform sampler2DRect Obstacle;
+								  uniform sampler2DRect Velocity;
+								  
+								  uniform float TimeStep;
+								  uniform float Dissipation;
+								  uniform float InverseCellSize;
+								  uniform vec2	Scale;
+								  
+								  void main(){
+									  vec2 st = gl_TexCoord[0].st;
+									  vec2 st2 = st * Scale;
+									  
+									  float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, st2).x - 0.5);
+									  
+									  vec2 u = texture2DRect(Velocity, st2).rg / Scale;
+									  vec2 coord =  st - TimeStep * InverseCellSize * u;
+									  
+									  gl_FragColor = Dissipation * texture2DRect(Backbuffer, coord) * inverseSolid;
+									  
+								  }
+								  
+								  );
 			
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			shader.linkProgram();
+
 		}
+		
+		void glThree() {
+			
+			fragmentShader = GLSL(150,
+								  uniform sampler2DRect Backbuffer;
+								  uniform sampler2DRect Obstacle;
+								  uniform sampler2DRect Velocity;
+								  
+								  uniform float TimeStep;
+								  uniform float Dissipation;
+								  uniform float InverseCellSize;
+								  uniform vec2	Scale;
+								  
+								  in vec2 texCoordVarying;
+								  out vec4 fragColor;
+								  
+								  void main(){
+									  vec2 st = texCoordVarying;
+									  vec2 st2 = st * Scale;
+									  
+									  float inverseSolid = 1.0 - ceil(texture(Obstacle, st2).x - 0.5);
+									  
+									  vec2 u = texture(Velocity, st2).rg / Scale;
+									  vec2 coord =  st - TimeStep * InverseCellSize * u;
+									  
+									  fragColor = Dissipation * texture(Backbuffer, coord) * inverseSolid;
+									  
+								  }
+								  
+								  );
+			
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			shader.bindDefaults();
+			shader.linkProgram();
+		}
+		
+	public:
 		
 		void update(ofFbo& _buffer, ofTexture& _backBufferTexture,  ofTexture& _velocityTexture, ofTexture& _obstaclesTexture, float _timeStep, float _dissipation, float _cellSize){
 			

@@ -11,20 +11,56 @@ namespace flowTools {
 	public:
 		ftToScalarShader() {
 			
-			fragmentShader = STRINGIFY(uniform sampler2DRect ScalarTexture;
-									   uniform float Scale;
-									   void main(){
-										   vec4	velocity = texture2DRect(normalTexture, gl_TexCoord[0].st);
-										   velocity.xyz -= vec3(Scale * 0.5);
-										   velocity.xyz *= vec3(Scale);
-										   velocity.w = 0.0;
-										   gl_FragColor = velocity;
-									   }
-									   );
+			ofLogVerbose("init ftToScalarShader");
+			if (isProgrammableRenderer)
+				glThree();
+			else
+				glTwo();
+		}
+		
+	protected:
+		void glTwo() {
+			fragmentShader = GLSL(120,
+								  uniform sampler2DRect ScalarTexture;
+								  uniform float Scale;
+								  void main(){
+									  vec4	velocity = texture2DRect(normalTexture, gl_TexCoord[0].st);
+									  velocity.xyz -= vec3(Scale * 0.5);
+									  velocity.xyz *= vec3(Scale);
+									  velocity.w = 0.0;
+									  gl_FragColor = velocity;
+								  }
+								  );
 			
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			shader.linkProgram();
 		}
+		
+		void glThree() {
+			fragmentShader = GLSL(150,
+								  uniform sampler2DRect ScalarTexture;
+								  uniform float Scale;
+								  
+								  in vec2 texCoordVarying;
+								  out vec4 fragColor;
+								  
+								  void main(){
+									  vec4	velocity = texture(normalTexture, texCoordVarying);
+									  velocity.xyz -= vec3(Scale * 0.5);
+									  velocity.xyz *= vec3(Scale);
+									  velocity.w = 0.0;
+									  fragColor = velocity;
+								  }
+								  );
+			
+			
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			shader.bindDefaults();
+			shader.linkProgram();
+		}
+		
+	public:
 		
 		void update(ofFbo& _buffer, ofTexture& _scalarTexture, float _scale){
 			_buffer.begin();

@@ -11,28 +11,68 @@ namespace flowTools {
 	public:
 		ftClampLengthShader() {
 			
-			fragmentShader = STRINGIFY(uniform sampler2DRect Backbuffer;
-									   uniform float MaxLength;
-									   uniform float ClampForce;
-									   
-									   void main(){
-										   vec2 st = gl_TexCoord[0].st;
-										   
-										   vec4 color = texture2DRect(Backbuffer, st);
-										   
-										   float l = length(color.xyz);
-										   if (l > MaxLength) {
-											   float dinges = (l - MaxLength) * ClampForce;
-											   color.xyz = normalize(color.xyz) * (l - dinges);
-										   }
-										   gl_FragColor = color ;
-									   }
-									   
-									   );
+			ofLogVerbose("init ftClampLengthShader");
+			if (isProgrammableRenderer)
+				glThree();
+			else
+				glTwo();
+		}
+		
+	protected:
+		void glTwo() {
+			fragmentShader = GLSL(120,
+								  uniform sampler2DRect Backbuffer;
+								  uniform float MaxLength;
+								  uniform float ClampForce;
+								  
+								  void main(){
+									  vec2 st = gl_TexCoord[0].st;
+									  
+									  vec4 color = texture2DRect(Backbuffer, st);
+									  
+									  float l = length(color.xyz);
+									  if (l > MaxLength) {
+										  float dinges = (l - MaxLength) * ClampForce;
+										  color.xyz = normalize(color.xyz) * (l - dinges);
+									  }
+									  gl_FragColor = color ;
+								  }
+								  );
 			
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			shader.linkProgram();
 		}
+		
+		void glThree() {
+			fragmentShader = GLSL(150,
+								  uniform sampler2DRect Backbuffer;
+								  uniform float MaxLength;
+								  uniform float ClampForce;
+								  
+								  in vec2 texCoordVarying;
+								  out vec4 fragColor;
+								  
+								  void main(){
+									  vec2 st = texCoordVarying;
+									  
+									  vec4 color = texture(Backbuffer, st);
+									  
+									  float l = length(color.xyz);
+									  if (l > MaxLength) {
+										  float dinges = (l - MaxLength) * ClampForce;
+										  color.xyz = normalize(color.xyz) * (l - dinges);
+									  }
+									  fragColor = color ;
+								  }
+								  );
+			
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			shader.bindDefaults();
+			shader.linkProgram();
+		}
+		
+	public:
 		
 		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, float _max, float _ClampForce){
 			_buffer.begin();

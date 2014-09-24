@@ -1,2 +1,0 @@
-ofxGui
-ofxFlowTools

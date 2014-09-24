@@ -43,6 +43,8 @@ namespace flowTools {
 			}
 			
 			ofScale(_width, _height);
+//			fieldMesh.draw();
+//			fieldVbo.draw(GL_POINTS, 0, vectorSize.get());
 			velocityFieldShader.update(fieldVbo, *floatTexture, vectorSize.get(), maxSize.get());
 			
 			if (lineSmooth.get()) {

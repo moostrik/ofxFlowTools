@@ -31,6 +31,7 @@ public:
 	int					numVisualisationModes;
 	string				*visualisationModeTitles;
 	ofParameterGroup	visualisationParameters;
+	
 	ofParameterGroup	drawForceParameters;
 	ofParameter<bool>	doResetDrawForces;
 	void				resetDrawForces(bool& _value) { if (_value) {for (int i=0; i<numDrawForces; i++) flexDrawForces[i].reset();} doResetDrawForces.set(false);}

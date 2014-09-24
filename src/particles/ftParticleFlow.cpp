@@ -2,7 +2,7 @@
  *
  *  ftParticleFlow
  *
- *  Created by Matthiasm Oostrik on 03/16.14.
+ *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
 			
-			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.dst,
+/*			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.dst,
 									   particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference(),
 									   particlePositionSwapBuffer.src->getTextureReference(),
 									   flowVelocitySwapBuffer.src->getTextureReference(),
@@ -134,7 +134,7 @@ namespace flowTools {
 									  timeStep,
 									  cellSize.get());
 			particlePositionSwapBuffer.swap();
-			
+*/			
 			ofPopStyle();
 	 
 			flowVelocitySwapBuffer.clear();

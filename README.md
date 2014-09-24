@@ -1,7 +1,8 @@
 UPDATE 
 
-- Added possibility to switch the Fbos to different GL formats (GL_RGBA16F, GL_RG16F, GL_R, etc)
+- Added possibility to switch the Fbos to different GL formats (GL_RG32F, GL_R32F, etc)
 - Added possibility to use the programmable GL renderer (OpenGL3 / GLSL150)
+- Added Visual Studio 2012 compatibility and example (note: BUG in Optical Flow Timeblur)
 
 
 

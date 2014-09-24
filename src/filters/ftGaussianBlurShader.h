@@ -23,7 +23,7 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			string fragmentHorizontalBlurShader = GLSL(120,
+			string fragmentHorizontalBlurShader = GLSL120(
 													   uniform sampler2DRect backbuffer;
 													   uniform float radius;
 													   
@@ -52,7 +52,7 @@ namespace flowTools {
 			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
 			blurShader[0].linkProgram();
 			
-			string fragmentVerticalBlurShader = GLSL(120,
+			string fragmentVerticalBlurShader = GLSL120(
 													 uniform sampler2DRect backbuffer;
 													 uniform float radius;
 													 
@@ -85,7 +85,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			string fragmentHorizontalBlurShader = GLSL(150,
+			string fragmentHorizontalBlurShader = GLSL150(
 													   uniform sampler2DRect backbuffer;
 													   uniform float radius;
 													   
@@ -119,7 +119,7 @@ namespace flowTools {
 			blurShader[0].bindDefaults();
 			blurShader[0].linkProgram();
 			
-			string fragmentVerticalBlurShader = GLSL(150,
+			string fragmentVerticalBlurShader = GLSL150(
 													 uniform sampler2DRect backbuffer;
 													 uniform float radius;
 													 

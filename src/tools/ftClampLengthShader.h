@@ -20,7 +20,7 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			fragmentShader = GLSL(120,
+			fragmentShader = GLSL120(
 								  uniform sampler2DRect Backbuffer;
 								  uniform float MaxLength;
 								  uniform float ClampForce;
@@ -44,7 +44,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL(150,
+			fragmentShader = GLSL150(
 								  uniform sampler2DRect Backbuffer;
 								  uniform float MaxLength;
 								  uniform float ClampForce;

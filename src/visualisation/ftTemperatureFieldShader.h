@@ -22,20 +22,20 @@ namespace flowTools {
 		void glTwo() {
 			string geometryShader;
 			
-			vertexShader = GLSL(120,
+			vertexShader = GLSL120(
 								void main() {
 									gl_Position = gl_Vertex;
 									gl_FrontColor = gl_Color;
 								}
 								);
 			
-			fragmentShader = GLSL(120,
+			fragmentShader = GLSL120(
 								  void main() {
 									  gl_FragColor = gl_Color;
 								  }
 								  );
 			
-			geometryShader = GLSL(120,
+			geometryShader = GLSL120GEO(
 								  uniform sampler2DRect fieldTexture;
 								  uniform vec2 texResolution;
 								  uniform float vectorSize;
@@ -84,7 +84,7 @@ namespace flowTools {
 		void glThree() {
 			string geometryShader;
 			
-			vertexShader = GLSL(150,
+			vertexShader = GLSL150(
 								uniform mat4 modelViewProjectionMatrix;
 								uniform mat4 textureMatrix;
 								
@@ -103,7 +103,7 @@ namespace flowTools {
 								
 								);
 			
-			geometryShader = GLSL(150,
+			geometryShader = GLSL150(
 								  uniform mat4 modelViewProjectionMatrix;
 								  uniform sampler2DRect fieldTexture;
 								  uniform vec2 texResolution;
@@ -159,7 +159,7 @@ namespace flowTools {
 								  }
 								  );
 			
-			fragmentShader = GLSL(150,
+			fragmentShader = GLSL150(
 								  
 								  in vec4 colorVarying;
 								  out vec4 fragColor;

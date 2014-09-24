@@ -19,7 +19,7 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			fragmentShader = GLSL(120,
+			fragmentShader = GLSL120(
 								  uniform vec2		Point;
 								  uniform float	Radius;
 								  uniform float	EdgeSmooth;
@@ -45,7 +45,7 @@ namespace flowTools {
 		
 		void glThree() {
 			
-			fragmentShader = GLSL(150,
+			fragmentShader = GLSL150(
 								  uniform vec2	Point;
 								  uniform float	Radius;
 								  uniform float	EdgeSmooth;

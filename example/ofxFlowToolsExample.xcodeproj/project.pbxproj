@@ -198,12 +198,12 @@
 			name = opticalflow;
 			sourceTree = "<group>";
 		};
-		2D532CE90B655CD948A5737B /* ofxFlowTools GL3 */ = {
+		2D532CE90B655CD948A5737B /* ofxFlowTools */ = {
 			isa = PBXGroup;
 			children = (
 				DA7A939B06261BC0E41EAF8A /* src */,
 			);
-			name = "ofxFlowTools GL3";
+			name = ofxFlowTools;
 			sourceTree = "<group>";
 		};
 		329E086B8B6FAA24045DB218 /* mask */ = {
@@ -305,7 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				480A780D8D0308AE4A368801 /* ofxGui */,
-				2D532CE90B655CD948A5737B /* ofxFlowTools GL3 */,
+				2D532CE90B655CD948A5737B /* ofxFlowTools */,
 			);
 			name = addons;
 			sourceTree = "<group>";

@@ -4,9 +4,12 @@
 #include "ofMain.h"
 
 
-#define STRINGIFY(A) #A
-#define GLSL(version, shader)  "#version " #version "\n" #shader
+//#define STRINGIFY(A) #A
+//#define GLSL(version, shader)  "#version " #version "\n" #shader
 
+#define GLSL120(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n" #shader
+#define GLSL120GEO(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #extension GL_EXT_geometry_shader4: enable \n" #shader
+#define GLSL150(shader)  "#version 150 \n" #shader
 
 /*
  
@@ -51,7 +54,7 @@ namespace flowTools {
 				isProgrammableRenderer = false;
 				
 			if (isProgrammableRenderer) {
-				vertexShader = GLSL(150,
+				vertexShader = GLSL150(
 								uniform mat4 modelViewProjectionMatrix;
 								uniform mat4 textureMatrix;
 								
@@ -70,7 +73,7 @@ namespace flowTools {
 								}
 								);
 			
-			fragmentShader = GLSL(150,
+			fragmentShader = GLSL150(
 								  out vec4 fragColor;
 								
 								  void main()
@@ -81,7 +84,7 @@ namespace flowTools {
 			}
 			else {
 				
-				vertexShader = GLSL(120,
+				vertexShader = GLSL120(
 									void main() {
 										gl_Position = gl_Vertex;
 										gl_FrontColor = gl_Color;
@@ -89,7 +92,7 @@ namespace flowTools {
 									);
 										 
 				
-				fragmentShader = GLSL(120,
+				fragmentShader = GLSL120(
 									  void main()
 									  {
 										  gl_FragColor = vec4(0.0,1.0,0.0,1.0);
@@ -141,7 +144,7 @@ namespace flowTools {
 		string fragmentShader;
 		string vertexShader;
 		
-		bool isProgrammableRenderer = false;
+		bool isProgrammableRenderer;
 	};
 	
 }

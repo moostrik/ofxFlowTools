@@ -20,7 +20,7 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			vertexShader = GLSL(120,
+			vertexShader = GLSL120(
 								  uniform sampler2DRect positionTexture;
 								  uniform sampler2DRect ALMSTexture;
 								  void main(){
@@ -47,7 +47,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			vertexShader = GLSL(150,
+			vertexShader = GLSL150(
 								uniform mat4 modelViewProjectionMatrix;
 								uniform mat4 textureMatrix;
 								uniform sampler2DRect positionTexture;
@@ -79,7 +79,7 @@ namespace flowTools {
 								}
 								);
 			
-			fragmentShader = GLSL(150,
+			fragmentShader = GLSL150(
 								  in vec4 colorVarying;
 								  out vec4 fragColor;
 								  

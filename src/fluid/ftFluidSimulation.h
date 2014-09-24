@@ -1,4 +1,3 @@
-
  
 #pragma once
 
@@ -74,7 +73,6 @@ namespace flowTools {
 		float getDensityFromVorticity() {return densityFromVorticity.get();}
 		float getDensityFromPressure() {return densityFromPressure.get();}
 		
-		void setDensityFromPressure() {return densityFromPressure.get();}
 		void setSpeed(float value) {speed.set(value);}
 		void setCellSize(float value) {cellSize.set(value);}
 		void setNumJacobiIterations(float value) {numJacobiIterations.set(value);}

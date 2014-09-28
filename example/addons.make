@@ -1,2 +1,2 @@
 ofxGui
-ofxFlowTools GL3
+ofxFlowTools

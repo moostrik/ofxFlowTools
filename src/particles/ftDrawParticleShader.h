@@ -40,6 +40,7 @@ namespace flowTools {
 								  }
 								  );
 			
+			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.linkProgram();
 
@@ -79,13 +80,28 @@ namespace flowTools {
 								}
 								);
 			
+			
+			
+			// thanx to: http://mmmovania.blogspot.nl/2010/12/circular-point-sprites-in-opengl-33.html
+			
 			fragmentShader = GLSL150(
 								  in vec4 colorVarying;
 								  out vec4 fragColor;
 								  
 								  void main()
 								  {
-									  fragColor = colorVarying;
+									  
+									  vec2 p = gl_PointCoord* 2.0 - vec2(1.0);
+									  
+									  float r = sqrt(dot(p,p));
+									  
+									  if(dot(p,p) > r)
+										  discard;
+									  else
+								//		  if(dot(p,p) < r*0.9)
+								//			  fragColor = colorVarying * (1.0, 1.0, 1.0, 0.9);
+								//		  else
+											  fragColor = colorVarying;
 								  }
 								  );
 			

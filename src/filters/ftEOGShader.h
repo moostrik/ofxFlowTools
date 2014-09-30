@@ -19,20 +19,17 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-								  uniform sampler2DRect tex0;
-								  uniform float exposure;
-								  uniform float offset;
-								  uniform float gamma;
-								  
-								  void main(){
-									  vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
-									  
-									  vec3 eog = pow((color.xyz * vec3(exposure)) + vec3(offset), vec3(1.0/gamma));
-									  
-									  
-									  gl_FragColor = vec4(eog, color.w);
-								  }
-								  );
+									 uniform sampler2DRect tex0;
+									 uniform float exposure;
+									 uniform float offset;
+									 uniform float gamma;
+									 
+									 void main(){
+										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
+										 vec3 eog = pow((color.xyz * vec3(exposure)) + vec3(offset), vec3(1.0/gamma));
+										 gl_FragColor = vec4(eog, color.w);
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			shader.linkProgram();
@@ -42,23 +39,20 @@ namespace flowTools {
 		void glThree() {
 			
 			fragmentShader = GLSL150(
-								  uniform sampler2DRect tex0;
-								  uniform float exposure;
-								  uniform float offset;
-								  uniform float gamma;
-								  
-								  in vec2 texCoordVarying;
-								  out vec4 fragColor;
-								  
-								  void main(){
-									  vec4 color = texture(tex0, texCoordVarying);
-									  
-									  vec3 eog = pow((color.xyz * vec3(exposure)) + vec3(offset), vec3(1.0/gamma));
-									  
-									  
-									  fragColor = vec4(eog, color.w);
-								  }
-								  );
+									 uniform sampler2DRect tex0;
+									 uniform float exposure;
+									 uniform float offset;
+									 uniform float gamma;
+									 
+									 in vec2 texCoordVarying;
+									 out vec4 fragColor;
+									 
+									 void main(){
+										 vec4 color = texture(tex0, texCoordVarying);
+										 vec3 eog = pow((color.xyz * vec3(exposure)) + vec3(offset), vec3(1.0/gamma));
+										 fragColor = vec4(eog, color.w);
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);

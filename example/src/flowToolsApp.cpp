@@ -275,7 +275,14 @@ void flowToolsApp::draw(){
 			ofPopStyle();
 			break;
 		case 2: // Optical Flow Mask
-			velocityMask.draw(0, 0, windowWidth, windowHeight);
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		/*	ofSetColor(255, 0, 0);
+			ofRect(0,0,windowWidth, windowHeight);
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			ofSetColor(255, 255, 255);
+		*/	velocityMask.draw(0, 0, windowWidth, windowHeight);
+			ofPopStyle();
 			break;
 		case 3: // Fluid Velocities
 			ofPushStyle();
@@ -368,6 +375,7 @@ void flowToolsApp::draw(){
 		case 10: // Fluid Color
 			ofPushStyle();
 			fluid.draw(0, 0, windowWidth, windowHeight);
+			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			if (particleFlow.isActive())
 				particleFlow.draw(0, 0, windowWidth, windowHeight);
 			if (showLogo) {
@@ -382,17 +390,14 @@ void flowToolsApp::draw(){
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			cameraFbo.draw(0,0, windowWidth, windowHeight);
 			
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			ofSetColor(255,255,255,64);
+			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			fluid.draw(0, 0, windowWidth, windowHeight);
-			ofSetColor(255,255,255,255);
 			
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			if (particleFlow.isActive())
 				particleFlow.draw(0, 0, windowWidth, windowHeight);
 			
 			if (showLogo) {
-				ofSetColor(255,255,255,255);
 				flowToolsLogoImage.draw(0, 0, windowWidth, windowHeight);
 			}
 			ofPopStyle();

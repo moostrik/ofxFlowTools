@@ -54,7 +54,7 @@ namespace flowTools {
 	
 	void ftVelocityMask::update() {
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		colorMaskSwapBuffer.clear();
 		
 		VelocityMaskShader.update(*colorMaskSwapBuffer.src, *densityTexture, *velocityTexture, strength.get());
@@ -64,7 +64,7 @@ namespace flowTools {
 						 saturation.get(),
 						 1);
 		colorMaskSwapBuffer.swap();
-		
+
 		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
 			gaussianBlurShader.update(*colorMaskSwapBuffer.src, blurPasses.get(), blurRadius.get());
 		}

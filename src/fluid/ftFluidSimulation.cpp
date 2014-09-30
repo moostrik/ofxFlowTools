@@ -216,8 +216,7 @@ namespace flowTools {
 							1.0 - (dissipation.get() + densityOffset.get()),
 							cellSize.get());
 		densitySwapBuffer.swap();
-		
-		
+
 		
 		// DIFFUSE
 		if (viscosity.get() > 0.0) {

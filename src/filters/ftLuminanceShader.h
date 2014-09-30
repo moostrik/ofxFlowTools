@@ -19,18 +19,15 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-								  uniform sampler2DRect tex0;
-								  
-								  void main(){
-									  vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
-									  float alpha = color.a;
-									  float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
-									  //p *= 10.0;
-									  color = vec4(p,p,p,1.0);
-									  
-									  gl_FragColor =  vec4(p, p, p, alpha);
-								  }
-								  );
+									 uniform sampler2DRect tex0;
+									 
+									 void main(){
+										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
+										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
+										 color.xyz = vec3(p,p,p);
+										 gl_FragColor =  color;
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			shader.linkProgram();
@@ -38,21 +35,18 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL150(
-								  uniform sampler2DRect tex0;
-								  
-								  in vec2 texCoordVarying;
-								  out vec4 fragColor;
-								  
-								  void main(){
-									  vec4 color = texture(tex0,texCoordVarying);
-									  float alpha = color.a;
-									  float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
-									  //p *= 10.0;
-									  color = vec4(p,p,p,1.0);
-									  
-									  fragColor =  vec4(p, p, p, alpha);
-								  }
-								  );
+									 uniform sampler2DRect tex0;
+									 
+									 in vec2 texCoordVarying;
+									 out vec4 fragColor;
+									 
+									 void main(){
+										 vec4 color = texture(tex0,texCoordVarying);
+										 float p = 0.3 * color.g + 0.59 * color.r + 0.11 * color.b;
+										 color.xyz = vec3(p,p,p);
+										 fragColor =  color;
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);

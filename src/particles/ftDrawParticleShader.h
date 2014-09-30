@@ -90,22 +90,16 @@ namespace flowTools {
 								  
 								  void main()
 								  {
+									  vec2 p = gl_PointCoord * 2.0 - vec2(1.0);
+									  float d = dot(p,p);
+									  float r = sqrt(d);
 									  
-									  vec2 p = gl_PointCoord* 2.0 - vec2(1.0);
-									  
-									  float r = sqrt(dot(p,p));
-									  
-									  if(dot(p,p) > r)
+									  if(d > r)
 										  discard;
 									  else
-								//		  if(dot(p,p) < r*0.9)
-								//			  fragColor = colorVarying * (1.0, 1.0, 1.0, 0.9);
-								//		  else
-											  fragColor = colorVarying;
+										  fragColor = colorVarying * (1.0, 1.0, 1.0, 1.0 - pow(r, 2.5));
 								  }
 								  );
-			
-			
 			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);

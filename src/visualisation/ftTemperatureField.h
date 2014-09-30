@@ -28,7 +28,6 @@ namespace flowTools {
 			parameters.add(vectorSize.set("vector Size", .25, 0, 1));
 			parameters.add(maxSize.set("maxSize", 0.9 / height, 0, 1));
 			parameters.add(lineSmooth.set("line smooth", false));
-			parameters.add(lineWidth.set("lineWidth", 0.333, 0, 10));
 		};
 		
 		void	draw(int _x, int _y, int _width, int _height) {
@@ -42,9 +41,7 @@ namespace flowTools {
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
 			}
-			
-			glLineWidth(_width / width * lineWidth.get());
-			
+						
 			ofScale(_width, _height);
 			temperatureFieldShader.update(fieldVbo, *floatTexture, vectorSize.get(), maxSize.get());
 			

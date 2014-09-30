@@ -2,7 +2,7 @@
  *
  *  ftOpticalFlow
  *
- *  Created by Matthiasm Oostrik on 03/16.14.
+ *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -57,10 +57,13 @@ namespace flowTools {
 	void	ftOpticalFlow::setup(int _width, int _height){
 		width = _width;
 		height = _height;
-		
+				
 		sourceSwapBuffer.allocate(width, height);
 		velocityBuffer.allocate(width, height, GL_RGB32F);
 		velocityBuffer.clear();
+		
+		velocityTexture.allocate(width, height, GL_RGB32F);
+		
 		decayBuffer.allocate(width, height, GL_RGB32F);
 		decayBuffer.clear();
 		

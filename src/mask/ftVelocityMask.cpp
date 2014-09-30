@@ -2,7 +2,7 @@
  *
  *  ftVelocityMask
  *
- *  Created by Matthiasm Oostrik on 03/16.14.
+ *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without

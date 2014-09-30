@@ -16,7 +16,11 @@ void flowToolsApp::setup(){
 	velocityMask.setup(drawWidth, drawHeight);
 	
 	// Fluid
-	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, false); // true turns on faster mode, but gives errors from ofGLUtils
+#ifdef USE_FASTER_INTERNAL_FORMATS
+	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, true);
+#else
+	fluid.setup(flowWidth, flowHeight, drawWidth, drawHeight, false);
+#endif
 	
 	flowToolsLogoImage.loadImage("flowtools.png");
 	fluid.addObstacle(flowToolsLogoImage.getTextureReference());
@@ -101,14 +105,17 @@ void flowToolsApp::setupGui() {
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(opticalFlow.parameters);
-	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
-	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
-	guiColorSwitch = 1 - guiColorSwitch;
-	gui.add(fluid.parameters);
+	
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(velocityMask.parameters);
+	
+	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
+	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
+	guiColorSwitch = 1 - guiColorSwitch;
+	gui.add(fluid.parameters);
+
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
@@ -125,7 +132,7 @@ void flowToolsApp::setupGui() {
 	temperatureFieldBarScale.addListener(this, &flowToolsApp::setTemperatureFieldBarScale);
 	visualisationParameters.add(visualisationLineSmooth.set("line smooth", false));
 	visualisationLineSmooth.addListener(this, &flowToolsApp::setVisualisationLineSmooth);
-	
+
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
@@ -154,7 +161,7 @@ void flowToolsApp::setupGui() {
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(doResetDrawForces.set("reset draw forces (D)", false));
 	doResetDrawForces.addListener(this,  &flowToolsApp::resetDrawForces);
-	
+
 	gui.loadFromFile("settings.xml");
 	gui.minimizeAll();
 	
@@ -196,11 +203,12 @@ void flowToolsApp::draw(){
 		velocityMask.setVelocity(opticalFlow.getOpticalFlow());
 		velocityMask.update();
 	}
-	
+
+
 	fluid.addVelocity(opticalFlow.getOpticalFlowDecay());
 	fluid.addDensity(velocityMask.getColorMask());
 	fluid.addTemperature(velocityMask.getLuminanceMask());
-	
+
 	for (int i=0; i<numDrawForces; i++) {
 		flexDrawForces[i].update();
 		if (flexDrawForces[i].didChange()) {
@@ -231,7 +239,7 @@ void flowToolsApp::draw(){
 	}
 	
 	fluid.update();
-	
+
 	if (particleFlow.isActive()) {
 		particleFlow.setSpeed(fluid.getSpeed());
 		particleFlow.setCellSize(fluid.getCellSize());
@@ -240,7 +248,7 @@ void flowToolsApp::draw(){
 		particleFlow.setObstacle(fluid.getObstacle());
 	}
 	particleFlow.update();
-	
+
 	
 	int windowWidth = ofGetWindowWidth();
 	int windowHeight = ofGetWindowHeight();
@@ -252,12 +260,14 @@ void flowToolsApp::draw(){
 			break;
 		case 1: // Optical Flow
 			ofPushStyle();
+			opticalFlow.getOpticalFlow().draw(0, 0, windowWidth, windowHeight);
+			
 			if (showScalar.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 				displayScalar.setSource(opticalFlow.getOpticalFlowDecay());
 				displayScalar.draw(0, 0, windowWidth, windowHeight);
 			}
-			if (showField.get()) {
+				if (showField.get()) {
 				ofEnableBlendMode(OF_BLENDMODE_ADD);
 				velocityField.setSource(opticalFlow.getOpticalFlowDecay());
 				velocityField.draw(0, 0, windowWidth, windowHeight);
@@ -387,13 +397,12 @@ void flowToolsApp::draw(){
 			}
 			ofPopStyle();
 			break;
-			
 	}
 	
 	if (toggleGuiDraw) {
 		guiFPS = ofGetFrameRate();
 		if (visualisationMode.get() >= numVisualisationModes)
-			visualisationMode.set(numDrawForces-1);
+			visualisationMode.set(numVisualisationModes-1);
 		visualisationName.set(visualisationModeTitles[visualisationMode.get()]);
 		gui.draw();
 	}
@@ -481,6 +490,7 @@ void flowToolsApp::mouseDragged(int x, int y, int button) {
 		}
 	}
 	lastMouse.set(mouse.x, mouse.y);
+
 }
 
 //--------------------------------------------------------------

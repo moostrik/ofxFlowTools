@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>102.526</FPS>
+		<FPS>157.544</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -178,7 +178,7 @@
 				<Decay>0.120158</Decay>
 				<Decay_Blur_Radius>2</Decay_Blur_Radius>
 			</time_blur>
-		<strength>29.0816</strength>
+		<strength>100</strength>
 		</optical_flow>
 	<testColor>255, 255, 255, 255</testColor>
 	<velocity_field>

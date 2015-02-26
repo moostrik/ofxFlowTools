@@ -68,6 +68,8 @@ namespace flowTools {
 		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
 			gaussianBlurShader.update(*colorMaskSwapBuffer.src, blurPasses.get(), blurRadius.get());
 		}
+		
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTextureReference());
 		
 		ofPopStyle();

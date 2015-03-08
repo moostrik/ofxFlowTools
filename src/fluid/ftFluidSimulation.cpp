@@ -400,6 +400,13 @@ namespace flowTools {
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::resetBackground() {
+		obstacleBuffer.clear();
+		createEdgeImage(obstacleBuffer);
+		combinedObstacleNeedsToBeCleaned = true;
+	}
+	
 	void ftFluidSimulation::createEdgeImage(ftFbo &buffer, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

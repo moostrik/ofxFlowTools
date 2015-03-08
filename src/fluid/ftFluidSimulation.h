@@ -29,6 +29,7 @@ namespace flowTools {
 		void    update(float _deltaTime = 0);
 		void    draw(int x = 0, int y = 0, float _width = -1, float _height = -1);
 		void	reset();
+		void	resetBackground();
 		
 		void    addDensity(ofTexture& _tex, float _strength  = 1.0);
 		void    addVelocity(ofTexture& _tex, float _strength  = 1.0);

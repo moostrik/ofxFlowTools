@@ -40,9 +40,6 @@ namespace flowTools {
 										 gl_FragColor = vec4(0.0,1.0,0.0,1.0);
 									 }
 									 );
-			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
 		}
 		
 		void glThree() {
@@ -73,32 +70,9 @@ namespace flowTools {
 										 fragColor = vec4(0.0,1.0,0.0,1.0);
 									 }
 									 );
-			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
 		}
 		
 		~ftShader() {shader.unload();};
-		
-	public:
-		void update(ofFbo& _drawBuffer, ofTexture& _backBuffer, ofTexture& _someTexture, float _someFloat = 1.0){
-			
-			_drawBuffer.begin();
-			
-			shader.begin();
-			shader.setUniformTexture("CurrTexture", _backBuffer, 0);
-			shader.setUniformTexture("LastTexture", _someTexture, 1);
-			shader.setUniform1f("force", _someFloat);
-			
-			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
-			
-			shader.end();
-			
-			_drawBuffer.end();
-			
-		}
 		
 	protected:
 		

@@ -11,7 +11,7 @@ namespace flowTools {
 		ftSmokeBuoyancyShader() {
 			
 			ofLogVerbose("init ftSmokeBuoyancyShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

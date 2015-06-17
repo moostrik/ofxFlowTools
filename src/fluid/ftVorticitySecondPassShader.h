@@ -10,7 +10,7 @@ namespace flowTools {
 		ftVorticitySecondPassShader() {
 			
 			ofLogVerbose("init ftVorticitySecondPassShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

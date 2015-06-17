@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftVelocityFieldShader() {
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

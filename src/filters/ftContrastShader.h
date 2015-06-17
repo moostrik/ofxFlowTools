@@ -10,7 +10,7 @@ namespace flowTools {
 		ftContrastShader(){
 			ofLogVerbose("init ftContrastShader");
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

@@ -12,7 +12,7 @@ namespace flowTools {
 		ftDrawParticleShader() {
 			
 			ofLogVerbose("init ftDrawParticleShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

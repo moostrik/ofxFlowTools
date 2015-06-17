@@ -12,7 +12,7 @@ namespace flowTools {
 		ftOpticalFlowShader() {
 			
 			ofLogVerbose("init ftOpticalFlowShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

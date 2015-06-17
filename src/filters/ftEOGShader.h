@@ -10,7 +10,7 @@ namespace flowTools {
 		ftEOGShader(){
 			
 			ofLogVerbose("init ftEOGShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

@@ -16,7 +16,7 @@ namespace flowTools {
 			
 			internalFormat = GL_RGBA;
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

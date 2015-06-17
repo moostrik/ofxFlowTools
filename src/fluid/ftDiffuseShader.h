@@ -12,7 +12,7 @@ namespace flowTools {
 		ftDiffuseShader() {
 			
 			ofLogVerbose("init ftDiffuseShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

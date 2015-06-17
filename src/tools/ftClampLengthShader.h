@@ -12,7 +12,7 @@ namespace flowTools {
 		ftClampLengthShader() {
 			
 			ofLogVerbose("init ftClampLengthShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

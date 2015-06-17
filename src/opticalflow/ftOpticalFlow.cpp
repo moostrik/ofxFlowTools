@@ -113,11 +113,11 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		sourceSwapBuffer.swap();
-		sourceSwapBuffer.src->scaleIntoMe(_tex);
+		sourceSwapBuffer.src->stretchIntoMe(_tex);
 		
 		if (!bSourceSet) { // on start set both buffers
 			bSourceSet = true;
-			sourceSwapBuffer.dst->scaleIntoMe(_tex);
+			sourceSwapBuffer.dst->stretchIntoMe(_tex);
 		}
 		
 		ofPopStyle();

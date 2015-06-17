@@ -15,7 +15,7 @@ namespace flowTools {
 			
 			ofLogVerbose("init ftGaussianBlurShader");
 			internalFormat = GL_RGBA;
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
@@ -167,7 +167,7 @@ namespace flowTools {
 			
 			
 			pingPong.clear();
-			pingPong.src->scaleIntoMe(_buffer);
+			pingPong.src->stretchIntoMe(_buffer);
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {

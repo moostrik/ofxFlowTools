@@ -11,7 +11,7 @@ namespace flowTools {
 	public:
 		ftVelocityMaskShader() {
 			ofLogVerbose("init ftVelocityMaskShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

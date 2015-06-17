@@ -10,7 +10,7 @@ namespace flowTools {
 		ftLuminanceShader(){
 			ofLogVerbose("init ftLuminanceShader");
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

@@ -53,9 +53,8 @@ void flowToolsApp::setup(){
 	// Camera
 	simpleCam.initGrabber(640, 480, true);
 	didCamUpdate = false;
-	cameraFbo.allocate(drawWidth, drawHeight);
-	cameraFbo.begin(); ofClear(0); cameraFbo.end();
-	
+	cameraFbo.allocate(640, 480);
+	cameraFbo.clear();
 	
 	setupGui();
 	

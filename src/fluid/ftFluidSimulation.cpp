@@ -115,7 +115,7 @@ namespace flowTools {
 		addTempObstacleBufferDidChange = false;
 		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		combinedObstacleBuffer.clear();
-		combinedObstacleBuffer.scaleIntoMe(obstacleBuffer);
+		combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 		
 		deltaTime = 0;
 		lastTime = 0;
@@ -145,13 +145,13 @@ namespace flowTools {
 		
 		if (combinedObstacleNeedsToBeCleaned) {
 			combinedObstacleBuffer.clear();
-			combinedObstacleBuffer.scaleIntoMe(obstacleBuffer);
+			combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 			combinedObstacleNeedsToBeCleaned = false;
 		}
 		
 		if (addTempObstacleBufferDidChange) {
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
-			combinedObstacleBuffer.scaleIntoMe(addTempObstacleBuffer);
+			combinedObstacleBuffer.stretchIntoMe(addTempObstacleBuffer);
 			addTempObstacleBufferDidChange = false;
 			addTempObstacleBuffer.clear();
 			combinedObstacleNeedsToBeCleaned = true;
@@ -369,7 +369,7 @@ namespace flowTools {
 	void ftFluidSimulation::addObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		obstacleBuffer.scaleIntoMe(_obstacleTexture);
+		obstacleBuffer.stretchIntoMe(_obstacleTexture);
 		ofPopStyle();
 	}
 	
@@ -377,7 +377,7 @@ namespace flowTools {
 	void ftFluidSimulation::addTempObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		addTempObstacleBuffer.scaleIntoMe(_obstacleTexture);
+		addTempObstacleBuffer.stretchIntoMe(_obstacleTexture);
 		addTempObstacleBufferDidChange = true;
 		ofPopStyle();
 	}

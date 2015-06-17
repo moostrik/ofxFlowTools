@@ -41,12 +41,14 @@ namespace flowTools {
 		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
 		
-		int		width;
-		int		height;
-		ofTexture* densityTexture;
-		ofTexture* velocityTexture;
-		ftSwapBuffer	colorMaskSwapBuffer;
-		ftFbo	luminanceMaskFbo;
+		int					width;
+		int					height;
+		ofTexture*			densityTexture;
+		bool				bDensityTextureSet;
+		ofTexture*			velocityTexture;
+		bool				bVelocityTextureSet;
+		ftSwapBuffer		colorMaskSwapBuffer;
+		ftFbo				luminanceMaskFbo;
 		ftVelocityMaskShader VelocityMaskShader;
 		
 		ftEOGShader			EOGShader;

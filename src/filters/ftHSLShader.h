@@ -12,7 +12,7 @@ namespace flowTools {
 			
 			ofLogVerbose("init ftHSLShader");
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

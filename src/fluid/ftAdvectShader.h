@@ -12,7 +12,7 @@ namespace flowTools {
 		ftAdvectShader() {
 			
 			ofLogVerbose("init ftAdvectShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

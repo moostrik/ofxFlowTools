@@ -12,7 +12,7 @@ namespace flowTools {
 		ftInitPositionShader() {
 			
 			ofLogVerbose("init ftInitPositionShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

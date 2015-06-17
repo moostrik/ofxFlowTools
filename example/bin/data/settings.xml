@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>60.0709</FPS>
+		<FPS>16.2565</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -400,7 +400,7 @@
 			<size_spread>0.994898</size_spread>
 		<speed>28.0612</speed>
 			<cell_size>1.25</cell_size>
-		<active>1</active>
+		<active>0</active>
 		<BC_Velocity_length>0.295918</BC_Velocity_length>
 		<birth_chance>0.362245</birth_chance>
 			<birth_velocity_chance>0.19898</birth_velocity_chance>

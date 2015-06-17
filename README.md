@@ -1,11 +1,3 @@
-UPDATE 
-
-- Added possibility to switch the Fbos to different GL formats (GL_RG32F, GL_R32F, etc)
-- Added possibility to use the programmable GL renderer (OpenGL3 / GLSL150)
-- Added Visual Studio 2012 compatibility and example (note: BUG in Optical Flow Timeblur)
-
-
-
 
 ofxFlowTools
 ============
@@ -29,8 +21,7 @@ Have fun!
 
 DEPENDENCIES
 
-The addon was created for OSX 10.8 / 10.9 using OF 0.8.0.
-The example was tested on 0.8.0 and 0.8.1, because of a small bug in the allocation of fbos in 0.8.1 (min- and maxFilter is not set) the particles behave incorrectly.
+The addon was created for OSX 10.8 / 10.9 / 10.10 using OF 0.8.4
 
 
 CREDITS AND ACKNOWLEDGEMENTS:

@@ -11,7 +11,7 @@ namespace flowTools {
 	public:
 		ftDisplayScalarShader() {
 			
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

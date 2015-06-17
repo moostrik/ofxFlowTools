@@ -11,7 +11,7 @@ namespace flowTools {
 		ftJacobiShader() {
 			
 			ofLogVerbose("init ftJacobiShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

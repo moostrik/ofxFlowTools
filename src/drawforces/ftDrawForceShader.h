@@ -11,7 +11,7 @@ namespace flowTools {
 		ftDrawForceShader() {
 			
 			ofLogVerbose("init ftDrawForceShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

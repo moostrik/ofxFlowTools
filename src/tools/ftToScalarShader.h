@@ -12,7 +12,7 @@ namespace flowTools {
 		ftToScalarShader() {
 			
 			ofLogVerbose("init ftToScalarShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

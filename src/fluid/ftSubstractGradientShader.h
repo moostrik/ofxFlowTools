@@ -11,7 +11,7 @@ namespace flowTools {
 		ftSubstractGradient() {
 			
 			ofLogVerbose("init ftSubstractGradient");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

@@ -11,7 +11,7 @@ namespace flowTools {
 		ftDivergenceShader() {
 			
 			ofLogVerbose("init ftDivergenceShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

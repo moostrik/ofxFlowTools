@@ -12,7 +12,7 @@ namespace flowTools {
 		ftTemperatureFieldShader() {
 			
 			ofLogVerbose("init ftTemperatureFieldShader");
-			if (isProgrammableRenderer)
+			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

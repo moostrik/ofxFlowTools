@@ -55,7 +55,7 @@ public:
 	// Camera
 	ofVideoGrabber		simpleCam;
 	bool				didCamUpdate;
-	ofFbo				cameraFbo;
+	ftFbo				cameraFbo;
 	
 	// Time
 	float				lastTime;

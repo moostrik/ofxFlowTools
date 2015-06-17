@@ -119,7 +119,8 @@
 		0B504CB219D2D05C003C6F85 /* ftLuminanceShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftLuminanceShader.h; path = ../src/filters/ftLuminanceShader.h; sourceTree = "<group>"; };
 		0B504CB319D2D05C003C6F85 /* ftTimeBlurShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftTimeBlurShader.h; path = ../src/filters/ftTimeBlurShader.h; sourceTree = "<group>"; };
 		0B504CB419D2D095003C6F85 /* ftShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftShader.h; path = ../src/ftShader.h; sourceTree = "<group>"; };
-		0BF04FF51B31746200A5BA58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		0BF04FF51B31746200A5BA58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		0BF04FF61B31782300A5BA58 /* ftRedToLuminanceShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftRedToLuminanceShader.h; path = ../src/tools/ftRedToLuminanceShader.h; sourceTree = "<group>"; };
 		0BF6237C196415F3009CF385 /* flowToolsApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flowToolsApp.cpp; sourceTree = "<group>"; };
 		0BF6237D196415F3009CF385 /* flowToolsApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flowToolsApp.h; sourceTree = "<group>"; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
@@ -220,6 +221,7 @@
 		3E0BEA91E6C334443DC7B073 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				0BF04FF61B31782300A5BA58 /* ftRedToLuminanceShader.h */,
 				0B504CA219D2D041003C6F85 /* ftAddForceShader.h */,
 				0B504CA319D2D041003C6F85 /* ftClampLengthShader.h */,
 				0B504CA419D2D041003C6F85 /* ftDensityFloatMultiplier.h */,
@@ -407,6 +409,7 @@
 			children = (
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
+				0BF04FF51B31746200A5BA58 /* README.md */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
@@ -418,7 +421,6 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				0BF04FF51B31746200A5BA58 /* README.md */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				0BF6237C196415F3009CF385 /* flowToolsApp.cpp */,
 				0BF6237D196415F3009CF385 /* flowToolsApp.h */,

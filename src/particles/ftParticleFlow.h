@@ -65,15 +65,16 @@ namespace flowTools {
 		ofParameter<float>	massSpread;
 		ofParameter<float>	size;
 		ofParameter<float>	sizeSpread;
+		ofParameter<float>	twinkleSpeed;
 		
-		float simulationWidth;
-		float simulationHeight;
-		float numParticlesX;
-		float numParticlesY;
-		int numParticles;
-		float deltaTime;
-		float lastTime;
-		float timeStep;
+		float	simulationWidth;
+		float	simulationHeight;
+		float	numParticlesX;
+		float	numParticlesY;
+		int		numParticles;
+		float	deltaTime;
+		float	lastTime;
+		float	timeStep;
 		
 		ofTexture *flowVelocityTexture;
 		ofTexture *fluidVelocityTexture;

@@ -410,6 +410,9 @@ void flowToolsApp::draw(){
 		visualisationName.set(visualisationModeTitles[visualisationMode.get()]);
 		gui.draw();
 	}
+	
+	// HACK TO COMPENSATE FOR DISSAPEARING MOUSE
+	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 1000.0);
 }
 
 //--------------------------------------------------------------

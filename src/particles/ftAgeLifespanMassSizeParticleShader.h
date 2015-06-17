@@ -21,8 +21,8 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-								  uniform sampler2DRect Backbuffer;
-								  uniform sampler2DRect Position;
+									 uniform sampler2DRect Backbuffer;
+									 uniform sampler2DRect Position;
 								  uniform sampler2DRect Velocity;
 								  uniform sampler2DRect Density;
 								  uniform sampler2DRect Obstacle;
@@ -62,20 +62,17 @@ namespace flowTools {
 									  }
 									  
 									  if (p_age == 0.0) {
-										  vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										  if (length(u) > 0.0) {
-											  float birthRandom = noise( st * GlobalTime + 304.5) + 0.0001;
-											  float birthFromVelocity = min(length(u) * BirthVelocityChance, 1.0) + 0.0001;
-											  birthRandom = birthRandom / birthFromVelocity;
-											  if (birthRandom < BirthChance) {
-												  p_age = 0.001;
-												  float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
-												  p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
-												  float massRandom =  noise( st * GlobalTime + 281.05) * 2.0 - 1.0;
-												  p_mass =  Mass + Mass * MassSpread * massRandom;
-												  float sizeRandom =   noise( st * GlobalTime + 431.93) * 2.0 - 1.0;
-												  p_size =  Size + Size * SizeSpread * sizeRandom;
-											  }
+										  float birthRandom = noise( st * GlobalTime + 304.5) / BirthChance;
+										  float speed = length(texture2DRect(Velocity, st2).rg / Scale);
+										  float birthFromVelocity = speed * BirthVelocityChance;
+										  if (birthRandom > 0.001 && birthRandom < birthFromVelocity ) {
+											  p_age = 0.001;
+											  float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
+											  p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
+											  float massRandom =  noise( st * GlobalTime + 281.05) * 2.0 - 1.0;
+											  p_mass =  Mass + Mass * MassSpread * massRandom;
+											  float sizeRandom =   noise( st * GlobalTime + 431.93) * 2.0 - 1.0;
+											  p_size =  Size + Size * SizeSpread * sizeRandom;
 										  }
 									  }
 									  
@@ -142,20 +139,17 @@ namespace flowTools {
 									  }
 									  
 									  if (p_age == 0.0) {
-										  vec2 u = texture(Velocity, st2).rg / Scale;
-										  if (length(u) > 0.0) {
-											  float birthRandom = noise( st * GlobalTime + 304.5) + 0.0001;
-											  float birthFromVelocity = min(length(u) * BirthVelocityChance, 1.0) + 0.0001;
-											  birthRandom = birthRandom / birthFromVelocity;
-											  if (birthRandom < BirthChance) {
-												  p_age = 0.001;
-												  float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
-												  p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
-												  float massRandom =  noise( st * GlobalTime + 281.05) * 2.0 - 1.0;
-												  p_mass =  Mass + Mass * MassSpread * massRandom;
-												  float sizeRandom =   noise( st * GlobalTime + 431.93) * 2.0 - 1.0;
-												  p_size =  Size + Size * SizeSpread * sizeRandom;
-											  }
+										  float birthRandom = noise( st * GlobalTime + 304.5) / BirthChance;
+										  float speed = length(texture(Velocity, st2).rg / Scale);
+										  float birthFromVelocity = speed * BirthVelocityChance;
+										  if (birthRandom > 0.001 && birthRandom < birthFromVelocity ) {
+											  p_age = 0.001;
+											  float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
+											  p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
+											  float massRandom =  noise( st * GlobalTime + 281.05) * 2.0 - 1.0;
+											  p_mass =  Mass + Mass * MassSpread * massRandom;
+											  float sizeRandom =   noise( st * GlobalTime + 431.93) * 2.0 - 1.0;
+											  p_size =  Size + Size * SizeSpread * sizeRandom;
 										  }
 									  }
 									  

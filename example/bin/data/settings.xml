@@ -54,7 +54,7 @@
 		</particles>
 	</fluids>
 <settings>
-		<FPS>16.2565</FPS>
+		<FPS>59.9902</FPS>
 		<fluids>
 			<DrawMode>0</DrawMode>
 			<optical_flow>
@@ -400,10 +400,11 @@
 			<size_spread>0.994898</size_spread>
 		<speed>28.0612</speed>
 			<cell_size>1.25</cell_size>
-		<active>0</active>
+		<active>1</active>
 		<BC_Velocity_length>0.295918</BC_Velocity_length>
 		<birth_chance>0.362245</birth_chance>
 			<birth_velocity_chance>0.19898</birth_velocity_chance>
+		<twinkle_speed>11.4694</twinkle_speed>
 		</particle_flow>
 	<draw_force>
 			<type>1</type>
@@ -517,7 +518,7 @@
 			<draw_flow_res_1>
 				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
 				<is_temporary>1</is_temporary>
-				<force>-0.00520831, 0.00833333, 0, 1</force>
+				<force>0, -0.000952385, 0, 1</force>
 				<strength>0.965223</strength>
 				<radius>0.0146189</radius>
 				<edge>1</edge>

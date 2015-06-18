@@ -21,10 +21,10 @@ Have fun!
 
 DEPENDENCIES & SYSTEM SPECS
 
-The last version of the addon was created using OSX 10.10 and OF 0.8.4, using nVidia Geforce graphics cards.
-The addon should work on older versions of OSX, Windows and Linux, using nVidia Geforce, AMD Radeon cards.
-The addon might work on professional nVidia and AMD cards (it did work on the MacPro FirePro card, but not as fast as expected).
-The addon does NOT work on most integrated Intel graphics solutions, like the MacMini Iris graphics.
+- The last version of the addon was created using OSX 10.10 and OF 0.8.4, using nVidia Geforce graphics cards.
+- The addon should work on older versions of OSX, Windows and Linux, using nVidia Geforce, AMD Radeon cards.
+- The addon might work on professional nVidia and AMD cards (it did work on the MacPro FirePro card, but not as fast as expected).
+- The addon does NOT work on most integrated Intel graphics solutions, like the MacMini Iris graphics.
 
 
 

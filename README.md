@@ -19,9 +19,13 @@ To complete the addon (what is a fluid sim without particles?) I added experimen
 Have fun!
 
 
-DEPENDENCIES
+DEPENDENCIES & SYSTEM SPECS
 
-The addon was created for OSX 10.8 / 10.9 / 10.10 using OF 0.8.4
+The last version of the addon was created using OSX 10.10 and OF 0.8.4, using nVidia Geforce graphics cards.
+The addon should work on older versions of OSX, Windows and Linux, using nVidia Geforce, AMD Radeon cards.
+The addon might work on professional nVidia and AMD cards (it did work on the MacPro FirePro card, but not as fast as expected).
+The addon does NOT work on most integrated Intel graphics solutions, like the MacMini Iris graphics.
+
 
 
 CREDITS AND ACKNOWLEDGEMENTS:

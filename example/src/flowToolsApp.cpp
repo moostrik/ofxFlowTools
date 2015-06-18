@@ -75,7 +75,7 @@ void flowToolsApp::setupGui() {
 	gui.add(toggleGuiDraw.set("show gui (G)", false));
 	gui.add(doFlipCamera.set("flip camera (C)", true));
 	numVisualisationModes = 12;
-	gui.add(visualisationMode.set("visualisation mode", 0, 0, numVisualisationModes - 1));
+	gui.add(visualisationMode.set("visualisation mode", 11, 0, numVisualisationModes - 1));
 	gui.add(visualisationName.set("MODE", "draw name"));
 	
 	visualisationModeTitles = new string[numVisualisationModes];
@@ -123,9 +123,9 @@ void flowToolsApp::setupGui() {
 	visualisationParameters.setName("visualisation");
 	visualisationParameters.add(showScalar.set("show scalar", true));
 	visualisationParameters.add(showField.set("show field", true));
-	visualisationParameters.add(displayScalarScale.set("display scalar scale", 0.25, 0.05, 0.5));
+	visualisationParameters.add(displayScalarScale.set("display scalar scale", 0.15, 0.05, 0.5));
 	displayScalarScale.addListener(this, &flowToolsApp::setDisplayScalarScale);
-	visualisationParameters.add(velocityFieldArrowScale.set("arrow scale", 0.6, 0.2, 1));
+	visualisationParameters.add(velocityFieldArrowScale.set("arrow scale", 0.1, 0.0, 0.5));
 	velocityFieldArrowScale.addListener(this, &flowToolsApp::setVelocityFieldArrowScale);
 	visualisationParameters.add(temperatureFieldBarScale.set("temperature scale", 0.25, 0.05, 0.5));
 	temperatureFieldBarScale.addListener(this, &flowToolsApp::setTemperatureFieldBarScale);
@@ -409,10 +409,10 @@ void flowToolsApp::draw(){
 			visualisationMode.set(numVisualisationModes-1);
 		visualisationName.set(visualisationModeTitles[visualisationMode.get()]);
 		gui.draw();
+		ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 600.0);
 	}
 	
 	// HACK TO COMPENSATE FOR DISSAPEARING MOUSE
-	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 1000.0);
 }
 
 //--------------------------------------------------------------

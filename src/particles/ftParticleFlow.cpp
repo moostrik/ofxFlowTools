@@ -37,17 +37,17 @@ namespace flowTools {
 	ftParticleFlow::ftParticleFlow(){
 		parameters.setName("particle flow");
 		parameters.add(bIsActive.set("active", true));
-		parameters.add(speed.set("speed", 0.1, 0, 100));
+		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
-		parameters.add(birthChance.set("birth chance", 0.1, 0, 1));
-		parameters.add(birthVelocityChance.set("birth velocity chance", 0.1, 0, 1));
-		parameters.add(lifeSpan.set("lifespan", 3, 0, 10));
-		parameters.add(lifeSpanSpread.set("lifespan spread", 0, 0, 1));
-		parameters.add(mass.set("mass", 1, 0, 2));
-		parameters.add(massSpread.set("mass spread", 0, 0, 1));
-		parameters.add(size.set("size", 1, 0, 10));
-		parameters.add(sizeSpread.set("size spread", 0, 0, 1));
-		parameters.add(twinkleSpeed.set("twinkle speed", 0, 9, 20));
+		parameters.add(birthChance.set("birth chance", 0.5, 0, 1));
+		parameters.add(birthVelocityChance.set("birth velocity chance", 0.5, 0, 1));
+		parameters.add(lifeSpan.set("lifespan", 5, 0, 10));
+		parameters.add(lifeSpanSpread.set("lifespan spread", .25, 0, 1));
+		parameters.add(mass.set("mass", 1.3, 0, 2));
+		parameters.add(massSpread.set("mass spread", .2, 0, 1));
+		parameters.add(size.set("size", 2, 0, 10));
+		parameters.add(sizeSpread.set("size spread", .75, 0, 1));
+		parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
 	}
 	
 	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {

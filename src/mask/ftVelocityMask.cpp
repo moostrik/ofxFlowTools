@@ -48,10 +48,10 @@ namespace flowTools {
 		bDensityTextureSet = false;
 		
 		parameters.setName("velocity mask");
-		parameters.add(strength.set("strength", 1, 0, 10));
-		parameters.add(saturation.set("saturation", 1, 1, 5));
-		parameters.add(blurPasses.set("blur passes", 1, 0, 10));
-		parameters.add(blurRadius.set("blur radius", 6, 0, 10));
+		parameters.add(strength.set("strength", 5.5, 0, 10));
+		parameters.add(saturation.set("saturation", 3, 1, 5));
+		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
+		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 	};
 	

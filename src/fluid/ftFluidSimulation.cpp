@@ -42,31 +42,31 @@ namespace flowTools {
 		
 		parameters.setName("fluid solver");
 		parameters.add(doReset.set("reset", false));
-		parameters.add(speed.set("speed", 10, 0, 100));
+		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.005, 0, 1));
-		parameters.add(vorticity.set("vorticity", 0.1, 0.0, 1));
-		parameters.add(dissipation.set("dissipation", 0.01f, 0, 0.02));
+		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
+		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
+		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
 		advancedDissipationParameters.setName("advanced dissipation");
-		advancedDissipationParameters.add(velocityOffset.set("velocity offset", 0, -0.01, 0.01));
+		advancedDissipationParameters.add(velocityOffset.set("velocity offset", -0.001, -0.01, 0.01));
 		advancedDissipationParameters.add(densityOffset.set("density offset", 0, -0.01, 0.01));
 		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0, -0.01, 0.01));
 		parameters.add(advancedDissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
-		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
+		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.0, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.01,0), ofVec2f(-.1,-.1), ofVec2f(.1,.1)));
 		parameters.add(smokeBuoyancyParameters);
 		maxValues.setName("maximum");
-		maxValues.add(clampForce.set("clampForce", 0, 0, .1));
-		maxValues.add(maxDensity.set("density", 1,0,5));
-		maxValues.add(maxVelocity.set("velocity", 1,0,10));
-		maxValues.add(maxTemperature.set("temperature", 1,0,5));
+		maxValues.add(clampForce.set("clampForce", 0.05, 0, .1));
+		maxValues.add(maxDensity.set("density", 2,0,5));
+		maxValues.add(maxVelocity.set("velocity", 4,0,10));
+		maxValues.add(maxTemperature.set("temperature", 2,0,5));
 		parameters.add(maxValues);
 		parameters.add(densityFromPressure.set("density from pressure", 0, -0.1, 0.1));
-		parameters.add(densityFromVorticity.set("density from vorticity", 0, -0.5, 0.5));
+		parameters.add(densityFromVorticity.set("density from vorticity", -0.1, -0.5, 0.5));
 	}
 	
 	//--------------------------------------------------------------

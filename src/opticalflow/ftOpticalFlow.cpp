@@ -38,10 +38,10 @@ namespace flowTools {
 	
 	ftOpticalFlow::ftOpticalFlow(){
 		parameters.setName("optical flow");
-		parameters.add(strength.set("strength", 1, 0, 100));
+		parameters.add(strength.set("strength", 50, 0, 100));
 		parameters.add(offset.set("offset", 3, 1, 10));
 		parameters.add(lambda.set("labda", 0.01, 0, 0.1));
-		parameters.add(threshold.set("treshold", 0.04, 0, 0.2));
+		parameters.add(threshold.set("treshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));
 		parameters.add(doTimeBlurDecay.set("do time blur", true));

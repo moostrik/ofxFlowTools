@@ -70,14 +70,14 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool doFasterInternalFormat) {
+	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool _doFasterInternalFormat) {
 		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		densityWidth = (!_densityWidth)? simulationWidth : _densityWidth;
 		densityHeight = (!_densityHeight)? simulationHeight: _densityHeight;
 		
 		int internalFormatDensity, internalFormatVelocity, interformatPressure, internalFormatObstacle;
-		if (doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
+		if (_doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
 			internalFormatDensity = GL_RGBA32F;
 			internalFormatVelocity = GL_RG32F;
 			interformatPressure = GL_R32F;
@@ -86,8 +86,8 @@ namespace flowTools {
 		}
 		else {							 // This gives no errors
 			internalFormatDensity = GL_RGBA32F;
-			internalFormatVelocity = GL_RGBA32F;
-			interformatPressure = GL_RGBA32F;
+			internalFormatVelocity = GL_RGB32F;
+			interformatPressure = GL_RGB32F;
 			internalFormatObstacle = GL_RGB;
 		}
 		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);

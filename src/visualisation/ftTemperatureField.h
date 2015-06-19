@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftTemperatureField {
 	public:
 		
-		void	allocate(int _width, int _height){
+		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			

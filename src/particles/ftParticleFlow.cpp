@@ -50,7 +50,7 @@ namespace flowTools {
 		parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
 	}
 	
-	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {
+	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY, bool _doFasterInternalFormat) {
 		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		numParticlesX = _numParticlesX;
@@ -65,24 +65,35 @@ namespace flowTools {
 			}
 		}
 		
+		int internalFormatVelocity;
+		if (_doFasterInternalFormat) {
+			internalFormatVelocity = GL_RG32F;
+			
+		}
+		else {
+			internalFormatVelocity = GL_RGB32F;
+		}
+		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
+		
+		
 		particleAgeLifespanMassSizeSwapBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F, GL_NEAREST);
 		particleAgeLifespanMassSizeSwapBuffer.clear();
-		particlePositionSwapBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F, GL_NEAREST);
+		particlePositionSwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity, GL_NEAREST);
 		particlePositionSwapBuffer.clear();
 		initPositionShader.update(*particlePositionSwapBuffer.src);
-		particleHomeBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F);
+		particleHomeBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
 		particleHomeBuffer.clear();
 		initPositionShader.update(particleHomeBuffer);
 		
-		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);
+		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		fluidVelocitySwapBuffer.clear();
-		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGB32F);
+		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		flowVelocitySwapBuffer.clear();
 		densitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
 		densitySwapBuffer.clear();
-		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB);
+		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB); // GL_RED??
 		obstacleBuffer.clear();
 		
 		ofPopStyle();

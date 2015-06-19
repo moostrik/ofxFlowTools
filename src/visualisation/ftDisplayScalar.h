@@ -14,7 +14,7 @@ namespace flowTools {
 			height = _height;
 			visibleBuffer.allocate(width, height);
 			parameters.setName("display scalar");
-			parameters.add(scale.set("scale", .25, 0, 1));
+			parameters.add(scale.set("scale", .15, 0, 1));
 		};
 		
 //		void	update() {visibleFloatShader.update(visibleBuffer, *floatTexture, scale.get());};

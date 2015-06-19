@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0191461B330F400096AA43 /* ftDrawMouseForces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B0191441B330F400096AA43 /* ftDrawMouseForces.cpp */; };
 		0B504C8719D2CFEE003C6F85 /* ftOpticalFlow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C8419D2CFEE003C6F85 /* ftOpticalFlow.cpp */; };
 		0B504C8B19D2CFFA003C6F85 /* ftVelocityMask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C8819D2CFFA003C6F85 /* ftVelocityMask.cpp */; };
 		0B504C9619D2D008003C6F85 /* ftFluidSimulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C8F19D2D008003C6F85 /* ftFluidSimulation.cpp */; };
@@ -73,6 +74,8 @@
 
 /* Begin PBXFileReference section */
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
+		0B0191441B330F400096AA43 /* ftDrawMouseForces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftDrawMouseForces.cpp; path = ../src/drawforces/ftDrawMouseForces.cpp; sourceTree = "<group>"; };
+		0B0191451B330F400096AA43 /* ftDrawMouseForces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftDrawMouseForces.h; path = ../src/drawforces/ftDrawMouseForces.h; sourceTree = "<group>"; };
 		0B504C8119D2CFB7003C6F85 /* ftFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftFbo.h; path = ../src/ftFbo.h; sourceTree = "<group>"; };
 		0B504C8219D2CFDD003C6F85 /* ftSwapBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftSwapBuffer.h; path = ../src/ftSwapBuffer.h; sourceTree = "<group>"; };
 		0B504C8419D2CFEE003C6F85 /* ftOpticalFlow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftOpticalFlow.cpp; path = ../src/opticalflow/ftOpticalFlow.cpp; sourceTree = "<group>"; };
@@ -243,6 +246,8 @@
 		7EA7281CB2CDA0CCA983FEA6 /* drawforces */ = {
 			isa = PBXGroup;
 			children = (
+				0B0191441B330F400096AA43 /* ftDrawMouseForces.cpp */,
+				0B0191451B330F400096AA43 /* ftDrawMouseForces.h */,
 				0B504C9719D2D01F003C6F85 /* ftDrawForce.cpp */,
 				0B504C9819D2D01F003C6F85 /* ftDrawForce.h */,
 				0B504C9919D2D01F003C6F85 /* ftDrawForceShader.h */,
@@ -535,6 +540,7 @@
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				0BF6237E196415F3009CF385 /* flowToolsApp.cpp in Sources */,
 				0B504C8719D2CFEE003C6F85 /* ftOpticalFlow.cpp in Sources */,
+				0B0191461B330F400096AA43 /* ftDrawMouseForces.cpp in Sources */,
 				0B504C8B19D2CFFA003C6F85 /* ftVelocityMask.cpp in Sources */,
 				0B504C9619D2D008003C6F85 /* ftFluidSimulation.cpp in Sources */,
 				0B504C9A19D2D01F003C6F85 /* ftDrawForce.cpp in Sources */,

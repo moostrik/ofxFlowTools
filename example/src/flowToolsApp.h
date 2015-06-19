@@ -9,53 +9,40 @@
 
 using namespace flowTools;
 
+
+enum drawModeEnum{
+	DRAW_COMPOSITE = 0,
+	DRAW_FLUID_DENSITY,
+	DRAW_PARTICLES,
+	DRAW_FLUID_VELOCITY,
+	DRAW_FLUID_PRESSURE,
+	DRAW_FLUID_TEMPERATURE,
+	//	DRAW_FLUID_DIVERGENCE,
+	DRAW_FLUID_VORTICITY,
+	DRAW_FLUID_BUOYANCY,
+	DRAW_FLUID_OBSTACLE,
+	DRAW_FLOW_MASK,
+	DRAW_OPTICAL_FLOW,
+	DRAW_SOURCE,
+	DRAW_LEFT_MOUSE_0,
+	DRAW_LEFT_MOUSE_1,
+	DRAW_LEFT_MOUSE_2,
+	DRAW_RIGHT_MOUSE_0,
+	DRAW_RIGHT_MOUSE_1,
+	DRAW_RIGHT_MOUSE_2
+};
+
 class flowToolsApp : public ofBaseApp{
 public:
-	void setup();
-	void update();
-	void draw();
-	
-	// Interaction
-	void				keyPressed(int key);
-	void				mouseMoved(int x, int y);
-	void				mouseDragged(int x, int y, int button);
-	ofVec2f				lastMouse;
-	
-	// GUI
-	ofxPanel			gui;
-	void				setupGui();
-	ofParameter<float>	guiFPS;
-	ofParameter<bool>	doFullScreen;
-	void				setFullScreen(bool& _value) { ofSetFullscreen(_value);}
-	ofParameter<bool>	toggleGuiDraw;
-	ofParameter<bool>	doFlipCamera;
-	ofParameter<int>	visualisationMode;
-	ofParameter<string> visualisationName;
-	int					numVisualisationModes;
-	string				*visualisationModeTitles;
-	ofParameterGroup	visualisationParameters;
-	
-	ofParameterGroup	drawForceParameters;
-	ofParameter<bool>	doResetDrawForces;
-	void				resetDrawForces(bool& _value) { if (_value) {for (int i=0; i<numDrawForces; i++) flexDrawForces[i].reset();} doResetDrawForces.set(false);}
-	ofParameterGroup	leftButtonParameters;
-	ofParameterGroup	rightButtonParameters;
-	ofParameter<bool>	showScalar;
-	ofParameter<bool>	showField;
-	ofParameter<float>	displayScalarScale;
-	void				setDisplayScalarScale(float& _value) { displayScalar.setScale(_value); }
-	ofParameter<float>	velocityFieldArrowScale;
-	void				setVelocityFieldArrowScale(float& _value) { velocityField.setVectorSize(_value); }
-	ofParameter<float>	temperatureFieldBarScale;
-	void				setTemperatureFieldBarScale(float& _value) { temperatureField.setVectorSize(_value); }
-	ofParameter<bool>	visualisationLineSmooth;
-	void				setVisualisationLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); }
-	
+	void	setup();
+	void	update();
+	void	draw();
 	
 	// Camera
 	ofVideoGrabber		simpleCam;
 	bool				didCamUpdate;
 	ftFbo				cameraFbo;
+	ofParameter<bool>	doFlipCamera;
 	
 	// Time
 	float				lastTime;
@@ -69,17 +56,75 @@ public:
 	
 	ftOpticalFlow		opticalFlow;
 	ftVelocityMask		velocityMask;
-	ftFluidSimulation	fluid;
+	ftFluidSimulation	fluidSimulation;
 	ftParticleFlow		particleFlow;
-	
-	ftDisplayScalar		displayScalar;
-	ftVelocityField		velocityField;
-	ftTemperatureField	temperatureField;
-	
-	int					numDrawForces;
-	ftDrawForce*		flexDrawForces;
 	
 	ofImage				flowToolsLogoImage;
 	bool				showLogo;
 	
+	// MouseDraw
+	ftDrawMouseForces	mouseDrawForces;
+	
+	// Visualisations
+	ofParameterGroup	visualizeParameters;
+	ftDisplayScalar		displayScalar;
+	ftVelocityField		velocityField;
+	ftTemperatureField	temperatureField;
+	
+	ofParameter<bool>	showScalar;
+	ofParameter<bool>	showField;
+	ofParameter<float>	displayScalarScale;
+	void				setDisplayScalarScale(float& _value) { displayScalar.setScale(_value); }
+	ofParameter<float>	velocityFieldArrowScale;
+	void				setVelocityFieldArrowScale(float& _value) { velocityField.setVectorSize(_value); }
+	ofParameter<bool>	velocityLineSmooth;
+	void				setVelocityLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); }
+	ofParameter<float>	temperatureFieldBarScale;
+	void				setTemperatureFieldBarScale(float& _value) { temperatureField.setVectorSize(_value); }
+	
+	// GUI
+	ofxPanel			gui;
+	void				setupGui();
+	void				keyPressed(int key);
+	void				drawGui();
+	ofParameter<bool>	toggleGuiDraw;
+	ofParameter<float>	guiFPS;
+	ofParameter<float>	guiMinFPS;
+	deque<float>		deltaTimeDeque;
+	ofParameter<bool>	doFullScreen;
+	void				setFullScreen(bool& _value) { ofSetFullscreen(_value);}
+	
+	// DRAW
+	ofParameter<int>	drawMode;
+	void				drawModeSetName(int& _value) ;
+	ofParameter<string> drawName;
+	
+	void				drawComposite() { drawComposite(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawComposite(int _x, int _y, int _width, int _height);
+	void				drawParticles() { drawParticles(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawParticles(int _x, int _y, int _width, int _height);
+	void				drawFluidDensity() { drawFluidDensity(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidDensity(int _x, int _y, int _width, int _height);
+	void				drawFluidVelocity() { drawFluidVelocity(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidVelocity(int _x, int _y, int _width, int _height);
+	void				drawFluidPressure() { drawFluidPressure(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidPressure(int _x, int _y, int _width, int _height);
+	void				drawFluidTemperature() { drawFluidTemperature(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidTemperature(int _x, int _y, int _width, int _height);
+	void				drawFluidDivergence() { drawFluidDivergence(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidDivergence(int _x, int _y, int _width, int _height);
+	void				drawFluidVorticity() { drawFluidVorticity(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidVorticity(int _x, int _y, int _width, int _height);
+	void				drawFluidBuoyance() { drawFluidBuoyance(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidBuoyance(int _x, int _y, int _width, int _height);
+	void				drawFluidObstacle() { drawFluidObstacle(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawFluidObstacle(int _x, int _y, int _width, int _height);
+	void				drawMask() { drawMask(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawMask(int _x, int _y, int _width, int _height);
+	void				drawOpticalFlow() { drawOpticalFlow(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawOpticalFlow(int _x, int _y, int _width, int _height);
+	void				drawSource() { drawSource(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawSource(int _x, int _y, int _width, int _height);
+	void				drawMouseDraw(int _index) { drawMouseDraw(_index, 0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawMouseDraw(int _index, int _x, int _y, int _width, int _height);
 };

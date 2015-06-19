@@ -25,7 +25,7 @@ namespace flowTools {
 			
 			
 			parameters.setName("velocity field");
-			parameters.add(vectorSize.set("vector Size", 1, 0, 2));
+			parameters.add(vectorSize.set("vector Size", .1, 0, 2));
 			parameters.add(maxSize.set("maxSize", 1, 0, 1));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};

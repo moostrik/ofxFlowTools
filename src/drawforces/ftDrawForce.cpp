@@ -68,6 +68,7 @@ namespace flowTools {
 		
 	void ftDrawForce::applyForce(ofVec2f _normalizedPosition) {
 		absolutePosition = _normalizedPosition * ofVec2f(width, height);
+		
 		absoluteRadius = radius * width;
 		
 		if (isTemporary && !forceApplied) // && allow for multiple temporal forces

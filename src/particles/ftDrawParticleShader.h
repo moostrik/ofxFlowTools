@@ -131,13 +131,13 @@ namespace flowTools {
 			shader.setUniform1f("TwinkleSpeed", _twinkleSpeed);
 			
 			bool dinges = true;
-			glEnable(GL_POINT_SMOOTH);
-			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+			//glEnable(GL_POINT_SMOOTH);
+			//glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			
 			particleVbo.draw();
 			
-			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
-			glDisable(GL_POINT_SMOOTH);
+			//glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+			//glDisable(GL_POINT_SMOOTH);
 			shader.end();
 			
 		}

@@ -1,0 +1,243 @@
+
+#pragma once
+
+#include "ofMain.h"
+#include "ftShader.h"
+
+namespace flowTools {
+	
+	class ftVTFieldShader : public ftShader {
+	public:
+		ftVTFieldShader() {
+			
+			if (ofGetGLProgrammableRenderer())
+				glThree();
+			else
+				glTwo();
+		}
+		
+	protected:
+		void glTwo() {
+			string geometryShader;
+			
+			
+			vertexShader = GLSL120(
+								   void main() {
+									   gl_Position = gl_Vertex;
+									   gl_FrontColor = gl_Color;
+								   }
+								   );
+			
+			fragmentShader = GLSL120(
+									 void main() {
+										 gl_FragColor = gl_Color;
+									 }
+									 );
+			
+			geometryShader = GLSL120GEO(
+										uniform sampler2DRect velocityTexture;
+										uniform sampler2DRect temperatureTexture;
+										uniform vec2 texResolution;
+										uniform float velocityScale;
+										uniform float temperatureScale;
+										uniform float arrowSize;
+										
+										void main(){
+									  
+											vec4 lineStart = gl_PositionIn[0];
+											vec2 uv = lineStart.xy * texResolution;
+											vec2 velocity = texture2DRect(velocityTexture, uv).xy * velocityScale;
+											if (length(velocity) > arrowSize)
+												velocity = normalize(velocity) * arrowSize;
+											vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
+											
+											float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
+											
+											float temperature = texture2DRect(temperatureTexture, uv).x * temperatureScale;
+											float warm = max(0.0, temperature);
+											float cold = max(0.0, -temperature);
+											float red = 1.0 - cold;
+											float green = 1.0 - cold - warm;
+											float blue = 1.0 - warm;
+											
+											vec4 color = vec4(red, green, blue, alpha);
+											
+											float arrowLength = 0.75 * length(velocity);
+											
+											vec2 nVel = normalize(velocity);
+											float arrowAngleA = atan(nVel.y, nVel.x) + 0.1;
+											float arrowAngleB = atan(nVel.y, nVel.x) - 0.1;
+											
+											vec4 arrowLineA = vec4(cos(arrowAngleA) ,sin(arrowAngleA), 0., 0.);
+											vec4 arrowLineB = vec4(cos(arrowAngleB) ,sin(arrowAngleB), 0., 0.);
+											arrowLineA = normalize(arrowLineA) * arrowLength;
+											arrowLineB = normalize(arrowLineB) * arrowLength;
+											vec4 arrowA = lineStart +arrowLineA;
+											vec4 arrowB = lineStart +arrowLineB;
+											
+											gl_Position = gl_ModelViewProjectionMatrix * lineStart;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											gl_Position = gl_ModelViewProjectionMatrix * arrowA;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											gl_Position = gl_ModelViewProjectionMatrix * arrowB;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											EndPrimitive();
+										}
+										);
+			
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
+			shader.setGeometryInputType(GL_POINTS);
+			shader.setGeometryOutputType(GL_LINE_STRIP);
+			shader.setGeometryOutputCount(5);
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			shader.linkProgram();
+			
+		}
+		
+		void glThree() {
+			
+			string geometryShader;
+			
+			vertexShader = GLSL150(
+								   uniform mat4 modelViewProjectionMatrix;
+								   uniform mat4 textureMatrix;
+								   
+								   in vec4	position;
+								   in vec2	texcoord;
+								   in vec4	color;
+								   
+								   out vec2 texCoordVarying;
+								   out vec4 colorVarying;
+								   
+								   void main()
+								   {
+									   colorVarying = color;
+									   gl_Position = position;
+								   }
+								   
+								   );
+			
+			geometryShader = GLSL150(
+									 uniform mat4 modelViewProjectionMatrix;
+									 uniform sampler2DRect velocityTexture;
+									 uniform sampler2DRect temperatureTexture;
+									 
+									 uniform vec2 texResolution;
+									 uniform float velocityScale;
+									 uniform float temperatureScale;
+									 uniform float arrowSize;
+									 
+									 layout (points) in;
+									 layout (line_strip) out;
+									 layout (max_vertices=5) out;
+									 
+									 out vec4 colorVarying;
+									 
+									 void main(){
+										 vec4 lineStart = gl_in[0].gl_Position;;
+										 
+										 vec2 uv = lineStart.xy * texResolution;
+										 vec2 velocity = texture(velocityTexture, uv).xy * velocityScale;
+										 if (length(velocity) > arrowSize)
+											 velocity = normalize(velocity) * arrowSize;
+										 vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
+										 
+										 float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
+										 
+										 float temperature = texture(temperatureTexture, uv).x * temperatureScale;
+										 float warm = max(0.0, temperature);
+										 float cold = max(0.0, -temperature);
+										 float red = 1.0 - cold;
+										 float green = 1.0 - cold - warm;
+										 float blue = 1.0 - warm;
+										 
+										 vec4 color = vec4(red, green, blue, alpha);
+										 
+										 float arrowLength = 0.75 * length(velocity);
+										 
+										 vec2 nVel = normalize(velocity);
+										 float arrowAngleA = atan(nVel.y, nVel.x) + 0.15;
+										 float arrowAngleB = atan(nVel.y, nVel.x) - 0.15;
+										 
+										 vec4 arrowLineA = vec4(cos(arrowAngleA) ,sin(arrowAngleA), 0., 0.);
+										 vec4 arrowLineB = vec4(cos(arrowAngleB) ,sin(arrowAngleB), 0., 0.);
+										 arrowLineA = normalize(arrowLineA) * arrowLength;
+										 arrowLineB = normalize(arrowLineB) * arrowLength;
+										 vec4 arrowA = lineStart +arrowLineA;
+										 vec4 arrowB = lineStart +arrowLineB;
+										 
+										 gl_Position = modelViewProjectionMatrix * lineStart;
+										 colorVarying = color;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 colorVarying = color;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * arrowA;
+										 colorVarying = color;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 colorVarying = color;
+										 EmitVertex();
+										 
+										 gl_Position =  modelViewProjectionMatrix * arrowB;
+										 colorVarying = color;
+										 EmitVertex();
+										 
+										 EndPrimitive();
+										 
+										}
+										);
+			
+			fragmentShader = GLSL150(
+									 in vec4 colorVarying;
+									 out vec4 fragColor;
+									 
+									 void main()
+									 {
+										 fragColor = colorVarying;
+									 }
+									 );
+			
+			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			shader.bindDefaults();
+			shader.linkProgram();
+		}
+		
+	public:
+		void update(ofVbo& _fieldVbo, ofTexture& _velocityTexture, ofTexture& _temperatureTexture, float _velocityScale, float _temperatureScale, float _arrowSize){
+			int width = _velocityTexture.getWidth();
+			int height = _velocityTexture.getHeight();
+			
+			shader.begin();
+			shader.setUniformTexture("velocityTexture", _velocityTexture,0);
+			shader.setUniformTexture("temperatureTexture", _temperatureTexture,1);
+			shader.setUniform2f("texResolution", width, height);
+			shader.setUniform1f("velocityScale", _velocityScale);
+			shader.setUniform1f("temperatureScale", _temperatureScale);
+			shader.setUniform1f("arrowSize", _arrowSize);
+			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
+			shader.end();
+		}
+	};
+}

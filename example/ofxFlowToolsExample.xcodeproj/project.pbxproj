@@ -76,6 +76,8 @@
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
 		0B0191441B330F400096AA43 /* ftDrawMouseForces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftDrawMouseForces.cpp; path = ../src/drawforces/ftDrawMouseForces.cpp; sourceTree = "<group>"; };
 		0B0191451B330F400096AA43 /* ftDrawMouseForces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftDrawMouseForces.h; path = ../src/drawforces/ftDrawMouseForces.h; sourceTree = "<group>"; };
+		0B0191491B3467AA0096AA43 /* ftVTFieldShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftVTFieldShader.h; path = ../src/visualisation/ftVTFieldShader.h; sourceTree = "<group>"; };
+		0B01914C1B346E820096AA43 /* ftVTField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftVTField.h; path = ../src/visualisation/ftVTField.h; sourceTree = "<group>"; };
 		0B504C8119D2CFB7003C6F85 /* ftFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftFbo.h; path = ../src/ftFbo.h; sourceTree = "<group>"; };
 		0B504C8219D2CFDD003C6F85 /* ftSwapBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftSwapBuffer.h; path = ../src/ftSwapBuffer.h; sourceTree = "<group>"; };
 		0B504C8419D2CFEE003C6F85 /* ftOpticalFlow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftOpticalFlow.cpp; path = ../src/opticalflow/ftOpticalFlow.cpp; sourceTree = "<group>"; };
@@ -305,6 +307,8 @@
 				0B504CAB19D2D04F003C6F85 /* ftTemperatureFieldShader.h */,
 				0B504CAC19D2D04F003C6F85 /* ftVelocityField.h */,
 				0B504CAD19D2D04F003C6F85 /* ftVelocityFieldShader.h */,
+				0B01914C1B346E820096AA43 /* ftVTField.h */,
+				0B0191491B3467AA0096AA43 /* ftVTFieldShader.h */,
 			);
 			name = visualisation;
 			sourceTree = "<group>";

@@ -41,3 +41,4 @@
 #include "ftVelocityField.h"
 #include "ftTemperatureField.h"
 #include "ftDisplayScalar.h"
+#include "ftVTField.h"

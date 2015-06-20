@@ -23,53 +23,50 @@ namespace flowTools {
 			string geometryShader;
 			
 			vertexShader = GLSL120(
-								void main() {
-									gl_Position = gl_Vertex;
-									gl_FrontColor = gl_Color;
-								}
-								);
+								   void main() {
+									   gl_Position = gl_Vertex;
+									   gl_FrontColor = gl_Color;
+								   }
+								   );
 			
 			fragmentShader = GLSL120(
-								  void main() {
-									  gl_FragColor = gl_Color;
-								  }
-								  );
+									 void main() {
+										 gl_FragColor = gl_Color;
+									 }
+									 );
 			
 			geometryShader = GLSL120GEO(
-								  uniform sampler2DRect fieldTexture;
-								  uniform vec2 texResolution;
-								  uniform float vectorSize;
-								  uniform float maxSize;
+										uniform sampler2DRect fieldTexture;
+										uniform vec2 texResolution;
+										uniform float vectorSize;
+										uniform float maxSize;
 								  
-								  void main(){
-									  
-								//	  for(int i = 0; i < gl_VerticesIn; i++){
-										  vec4 lineStart = gl_PositionIn[0];
-										  vec2 uv = lineStart.xy * texResolution;
-										  float line = texture2DRect(fieldTexture, uv).x * vectorSize;
-										  if (line > maxSize)
-											  line = maxSize;
-										  vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
-										  
-										  float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
-										  float red = max(0.0, line * 1000.);
-										  float blue = max(0.0, -line * 1000.);
-										  vec4 color = vec4(red, 0.0, blue, alpha);
-										  
-										  float arrowLength = 0.75 * line;
-										  
-										  gl_Position = gl_ModelViewProjectionMatrix * lineStart;
-										  gl_FrontColor = vec4(1.0,1.0,1.0,0.0);
-										  EmitVertex();
-										  
-										  gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
-										  gl_FrontColor = color;
-										  EmitVertex();
-										  
-										  EndPrimitive();
-								//	  }
-								  }
-								  );
+										void main(){
+											vec4 lineStart = gl_PositionIn[0];
+											vec2 uv = lineStart.xy * texResolution;
+											
+											float line = texture2DRect(fieldTexture, uv).x * vectorSize;
+											line = min(line, maxSize);
+											vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
+										 
+											float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
+											float red = max(0.0, line * 1000.);
+											float blue = max(0.0, -line * 1000.);
+											vec4 color = vec4(red, 0.0, blue, alpha);
+											
+											float arrowLength = 0.75 * line;
+											
+											gl_Position = gl_ModelViewProjectionMatrix * lineStart;
+											gl_FrontColor = vec4(1.0,1.0,1.0,0.0);
+											EmitVertex();
+											
+											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
+											gl_FrontColor = color;
+											EmitVertex();
+											
+											EndPrimitive();
+										}
+										);
 			
 			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
 			shader.setGeometryInputType(GL_POINTS);
@@ -85,90 +82,89 @@ namespace flowTools {
 			string geometryShader;
 			
 			vertexShader = GLSL150(
-								uniform mat4 modelViewProjectionMatrix;
-								uniform mat4 textureMatrix;
-								
-								in vec4 position;
-								in vec2	texcoord;
-								in vec4	color;
-								
-								out vec2 texCoordVarying;
-								out vec4 colorVarying;
-								
-								void main()
-								{
-									colorVarying = color;
-									gl_Position = position;
-								}
-								
-								);
+								   uniform mat4 modelViewProjectionMatrix;
+								   uniform mat4 textureMatrix;
+								   
+								   in vec4 position;
+								   in vec2	texcoord;
+								   in vec4	color;
+								   
+								   out vec2 texCoordVarying;
+								   out vec4 colorVarying;
+								   
+								   void main()
+								   {
+									   colorVarying = color;
+									   gl_Position = position;
+								   }
+								   
+								   );
 			
 			geometryShader = GLSL150(
-								  uniform mat4 modelViewProjectionMatrix;
-								  uniform sampler2DRect fieldTexture;
-								  uniform vec2 texResolution;
-								  uniform float vectorSize;
-								  uniform float maxSize;
-								  uniform float lineWidth;
-								  
-								  layout (points) in;
-								  layout (triangle_strip) out;
-								  layout (max_vertices=4) out;
-								  
-								  out vec4 colorVarying;
-								  
-								  void main(){
+									 uniform mat4 modelViewProjectionMatrix;
+									 uniform sampler2DRect fieldTexture;
+									 uniform vec2 texResolution;
+									 uniform float vectorSize;
+									 uniform float maxSize;
+									 uniform float lineWidth;
+									 
+									 layout (points) in;
+									 layout (triangle_strip) out;
+									 layout (max_vertices=4) out;
+									 
+									 out vec4 colorVarying;
+									 
+									 void main(){
+										 
+										 vec4 lineStart = gl_in[0].gl_Position;
+										 vec2 uv = lineStart.xy * texResolution;
+										 
+										 float line = texture(fieldTexture, uv).x * vectorSize;
+
+										 line = min(line, maxSize);
+										 vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
+										 
+										 float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
+										 float red = max(0.0, line * 1000.);
+										 float blue = max(0.0, -line * 1000.);
+										 vec4 color = vec4(red, 0.0, blue, alpha);
+										 
+										 float arrowLength = 0.75 * line;
+										 
+										 lineStart.x -= lineWidth * 0.5;
+										 gl_Position = modelViewProjectionMatrix * lineStart;
+										 colorVarying = vec4(1.0,1.0,1.0,0.0);
+										 EmitVertex();
+										 
+										 
+										 lineStart.x += lineWidth;
+										 gl_Position = modelViewProjectionMatrix * lineStart;
+										 colorVarying = vec4(1.0,1.0,1.0,0.0);
+										 EmitVertex();
+										 
+										 lineEnd.x -= lineWidth * 0.5;
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 colorVarying= color;
+										 EmitVertex();
 									  
-									  vec4 lineStart = gl_in[0].gl_Position;;
+										 lineEnd.x += lineWidth;
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 colorVarying= color;
+										 EmitVertex();
 									  
-									  vec2 uv = lineStart.xy * texResolution;
-									  float line = texture(fieldTexture, uv).x * vectorSize;
-									  if (line > maxSize)
-										  line = maxSize;
-									  vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
-									  
-									  float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
-									  float red = max(0.0, line * 1000.);
-									  float blue = max(0.0, -line * 1000.);
-									  vec4 color = vec4(red, 0.0, blue, alpha);
-									  
-									  float arrowLength = 0.75 * line;
-									  
-									  lineStart.x -= lineWidth * 0.5;
-									  gl_Position = modelViewProjectionMatrix * lineStart;
-									  colorVarying = vec4(1.0,1.0,1.0,0.0);
-									  EmitVertex();
-									  
-									  
-									  lineStart.x += lineWidth;
-									  gl_Position = modelViewProjectionMatrix * lineStart;
-									  colorVarying = vec4(1.0,1.0,1.0,0.0);
-									  EmitVertex();
-									  
-									  lineEnd.x -= lineWidth * 0.5;
-									  gl_Position = modelViewProjectionMatrix * lineEnd;
-									  colorVarying= color;
-									  EmitVertex();
-									  
-									  lineEnd.x += lineWidth;
-									  gl_Position = modelViewProjectionMatrix * lineEnd;
-									  colorVarying= color;
-									  EmitVertex();
-									  
-									  EndPrimitive();
-								  }
-								  );
+										 EndPrimitive();
+									 }
+									 );
 			
 			fragmentShader = GLSL150(
-								  
-								  in vec4 colorVarying;
-								  out vec4 fragColor;
-								  
-								  void main()
-								  {
-									  fragColor = colorVarying;
-								  }
-								  );
+									 in vec4 colorVarying;
+									 out vec4 fragColor;
+									 
+									 void main()
+									 {
+										 fragColor = colorVarying;
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);

@@ -4,7 +4,7 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 
-#define USE_PROGRAMMABLE_GL					// Maybe there is a reason you would want to
+//#define USE_PROGRAMMABLE_GL					// Maybe there is a reason you would want to
 //#define USE_FASTER_INTERNAL_FORMATS			// about 15% faster but gives errors from ofGLUtils
 
 using namespace flowTools;
@@ -70,17 +70,18 @@ public:
 	ftDisplayScalar		displayScalar;
 	ftVelocityField		velocityField;
 	ftTemperatureField	temperatureField;
+	ftVTField			velocityTemperatureField;
 	
 	ofParameter<bool>	showScalar;
 	ofParameter<bool>	showField;
 	ofParameter<float>	displayScalarScale;
 	void				setDisplayScalarScale(float& _value) { displayScalar.setScale(_value); }
-	ofParameter<float>	velocityFieldArrowScale;
-	void				setVelocityFieldArrowScale(float& _value) { velocityField.setVectorSize(_value); }
+	ofParameter<float>	velocityFieldScale;
+	void				setVelocityFieldArrowScale(float& _value) { velocityField.setVelocityScale(_value); velocityTemperatureField.setVelocityScale(_value); }
 	ofParameter<bool>	velocityLineSmooth;
-	void				setVelocityLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); }
-	ofParameter<float>	temperatureFieldBarScale;
-	void				setTemperatureFieldBarScale(float& _value) { temperatureField.setVectorSize(_value); }
+	void				setVelocityLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); velocityTemperatureField.setLineSmooth(_value);  }
+	ofParameter<float>	temperatureFieldScale;
+	void				setTemperatureFieldBarScale(float& _value) { temperatureField.setTemperatureScale(_value); velocityTemperatureField.setTemperatureScale(_value); }
 	
 	// GUI
 	ofxPanel			gui;

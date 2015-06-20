@@ -32,6 +32,7 @@ void flowToolsApp::setup(){
 	displayScalar.setup(flowWidth, flowHeight);
 	velocityField.setup(flowWidth / 4, flowHeight / 4);
 	temperatureField.setup(flowWidth / 4, flowHeight / 4);
+	velocityTemperatureField.setup(flowWidth / 4, flowHeight / 4);
 	
 	// MOUSE DRAW
 	mouseDrawForces.setup(flowWidth, flowHeight, drawWidth, drawHeight);
@@ -110,11 +111,11 @@ void flowToolsApp::setupGui() {
 	visualizeParameters.add(showField.set("show field", true));
 	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.15, 0.05, 0.5));
 	displayScalarScale.addListener(this, &flowToolsApp::setDisplayScalarScale);
-	visualizeParameters.add(velocityFieldArrowScale.set("arrow scale", 0.1, 0.0, 0.5));
-	velocityFieldArrowScale.addListener(this, &flowToolsApp::setVelocityFieldArrowScale);
+	visualizeParameters.add(velocityFieldScale.set("velocity scale", 0.1, 0.0, 0.5));
+	velocityFieldScale.addListener(this, &flowToolsApp::setVelocityFieldArrowScale);
 	visualizeParameters.add(velocityLineSmooth.set("arrow smooth", false));
-	visualizeParameters.add(temperatureFieldBarScale.set("temperature scale", 0.25, 0.05, 0.5));
-	temperatureFieldBarScale.addListener(this, &flowToolsApp::setTemperatureFieldBarScale);
+	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.25, 0.05, 0.5));
+	temperatureFieldScale.addListener(this, &flowToolsApp::setTemperatureFieldBarScale);
 	velocityLineSmooth.addListener(this, &flowToolsApp::setVelocityLineSmooth);
 	
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
@@ -332,14 +333,14 @@ void flowToolsApp::drawParticles(int _x, int _y, int _width, int _height) {
 void flowToolsApp::drawFluidDensity(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	fluidSimulation.draw(_x, _y, _width, _height);
+	
+	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	if (particleFlow.isActive())
-		particleFlow.draw(_x, _y, _width, _height);
-	if (showLogo) {
-		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-		ofSetColor(255,255,255,255);
-		flowToolsLogoImage.draw(_x, _y, _width, _height);
-	}
+	velocityTemperatureField.setVelocity(fluidSimulation.getVelocity());
+	velocityTemperatureField.setTemperature(fluidSimulation.getPressure());
+	velocityTemperatureField.draw(_x, _y, _width, _height);
+	
+	
 	ofPopStyle();}
 
 //--------------------------------------------------------------
@@ -352,7 +353,7 @@ void flowToolsApp::drawFluidVelocity(int _x, int _y, int _width, int _height) {
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		velocityField.setSource(fluidSimulation.getVelocity());
+		velocityField.setVelocity(fluidSimulation.getVelocity());
 		velocityField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
@@ -368,7 +369,7 @@ void flowToolsApp::drawFluidPressure(int _x, int _y, int _width, int _height) {
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		temperatureField.setSource(fluidSimulation.getPressure());
+		temperatureField.setTemperature(fluidSimulation.getPressure());
 		temperatureField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
@@ -384,7 +385,7 @@ void flowToolsApp::drawFluidTemperature(int _x, int _y, int _width, int _height)
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		temperatureField.setSource(fluidSimulation.getTemperature());
+		temperatureField.setTemperature(fluidSimulation.getTemperature());
 		temperatureField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
@@ -400,7 +401,7 @@ void flowToolsApp::drawFluidDivergence(int _x, int _y, int _width, int _height) 
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		temperatureField.setSource(fluidSimulation.getDivergence());
+		temperatureField.setTemperature(fluidSimulation.getDivergence());
 		temperatureField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();}
@@ -416,7 +417,7 @@ void flowToolsApp::drawFluidVorticity(int _x, int _y, int _width, int _height) {
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		ofSetColor(255, 255, 255, 255);
-		velocityField.setSource(fluidSimulation.getConfinement());
+		velocityField.setVelocity(fluidSimulation.getConfinement());
 		velocityField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();}
@@ -431,7 +432,7 @@ void flowToolsApp::drawFluidBuoyance(int _x, int _y, int _width, int _height) {
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		velocityField.setSource(fluidSimulation.getSmokeBuoyancy());
+		velocityField.setVelocity(fluidSimulation.getSmokeBuoyancy());
 		velocityField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
@@ -466,7 +467,7 @@ void flowToolsApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		velocityField.setSource(opticalFlow.getOpticalFlowDecay());
+		velocityField.setVelocity(opticalFlow.getOpticalFlowDecay());
 		velocityField.draw(0, 0, _width, _height);
 	}
 	ofPopStyle();
@@ -487,10 +488,12 @@ void flowToolsApp::drawMouseDraw(int _index, int _x, int _y, int _width, int _he
 	if (mouseDrawForces.didChange(_index)) {
 		ftDrawForceType dinges = mouseDrawForces.getType(_index);
 		
+		
 		switch (mouseDrawForces.getType(_index)) {
 			case FT_DENSITY:
 				ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 				mouseDrawForces.getTextureReference(_index).draw(_x, _y, _width, _height);
+				
 				break;
 			case FT_VELOCITY:
 				if (showScalar.get()) {
@@ -500,7 +503,7 @@ void flowToolsApp::drawMouseDraw(int _index, int _x, int _y, int _width, int _he
 				}
 				if (showField.get()) {
 					ofEnableBlendMode(OF_BLENDMODE_ADD);
-					velocityField.setSource(mouseDrawForces.getTextureReference(_index));
+					velocityField.setVelocity(mouseDrawForces.getTextureReference(_index));
 					velocityField.draw(_x, _y, _width, _height);
 				}
 				break;
@@ -512,7 +515,7 @@ void flowToolsApp::drawMouseDraw(int _index, int _x, int _y, int _width, int _he
 				}
 				if (showField.get()) {
 					ofEnableBlendMode(OF_BLENDMODE_ADD);
-					temperatureField.setSource(mouseDrawForces.getTextureReference(_index));
+					temperatureField.setTemperature(mouseDrawForces.getTextureReference(_index));
 					temperatureField.draw(_x, _y, _width, _height);
 				}
 				break;
@@ -524,7 +527,7 @@ void flowToolsApp::drawMouseDraw(int _index, int _x, int _y, int _width, int _he
 				}
 				if (showField.get()) {
 					ofEnableBlendMode(OF_BLENDMODE_ADD);
-					temperatureField.setSource(mouseDrawForces.getTextureReference(_index));
+					temperatureField.setTemperature(mouseDrawForces.getTextureReference(_index));
 					temperatureField.draw(_x, _y, _width, _height);
 				}
 				break;

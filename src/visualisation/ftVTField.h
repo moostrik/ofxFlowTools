@@ -2,11 +2,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftVelocityFieldShader.h"
+#include "ftVTFieldShader.h"
 
 namespace flowTools {
 	
-	class ftVelocityField {
+	class ftVTField {
 	public:
 		
 		void	setup(int _width, int _height){
@@ -25,7 +25,7 @@ namespace flowTools {
 			
 			parameters.setName("velocity field");
 			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
-			parameters.add(arrowLength.set("maxSize", 1, 0, 1));
+			parameters.add(temperatureScale.set("temperature scale", .1, 0, 2));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -42,7 +42,8 @@ namespace flowTools {
 			}
 			
 			ofScale(_width, _height);
-			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), arrowLength.get());
+			float arrowLength =  1.0 / (width + 1);
+			velocityTemperatureFieldShader.update(fieldVbo, *velocityTexture, *temperatureTexture, velocityScale.get(), temperatureScale.get(), arrowLength);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -54,12 +55,13 @@ namespace flowTools {
 		}
 		
 		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
+		void	setTemperature(ofTexture& tex)		{ temperatureTexture = &tex; }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
-		void	setArrowLength(float _value)		{ arrowLength.set(_value); }
+		void	setTemperatureScale(float _value)	{ temperatureScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
 		float	getVelocityScale()					{ return velocityScale.get(); }
-		float	getArrowLength()					{ return arrowLength.get(); }
+		float	getTemperatureScale()				{ return temperatureScale.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
@@ -71,15 +73,15 @@ namespace flowTools {
 		int		height;
 		
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
-		ofParameter<float>	arrowLength;		// max arrow length
+		ofParameter<float>	temperatureScale;	// scale to normalize temperature
 		ofParameter<bool>	lineSmooth;
-
 		
 		ofMesh		fieldMesh;
 		ofTexture*	velocityTexture;
+		ofTexture*	temperatureTexture;
 		ofVbo		fieldVbo;
 		
-		ftVelocityFieldShader velocityFieldShader;
+		ftVTFieldShader velocityTemperatureFieldShader;
 		
 	};
 }

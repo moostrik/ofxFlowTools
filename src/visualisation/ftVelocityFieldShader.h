@@ -105,96 +105,88 @@ namespace flowTools {
 			string geometryShader;
 			
 			vertexShader = GLSL150(
-								uniform mat4 modelViewProjectionMatrix;
-								uniform mat4 textureMatrix;
-								
-								in vec4 position;
-								in vec2	texcoord;
-								in vec4	color;
-								
-								out vec2 texCoordVarying;
-								out vec4 colorVarying;
-								
-								void main()
-								{
-									colorVarying = color;
-									gl_Position = position;
-								}
-								
-								);
+								   uniform mat4 modelViewProjectionMatrix;
+								   uniform mat4 textureMatrix;
+								   
+								   in vec4 position;
+								   in vec2	texcoord;
+								   in vec4	color;
+								   
+								   out vec2 texCoordVarying;
+								   out vec4 colorVarying;
+								   
+								   void main()
+								   {
+									   colorVarying = color;
+									   gl_Position = position;
+								   }
+								   
+								   );
 			
 			geometryShader = GLSL150(
-								  uniform mat4 modelViewProjectionMatrix;
-								  uniform sampler2DRect fieldTexture;
-								  uniform vec2 texResolution;
-								  uniform float vectorSize;
-								  uniform float maxSize;
-								  
-								  layout (points) in;
-								  layout (line_strip) out;
-								  layout (max_vertices=5) out;
-								  
-								  void main(){
-									  
-									  vec4 lineStart = gl_in[0].gl_Position;;
-									  
-									  
-									  vec2 uv = lineStart.xy * texResolution;
-											   vec2 line = texture(fieldTexture, uv).xy * vectorSize;
-											   if (length(line) > maxSize)
-												   line = normalize(line) * maxSize;
-											   vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
-											   
-											   float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxSize);
-											   vec4 color = vec4(1.0, 1.0, 1.0, alpha);
-											   
-											   float arrowLength = 0.75 * length(line);
-											   
-											   vec2 nLine = normalize(line);
-											   float arrowAngleA = atan(nLine.y, nLine.x) + 0.1;
-											   float arrowAngleB = atan(nLine.y, nLine.x) - 0.1;
-											   
-											   vec4 arrowLineA = vec4(cos(arrowAngleA) ,sin(arrowAngleA), 0., 0.);
-											   vec4 arrowLineB = vec4(cos(arrowAngleB) ,sin(arrowAngleB), 0., 0.);
-											   arrowLineA = normalize(arrowLineA) * arrowLength;
-											   arrowLineB = normalize(arrowLineB) * arrowLength;
-											   vec4 arrowA = lineStart +arrowLineA;
-											   vec4 arrowB = lineStart +arrowLineB;
-											   
-											   gl_Position = modelViewProjectionMatrix * lineStart;
-											//   gl_FrontColor = color;
-											   EmitVertex();
-											   
-											   gl_Position = modelViewProjectionMatrix * lineEnd;
-											//   gl_FrontColor = color;
-											   EmitVertex();
-											   
-											   gl_Position = modelViewProjectionMatrix * arrowA;
-											//   gl_FrontColor = color;
-											   EmitVertex();
-											   
-											   gl_Position = modelViewProjectionMatrix * lineEnd;
-											//   gl_FrontColor = color;
-											   EmitVertex();
-											   
-											   gl_Position =  modelViewProjectionMatrix * arrowB;
-											//   gl_FrontColor = color;
-											   EmitVertex();
-											   
-											   EndPrimitive();
-										   
-									   
-									   }
-								  );
+									 uniform mat4 modelViewProjectionMatrix;
+									 uniform sampler2DRect fieldTexture;
+									 uniform vec2 texResolution;
+									 uniform float vectorSize;
+									 uniform float maxSize;
+									
+									 layout (points) in;
+									 layout (line_strip) out;
+									 layout (max_vertices=5) out;
+									 
+									 void main(){
+										 vec4 lineStart = gl_in[0].gl_Position;;
+										 
+										 vec2 uv = lineStart.xy * texResolution;
+										 vec2 line = texture(fieldTexture, uv).xy * vectorSize;
+										 if (length(line) > maxSize)
+											 line = normalize(line) * maxSize;
+										 vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
+										 
+										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxSize);
+										 vec4 color = vec4(1.0, 1.0, 1.0, alpha);
+										 
+										 float arrowLength = 0.75 * length(line);
+										 
+										 vec2 nLine = normalize(line);
+										 float arrowAngleA = atan(nLine.y, nLine.x) + 0.1;
+										 float arrowAngleB = atan(nLine.y, nLine.x) - 0.1;
+										 
+										 vec4 arrowLineA = vec4(cos(arrowAngleA) ,sin(arrowAngleA), 0., 0.);
+										 vec4 arrowLineB = vec4(cos(arrowAngleB) ,sin(arrowAngleB), 0., 0.);
+										 arrowLineA = normalize(arrowLineA) * arrowLength;
+										 arrowLineB = normalize(arrowLineB) * arrowLength;
+										 vec4 arrowA = lineStart +arrowLineA;
+										 vec4 arrowB = lineStart +arrowLineB;
+										 
+										 gl_Position = modelViewProjectionMatrix * lineStart;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * arrowA;
+										 EmitVertex();
+										 
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 EmitVertex();
+										 
+										 gl_Position =  modelViewProjectionMatrix * arrowB;
+										 EmitVertex();
+										 
+										 EndPrimitive();
+										 
+										}
+										);
 			
 			fragmentShader = GLSL150(
-								  out vec4 fragColor;
-								  
-								  void main()
-								  {
-									  fragColor = vec4(1.0,1.0,1.0,1.0);
-								  }
-								  );
+									 out vec4 fragColor;
+									 
+									 void main()
+									 {
+										 fragColor = vec4(1.0,1.0,1.0,1.0);
+									 }
+									 );
 			
 			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);

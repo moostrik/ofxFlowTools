@@ -9,11 +9,17 @@ namespace flowTools {
 	class ftVTFieldShader : public ftShader {
 	public:
 		ftVTFieldShader() {
+			bInitialized = 1;
 			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftVTFieldShader initialized");
+			else
+				ofLogWarning("ftVTFieldShader failed to initialize");
 		}
 		
 	protected:
@@ -54,8 +60,8 @@ namespace flowTools {
 											float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
 											
 											float temperature = texture2DRect(temperatureTexture, uv).x * temperatureScale;
-											float warm = max(0.0, temperature);
-											float cold = max(0.0, -temperature);
+											float warm = pow(max(0.0, temperature), 0.5);
+											float cold = pow(max(0.0, -temperature), 0.5);
 											float red = 1.0 - cold;
 											float green = 1.0 - cold - warm;
 											float blue = 1.0 - warm;
@@ -65,8 +71,8 @@ namespace flowTools {
 											float arrowLength = 0.75 * length(velocity);
 											
 											vec2 nVel = normalize(velocity);
-											float arrowAngleA = atan(nVel.y, nVel.x) + 0.1;
-											float arrowAngleB = atan(nVel.y, nVel.x) - 0.1;
+											float arrowAngleA = atan(nVel.y, nVel.x) + 0.2;
+											float arrowAngleB = atan(nVel.y, nVel.x) - 0.2;
 											
 											vec4 arrowLineA = vec4(cos(arrowAngleA) ,sin(arrowAngleA), 0., 0.);
 											vec4 arrowLineB = vec4(cos(arrowAngleB) ,sin(arrowAngleB), 0., 0.);
@@ -87,11 +93,11 @@ namespace flowTools {
 											gl_FrontColor = color;
 											EmitVertex();
 											
-											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
+											gl_Position = gl_ModelViewProjectionMatrix * arrowB;
 											gl_FrontColor = color;
 											EmitVertex();
 											
-											gl_Position = gl_ModelViewProjectionMatrix * arrowB;
+											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
 											gl_FrontColor = color;
 											EmitVertex();
 											
@@ -103,10 +109,10 @@ namespace flowTools {
 			shader.setGeometryInputType(GL_POINTS);
 			shader.setGeometryOutputType(GL_LINE_STRIP);
 			shader.setGeometryOutputCount(5);
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.linkProgram();
 			
 		}
 		
@@ -161,8 +167,8 @@ namespace flowTools {
 										 float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
 										 
 										 float temperature = texture(temperatureTexture, uv).x * temperatureScale;
-										 float warm = max(0.0, temperature);
-										 float cold = max(0.0, -temperature);
+										 float warm = pow(max(0.0, temperature), 0.5);
+										 float cold = pow(max(0.0, -temperature), 0.5);
 										 float red = 1.0 - cold;
 										 float green = 1.0 - cold - warm;
 										 float blue = 1.0 - warm;
@@ -194,11 +200,11 @@ namespace flowTools {
 										 colorVarying = color;
 										 EmitVertex();
 										 
-										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 gl_Position =  modelViewProjectionMatrix * arrowB;
 										 colorVarying = color;
 										 EmitVertex();
 										 
-										 gl_Position =  modelViewProjectionMatrix * arrowB;
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
 										 colorVarying = color;
 										 EmitVertex();
 										 
@@ -217,11 +223,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

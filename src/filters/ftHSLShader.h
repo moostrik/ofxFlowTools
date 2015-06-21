@@ -9,13 +9,17 @@ namespace flowTools {
 	class ftHSLShader : public ftShader {
 	public:
 		ftHSLShader(){
-			
-			ofLogVerbose("init ftHSLShader");
+			bInitialized = 1;
 			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftHSLShader initialized");
+			else
+				ofLogWarning("ftHSLShader failed to initialize");
 		}
 		
 	protected:
@@ -111,8 +115,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -211,10 +215,10 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

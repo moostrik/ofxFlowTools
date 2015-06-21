@@ -4,6 +4,7 @@
 void flowToolsApp::setup(){
 	
 	ofSetVerticalSync(false);
+	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	drawWidth = 1280 / 2;
 	drawHeight = 720 / 2;
@@ -32,6 +33,7 @@ void flowToolsApp::setup(){
 	displayScalar.setup(flowWidth, flowHeight);
 	velocityField.setup(flowWidth / 4, flowHeight / 4);
 	temperatureField.setup(flowWidth / 4, flowHeight / 4);
+	pressureField.setup(flowWidth / 4, flowHeight / 4);
 	velocityTemperatureField.setup(flowWidth / 4, flowHeight / 4);
 	
 	// MOUSE DRAW
@@ -113,10 +115,12 @@ void flowToolsApp::setupGui() {
 	displayScalarScale.addListener(this, &flowToolsApp::setDisplayScalarScale);
 	visualizeParameters.add(velocityFieldScale.set("velocity scale", 0.1, 0.0, 0.5));
 	velocityFieldScale.addListener(this, &flowToolsApp::setVelocityFieldArrowScale);
-	visualizeParameters.add(velocityLineSmooth.set("arrow smooth", false));
-	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.25, 0.05, 0.5));
-	temperatureFieldScale.addListener(this, &flowToolsApp::setTemperatureFieldBarScale);
+	visualizeParameters.add(velocityLineSmooth.set("line smooth", false));
 	velocityLineSmooth.addListener(this, &flowToolsApp::setVelocityLineSmooth);
+	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.25, 0.0, 0.5));
+	temperatureFieldScale.addListener(this, &flowToolsApp::setTemperatureFieldScale);
+	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.25, 0.0, 0.5));
+	pressureFieldScale.addListener(this, &flowToolsApp::setPressureFieldScale);
 	
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
@@ -335,11 +339,12 @@ void flowToolsApp::drawFluidDensity(int _x, int _y, int _width, int _height) {
 	fluidSimulation.draw(_x, _y, _width, _height);
 	
 	
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	pressureField.setPressure(fluidSimulation.getPressure());
+	pressureField.draw(_x, _y, _width, _height);
 	velocityTemperatureField.setVelocity(fluidSimulation.getVelocity());
 	velocityTemperatureField.setTemperature(fluidSimulation.getPressure());
 	velocityTemperatureField.draw(_x, _y, _width, _height);
-	
 	
 	ofPopStyle();}
 

@@ -38,7 +38,8 @@
 #include "ftDrawForce.h"
 #include "ftDrawMouseForces.h"
 
+#include "ftDisplayScalar.h"
 #include "ftVelocityField.h"
 #include "ftTemperatureField.h"
-#include "ftDisplayScalar.h"
+#include "ftPressureField.h"
 #include "ftVTField.h"

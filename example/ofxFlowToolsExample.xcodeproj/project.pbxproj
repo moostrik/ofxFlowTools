@@ -13,6 +13,7 @@
 		0B504C9619D2D008003C6F85 /* ftFluidSimulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C8F19D2D008003C6F85 /* ftFluidSimulation.cpp */; };
 		0B504C9A19D2D01F003C6F85 /* ftDrawForce.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C9719D2D01F003C6F85 /* ftDrawForce.cpp */; };
 		0B504CA119D2D02E003C6F85 /* ftParticleFlow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B504C9F19D2D02E003C6F85 /* ftParticleFlow.cpp */; };
+		0B64F2381B35FE5400EA8DAF /* ftAverageVelocity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0B64F2361B35FE5400EA8DAF /* ftAverageVelocity.cpp */; };
 		0BF6237E196415F3009CF385 /* flowToolsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0BF6237C196415F3009CF385 /* flowToolsApp.cpp */; };
 		1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 907C5B5E104864A2D3A25745 /* ofxToggle.cpp */; };
 		483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78D67A00EB899FAC09430597 /* ofxLabel.cpp */; };
@@ -124,6 +125,10 @@
 		0B504CB219D2D05C003C6F85 /* ftLuminanceShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftLuminanceShader.h; path = ../src/filters/ftLuminanceShader.h; sourceTree = "<group>"; };
 		0B504CB319D2D05C003C6F85 /* ftTimeBlurShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftTimeBlurShader.h; path = ../src/filters/ftTimeBlurShader.h; sourceTree = "<group>"; };
 		0B504CB419D2D095003C6F85 /* ftShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftShader.h; path = ../src/ftShader.h; sourceTree = "<group>"; };
+		0B64F2301B35F9A200EA8DAF /* ftPressureFieldShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftPressureFieldShader.h; path = ../src/visualisation/ftPressureFieldShader.h; sourceTree = "<group>"; };
+		0B64F2311B35F9B800EA8DAF /* ftPressureField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftPressureField.h; path = ../src/visualisation/ftPressureField.h; sourceTree = "<group>"; };
+		0B64F2361B35FE5400EA8DAF /* ftAverageVelocity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftAverageVelocity.cpp; path = ../src/tools/ftAverageVelocity.cpp; sourceTree = "<group>"; };
+		0B64F2371B35FE5400EA8DAF /* ftAverageVelocity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftAverageVelocity.h; path = ../src/tools/ftAverageVelocity.h; sourceTree = "<group>"; };
 		0BF04FF51B31746200A5BA58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0BF04FF61B31782300A5BA58 /* ftRedToLuminanceShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftRedToLuminanceShader.h; path = ../src/tools/ftRedToLuminanceShader.h; sourceTree = "<group>"; };
 		0BF6237C196415F3009CF385 /* flowToolsApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flowToolsApp.cpp; sourceTree = "<group>"; };
@@ -226,6 +231,8 @@
 		3E0BEA91E6C334443DC7B073 /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				0B64F2361B35FE5400EA8DAF /* ftAverageVelocity.cpp */,
+				0B64F2371B35FE5400EA8DAF /* ftAverageVelocity.h */,
 				0BF04FF61B31782300A5BA58 /* ftRedToLuminanceShader.h */,
 				0B504CA219D2D041003C6F85 /* ftAddForceShader.h */,
 				0B504CA319D2D041003C6F85 /* ftClampLengthShader.h */,
@@ -303,10 +310,12 @@
 			children = (
 				0B504CA819D2D04F003C6F85 /* ftDisplayScalar.h */,
 				0B504CA919D2D04F003C6F85 /* ftDisplayScalarShader.h */,
-				0B504CAA19D2D04F003C6F85 /* ftTemperatureField.h */,
-				0B504CAB19D2D04F003C6F85 /* ftTemperatureFieldShader.h */,
 				0B504CAC19D2D04F003C6F85 /* ftVelocityField.h */,
 				0B504CAD19D2D04F003C6F85 /* ftVelocityFieldShader.h */,
+				0B504CAA19D2D04F003C6F85 /* ftTemperatureField.h */,
+				0B504CAB19D2D04F003C6F85 /* ftTemperatureFieldShader.h */,
+				0B64F2311B35F9B800EA8DAF /* ftPressureField.h */,
+				0B64F2301B35F9A200EA8DAF /* ftPressureFieldShader.h */,
 				0B01914C1B346E820096AA43 /* ftVTField.h */,
 				0B0191491B3467AA0096AA43 /* ftVTFieldShader.h */,
 			);
@@ -538,6 +547,7 @@
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
+				0B64F2381B35FE5400EA8DAF /* ftAverageVelocity.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,

@@ -70,6 +70,7 @@ public:
 	ftDisplayScalar		displayScalar;
 	ftVelocityField		velocityField;
 	ftTemperatureField	temperatureField;
+	ftPressureField		pressureField;
 	ftVTField			velocityTemperatureField;
 	
 	ofParameter<bool>	showScalar;
@@ -81,7 +82,9 @@ public:
 	ofParameter<bool>	velocityLineSmooth;
 	void				setVelocityLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); velocityTemperatureField.setLineSmooth(_value);  }
 	ofParameter<float>	temperatureFieldScale;
-	void				setTemperatureFieldBarScale(float& _value) { temperatureField.setTemperatureScale(_value); velocityTemperatureField.setTemperatureScale(_value); }
+	void				setTemperatureFieldScale(float& _value) { temperatureField.setTemperatureScale(_value); velocityTemperatureField.setTemperatureScale(_value); }
+	ofParameter<float>	pressureFieldScale;
+	void				setPressureFieldScale(float& _value) { pressureField.setPressureScale(_value); }
 	
 	// GUI
 	ofxPanel			gui;

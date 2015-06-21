@@ -9,11 +9,17 @@ namespace flowTools {
 	class ftVelocityFieldShader : public ftShader {
 	public:
 		ftVelocityFieldShader() {
+			bInitialized = 1;
 			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftVelocityFieldShader initialized");
+			else
+				ofLogWarning("ftVelocityFieldShader failed to initialize");
 		}
 		
 	protected:
@@ -93,10 +99,10 @@ namespace flowTools {
 			shader.setGeometryInputType(GL_POINTS);
 			shader.setGeometryOutputType(GL_LINE_STRIP);
 			shader.setGeometryOutputCount(5);
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -188,11 +194,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 	
 	public:	

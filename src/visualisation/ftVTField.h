@@ -76,9 +76,9 @@ namespace flowTools {
 		ofParameter<float>	temperatureScale;	// scale to normalize temperature
 		ofParameter<bool>	lineSmooth;
 		
-		ofMesh		fieldMesh;
 		ofTexture*	velocityTexture;
 		ofTexture*	temperatureTexture;
+		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		
 		ftVTFieldShader velocityTemperatureFieldShader;

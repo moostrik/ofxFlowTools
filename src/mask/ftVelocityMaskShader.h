@@ -10,11 +10,17 @@ namespace flowTools {
 	class ftVelocityMaskShader : public ftShader {
 	public:
 		ftVelocityMaskShader() {
-			ofLogVerbose("init ftVelocityMaskShader");
+			bInitialized = 1;
+			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftVelocityMaskShader initialized");
+			else
+				ofLogWarning("ftVelocityMaskShader failed to initialize");
 			}
 		
 	protected:
@@ -41,8 +47,8 @@ namespace flowTools {
 								  
 								  );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 			
 		}
 		
@@ -73,10 +79,10 @@ namespace flowTools {
 								  
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

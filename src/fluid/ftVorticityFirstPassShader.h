@@ -9,12 +9,17 @@ namespace flowTools {
 	class ftVorticityFirstPassShader : public ftShader {
 	public:
 		ftVorticityFirstPassShader() {
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftVorticityFirstPassShader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftVorticityFirstPassShader initialized");
+			else
+				ofLogWarning("ftVorticityFirstPassShader failed to initialize");
 		}
 		
 	protected:
@@ -61,8 +66,8 @@ namespace flowTools {
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -113,10 +118,10 @@ namespace flowTools {
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

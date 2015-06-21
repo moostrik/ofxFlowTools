@@ -12,14 +12,19 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		ftTimeBlurShader(){
-			ofLogVerbose("init ftTimeBlurShader");
-			
 			internalFormat = GL_RGBA;
+			
+			bInitialized = 1;
 			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftTimeBlurShader initialized");
+			else
+				ofLogWarning("ftTimeBlurShader failed to initialize");
 		}
 		
 	protected:
@@ -50,8 +55,8 @@ namespace flowTools {
 													   }
 													   );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL120(
 													 uniform sampler2DRect backbuffer;
@@ -79,8 +84,8 @@ namespace flowTools {
 													 }
 													 );
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].linkProgram();
 		}
 		
 		void glThree() {
@@ -114,9 +119,9 @@ namespace flowTools {
 													   }
 													   );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL150(
 													 uniform sampler2DRect backbuffer;
@@ -147,9 +152,9 @@ namespace flowTools {
 													 }
 													 );
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].linkProgram();
 			
 		}
 

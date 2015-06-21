@@ -26,7 +26,6 @@ namespace flowTools {
 			
 			parameters.setName("temperature field");
 			parameters.add(temperatureScale.set("temperature scale", .25, 0, 1));
-			parameters.add(maxSize.set("maxSize", 0.9 / height, 0, 1));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -43,7 +42,9 @@ namespace flowTools {
 			}
 						
 			ofScale(_width, _height);
-			temperatureFieldShader.update(fieldVbo, *temperatureTexture, temperatureScale.get(), maxSize.get());
+			float barHeight =  0.9 / height;
+			float barWidth = 5.0;
+			temperatureFieldShader.update(fieldVbo, *temperatureTexture, temperatureScale.get(), barHeight, barWidth);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -56,12 +57,9 @@ namespace flowTools {
 		
 		void	setTemperature(ofTexture& tex)		{ temperatureTexture = &tex; }
 		void	setTemperatureScale(float _value)	{ temperatureScale.set(_value); }
-		void	setMaxSize(float _value)			{ maxSize.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
-		void	setLineWidth(float _value)			{ lineWidth.set(_value); }
 		
 		float	getTemperatureScale()				{ return temperatureScale.get(); }
-		float	getLineWidth()						{ return lineWidth.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
@@ -74,12 +72,10 @@ namespace flowTools {
 		int		height;
 		
 		ofParameter<float>	temperatureScale;
-		ofParameter<float>	maxSize;
 		ofParameter<bool>	lineSmooth;
-		ofParameter<float>	lineWidth;
 		
-		ofMesh		fieldMesh;
 		ofTexture*	temperatureTexture;
+		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		
 		ftTemperatureFieldShader temperatureFieldShader;

@@ -25,7 +25,6 @@ namespace flowTools {
 			
 			parameters.setName("velocity field");
 			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
-			parameters.add(arrowLength.set("maxSize", 1, 0, 1));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -42,7 +41,8 @@ namespace flowTools {
 			}
 			
 			ofScale(_width, _height);
-			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), arrowLength.get());
+			float arrowLength =  1.0 / (width + 1);
+			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), arrowLength);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -55,11 +55,9 @@ namespace flowTools {
 		
 		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
-		void	setArrowLength(float _value)		{ arrowLength.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
 		float	getVelocityScale()					{ return velocityScale.get(); }
-		float	getArrowLength()					{ return arrowLength.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
@@ -71,12 +69,11 @@ namespace flowTools {
 		int		height;
 		
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
-		ofParameter<float>	arrowLength;		// max arrow length
 		ofParameter<bool>	lineSmooth;
 
 		
-		ofMesh		fieldMesh;
 		ofTexture*	velocityTexture;
+		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		
 		ftVelocityFieldShader velocityFieldShader;

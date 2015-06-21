@@ -8,12 +8,17 @@ namespace flowTools {
 	class ftContrastShader : public ftShader {
 	public:
 		ftContrastShader(){
-			ofLogVerbose("init ftContrastShader");
+			bInitialized = 1;
 			
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftContrastShader initialized");
+			else
+				ofLogWarning("ftContrastShader failed to initialize");
 		}
 		
 	protected:
@@ -35,8 +40,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 			
 		}
 		
@@ -62,10 +67,10 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 			
 		}
 		

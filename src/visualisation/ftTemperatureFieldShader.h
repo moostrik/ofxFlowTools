@@ -10,12 +10,17 @@ namespace flowTools {
 	class ftTemperatureFieldShader : public ftShader {
 	public:
 		ftTemperatureFieldShader() {
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftTemperatureFieldShader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftTemperatureFieldShader initialized");
+			else
+				ofLogWarning("ftTemperatureFieldShader failed to initialize");
 		}
 		
 	protected:
@@ -36,20 +41,20 @@ namespace flowTools {
 									 );
 			
 			geometryShader = GLSL120GEO(
-										uniform sampler2DRect fieldTexture;
+										uniform sampler2DRect temperatureTexture;
 										uniform vec2 texResolution;
-										uniform float vectorSize;
-										uniform float maxSize;
+										uniform float temperatureScale;
+										uniform float maxHeight;
 								  
 										void main(){
 											vec4 lineStart = gl_PositionIn[0];
 											vec2 uv = lineStart.xy * texResolution;
 											
-											float line = texture2DRect(fieldTexture, uv).x * vectorSize;
-											line = min(line, maxSize);
+											float line = texture2DRect(temperatureTexture, uv).x * temperatureScale;
+											line = min(line, maxHeight);
 											vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
 										 
-											float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
+											float alpha = 0.5 + 0.5 * (abs(line) / maxHeight);
 											float red = max(0.0, line * 1000.);
 											float blue = max(0.0, -line * 1000.);
 											vec4 color = vec4(red, 0.0, blue, alpha);
@@ -72,10 +77,10 @@ namespace flowTools {
 			shader.setGeometryInputType(GL_POINTS);
 			shader.setGeometryOutputType(GL_LINE_STRIP);
 			shader.setGeometryOutputCount(2);
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.linkProgram();
 		}
 		
 		void glThree() {
@@ -102,10 +107,10 @@ namespace flowTools {
 			
 			geometryShader = GLSL150(
 									 uniform mat4 modelViewProjectionMatrix;
-									 uniform sampler2DRect fieldTexture;
+									 uniform sampler2DRect temperatureTexture;
 									 uniform vec2 texResolution;
-									 uniform float vectorSize;
-									 uniform float maxSize;
+									 uniform float temperatureScale;
+									 uniform float maxHeight;
 									 uniform float lineWidth;
 									 
 									 layout (points) in;
@@ -119,12 +124,12 @@ namespace flowTools {
 										 vec4 lineStart = gl_in[0].gl_Position;
 										 vec2 uv = lineStart.xy * texResolution;
 										 
-										 float line = texture(fieldTexture, uv).x * vectorSize;
+										 float line = texture(temperatureTexture, uv).x * temperatureScale;
 
-										 line = min(line, maxSize);
+										 line = min(line, maxHeight);
 										 vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
 										 
-										 float alpha = 0.5 + 0.5 * (abs(line) / maxSize);
+										 float alpha = 0.5 + 0.5 * (abs(line) / maxHeight);
 										 float red = max(0.0, line * 1000.);
 										 float blue = max(0.0, -line * 1000.);
 										 vec4 color = vec4(red, 0.0, blue, alpha);
@@ -166,29 +171,28 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 
 		}
 		
 	public:
 		
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _vectorSize, float _maxSize){
-			int width = _floatTexture.getWidth();
-			int height = _floatTexture.getHeight();
-			
+		void update(ofVbo& _fieldVbo, ofTexture& _temperatureTexture, float _temperatureScale, float _barHeight, float _barWidth){
+			int width = _temperatureTexture.getWidth();
+			int height = _temperatureTexture.getHeight();
 			
 			shader.begin();
-			shader.setUniformTexture("fieldTexture", _floatTexture,0);
+			shader.setUniformTexture("temperatureTexture", _temperatureTexture,0);
 			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("vectorSize", _vectorSize / width * 10.0);
-			shader.setUniform1f("maxSize", _maxSize);
+			shader.setUniform1f("temperatureScale", _temperatureScale);
+			shader.setUniform1f("maxHeight", _barHeight);
 			
-			glLineWidth(5); // for openGL 2
-			shader.setUniform1f("lineWidth", 5.0 / ofGetWindowWidth());  // for openGL 3
+			glLineWidth(_barWidth); // for openGL 2
+			shader.setUniform1f("lineWidth", _barWidth / ofGetWindowWidth());  // for openGL 3
 			
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();

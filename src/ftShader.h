@@ -11,8 +11,8 @@ namespace flowTools {
 	class ftShader{
 	public:
 		ftShader() {
+			bInitialized = false;
 			
-			ofLogVerbose("init standard shader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
@@ -104,12 +104,11 @@ namespace flowTools {
 			quad.draw();
 		}
 		
-		
-		ofMesh quad;
-		
-		ofShader shader;
-		string fragmentShader;
-		string vertexShader;
+		ofMesh		quad;
+		ofShader	shader;
+		string		fragmentShader;
+		string		vertexShader;
+		bool		bInitialized;
 	};
 	
 }

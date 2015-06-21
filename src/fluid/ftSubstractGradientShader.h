@@ -9,12 +9,17 @@ namespace flowTools {
 	class ftSubstractGradient : public ftShader {
 	public:
 		ftSubstractGradient() {
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftSubstractGradient");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftSubstractGradient initialized");
+			else
+				ofLogWarning("ftSubstractGradient failed to initialize");
 		}
 		
 	protected:
@@ -59,8 +64,8 @@ namespace flowTools {
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -109,10 +114,10 @@ namespace flowTools {
 								  );
 			
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:		

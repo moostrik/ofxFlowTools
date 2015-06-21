@@ -10,12 +10,17 @@ namespace flowTools {
 	class ftAdvectShader : public ftShader {
 	public:
 		ftAdvectShader() {
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftAdvectShader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftAdvectShader initialized");
+			else
+				ofLogWarning("ftAdvectShader failed to initialize");
 		}
 		
 	protected:
@@ -45,8 +50,8 @@ namespace flowTools {
 								  
 								  );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -80,10 +85,10 @@ namespace flowTools {
 								  
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

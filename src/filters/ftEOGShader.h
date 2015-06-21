@@ -8,12 +8,17 @@ namespace flowTools {
 	class ftEOGShader : public ftShader {
 	public:
 		ftEOGShader(){
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftEOGShader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftEOGShader initialized");
+			else
+				ofLogWarning("ftEOGShader failed to initialize");
 		}
 		
 	protected:
@@ -31,8 +36,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 
 		}
 		
@@ -54,10 +59,10 @@ namespace flowTools {
 									 }
 									 );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

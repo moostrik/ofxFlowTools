@@ -10,12 +10,17 @@ namespace flowTools {
 	class ftDrawParticleShader : public ftShader {
 	public:
 		ftDrawParticleShader() {
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftDrawParticleShader");
 			if (ofGetGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftDrawParticleShader initialized");
+			else
+				ofLogWarning("ftDrawParticleShader failed to initialize");
 		}
 		
 	protected:
@@ -48,8 +53,8 @@ namespace flowTools {
 								   );
 			
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.linkProgram();
 
 			
 		}
@@ -116,10 +121,10 @@ namespace flowTools {
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 		}
 		
 	public:

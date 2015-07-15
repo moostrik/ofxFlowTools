@@ -60,8 +60,15 @@ namespace flowTools {
 											vec4 south = centre + vec4(-pressure, 0, 0, 0);
 											vec4 west  = centre + vec4(0, -pressure * aspectRatio, 0, 0);
 											
-											float brightness = 0.5 + (pressure / maxRadius) * 0.5;
-											vec4 color = vec4(vec3(brightness), 1);
+											float normalizedPressure = pressure / maxRadius;
+											float highPressure = pow(max(0.0, normalizedPressure), 0.5);
+											float lowPressure = pow(max(0.0, -normalizedPressure), 0.5);
+											float red = 1.0 - lowPressure;
+											float green = 1.0;
+											float blue = 1.0 - highPressure;
+											float alpha = 0.3 + 0.3 * (abs(normalizedPressure));
+											
+											vec4 color = vec4(red, green, blue, alpha);
 											
 											gl_Position = gl_ModelViewProjectionMatrix * north;
 											gl_FrontColor = color;
@@ -116,7 +123,7 @@ namespace flowTools {
 								   }
 								   
 								   );
-			
+
 			geometryShader = GLSL150(
 									 uniform mat4 modelViewProjectionMatrix;
 									 uniform sampler2DRect pressureTexture;
@@ -131,6 +138,7 @@ namespace flowTools {
 									 out vec4 colorVarying;
 									 
 									 void main(){
+										 
 										 vec4 centre = gl_in[0].gl_Position;
 										 vec2 uv = centre.xy * texResolution;
 										 
@@ -138,14 +146,21 @@ namespace flowTools {
 										 pressure = min(pressure, maxRadius);
 										 pressure = max(pressure, -maxRadius);
 										 float aspectRatio = texResolution.x / texResolution.y;
-										
+											
 										 vec4 north = centre + vec4(pressure, 0, 0, 0);
 										 vec4 east  = centre + vec4(0, pressure * aspectRatio, 0, 0);
 										 vec4 south = centre + vec4(-pressure, 0, 0, 0);
 										 vec4 west  = centre + vec4(0, -pressure * aspectRatio, 0, 0);
-										 
-										 float brightness = 0.5 + (pressure / maxRadius) * 0.5;
-										 vec4 color = vec4(vec3(brightness), 1);
+											
+										 float normalizedPressure = pressure / maxRadius;
+										 float highPressure = pow(max(0.0, normalizedPressure), 0.5);
+										 float lowPressure = pow(max(0.0, -normalizedPressure), 0.5);
+										 float red = 1.0 - lowPressure;
+										 float green = 1.0 - lowPressure - highPressure;
+										 float blue = 1.0 - highPressure;
+										 float alpha = 0.3 + 0.3 * (abs(normalizedPressure));
+											
+										 vec4 color = vec4(red, green, blue, alpha);
 										 
 										 gl_Position = modelViewProjectionMatrix * north;
 										 colorVarying = color;
@@ -194,6 +209,8 @@ namespace flowTools {
 			int width = _pressureTexture.getWidth();
 			int height = _pressureTexture.getHeight();
 			
+			glEnable(GL_CULL_FACE);
+			
 			shader.begin();
 			shader.setUniformTexture("pressureTexture", _pressureTexture, 0);
 			shader.setUniform2f("texResolution", width, height);
@@ -203,6 +220,8 @@ namespace flowTools {
 			
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
+			
+			glDisable(GL_CULL_FACE);
 			
 			glFlush();
 			

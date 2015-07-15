@@ -24,7 +24,7 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("pressure field");
-			parameters.add(pressureScale.set("pressure scale", .25, 0, 1));
+			parameters.add(pressureScale.set("pressure scale", .45, 0, 1));
 		};
 		
 		void	draw(int _x, int _y, int _width, int _height) {
@@ -36,7 +36,7 @@ namespace flowTools {
 			ofDisableAntiAliasing();
 			
 			ofScale(_width, _height);
-			float radius = 1.0 / (width + 1) / 4.0;
+			float radius = 1.0 / (height) * 0.275;
 			pressureFieldShader.update(fieldVbo, *pressureTexture, pressureScale.get(), radius);
 			
 			ofEnableAntiAliasing();

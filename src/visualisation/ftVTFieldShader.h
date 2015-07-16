@@ -93,11 +93,11 @@ namespace flowTools {
 											gl_FrontColor = color;
 											EmitVertex();
 											
-											gl_Position = gl_ModelViewProjectionMatrix * arrowB;
+											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
 											gl_FrontColor = color;
 											EmitVertex();
 											
-											gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
+											gl_Position = gl_ModelViewProjectionMatrix * arrowB;
 											gl_FrontColor = color;
 											EmitVertex();
 											

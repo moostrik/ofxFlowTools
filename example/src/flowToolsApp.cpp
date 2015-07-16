@@ -115,9 +115,9 @@ void flowToolsApp::setupGui() {
 	displayScalarScale.addListener(this, &flowToolsApp::setDisplayScalarScale);
 	visualizeParameters.add(velocityFieldScale.set("velocity scale", 0.1, 0.0, 0.5));
 	velocityFieldScale.addListener(this, &flowToolsApp::setVelocityFieldScale);
-	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.25, 0.0, 0.5));
+	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
 	temperatureFieldScale.addListener(this, &flowToolsApp::setTemperatureFieldScale);
-	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.25, 0.0, 0.5));
+	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.02, 0.0, 0.5));
 	pressureFieldScale.addListener(this, &flowToolsApp::setPressureFieldScale);
 	visualizeParameters.add(velocityLineSmooth.set("line smooth", false));
 	velocityLineSmooth.addListener(this, &flowToolsApp::setVelocityLineSmooth);
@@ -127,9 +127,13 @@ void flowToolsApp::setupGui() {
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(visualizeParameters);
 
-	gui.loadFromFile("settings.xml");
-	gui.minimizeAll();
+	// if the settings file is not present the parameters will not be set during this setup
+	if (!ofFile("settings.xml"))
+		gui.saveToFile("settings.xml");
 	
+	gui.loadFromFile("settings.xml");
+	
+	gui.minimizeAll();
 	toggleGuiDraw = true;
 	
 }

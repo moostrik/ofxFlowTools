@@ -51,10 +51,10 @@ namespace flowTools {
 		advancedDissipationParameters.setName("advanced dissipation");
 		advancedDissipationParameters.add(velocityOffset.set("velocity offset", -0.001, -0.01, 0.01));
 		advancedDissipationParameters.add(densityOffset.set("density offset", 0, -0.01, 0.01));
-		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0, -0.01, 0.01));
+		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0.005, -0.01, 0.01));
 		parameters.add(advancedDissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
-		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.0, 0.0, 1.0));
+		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
 		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.01,0), ofVec2f(-.1,-.1), ofVec2f(.1,.1)));

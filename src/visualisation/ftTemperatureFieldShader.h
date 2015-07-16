@@ -50,16 +50,18 @@ namespace flowTools {
 											vec4 lineStart = gl_PositionIn[0];
 											vec2 uv = lineStart.xy * texResolution;
 											
-											float line = texture2DRect(temperatureTexture, uv).x * temperatureScale;
-											line = min(line, maxHeight);
-											vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
+											float temperature = texture2DRect(temperatureTexture, uv).x * temperatureScale;
+											temperature = min(temperature, maxHeight);
+											temperature = max(temperature, -maxHeight);
+											
+											vec4 lineEnd = lineStart + vec4(0.0, -temperature, 0.0, 0.0);
 										 
-											float alpha = 0.5 + 0.5 * (abs(line) / maxHeight);
-											float red = max(0.0, line * 1000.);
-											float blue = max(0.0, -line * 1000.);
+											float alpha = 0.5 + 0.5 * (abs(temperature) / maxHeight);
+											float red = max(0.0, temperature * 1000.);
+											float blue = max(0.0, -temperature * 1000.);
 											vec4 color = vec4(red, 0.0, blue, alpha);
 											
-											float arrowLength = 0.75 * line;
+											float arrowLength = 0.75 * temperature;
 											
 											gl_Position = gl_ModelViewProjectionMatrix * lineStart;
 											gl_FrontColor = vec4(1.0,1.0,1.0,0.0);
@@ -124,17 +126,18 @@ namespace flowTools {
 										 vec4 lineStart = gl_in[0].gl_Position;
 										 vec2 uv = lineStart.xy * texResolution;
 										 
-										 float line = texture(temperatureTexture, uv).x * temperatureScale;
-
-										 line = min(line, maxHeight);
-										 vec4 lineEnd = lineStart + vec4(0.0, -line, 0.0, 0.0);
+										 float temperature = texture(temperatureTexture, uv).x * temperatureScale;
+										 temperature = min(temperature, maxHeight);
+										 temperature = max(temperature, -maxHeight);
 										 
-										 float alpha = 0.5 + 0.5 * (abs(line) / maxHeight);
-										 float red = max(0.0, line * 1000.);
-										 float blue = max(0.0, -line * 1000.);
+										 vec4 lineEnd = lineStart + vec4(0.0, -temperature, 0.0, 0.0);
+										 
+										 float alpha = 0.5 + 0.5 * (abs(temperature) / maxHeight);
+										 float red = max(0.0, temperature * 1000.);
+										 float blue = max(0.0, -temperature * 1000.);
 										 vec4 color = vec4(red, 0.0, blue, alpha);
 										 
-										 float arrowLength = 0.75 * line;
+										 float arrowLength = 0.75 * temperature;
 										 
 										 lineStart.x -= lineWidth * 0.5;
 										 gl_Position = modelViewProjectionMatrix * lineStart;

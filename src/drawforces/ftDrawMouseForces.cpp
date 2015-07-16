@@ -39,8 +39,10 @@ namespace flowTools {
 		drawForces[5].setName("draw flow res 2");
 		
 		leftButtonParameters.setName("mouse left button");
+		leftButtonParameters.add(doResetDrawForces.set("reset", false));
 		rightButtonParameters.setName("mouse right button");
-		parameters.setName("mouseDraw");
+		rightButtonParameters.add(doResetDrawForces.set("reset", false));
+		doResetDrawForces.addListener(this, &ftDrawMouseForces::resetDrawForcesListner);
 		for (int i=0; i<3; i++) {
 			leftButtonParameters.add(drawForces[i].parameters);
 			rightButtonParameters.add(drawForces[i+3].parameters);
@@ -133,6 +135,7 @@ namespace flowTools {
 	void ftDrawMouseForces::mouseMoved( ofMouseEventArgs& mouse ){
 		ofVec2f normalizedMouse;
 		normalizedMouse.set(mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
+		lastNormalizedMouse.set(normalizedMouse);
 	}
 	
 }

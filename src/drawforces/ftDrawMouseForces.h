@@ -24,7 +24,7 @@ namespace flowTools {
 		ofTexture&			getTextureReference(int _index);
 		float				getStrength(int _index);
 		
-		ofParameterGroup	parameters;
+//		ofParameterGroup	parameters;
 		ofParameterGroup	leftButtonParameters;
 		ofParameterGroup	rightButtonParameters;
 		

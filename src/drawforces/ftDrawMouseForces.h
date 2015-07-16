@@ -16,6 +16,7 @@ namespace flowTools {
 	
 		void				setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0) ;
 		void				update(float _deltaTime);
+		void				reset()  { for (int i=0; i<numDrawForces; i++) drawForces[i].reset(); }
 		
 		int					getNumForces() { return numDrawForces; }
 		
@@ -30,7 +31,7 @@ namespace flowTools {
 		
 	private:
 		ofParameter<bool>	doResetDrawForces;
-		void				resetDrawForcesListner(bool& _value) { if (_value) {for (int i=0; i<numDrawForces; i++) drawForces[i].reset();} doResetDrawForces.set(false);}
+		void				resetDrawForcesListner(bool& _value) { if (_value) { reset(); }; doResetDrawForces.set(false); }
 		
 		int					numDrawForces;
 		ftDrawForce*		drawForces;

@@ -18,8 +18,6 @@ public:
 	void		setTexture(ofTexture& _textureReference);
 	void		update();
 	
-	
-	
 	ofVec2f		getDirection() { return direction; }
 	float		getAmplitude()  { return amplitude; }
 	float		getArea()	{ return area; }

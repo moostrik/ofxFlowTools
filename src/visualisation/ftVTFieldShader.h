@@ -46,18 +46,18 @@ namespace flowTools {
 										uniform vec2 texResolution;
 										uniform float velocityScale;
 										uniform float temperatureScale;
-										uniform float arrowSize;
+										uniform float maxArrowSize;
 										
 										void main(){
 									  
 											vec4 lineStart = gl_PositionIn[0];
 											vec2 uv = lineStart.xy * texResolution;
 											vec2 velocity = texture2DRect(velocityTexture, uv).xy * velocityScale;
-											if (length(velocity) > arrowSize)
-												velocity = normalize(velocity) * arrowSize;
+											if (length(velocity) > maxArrowSize)
+												velocity = normalize(velocity) * maxArrowSize;
 											vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
 											
-											float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
+											float alpha = 0.3 + 0.3 * (length(velocity) / maxArrowSize);
 											
 											float temperature = texture2DRect(temperatureTexture, uv).x * temperatureScale;
 											float warm = pow(max(0.0, temperature), 0.5);
@@ -147,7 +147,7 @@ namespace flowTools {
 									 uniform vec2 texResolution;
 									 uniform float velocityScale;
 									 uniform float temperatureScale;
-									 uniform float arrowSize;
+									 uniform float maxArrowSize;
 									 
 									 layout (points) in;
 									 layout (line_strip) out;
@@ -160,11 +160,11 @@ namespace flowTools {
 										 
 										 vec2 uv = lineStart.xy * texResolution;
 										 vec2 velocity = texture(velocityTexture, uv).xy * velocityScale;
-										 if (length(velocity) > arrowSize)
-											 velocity = normalize(velocity) * arrowSize;
+										 if (length(velocity) > maxArrowSize)
+											 velocity = normalize(velocity) * maxArrowSize;
 										 vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
 										 
-										 float alpha = 0.3 + 0.3 * (length(velocity) / arrowSize);
+										 float alpha = 0.3 + 0.3 * (length(velocity) / maxArrowSize);
 										 
 										 float temperature = texture(temperatureTexture, uv).x * temperatureScale;
 										 float warm = pow(max(0.0, temperature), 0.5);
@@ -200,11 +200,11 @@ namespace flowTools {
 										 colorVarying = color;
 										 EmitVertex();
 										 
-										 gl_Position =  modelViewProjectionMatrix * arrowB;
+										 gl_Position = modelViewProjectionMatrix * lineEnd;
 										 colorVarying = color;
 										 EmitVertex();
 										 
-										 gl_Position = modelViewProjectionMatrix * lineEnd;
+										 gl_Position =  modelViewProjectionMatrix * arrowB;
 										 colorVarying = color;
 										 EmitVertex();
 										 
@@ -231,7 +231,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofVbo& _fieldVbo, ofTexture& _velocityTexture, ofTexture& _temperatureTexture, float _velocityScale, float _temperatureScale, float _arrowSize){
+		void update(ofVbo& _fieldVbo, ofTexture& _velocityTexture, ofTexture& _temperatureTexture, float _velocityScale, float _temperatureScale, float _maxArrowSize){
 			int width = _velocityTexture.getWidth();
 			int height = _velocityTexture.getHeight();
 			
@@ -241,7 +241,7 @@ namespace flowTools {
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform1f("velocityScale", _velocityScale);
 			shader.setUniform1f("temperatureScale", _temperatureScale);
-			shader.setUniform1f("arrowSize", _arrowSize);
+			shader.setUniform1f("maxArrowSize", _maxArrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
 		}

@@ -218,12 +218,13 @@ void flowToolsApp::keyPressed(int key){
 		case 'C': doDrawCamBackground.set(!doDrawCamBackground.get()); break;
 			
 		case '1': drawMode.set(DRAW_COMPOSITE); break;
-		case '2': drawMode.set(DRAW_PARTICLES); break;
-		case '3': drawMode.set(DRAW_FLUID_FIELDS); break;
-		case '4': drawMode.set(DRAW_FLUID_VELOCITY); break;
-		case '5': drawMode.set(DRAW_OPTICAL_FLOW); break;
-		case '6': drawMode.set(DRAW_FLOW_MASK); break;
-		case '7': drawMode.set(DRAW_MOUSE); break;
+		case '2': drawMode.set(DRAW_FLUID_FIELDS); break;
+		case '3': drawMode.set(DRAW_FLUID_VELOCITY); break;
+		case '4': drawMode.set(DRAW_FLUID_PRESSURE); break;
+		case '5': drawMode.set(DRAW_FLUID_TEMPERATURE); break;
+		case '6': drawMode.set(DRAW_OPTICAL_FLOW); break;
+		case '7': drawMode.set(DRAW_FLOW_MASK); break;
+		case '8': drawMode.set(DRAW_MOUSE); break;
 			
 		case 'r':
 		case 'R':
@@ -240,20 +241,20 @@ void flowToolsApp::keyPressed(int key){
 void flowToolsApp::drawModeSetName(int &_value) {
 	switch(_value) {
 		case DRAW_COMPOSITE:		drawName.set("Composite      (1)"); break;
-		case DRAW_PARTICLES:		drawName.set("Particles      (2)"); break;
-		case DRAW_FLUID_FIELDS:		drawName.set("Fluid Fields   (3)"); break;
+		case DRAW_PARTICLES:		drawName.set("Particles      "); break;
+		case DRAW_FLUID_FIELDS:		drawName.set("Fluid Fields   (2)"); break;
 		case DRAW_FLUID_DENSITY:	drawName.set("Fluid Density  "); break;
-		case DRAW_FLUID_VELOCITY:	drawName.set("Fluid Velocity (4)"); break;
-		case DRAW_FLUID_PRESSURE:	drawName.set("Fluid Pressure "); break;
-		case DRAW_FLUID_TEMPERATURE:drawName.set("Fld Temperature"); break;
+		case DRAW_FLUID_VELOCITY:	drawName.set("Fluid Velocity (3)"); break;
+		case DRAW_FLUID_PRESSURE:	drawName.set("Fluid Pressure (4)"); break;
+		case DRAW_FLUID_TEMPERATURE:drawName.set("Fld Temperature(5)"); break;
 		case DRAW_FLUID_DIVERGENCE: drawName.set("Fld Divergence "); break;
 		case DRAW_FLUID_VORTICITY:	drawName.set("Fluid Vorticity"); break;
 		case DRAW_FLUID_BUOYANCY:	drawName.set("Fluid Buoyancy "); break;
 		case DRAW_FLUID_OBSTACLE:	drawName.set("Fluid Obstacle "); break;
-		case DRAW_OPTICAL_FLOW:		drawName.set("Optical Flow   (5)"); break;
-		case DRAW_FLOW_MASK:		drawName.set("Flow Mask      (6)"); break;
+		case DRAW_OPTICAL_FLOW:		drawName.set("Optical Flow   (6)"); break;
+		case DRAW_FLOW_MASK:		drawName.set("Flow Mask      (7)"); break;
 		case DRAW_SOURCE:			drawName.set("Source         "); break;
-		case DRAW_MOUSE:			drawName.set("Left Mouse     (7)"); break;
+		case DRAW_MOUSE:			drawName.set("Left Mouse     (8)"); break;
 	}
 }
 
@@ -347,6 +348,7 @@ void flowToolsApp::drawFluidVelocity(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	if (showScalar.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+//		ofEnableBlendMode(OF_BLENDMODE_ALPHA); // altenate mode
 		displayScalar.setSource(fluidSimulation.getVelocity());
 		displayScalar.draw(_x, _y, _width, _height);
 	}
@@ -458,7 +460,7 @@ void flowToolsApp::drawMask(int _x, int _y, int _width, int _height) {
 void flowToolsApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
 	
 	ofPushStyle();
-	opticalFlow.getOpticalFlow().draw(_x, _y, _width, _height);
+//	opticalFlow.getOpticalFlow().draw(_x, _y, _width, _height);
 	
 	if (showScalar.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -500,22 +502,16 @@ void flowToolsApp::drawMouseForces(int _x, int _y, int _width, int _height) {
 		if (mouseForces.didChange(i)) {
 			switch (mouseForces.getType(i)) {
 				case FT_VELOCITY:
-					if (showField.get()) {
-						velocityField.setVelocity(mouseForces.getTextureReference(i));
-						velocityField.draw(_x, _y, _width, _height);
-					}
+					velocityField.setVelocity(mouseForces.getTextureReference(i));
+					velocityField.draw(_x, _y, _width, _height);
 					break;
 				case FT_TEMPERATURE:
-					if (showField.get()) {
-						temperatureField.setTemperature(mouseForces.getTextureReference(i));
-						temperatureField.draw(_x, _y, _width, _height);
-					}
+					temperatureField.setTemperature(mouseForces.getTextureReference(i));
+					temperatureField.draw(_x, _y, _width, _height);
 					break;
 				case FT_PRESSURE:
-					if (showField.get()) {
-						pressureField.setPressure(mouseForces.getTextureReference(i));
-						pressureField.draw(_x, _y, _width, _height);
-					}
+					pressureField.setPressure(mouseForces.getTextureReference(i));
+					pressureField.draw(_x, _y, _width, _height);
 					break;
 				default:
 					break;

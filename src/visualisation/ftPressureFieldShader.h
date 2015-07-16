@@ -156,7 +156,7 @@ namespace flowTools {
 										 float highPressure = pow(max(0.0, normalizedPressure), 0.5);
 										 float lowPressure = pow(max(0.0, -normalizedPressure), 0.5);
 										 float red = 1.0 - lowPressure;
-										 float green = 1.0 - lowPressure - highPressure;
+										 float green = 1.0;// - lowPressure - highPressure;
 										 float blue = 1.0 - highPressure;
 										 float alpha = 0.3 + 0.3 * (abs(normalizedPressure));
 											
@@ -209,7 +209,7 @@ namespace flowTools {
 			int width = _pressureTexture.getWidth();
 			int height = _pressureTexture.getHeight();
 			
-			glEnable(GL_CULL_FACE);
+//			glEnable(GL_CULL_FACE);
 			
 			shader.begin();
 			shader.setUniformTexture("pressureTexture", _pressureTexture, 0);
@@ -221,7 +221,7 @@ namespace flowTools {
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
 			
-			glDisable(GL_CULL_FACE);
+//			glDisable(GL_CULL_FACE);
 			
 			glFlush();
 			

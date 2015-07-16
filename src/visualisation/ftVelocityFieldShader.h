@@ -44,18 +44,18 @@ namespace flowTools {
 								  uniform sampler2DRect fieldTexture;
 								  uniform vec2 texResolution;
 								  uniform float vectorSize;
-								  uniform float maxSize;
+								  uniform float maxArrowSize;
 									   
 								  void main(){
 										   
 									  vec4 lineStart = gl_PositionIn[0];
 									  vec2 uv = lineStart.xy * texResolution;
 									  vec2 line = texture2DRect(fieldTexture, uv).xy * vectorSize;
-									  if (length(line) > maxSize)
-										  line = normalize(line) * maxSize;
+									  if (length(line) > maxArrowSize)
+										  line = normalize(line) * maxArrowSize;
 									  vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 											   
-									  float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxSize);
+									  float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxArrowSize);
 									  vec4 color = vec4(1.0, 1.0, 1.0, alpha);
 										   
 									  float arrowLength = 0.75 * length(line);
@@ -134,7 +134,7 @@ namespace flowTools {
 									 uniform sampler2DRect fieldTexture;
 									 uniform vec2 texResolution;
 									 uniform float vectorSize;
-									 uniform float maxSize;
+									 uniform float maxArrowSize;
 									
 									 layout (points) in;
 									 layout (line_strip) out;
@@ -145,11 +145,11 @@ namespace flowTools {
 										 
 										 vec2 uv = lineStart.xy * texResolution;
 										 vec2 line = texture(fieldTexture, uv).xy * vectorSize;
-										 if (length(line) > maxSize)
-											 line = normalize(line) * maxSize;
+										 if (length(line) > maxArrowSize)
+											 line = normalize(line) * maxArrowSize;
 										 vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 										 
-										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxSize);
+										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxArrowSize);
 										 vec4 color = vec4(1.0, 1.0, 1.0, alpha);
 										 
 										 float arrowLength = 0.75 * length(line);
@@ -202,15 +202,15 @@ namespace flowTools {
 		}
 	
 	public:	
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _vectorSize, float _maxSize){
+		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _velocityScale, float _maxArrowSize){
 			int width = _floatTexture.getWidth();
 			int height = _floatTexture.getHeight();
 			
 			shader.begin();
 			shader.setUniformTexture("fieldTexture", _floatTexture,0);
 			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("vectorSize", _vectorSize / width * 10.0);
-			shader.setUniform1f("maxSize", _maxSize);
+			shader.setUniform1f("vectorSize", _velocityScale);
+			shader.setUniform1f("maxArrowSize", _maxArrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
 		}

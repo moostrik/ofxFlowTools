@@ -41,8 +41,8 @@ namespace flowTools {
 			}
 			
 			ofScale(_width, _height);
-			float arrowLength =  1.0 / (width + 1);
-			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), arrowLength);
+			float maxArrowLength =  2.0 / (width + 1);
+			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), maxArrowLength);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);

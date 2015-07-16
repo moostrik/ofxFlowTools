@@ -42,7 +42,7 @@ namespace flowTools {
 			}
 						
 			ofScale(_width, _height);
-			float barHeight =  0.9 / height;
+			float barHeight =  2.0 * 0.9 / height;
 			float barWidth = 5.0;
 			temperatureFieldShader.update(fieldVbo, *temperatureTexture, temperatureScale.get(), barHeight, barWidth);
 			

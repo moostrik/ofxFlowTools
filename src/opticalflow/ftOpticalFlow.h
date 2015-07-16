@@ -20,9 +20,9 @@ namespace flowTools {
 		ofTexture&	getOpticalFlow() {return velocityBuffer.getTextureReference();};
 		ofTexture&	getOpticalFlowDecay() {if(doTimeBlurDecay.get()) return decayBuffer.getTextureReference(); else return velocityBuffer.getTextureReference();
 											};
-		int			getFlowVectorSize(){return width * height;};
-		ofVec2f*	getFlowVectors();
-		float		getAverageFlow();
+//		int			getFlowVectorSize(){return width * height;};
+//		ofVec2f*	getFlowVectors();
+//		float		getAverageFlow();
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};
@@ -78,9 +78,9 @@ namespace flowTools {
 		ftTimeBlurShader	timeBlurShader;
 		
 		
-		float*	flowFloats;
-		ofVec2f* flowVectors;
-		bool	flowVectorsDidUpdate;
+//		float*	flowFloats;
+//		ofVec2f* flowVectors;
+//		bool	flowVectorsDidUpdate;
 		
 	};
 }

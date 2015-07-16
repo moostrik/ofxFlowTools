@@ -50,7 +50,7 @@ namespace flowTools {
 		timeBlurParameters.add(timeBlurRadius.set("Decay Blur Radius", 2, 0, 10));
 		parameters.add(timeBlurParameters);
 		
-		flowVectorsDidUpdate = false;
+//		flowVectorsDidUpdate = false;
 		lastTime = ofGetElapsedTimef();
 	};
 	
@@ -67,8 +67,8 @@ namespace flowTools {
 		decayBuffer.allocate(width, height, GL_RGB32F);
 		decayBuffer.clear();
 		
-		flowVectors = new ofVec2f[int(width * height)];
-		flowFloats = new float [int(width * height) * 2];
+//		flowVectors = new ofVec2f[int(width * height)];
+//		flowFloats = new float [int(width * height) * 2];
 		
 		bSourceSet = false;
 	};
@@ -82,7 +82,7 @@ namespace flowTools {
 		lastTime = time;
 		timeStep = deltaTime * strength.get();
 		
-		flowVectorsDidUpdate = false;
+//		flowVectorsDidUpdate = false;
 		
 		float inverseX = 1;
 		if (doInverseX)inverseX = -1;
@@ -124,6 +124,8 @@ namespace flowTools {
 		
 	}
 	
+/* MOVED TO FTAVERAGEVELOCITY
+ 
 	ofVec2f* ftOpticalFlow::getFlowVectors(){
 		if (!flowVectorsDidUpdate) {
 			velocityBuffer.bind();
@@ -148,5 +150,6 @@ namespace flowTools {
 		avgFlow /= width * height;
 		return avgFlow;
 	}
+ */
 	
 }

@@ -410,7 +410,8 @@ void flowToolsApp::drawFluidDivergence(int _x, int _y, int _width, int _height) 
 		temperatureField.setTemperature(fluidSimulation.getDivergence());
 		temperatureField.draw(_x, _y, _width, _height);
 	}
-	ofPopStyle();}
+	ofPopStyle();
+}
 
 //--------------------------------------------------------------
 void flowToolsApp::drawFluidVorticity(int _x, int _y, int _width, int _height) {
@@ -426,7 +427,8 @@ void flowToolsApp::drawFluidVorticity(int _x, int _y, int _width, int _height) {
 		velocityField.setVelocity(fluidSimulation.getConfinement());
 		velocityField.draw(_x, _y, _width, _height);
 	}
-	ofPopStyle();}
+	ofPopStyle();
+}
 
 //--------------------------------------------------------------
 void flowToolsApp::drawFluidBuoyance(int _x, int _y, int _width, int _height) {
@@ -554,6 +556,6 @@ void flowToolsApp::drawGui() {
 	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 300.0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 600.0);
-	ofPopStyle;
+	ofPopStyle();
 }
 

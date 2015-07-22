@@ -80,7 +80,6 @@ namespace flowTools {
 		ofTexture *fluidVelocityTexture;
 		ofTexture *colorTexture;
 		
-//		GLuint		ParticleLutVbo;
 		ofVboMesh	particleMesh;
 		
 		ftSwapBuffer			particleAgeLifespanMassSizeSwapBuffer;
@@ -98,10 +97,6 @@ namespace flowTools {
 		ftMoveParticleShader	moveParticleShader;
 		ftAgeLifespanMassSizeParticleShader	ALMSParticleShader;
 		ftAddForceShader		addShader;
-		
-		ofVbo particles;
-		
-		ofFbo drawFbo;
 	};
 		
 }

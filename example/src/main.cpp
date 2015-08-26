@@ -1,19 +1,18 @@
 #include "ofMain.h"
 #include "flowToolsApp.h"
 
-#ifdef USE_PROGRAMMABLE_GL
-#include "ofGLProgrammableRenderer.h"
-#endif
-
 //========================================================================
 int main( ){
 	
-#ifdef 	USE_PROGRAMMABLE_GL	
-	ofPtr<ofBaseRenderer> renderer(new ofGLProgrammableRenderer(false));
-	ofSetCurrentRenderer(renderer, false);
+    ofGLFWWindowSettings windowSettings;
+#ifdef USE_PROGRAMMABLE_GL
+    windowSettings.setGLVersion(4, 1);
 #endif
-	ofSetupOpenGL(1280, 720, OF_WINDOW);
-	
-	ofRunApp( new flowToolsApp());
-
+    windowSettings.width = 1280;
+    windowSettings.height = 720;
+    windowSettings.windowMode = OF_WINDOW;
+    
+    ofCreateWindow(windowSettings);
+    
+    ofRunApp(new flowToolsApp());
 }

@@ -16,7 +16,7 @@ namespace flowTools {
 			
 			bInitialized = 1;
 			
-			if (ofGetGLProgrammableRenderer())
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
@@ -164,8 +164,8 @@ namespace flowTools {
 		void update(ofFbo& _buffer, float _decay, int _radius = 5, int _passes = 1){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
-				pingPong.getInternalFormat() != _buffer.getTextureReference().getTextureData().glTypeInternal) {
-				pingPong.allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTextureReference().getTextureData().glTypeInternal );
+				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
+				pingPong.allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
 				
 			}
 			
@@ -174,7 +174,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 			pingPong.src->begin();
 			ofSetColor(0,0,0,255 * _decay);
-			ofRect(0,0, pingPong.getWidth(), pingPong.getHeight());
+			ofDrawRectangle(0,0, pingPong.getWidth(), pingPong.getHeight());
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			ofSetColor(255, 255, 255, 255);
 			_buffer.draw(0,0, pingPong.getWidth(), pingPong.getHeight());
@@ -185,7 +185,7 @@ namespace flowTools {
 				for(int j = 0; j < 2; j++) {
 					pingPong.dst->begin();
 					blurShader[j].begin();
-					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTextureReference(), 0 );
+					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTexture(), 0 );
 					blurShader[j].setUniform1f("radius", _radius);
 					renderFrame(pingPong.getWidth(), pingPong.getHeight());
 					blurShader[j].end();

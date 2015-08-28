@@ -10,9 +10,8 @@ namespace flowTools {
 	class ftDrawMouseForces {
 		
 	public:
-		ftDrawMouseForces() ;
-	
-		~ftDrawMouseForces(){;}
+		ftDrawMouseForces();
+        ~ftDrawMouseForces();
 	
 		void				setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0) ;
 		void				update(float _deltaTime);

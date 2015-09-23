@@ -79,7 +79,7 @@ namespace flowTools {
 		ofVec4f typeForce = force;
 		switch (type) {
 			case FT_VELOCITY:
-				typeForce *= ofVec4f(width, width, 0, 1);
+				typeForce *= ofVec4f(width, height, 0, 1);
 				break;
 			case FT_PRESSURE:
 				typeForce *= ofVec4f(100, 0, 0, 1);

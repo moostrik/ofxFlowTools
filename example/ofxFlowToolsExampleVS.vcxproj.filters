@@ -46,6 +46,9 @@
     <ClCompile Include="src\flowToolsApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\drawforces\ftDrawMouseForces.cpp">
+      <Filter>addons\ofxFlowTools\src\drawforces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -247,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="src\flowToolsApp.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\drawforces\ftDrawMouseForces.h">
+      <Filter>addons\ofxFlowTools\src\drawforces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\drawforces\ftDrawMouseForces.cpp" />
     <ClCompile Include="src\flowToolsApp.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\..\..\addons\ofxFlowTools\src\visualisation\ftTemperatureFieldShader.h" />
     <ClInclude Include="..\..\..\addons\ofxFlowTools\src\visualisation\ftVelocityField.h" />
     <ClInclude Include="..\..\..\addons\ofxFlowTools\src\visualisation\ftVelocityFieldShader.h" />
+    <ClInclude Include="..\src\drawforces\ftDrawMouseForces.h" />
     <ClInclude Include="src\flowToolsApp.h" />
   </ItemGroup>
   <ItemGroup>

@@ -20,8 +20,8 @@ namespace flowTools {
 		void	update();
 		
 		ofTexture& getTextureReference() {return getColorMask();};
-		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTextureReference();};
-		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTextureReference();};
+		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTexture();};
+		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTexture();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.src->draw(_x, _y, _width, _height);};
 		

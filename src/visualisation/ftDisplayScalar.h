@@ -27,7 +27,7 @@ namespace flowTools {
 		int		getWidth()	{ return width; }
 		int		getHeight()	{ return height; }
 		
-		ofTexture& getTextureReference() {return visibleBuffer.getTextureReference();};
+		ofTexture& getTextureReference() {return visibleBuffer.getTexture();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height) {
 			visibleBuffer.clear();

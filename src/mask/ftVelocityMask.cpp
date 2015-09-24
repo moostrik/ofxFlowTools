@@ -66,7 +66,7 @@ namespace flowTools {
 		else {
 			VelocityMaskShader.update(*colorMaskSwapBuffer.src, *densityTexture, *velocityTexture, strength.get());
 			HSLShader.update(*colorMaskSwapBuffer.dst,
-							 colorMaskSwapBuffer.src->getTextureReference(),
+							 colorMaskSwapBuffer.src->getTexture(),
 							 0,
 							 saturation.get(),
 							 1);
@@ -77,7 +77,7 @@ namespace flowTools {
 			}
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTextureReference());
+			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTexture());
 		}
 		
 		ofPopStyle();

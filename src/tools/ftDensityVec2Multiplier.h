@@ -12,7 +12,7 @@ namespace flowTools {
 		ftDensityVec2Multiplier() {
 			
 			ofLogVerbose("init ");
-			if (ofGetGLProgrammableRenderer())
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

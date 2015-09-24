@@ -12,19 +12,19 @@ namespace flowTools {
 		void clear() { begin(); ofClear(0, 0); end(); }
 		
 		// draw texture in fbo using dimensions of texture
-		void drawIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTextureReference()); };
+		void drawIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTexture()); };
 		void drawIntoMe(ofTexture& _tex) {  begin(); _tex.draw(0, 0); end(); };
 		
 		// draw texture in fbo using dimensions of texture, aligned to the centre of the fbo
-		void centreIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTextureReference()); };
+		void centreIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTexture()); };
 		void centreIntoMe(ofTexture& _tex) { begin(); _tex.draw((getWidth() - _tex.getWidth()) / 2, (getHeight() - _tex.getHeight()) / 2, 0, 0); end(); };
 		
 		// draw texture in fbo using dimensions of fbo, filling the fbo but distorting the texture
-		void stretchIntoMe(ofFbo& _fbo) { stretchIntoMe(_fbo.getTextureReference()); };
+		void stretchIntoMe(ofFbo& _fbo) { stretchIntoMe(_fbo.getTexture()); };
 		void stretchIntoMe(ofTexture& _tex) {  begin(); _tex.draw(0, 0, getWidth(), getHeight()); end(); };
 		
 		// draw texture in fbo using aspectratio of texture, showing the complete texture, but not filling thye fbo
-		void fitIntoMe(ofFbo& _fbo) { fitIntoMe(_fbo.getTextureReference()); };
+		void fitIntoMe(ofFbo& _fbo) { fitIntoMe(_fbo.getTexture()); };
 		void fitIntoMe(ofTexture& _tex) {
 			
 			float meRatio = float(getWidth()) / float(getHeight());   // 0.5625
@@ -70,7 +70,7 @@ namespace flowTools {
 		}
 		
 		// draw texture in fbo using aspectratio of texture, filling the fbo
-		void fillMe(ofFbo& _fbo) { fillMe(_fbo.getTextureReference()); };
+		void fillMe(ofFbo& _fbo) { fillMe(_fbo.getTexture()); };
 		void fillMe(ofTexture& _tex) {
 			
 			float meRatio = float(getWidth()) / float(getHeight());   // 0.5625
@@ -112,7 +112,7 @@ namespace flowTools {
 			end();
 		}
 		
-		GLint getInternalFormat() { return getTextureReference().getTextureData().glTypeInternal; };
+		GLint getInternalFormat() { return getTexture().getTextureData().glInternalFormat; };
 				
 	};
 }

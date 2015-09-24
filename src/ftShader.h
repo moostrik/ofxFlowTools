@@ -13,7 +13,7 @@ namespace flowTools {
 		ftShader() {
 			bInitialized = false;
 			
-			if (ofGetGLProgrammableRenderer())
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

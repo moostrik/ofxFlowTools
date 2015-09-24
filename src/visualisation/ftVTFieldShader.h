@@ -11,7 +11,7 @@ namespace flowTools {
 		ftVTFieldShader() {
 			bInitialized = 1;
 			
-			if (ofGetGLProgrammableRenderer())
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

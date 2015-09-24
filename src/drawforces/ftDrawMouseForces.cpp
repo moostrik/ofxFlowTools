@@ -14,8 +14,12 @@ namespace flowTools {
 	ftDrawMouseForces::ftDrawMouseForces() {
 		ofAddListener(ofEvents().mouseMoved, this, &ftDrawMouseForces::mouseMoved);
 		ofAddListener(ofEvents().mouseDragged, this, &ftDrawMouseForces::mouseDragged);
-		
 	}
+    
+    ftDrawMouseForces::~ftDrawMouseForces() {
+        ofRemoveListener(ofEvents().mouseMoved, this, &ftDrawMouseForces::mouseMoved);
+        ofRemoveListener(ofEvents().mouseDragged, this, &ftDrawMouseForces::mouseDragged);
+    }
 	
 	void ftDrawMouseForces::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
 		simulationWidth = _simulationWidth;

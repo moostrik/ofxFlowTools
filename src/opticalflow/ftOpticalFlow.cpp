@@ -93,8 +93,8 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		opticalFlowShader.update(velocityBuffer,
-								 sourceSwapBuffer.src->getTextureReference(),
-								 sourceSwapBuffer.dst->getTextureReference(),
+								 sourceSwapBuffer.src->getTexture(),
+								 sourceSwapBuffer.dst->getTexture(),
 								 timeStep,
 								 offset.get(),
 								 lambda.get(),

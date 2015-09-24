@@ -25,8 +25,8 @@ void flowToolsApp::setup(){
 	particleFlow.setup(flowWidth, flowHeight, drawWidth, drawHeight, false);
 #endif
 	
-	flowToolsLogoImage.loadImage("flowtools.png");
-	fluidSimulation.addObstacle(flowToolsLogoImage.getTextureReference());
+	flowToolsLogoImage.load("flowtools.png");
+	fluidSimulation.addObstacle(flowToolsLogoImage.getTexture());
 	showLogo = true;
 	
 	// VISUALIZATION
@@ -40,7 +40,7 @@ void flowToolsApp::setup(){
 	mouseForces.setup(flowWidth, flowHeight, drawWidth, drawHeight);
 	
 	// CAMERA
-	simpleCam.initGrabber(640, 480, true);
+	simpleCam.setup(640, 480, true);
 	didCamUpdate = false;
 	cameraFbo.allocate(640, 480);
 	cameraFbo.clear();
@@ -158,10 +158,10 @@ void flowToolsApp::update(){
 		cameraFbo.end();
 		ofPopStyle();
 		
-		opticalFlow.setSource(cameraFbo.getTextureReference());
+		opticalFlow.setSource(cameraFbo.getTexture());
 		opticalFlow.update(deltaTime);
 		
-		velocityMask.setDensity(cameraFbo.getTextureReference());
+		velocityMask.setDensity(cameraFbo.getTexture());
 		velocityMask.setVelocity(opticalFlow.getOpticalFlow());
 		velocityMask.update();
 	}
@@ -233,7 +233,7 @@ void flowToolsApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			fluidSimulation.reset();
-			fluidSimulation.addObstacle(flowToolsLogoImage.getTextureReference());
+			fluidSimulation.addObstacle(flowToolsLogoImage.getTexture());
 			mouseForces.reset();
 			break;
 			
@@ -553,9 +553,9 @@ void flowToolsApp::drawGui() {
 	
 	// HACK TO COMPENSATE FOR DISSAPEARING MOUSE
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 300.0);
+	ofDrawCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 300.0);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	ofCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 600.0);
+	ofDrawCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 600.0);
 	ofPopStyle();
 }
 

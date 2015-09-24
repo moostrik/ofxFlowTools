@@ -116,11 +116,11 @@ namespace flowTools {
 			
 			
 			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.dst,
-									   particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference(),
-									   particlePositionSwapBuffer.src->getTextureReference(),
-									   flowVelocitySwapBuffer.src->getTextureReference(),
-									   densitySwapBuffer.src->getTextureReference(),
-									   obstacleBuffer.getTextureReference(),
+									   particleAgeLifespanMassSizeSwapBuffer.src->getTexture(),
+									   particlePositionSwapBuffer.src->getTexture(),
+									   flowVelocitySwapBuffer.src->getTexture(),
+									   densitySwapBuffer.src->getTexture(),
+									   obstacleBuffer.getTexture(),
 									   deltaTime,
 									   birthChance.get(),
 									   birthVelocityChance.get(),
@@ -131,10 +131,10 @@ namespace flowTools {
 			
 		
 			moveParticleShader.update(*particlePositionSwapBuffer.dst,
-									  particlePositionSwapBuffer.src->getTextureReference(),
-									  particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference(),
-									  fluidVelocitySwapBuffer.src->getTextureReference(),
-									  particleHomeBuffer.getTextureReference(),
+									  particlePositionSwapBuffer.src->getTexture(),
+									  particleAgeLifespanMassSizeSwapBuffer.src->getTexture(),
+									  fluidVelocitySwapBuffer.src->getTexture(),
+									  particleHomeBuffer.getTexture(),
 									  timeStep,
 									  cellSize.get());
 			particlePositionSwapBuffer.swap();
@@ -152,7 +152,7 @@ namespace flowTools {
 		ofPushView();
 		ofTranslate(_x, _y);
 		ofScale(_width / numParticlesX, _height / numParticlesY);
-		drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.src->getTextureReference(), particleAgeLifespanMassSizeSwapBuffer.src->getTextureReference(), twinkleSpeed.get());
+		drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.src->getTexture(), particleAgeLifespanMassSizeSwapBuffer.src->getTexture(), twinkleSpeed.get());
 		
 		ofPopView();
 	}
@@ -161,7 +161,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		addShader.update(*flowVelocitySwapBuffer.dst,
-						 flowVelocitySwapBuffer.src->getTextureReference(),
+						 flowVelocitySwapBuffer.src->getTexture(),
 						 _tex,
 						 _strength);
 		flowVelocitySwapBuffer.swap();
@@ -172,7 +172,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		addShader.update(*fluidVelocitySwapBuffer.dst,
-						 fluidVelocitySwapBuffer.src->getTextureReference(),
+						 fluidVelocitySwapBuffer.src->getTexture(),
 						 _tex,
 						 _strength);
 		fluidVelocitySwapBuffer.swap();

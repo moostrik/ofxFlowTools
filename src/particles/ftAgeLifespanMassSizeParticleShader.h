@@ -12,7 +12,7 @@ namespace flowTools {
 		ftAgeLifespanMassSizeParticleShader() {
 			bInitialized = 1;
 			
-			if (ofGetGLProgrammableRenderer())
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();

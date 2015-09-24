@@ -141,7 +141,7 @@ namespace flowTools {
 									 layout (max_vertices=5) out;
 									 
 									 void main(){
-										 vec4 lineStart = gl_in[0].gl_Position;;
+										 vec4 lineStart = gl_in[0].gl_Position;
 										 
 										 vec2 uv = lineStart.xy * texResolution;
 										 vec2 line = texture(fieldTexture, uv).xy * vectorSize;

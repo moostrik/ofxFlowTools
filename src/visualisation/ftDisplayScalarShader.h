@@ -54,7 +54,7 @@ namespace flowTools {
 									  vec2 st = texCoordVarying;
 									  vec4	velocity = texture(FloatTexture, st);
 									  velocity.xyz *= vec3(Scale);
-									  velocity.w = pow(length(velocity.xyz), 0.33);
+									  velocity.w = pow(length(velocity.xyz), 0.33); //WHY? NOT IN 120
 									  velocity.xyz += vec3(0.5);
 									  fragColor = velocity;
 								  }

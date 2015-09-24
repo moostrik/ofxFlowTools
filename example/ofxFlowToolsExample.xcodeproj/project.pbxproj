@@ -216,7 +216,7 @@
 				DA7A939B06261BC0E41EAF8A /* src */,
 			);
 			name = ofxFlowTools;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		329E086B8B6FAA24045DB218 /* mask */ = {
 			isa = PBXGroup;

@@ -169,16 +169,17 @@ namespace flowTools {
 				
 			}
 			
-			
+			pingPong.swap();
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			pingPong.getBackBuffer()->begin();
+			pingPong.getBuffer()->begin();
 			ofSetColor(0,0,0,255 * _decay);
 			ofRect(0,0, pingPong.getWidth(), pingPong.getHeight());
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			ofSetColor(255, 255, 255, 255);
 			_buffer.draw(0,0, pingPong.getWidth(), pingPong.getHeight());
-			pingPong.getBackBuffer()->end();
+			pingPong.getBuffer()->end();
+			pingPong.swap();
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			for(int i = 0; i < _passes; i++) {

@@ -82,7 +82,8 @@ namespace flowTools {
 		particleAgeLifespanMassSizeSwapBuffer.clear();
 		particlePositionSwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity, GL_NEAREST);
 		particlePositionSwapBuffer.clear();
-		initPositionShader.update(*particlePositionSwapBuffer.getBackBuffer());
+		initPositionShader.update(*particlePositionSwapBuffer.getBuffer());
+		particlePositionSwapBuffer.swap();
 		particleHomeBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
 		particleHomeBuffer.clear();
 		initPositionShader.update(particleHomeBuffer);

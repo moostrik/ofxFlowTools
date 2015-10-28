@@ -64,7 +64,7 @@ namespace flowTools {
 			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");
 		}
 		else {
-			VelocityMaskShader.update(*colorMaskSwapBuffer.getBackBuffer(), *densityTexture, *velocityTexture, strength.get());
+			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, strength.get());
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),
 							 0,
@@ -73,7 +73,7 @@ namespace flowTools {
 			colorMaskSwapBuffer.swap();
 			
 			if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-				gaussianBlurShader.update(*colorMaskSwapBuffer.getBackBuffer(), blurPasses.get(), blurRadius.get());
+				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
 			}
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);

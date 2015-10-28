@@ -29,6 +29,8 @@ void flowToolsApp::setup(){
 	fluidSimulation.addObstacle(flowToolsLogoImage.getTextureReference());
 	showLogo = true;
 	
+	velocityDots.setup(flowWidth / 4, flowHeight / 4);
+	
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);
 	velocityField.setup(flowWidth / 4, flowHeight / 4);
@@ -126,6 +128,8 @@ void flowToolsApp::setupGui() {
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(visualizeParameters);
+	
+	gui.add(velocityDots.parameters);
 
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -259,6 +263,7 @@ void flowToolsApp::drawModeSetName(int &_value) {
 		case DRAW_FLOW_MASK:		drawName.set("Flow Mask      (7)"); break;
 		case DRAW_SOURCE:			drawName.set("Source         "); break;
 		case DRAW_MOUSE:			drawName.set("Left Mouse     (8)"); break;
+		case DRAW_VELDOTS:			drawName.set("VelDots        (0)"); break;
 	}
 }
 
@@ -291,6 +296,7 @@ void flowToolsApp::draw(){
 			case DRAW_OPTICAL_FLOW: drawOpticalFlow(); break;
 			case DRAW_SOURCE: drawSource(); break;
 			case DRAW_MOUSE: drawMouseForces(); break;
+			case DRAW_VELDOTS: drawVelocityDots(); break;
 		}
 		drawGui();
 	}
@@ -525,6 +531,15 @@ void flowToolsApp::drawMouseForces(int _x, int _y, int _width, int _height) {
 		}
 	}
 
+	ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void flowToolsApp::drawVelocityDots(int _x, int _y, int _width, int _height) {
+	ofPushStyle();
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	velocityDots.setVelocity(fluidSimulation.getVelocity());
+	velocityDots.draw(_x, _y, _width, _height);
 	ofPopStyle();
 }
 

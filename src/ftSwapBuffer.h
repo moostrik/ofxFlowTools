@@ -16,6 +16,7 @@ namespace flowTools {
 			mySettings.internalformat = _internalformat;
 			mySettings.maxFilter = _filter;
 			mySettings.minFilter = _filter;
+	//		mySettings.numColorbuffers = 2;
 			
 			for(int i = 0; i < 2; i++){
 				FBOs[i].allocate(mySettings);
@@ -39,11 +40,17 @@ namespace flowTools {
 			}
 		}
 				
-		ofFbo& operator[]( int n ){ return FBOs[n];}
+		ofFbo& operator[]( int n ){ return FBOs[n]; }
 		
-		int getWidth() { return FBOs[0].getWidth(); };
-		int getHeight() { return FBOs[0].getHeight(); };
-		int getInternalFormat() { return FBOs[0].getInternalFormat(); };
+		int getWidth() { return FBOs[0].getWidth(); }
+		int getHeight() { return FBOs[0].getHeight(); }
+		int getInternalFormat() { return FBOs[0].getInternalFormat(); }
+		
+		ftFbo* getBuffer() { return dst; }
+		ofTexture& getTextureReference() { return dst->getTextureReference(); }
+		
+		ftFbo* getBackBuffer() { return src; }
+		ofTexture& getBackBufferTextureReference() { return src->getTextureReference(); }
 		
 		ftFbo   *src;       // Source       ->  Ping
 		ftFbo   *dst;       // Destination  ->  Pong

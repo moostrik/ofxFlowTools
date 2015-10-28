@@ -129,6 +129,9 @@
 		0B64F2311B35F9B800EA8DAF /* ftPressureField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftPressureField.h; path = ../src/visualisation/ftPressureField.h; sourceTree = "<group>"; };
 		0B64F2361B35FE5400EA8DAF /* ftAverageVelocity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftAverageVelocity.cpp; path = ../src/tools/ftAverageVelocity.cpp; sourceTree = "<group>"; };
 		0B64F2371B35FE5400EA8DAF /* ftAverageVelocity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftAverageVelocity.h; path = ../src/tools/ftAverageVelocity.h; sourceTree = "<group>"; };
+		0B8DF62C1BC3D01D007EB214 /* ftEaseShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ftEaseShader.h; sourceTree = "<group>"; };
+		0BBF79211BBEC78700542562 /* ftVelocitySpheres.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftVelocitySpheres.h; path = ../src/visualisation/ftVelocitySpheres.h; sourceTree = "<group>"; };
+		0BBF79221BBEC7AF00542562 /* ftVelocitySpheresShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftVelocitySpheresShader.h; path = ../src/visualisation/ftVelocitySpheresShader.h; sourceTree = "<group>"; };
 		0BF04FF51B31746200A5BA58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0BF04FF61B31782300A5BA58 /* ftRedToLuminanceShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftRedToLuminanceShader.h; path = ../src/tools/ftRedToLuminanceShader.h; sourceTree = "<group>"; };
 		0BF6237C196415F3009CF385 /* flowToolsApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flowToolsApp.cpp; sourceTree = "<group>"; };
@@ -240,6 +243,7 @@
 				0B504CA519D2D041003C6F85 /* ftDensityVec2Multiplier.h */,
 				0B504CA619D2D041003C6F85 /* ftToScalar.h */,
 				0B504CA719D2D041003C6F85 /* ftToScalarShader.h */,
+				0B8DF62C1BC3D01D007EB214 /* ftEaseShader.h */,
 			);
 			name = tools;
 			sourceTree = "<group>";
@@ -318,6 +322,8 @@
 				0B64F2301B35F9A200EA8DAF /* ftPressureFieldShader.h */,
 				0B01914C1B346E820096AA43 /* ftVTField.h */,
 				0B0191491B3467AA0096AA43 /* ftVTFieldShader.h */,
+				0BBF79211BBEC78700542562 /* ftVelocitySpheres.h */,
+				0BBF79221BBEC7AF00542562 /* ftVelocitySpheresShader.h */,
 			);
 			name = visualisation;
 			sourceTree = "<group>";

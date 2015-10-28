@@ -169,24 +169,25 @@ namespace flowTools {
 			
 			
 			pingPong.clear();
-			pingPong.src->stretchIntoMe(_buffer);
+			pingPong.getBuffer()->stretchIntoMe(_buffer);
+			pingPong.swap();
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {
-					pingPong.dst->begin();
+					pingPong.getBuffer()->begin();
 					blurShader[j].begin();
-					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTextureReference(), 0 );
+					blurShader[j].setUniformTexture("backbuffer", pingPong.getBackTexture(), 0 );
 					blurShader[j].setUniform1f("radius", _radius);
 					renderFrame(pingPong.getWidth(), pingPong.getHeight());
 					blurShader[j].end();
-					pingPong.dst->end();
+					pingPong.getBuffer()->end();
 					
 					pingPong.swap();
 				}
 			}
 	
 			_buffer.begin();
-			pingPong.src->draw(0,0, pingPong.getWidth(), pingPong.getHeight());
+			pingPong.getBackTexture().draw(0,0, pingPong.getWidth(), pingPong.getHeight());
 			_buffer.end();
 		}
 		

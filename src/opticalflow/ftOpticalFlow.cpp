@@ -93,8 +93,8 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		opticalFlowShader.update(velocityBuffer,
-								 sourceSwapBuffer.src->getTextureReference(),
-								 sourceSwapBuffer.dst->getTextureReference(),
+								 sourceSwapBuffer.getBackTexture(),
+								 sourceSwapBuffer.getTexture(),
 								 timeStep,
 								 offset.get(),
 								 lambda.get(),
@@ -113,11 +113,11 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		sourceSwapBuffer.swap();
-		sourceSwapBuffer.src->stretchIntoMe(_tex);
+		sourceSwapBuffer.getBackBuffer()->stretchIntoMe(_tex);
 		
 		if (!bSourceSet) { // on start set both buffers
 			bSourceSet = true;
-			sourceSwapBuffer.dst->stretchIntoMe(_tex);
+			sourceSwapBuffer.getBuffer()->stretchIntoMe(_tex);
 		}
 		
 		ofPopStyle();

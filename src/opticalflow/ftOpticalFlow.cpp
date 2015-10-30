@@ -40,7 +40,7 @@ namespace flowTools {
 		parameters.setName("optical flow");
 		parameters.add(strength.set("strength", 50, 0, 100));
 		parameters.add(offset.set("offset", 3, 1, 10));
-		parameters.add(lambda.set("lambda", 0.01, 0, 0.1));
+		parameters.add(lambda.set("lambda", 0.01, 0.1, 1));
 		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));

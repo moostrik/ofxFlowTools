@@ -113,7 +113,7 @@ void flowToolsApp::setupGui() {
 	visualizeParameters.setName("visualizers");
 	visualizeParameters.add(showScalar.set("show scalar", true));
 	visualizeParameters.add(showField.set("show field", true));
-	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.15, 0.05, 0.5));
+	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.15, 0.05, 1.0));
 	displayScalarScale.addListener(this, &flowToolsApp::setDisplayScalarScale);
 	visualizeParameters.add(velocityFieldScale.set("velocity scale", 0.1, 0.0, 0.5));
 	velocityFieldScale.addListener(this, &flowToolsApp::setVelocityFieldScale);
@@ -129,6 +129,9 @@ void flowToolsApp::setupGui() {
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(visualizeParameters);
 	
+	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
+	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
+	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(velocityDots.parameters);
 
 	// if the settings file is not present the parameters will not be set during this setup
@@ -357,8 +360,9 @@ void flowToolsApp::drawFluidDensity(int _x, int _y, int _width, int _height) {
 void flowToolsApp::drawFluidVelocity(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	if (showScalar.get()) {
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-//		ofEnableBlendMode(OF_BLENDMODE_ALPHA); // altenate mode
+		ofClear(0,0);
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	//	ofEnableBlendMode(OF_BLENDMODE_DISABLED); // altenate mode
 		displayScalar.setSource(fluidSimulation.getVelocity());
 		displayScalar.draw(_x, _y, _width, _height);
 	}
@@ -470,12 +474,9 @@ void flowToolsApp::drawMask(int _x, int _y, int _width, int _height) {
 
 //--------------------------------------------------------------
 void flowToolsApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
-	
 	ofPushStyle();
-//	opticalFlow.getOpticalFlow().draw(_x, _y, _width, _height);
-	
 	if (showScalar.get()) {
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		displayScalar.setSource(opticalFlow.getOpticalFlowDecay());
 		displayScalar.draw(0, 0, _width, _height);
 	}

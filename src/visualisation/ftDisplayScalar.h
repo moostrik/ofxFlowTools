@@ -18,8 +18,6 @@ namespace flowTools {
 			parameters.add(scale.set("scale", .15, 0, 1));
 		};
 		
-//		void	update() {visibleFloatShader.update(visibleBuffer, *floatTexture, scale.get());};
-		
 		void	setSource(ofTexture& tex)	{ floatTexture = &tex; }
 		void	setScale(float _value)		{ scale.set(_value); }
 		

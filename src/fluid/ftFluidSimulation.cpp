@@ -103,7 +103,7 @@ namespace flowTools {
 		obstacleBuffer.clear();
 		createEdgeImage(obstacleBuffer);
 		
-		divergenceBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		divergenceBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		smokeBuoyancyBuffer.clear();
 		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);

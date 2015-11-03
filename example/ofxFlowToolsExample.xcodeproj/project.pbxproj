@@ -80,7 +80,6 @@
 		0B0191491B3467AA0096AA43 /* ftVTFieldShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftVTFieldShader.h; path = ../src/visualisation/ftVTFieldShader.h; sourceTree = "<group>"; };
 		0B01914C1B346E820096AA43 /* ftVTField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftVTField.h; path = ../src/visualisation/ftVTField.h; sourceTree = "<group>"; };
 		0B504C8119D2CFB7003C6F85 /* ftFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftFbo.h; path = ../src/ftFbo.h; sourceTree = "<group>"; };
-		0B504C8219D2CFDD003C6F85 /* ftSwapBufferAlternate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftSwapBufferAlternate.h; path = ../src/ftSwapBufferAlternate.h; sourceTree = "<group>"; };
 		0B504C8419D2CFEE003C6F85 /* ftOpticalFlow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ftOpticalFlow.cpp; path = ../src/opticalflow/ftOpticalFlow.cpp; sourceTree = "<group>"; };
 		0B504C8519D2CFEE003C6F85 /* ftOpticalFlow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftOpticalFlow.h; path = ../src/opticalflow/ftOpticalFlow.h; sourceTree = "<group>"; };
 		0B504C8619D2CFEE003C6F85 /* ftOpticalFlowShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftOpticalFlowShader.h; path = ../src/opticalflow/ftOpticalFlowShader.h; sourceTree = "<group>"; };
@@ -400,7 +399,6 @@
 				0B504CB419D2D095003C6F85 /* ftShader.h */,
 				0B504C8119D2CFB7003C6F85 /* ftFbo.h */,
 				0BF65F051BE25458001FD488 /* ftSwapBuffer.h */,
-				0B504C8219D2CFDD003C6F85 /* ftSwapBufferAlternate.h */,
 				19EA630876A9104CB2BF5E78 /* opticalflow */,
 				329E086B8B6FAA24045DB218 /* mask */,
 				9D76D7CDEB7A0AD0870408E0 /* fluid */,

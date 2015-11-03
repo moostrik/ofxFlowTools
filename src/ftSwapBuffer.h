@@ -16,17 +16,14 @@ namespace flowTools {
 			mySettings.internalformat = _internalformat;
 			mySettings.maxFilter = _filter;
 			mySettings.minFilter = _filter;
-	//		mySettings.numColorbuffers = 2;
 			
 			for(int i = 0; i < 2; i++){
 				FBOs[i].allocate(mySettings);
 			}
 			
 			clear();
-			
 			flag = 0;
 			swap();
-			flag = 0;
 		}
 		
 		void swap(){
@@ -47,7 +44,7 @@ namespace flowTools {
 		int getInternalFormat() { return FBOs[0].getInternalFormat(); }
 		
 		ftFbo* getBuffer() { return buffer; }
-		ofTexture& getTexture() { return buffer->getTextureReference(); }
+		ofTexture& getTextureReference() { return buffer->getTextureReference(); }
 		
 		ftFbo* getBackBuffer() { return backbuffer; }
 		ofTexture& getBackTexture() { return backbuffer->getTextureReference(); }

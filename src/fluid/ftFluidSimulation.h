@@ -38,10 +38,10 @@ namespace flowTools {
 		void    addObstacle(ofTexture& _tex);
 		void    addTempObstacle(ofTexture& _tex);
 		
-		ofTexture&	getDensity() {return densitySwapBuffer.src->getTexture();};
-		ofTexture&	getVelocity() {return velocitySwapBuffer.src->getTexture();};
-		ofTexture&	getPressure() {return pressureSwapBuffer.src->getTexture();}
-		ofTexture&	getTemperature() {return temperatureSwapBuffer.src->getTexture();}
+		ofTexture&	getDensity() {return densitySwapBuffer.getBackTexture();};
+		ofTexture&	getVelocity() {return velocitySwapBuffer.getBackTexture();};
+		ofTexture&	getPressure() {return pressureSwapBuffer.getBackTexture();}
+		ofTexture&	getTemperature() {return temperatureSwapBuffer.getBackTexture();}
 		ofTexture&	getDivergence() {return divergenceBuffer.getTexture();}
 		ofTexture&	getObstacle() {return combinedObstacleBuffer.getTexture();}
 		ofTexture&	getCurlMagnitude() {return vorticityFirstPassBuffer.getTexture();}

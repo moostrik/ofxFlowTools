@@ -50,7 +50,7 @@ namespace flowTools {
 		float	getEdge() { return edge.get(); }
 		float	getStrength() { return strength.get(); }
 		ofVec4f	getForce() { return force.get(); }
-		ofTexture&	getTextureReference() {return forceBuffer.getTexture();}
+		ofTexture&	getTexture() {return forceBuffer.getTexture();}
 		bool	didChange() {return forceChanged;}
 		
 		ofParameterGroup	parameters;

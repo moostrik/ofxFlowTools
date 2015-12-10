@@ -4,6 +4,8 @@ ofxFlowTools
 
 openframeworks addon. Combines 2D fluid simulation, optical flow and more using GLSL shaders. Works best with live camera input.
 
+* created for OF 0.9.0 
+* OF 0.8.4 version can be found in releases
 
 INTRODUCTION
 

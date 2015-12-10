@@ -22,15 +22,13 @@ namespace flowTools {
 			}
 			
 			clear();
-			
 			flag = 0;
 			swap();
-			flag = 0;
 		}
 		
 		void swap(){
-			src = &(FBOs[(flag)%2]);
-			dst = &(FBOs[++(flag)%2]);
+			backbuffer = &(FBOs[(flag)%2]);
+			buffer = &(FBOs[++(flag)%2]);
 		}
 		
 		void clear(){
@@ -39,16 +37,22 @@ namespace flowTools {
 			}
 		}
 				
-		ofFbo& operator[]( int n ){ return FBOs[n];}
+		ofFbo& operator[]( int n ){ return FBOs[n]; }
 		
-		int getWidth() { return FBOs[0].getWidth(); };
-		int getHeight() { return FBOs[0].getHeight(); };
-		int getInternalFormat() { return FBOs[0].getInternalFormat(); };
+		int getWidth() { return FBOs[0].getWidth(); }
+		int getHeight() { return FBOs[0].getHeight(); }
+		int getInternalFormat() { return FBOs[0].getInternalFormat(); }
 		
-		ftFbo   *src;       // Source       ->  Ping
-		ftFbo   *dst;       // Destination  ->  Pong
+		ftFbo* getBuffer() { return buffer; }
+		ofTexture& getTexture() { return buffer->getTexture(); }
+		
+		ftFbo* getBackBuffer() { return backbuffer; }
+		ofTexture& getBackTexture() { return backbuffer->getTexture(); }
 		
 	private:
+		ftFbo   *backbuffer;	// Source       ->  Ping
+		ftFbo   *buffer;		// Destination  ->  Pong
+		
 		ftFbo   FBOs[2];    // Real addresses of ping/pong FBO´s
 		int     flag;       // Integer for making a quick swap
 	};

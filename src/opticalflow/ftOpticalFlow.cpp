@@ -40,7 +40,7 @@ namespace flowTools {
 		parameters.setName("optical flow");
 		parameters.add(strength.set("strength", 50, 0, 100));
 		parameters.add(offset.set("offset", 3, 1, 10));
-		parameters.add(lambda.set("lambda", 0.01, 0, 0.1));
+		parameters.add(lambda.set("lambda", 0.01, 0.1, 1));
 		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));
@@ -93,8 +93,8 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		opticalFlowShader.update(velocityBuffer,
-								 sourceSwapBuffer.src->getTexture(),
-								 sourceSwapBuffer.dst->getTexture(),
+								 sourceSwapBuffer.getTexture(),
+								 sourceSwapBuffer.getBackTexture(),
 								 timeStep,
 								 offset.get(),
 								 lambda.get(),
@@ -113,11 +113,12 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		sourceSwapBuffer.swap();
-		sourceSwapBuffer.src->stretchIntoMe(_tex);
+		sourceSwapBuffer.getBuffer()->stretchIntoMe(_tex);
 		
 		if (!bSourceSet) { // on start set both buffers
 			bSourceSet = true;
-			sourceSwapBuffer.dst->stretchIntoMe(_tex);
+			sourceSwapBuffer.swap();
+			sourceSwapBuffer.getBuffer()->stretchIntoMe(_tex);
 		}
 		
 		ofPopStyle();

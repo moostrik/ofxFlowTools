@@ -19,11 +19,11 @@ namespace flowTools {
 		void	setVelocity(ofTexture& tex);
 		void	update();
 		
-		ofTexture& getTextureReference() {return getColorMask();};
-		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTexture();};
+		ofTexture& getTexture() {return getColorMask();};
+		ofTexture& getColorMask() {return colorMaskSwapBuffer.getBackTexture();};
 		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTexture();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
-		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.src->draw(_x, _y, _width, _height);};
+		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.getBackTexture().draw(_x, _y, _width, _height);};
 		
 		int		getWidth() {return width;};
 		int		getHeight(){return height;};

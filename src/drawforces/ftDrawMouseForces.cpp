@@ -87,7 +87,7 @@ namespace flowTools {
 			ofLogError("ftDrawMouseForces::getTexture: index out of range");
 		}
 		else
-			return drawForces[_index].getTextureReference();
+			return drawForces[_index].getTexture();
 		
 	}
 	

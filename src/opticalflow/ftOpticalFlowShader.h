@@ -42,48 +42,34 @@ namespace flowTools {
 										   vec2	off_x = vec2(offset, 0.0);
 										   vec2	off_y = vec2(0.0, offset);
 										   
-										   vec4	scr_dif;
-										   vec4	gradx;
-										   vec4	grady;
-										   vec4	gradmag;
-										   vec4	vx;
-										   vec4	vy;
-										   vec4	f4l = vec4(lambda);
-										   vec4	flow = vec4(0.0);
-										   
 										   //get the difference
-										   scr_dif = texture2DRect(CurrTexture, st) - texture2DRect(LastTexture, st);
+										   vec4 scr_dif = texture2DRect(CurrTexture, st) - texture2DRect(LastTexture, st);
 										   
 										   //calculate the gradient
+										   vec4 gradx; vec4 grady; vec4 gradmag; vec4 vx; vec4 vy;
 										   gradx =	texture2DRect(LastTexture, st + off_x) - texture2DRect(LastTexture, st - off_x);
 										   gradx += texture2DRect(CurrTexture, st + off_x) - texture2DRect(CurrTexture, st - off_x);
 										   grady =	texture2DRect(LastTexture, st + off_y) - texture2DRect(LastTexture, st -off_y);
 										   grady += texture2DRect(CurrTexture, st + off_y) - texture2DRect(CurrTexture, st - off_y);
 										   
-										   gradmag = sqrt((gradx*gradx)+(grady*grady)+f4l);
+										   gradmag = sqrt((gradx*gradx)+(grady*grady)+vec4(lambda));
 										   vx = scr_dif*(gradx/gradmag);
 										   vy = scr_dif*(grady/gradmag);
 										   
+										   vec2	flow = vec2(0.0);
 										   flow.x = -(vx.x + vx.y + vx.z) / 3.0 * inverseX;
 										   flow.y = -(vy.x + vy.y + vy.z) / 3.0 * inverseY;
 										   
+										   // apply treshold
+										   float strength = length(flow);
+										   strength = max(0.0, strength - threshold) / (1.0 - threshold);
+										   flow = normalize(flow) * vec2(strength);
 										   
-										   if (length(flow.xy) < threshold)
-											   flow = vec4(0.0);
-										   else
-											   flow *= vec4(force);
+										   // apply force
+										   flow *= vec2(force);
 										   
-										   flow.w = 1.0;// was flow.w = length(flow.xy);
-										   /*
-										   if (length(flow.xy) < threshold) flow = vec4(0.0);
-										   else {
-											   flow *= vec4(force);
-											   float flowLength = length(flow.xy);
-											   flow.xy = normalize(flow.xy) * pow(flowLength, FlowPower);
-										   }
-										   flow.w = length(flow.xy);
-										   */
-										   gl_FragColor = flow;
+										   // set color
+										   gl_FragColor = vec4(flow, 0.0, 1.0);
 									   }
 									   );
 			
@@ -109,46 +95,38 @@ namespace flowTools {
 								  
 								  void main()
 								  {
-									  
 									  vec2 st = texCoordVarying;
-									  
 									  vec2	off_x = vec2(offset, 0.0);
 									  vec2	off_y = vec2(0.0, offset);
 									  
-									  vec4	scr_dif;
-									  vec4	gradx;
-									  vec4	grady;
-									  vec4	gradmag;
-									  vec4	vx;
-									  vec4	vy;
-									  vec4	f4l = vec4(lambda);
-									  vec4	flow = vec4(0.0);
-									  
 									  //get the difference
-									  scr_dif = texture(CurrTexture, st) - texture(LastTexture, st);
+									  vec4 scr_dif = texture(CurrTexture, st) - texture(LastTexture, st);
 									  
 									  //calculate the gradient
+									  vec4 gradx; vec4 grady; vec4 gradmag; vec4 vx; vec4 vy;
 									  gradx =  texture(LastTexture, st + off_x) - texture(LastTexture, st - off_x);
 									  gradx += texture(CurrTexture, st + off_x) - texture(CurrTexture, st - off_x);
 									  grady =  texture(LastTexture, st + off_y) - texture(LastTexture, st - off_y);
 									  grady += texture(CurrTexture, st + off_y) - texture(CurrTexture, st - off_y);
-									  
-									  gradmag = sqrt((gradx*gradx)+(grady*grady)+f4l);
+
+									  gradmag = sqrt((gradx*gradx)+(grady*grady)+vec4(lambda));
 									  vx = scr_dif*(gradx/gradmag);
 									  vy = scr_dif*(grady/gradmag);
 									  
+									  vec2	flow = vec2(0.0);
 									  flow.x = -(vx.x + vx.y + vx.z) / 3.0 * inverseX;
 									  flow.y = -(vy.x + vy.y + vy.z) / 3.0 * inverseY;
 									  
+									  // apply treshold
+									  float strength = length(flow);
+									  strength = max(0.0, strength - threshold) / (1.0 - threshold);
+									  flow = normalize(flow) * vec2(strength);
 									  
-									  if (length(flow.xy) < threshold)
-										  flow = vec4(0.0);
-									  else
-										  flow *= vec4(force);
+									  // apply force
+									  flow *= vec2(force);
 									  
-									  flow.w = 1.0;// was flow.w = length(flow.xy);
-									  
-									  fragColor = flow;
+									  // set color
+									  fragColor = vec4(flow, 0.0, 1.0);
 								  }
 								  
 								  );

@@ -16,7 +16,7 @@ namespace flowTools {
 	public:
 		ftParticleFlow();
 		
-		void setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY, bool _doFasterInternalFormat = 0);
+		void setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
 		void addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
 		void addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;

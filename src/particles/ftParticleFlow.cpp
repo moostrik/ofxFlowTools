@@ -50,7 +50,7 @@ namespace flowTools {
 		parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
 	}
 	
-	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY, bool _doFasterInternalFormat) {
+	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {
 		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		numParticlesX = _numParticlesX;
@@ -65,14 +65,7 @@ namespace flowTools {
 			}
 		}
 		
-		int internalFormatVelocity;
-		if (_doFasterInternalFormat) {
-			internalFormatVelocity = GL_RG32F;
-			
-		}
-		else {
-			internalFormatVelocity = GL_RGB32F;
-		}
+		int internalFormatVelocity = GL_RG32F;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?

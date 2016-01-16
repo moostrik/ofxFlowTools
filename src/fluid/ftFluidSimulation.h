@@ -25,7 +25,7 @@ namespace flowTools {
 	public:
 		ftFluidSimulation();
 		
-		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0, bool doFasterInternalFormat = false);
+		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void    update(float _deltaTime = 0);
 		void    draw(int x = 0, int y = 0, float _width = -1, float _height = -1);
 		void	reset();

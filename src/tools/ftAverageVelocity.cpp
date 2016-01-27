@@ -8,7 +8,7 @@
 
 #include "ftAverageVelocity.h"
 
-
+namespace flowTools {
 
 void ftAverageVelocity::setup(int _width, int _height, string _name) {
 	
@@ -87,8 +87,10 @@ void ftAverageVelocity::update() {
 	direction = cumVelocity.normalize();
 	area /= totalPixels;
 	
+//	cout << cumVelocity << endl;
 	pDirection.set(direction);
 	pAmplitude.set(amplitude);
 	pArea.set(area);
 	
+}
 }

@@ -101,10 +101,10 @@ namespace flowTools {
 								 threshold.get(),
 								 inverseX,
 								 inverseY);
-		
-		decayBuffer.drawIntoMe(velocityBuffer);
-		timeBlurShader.update(decayBuffer, timeBlurDecay, timeBlurRadius);
-				
+		if (doTimeBlurDecay) {
+			decayBuffer.drawIntoMe(velocityBuffer);
+			timeBlurShader.update(decayBuffer, timeBlurDecay, timeBlurRadius);
+		}
 		ofPopStyle();
 	}
 	

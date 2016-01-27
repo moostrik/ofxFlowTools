@@ -4,7 +4,7 @@
 #include "ofMain.h"
 #include "ftFbo.h"
 
-using namespace flowTools;
+namespace flowTools {
 
 class ftAverageVelocity {
 public:
@@ -45,3 +45,4 @@ private:
 	
 	
 };
+}

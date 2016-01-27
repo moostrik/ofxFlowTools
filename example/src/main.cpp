@@ -1,5 +1,5 @@
 #include "ofMain.h"
-#include "flowToolsApp.h"
+#include "ofApp.h"
 
 //========================================================================
 int main( ){
@@ -14,5 +14,5 @@ int main( ){
     
     ofCreateWindow(windowSettings);
     
-    ofRunApp(new flowToolsApp());
+    ofRunApp(new ofApp());
 }

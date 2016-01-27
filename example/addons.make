@@ -1,2 +1,2 @@
-ofxGui
 ofxFlowTools
+ofxGui

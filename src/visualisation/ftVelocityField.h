@@ -25,6 +25,7 @@ namespace flowTools {
 			
 			parameters.setName("velocity field");
 			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
+			parameters.add(maxArrowLength.set("max arrow size", 1, 0, 10));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -36,13 +37,16 @@ namespace flowTools {
 			ofEnableAlphaBlending();
 			ofDisableAntiAliasing();
 			
+			
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
 			}
 			
+			ofTranslate(_x, _y);
 			ofScale(_width, _height);
-			float maxArrowLength =  2.0 / (width + 1);
-			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), maxArrowLength);
+			
+			float NormalizedMaxArrowLength =  (2.0 / (width + 1)) * maxArrowLength.get();
+			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), NormalizedMaxArrowLength, color.get());
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -56,11 +60,15 @@ namespace flowTools {
 		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
+		void	setColor(ofFloatColor _value)		{ color.set(_value); }
+		void	setMaxArrowLength(float _value)		{ maxArrowLength.set(_value); }
 		
 		float	getVelocityScale()					{ return velocityScale.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
+		ofFloatColor	getColor()					{ return color.get(); }
+		void	getMaxArrowLenth()					{ return maxArrowLength.get(); }
 		
 		ofParameterGroup	parameters;
 		
@@ -70,6 +78,8 @@ namespace flowTools {
 		
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
 		ofParameter<bool>	lineSmooth;
+		ofParameter<float>	maxArrowLength;
+		ofParameter<ofFloatColor>	color;
 
 		
 		ofTexture*	velocityTexture;

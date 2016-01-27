@@ -43,6 +43,7 @@ namespace flowTools {
 			geometryShader = GLSL120GEO(
 								  uniform sampler2DRect fieldTexture;
 								  uniform vec2 texResolution;
+								  uniform vec4 baseColor;
 								  uniform float vectorSize;
 								  uniform float maxArrowSize;
 									   
@@ -56,8 +57,9 @@ namespace flowTools {
 									  vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 											   
 									  float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxArrowSize);
-									  vec4 color = vec4(1.0, 1.0, 1.0, alpha);
-										   
+									  vec4 color = baseColor;
+									  color.w *= alpha;
+									  
 									  float arrowLength = 0.75 * length(line);
 											   
 									  vec2 nLine = normalize(line);
@@ -202,13 +204,14 @@ namespace flowTools {
 		}
 	
 	public:	
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _velocityScale, float _maxArrowSize){
+		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _velocityScale, float _maxArrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
 			int width = _floatTexture.getWidth();
 			int height = _floatTexture.getHeight();
 			
 			shader.begin();
 			shader.setUniformTexture("fieldTexture", _floatTexture,0);
 			shader.setUniform2f("texResolution", width, height);
+			shader.setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
 			shader.setUniform1f("vectorSize", _velocityScale);
 			shader.setUniform1f("maxArrowSize", _maxArrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());

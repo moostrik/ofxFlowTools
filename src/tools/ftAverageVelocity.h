@@ -23,8 +23,6 @@ public:
 	
 	ofParameterGroup parameters;
 	
-	void draw() { averageFbo.draw(300,0, 400, 400); }
-	
 private:
 	ofParameter<float>		pMagnitude;
 	ofParameter<ofVec2f>	pDirection;

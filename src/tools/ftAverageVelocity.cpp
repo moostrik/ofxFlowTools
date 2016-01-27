@@ -78,6 +78,6 @@ namespace flowTools {
 		pMagnitude.set(averageMagnitude);
 		pDirection.set(averageDirection);
 		
-		cout << averageMagnitude << " " << averageDirection << " " << endl;
+//		cout << averageMagnitude << " " << averageDirection << " " << endl;
 	}
 }

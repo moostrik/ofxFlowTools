@@ -58,6 +58,7 @@ namespace flowTools {
 		}
 		
 		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
+		void	setScale(float _value)				{ setVelocityScale(_value); }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		void	setColor(ofFloatColor _value)		{ color.set(_value); }

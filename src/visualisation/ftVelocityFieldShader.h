@@ -135,6 +135,7 @@ namespace flowTools {
 									 uniform mat4 modelViewProjectionMatrix;
 									 uniform sampler2DRect fieldTexture;
 									 uniform vec2 texResolution;
+									 uniform vec4 baseColor;
 									 uniform float vectorSize;
 									 uniform float maxArrowSize;
 									
@@ -152,7 +153,8 @@ namespace flowTools {
 										 vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 										 
 										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxArrowSize);
-										 vec4 color = vec4(1.0, 1.0, 1.0, alpha);
+										 vec4 color = baseColor;
+										 color.w *= alpha;
 										 
 										 float arrowLength = 0.75 * length(line);
 										 

@@ -15,12 +15,14 @@ namespace flowTools {
 		averageFbo.allocate(_width, _height, GL_RGB32F);
 		floatPixelData = new float [(_width * _height) * 2];
 		
-		averageDirection = ofVec2f(0,0);
+		direction = ofVec2f(0,0);
+		totalMagnitude = 0;
 		averageMagnitude = 0;
 		
 		parameters.setName("average " + _name);
-		parameters.add(pMagnitude.set("magnitude", 10, 1, 100));
 		parameters.add(pDirection.set("direction", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
+		parameters.add(pMagnitude.set("magnitude", 0, 0, 100));
+		parameters.add(pAverageMagnitude.set("magnitude", 0, 0, 1));
 		
 	}
 	
@@ -60,23 +62,25 @@ namespace flowTools {
 		// ----- presumably slower method -----
 		
 		int		totalPixels = width * height;
-		ofVec2f velocity, cumVelocity(0,0);
-		float	magnitude, cumMagnitude(0);
+		ofVec2f velocity, totalVelocity(0,0);
+		float	magnitude;
 		
+		totalMagnitude = 0;
 		for (int i=0; i<totalPixels; i++) {
 			velocity.x = floatPixelData[i*2];
 			velocity.y = floatPixelData[i*2+1];
-			cumVelocity += velocity;
+			totalVelocity += velocity;
 			
 			magnitude = velocity.length();
-			cumMagnitude += magnitude;
+			totalMagnitude += magnitude;
 		}
 		
-		averageMagnitude = cumMagnitude / totalPixels * 100;
-		averageDirection = cumVelocity.normalize();
+		averageMagnitude = totalMagnitude / totalPixels;
+		direction = totalVelocity.normalize();
 		
 		pMagnitude.set(averageMagnitude);
-		pDirection.set(averageDirection);
+		pMagnitude.set(totalMagnitude);
+		pDirection.set(direction);
 		
 //		cout << averageMagnitude << " " << averageDirection << " " << endl;
 	}

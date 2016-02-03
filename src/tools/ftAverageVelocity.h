@@ -18,14 +18,16 @@ public:
 	void		setTexture(ofTexture& _textureReference);
 	void		update();
 	
-	ofVec2f		getDirection() { return averageDirection; }
-	float		getMagnitude()	{ return averageMagnitude; }
+	ofVec2f		getDirection() { return direction; }
+	float		getMagnitude()	{ return totalMagnitude; }
+	float		getAverageMagnitude()	{ return averageMagnitude; }
 	
 	ofParameterGroup parameters;
 	
 private:
-	ofParameter<float>		pMagnitude;
 	ofParameter<ofVec2f>	pDirection;
+	ofParameter<float>		pMagnitude;
+	ofParameter<float>		pAverageMagnitude;
 	
 //	void pWidthListner(int& _width) { setSize(_width, averageFbo.getHeight()); }
 //	void pHeightListner(int& _height) { setSize(averageFbo.getHeight(), _height); }
@@ -33,7 +35,8 @@ private:
 	ftFbo		averageFbo;
 	float*		floatPixelData;
 	
-	ofVec2f		averageDirection;
+	ofVec2f		direction;
+	float		totalMagnitude;
 	float		averageMagnitude;
 	
 	

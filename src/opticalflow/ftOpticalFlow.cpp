@@ -46,7 +46,7 @@ namespace flowTools {
 		parameters.add(doInverseY.set("inverse y", false));
 		parameters.add(doTimeBlurDecay.set("do time blur", true));
 		timeBlurParameters.setName("time blur");
-		timeBlurParameters.add(timeBlurDecay.set("Decay", 0.1, 0, 1));
+		timeBlurParameters.add(timeBlurDecay.set("Decay", 3, 0, 10));
 		timeBlurParameters.add(timeBlurRadius.set("Decay Blur Radius", 2, 0, 10));
 		parameters.add(timeBlurParameters);
 		
@@ -103,7 +103,7 @@ namespace flowTools {
 								 inverseY);
 		if (doTimeBlurDecay) {
 			decayBuffer.drawIntoMe(velocityBuffer);
-			timeBlurShader.update(decayBuffer, timeBlurDecay, timeBlurRadius);
+			timeBlurShader.update(decayBuffer, timeBlurDecay * deltaTime, timeBlurRadius);
 		}
 		ofPopStyle();
 	}

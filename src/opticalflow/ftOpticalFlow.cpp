@@ -44,13 +44,13 @@ namespace flowTools {
 		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));
-		parameters.add(doTimeBlurDecay.set("do time blur", true));
-		timeBlurParameters.setName("time blur");
-		timeBlurParameters.add(timeBlurDecay.set("Decay", 3, 0, 10));
-		timeBlurParameters.add(timeBlurRadius.set("Decay Blur Radius", 2, 0, 10));
+//		parameters.add(doTimeBlurDecay.set("do time blur", true));
+		doTimeBlurDecay.set("do time blur", true);
+		timeBlurParameters.setName("time decay blur");
+		timeBlurParameters.add(timeBlurDecay.set("decay", 3, 0, 10));
+		timeBlurParameters.add(timeBlurRadius.set("blur radius", 2, 0, 10));
 		parameters.add(timeBlurParameters);
 		
-//		flowVectorsDidUpdate = false;
 		lastTime = ofGetElapsedTimef();
 	};
 	
@@ -60,12 +60,12 @@ namespace flowTools {
 				
 		sourceSwapBuffer.allocate(width, height);
 		velocityBuffer.allocate(width, height, GL_RGB32F);
-		velocityBuffer.clear();
+		velocityBuffer.black();
 		
 		velocityTexture.allocate(width, height, GL_RGB32F);
 		
 		decayBuffer.allocate(width, height, GL_RGB32F);
-		decayBuffer.clear();
+		decayBuffer.black();
 		
 //		flowVectors = new ofVec2f[int(width * height)];
 //		flowFloats = new float [int(width * height) * 2];
@@ -101,10 +101,10 @@ namespace flowTools {
 								 threshold.get(),
 								 inverseX,
 								 inverseY);
-		if (doTimeBlurDecay) {
-			decayBuffer.drawIntoMe(velocityBuffer);
-			timeBlurShader.update(decayBuffer, timeBlurDecay * deltaTime, timeBlurRadius);
-		}
+		
+		decayBuffer.drawIntoMe(velocityBuffer);
+		timeBlurShader.update(decayBuffer, timeBlurDecay * deltaTime, timeBlurRadius);
+
 		ofPopStyle();
 	}
 	
@@ -125,32 +125,5 @@ namespace flowTools {
 		
 	}
 	
-/* MOVED TO FTAVERAGEVELOCITY
- 
-	ofVec2f* ftOpticalFlow::getFlowVectors(){
-		if (!flowVectorsDidUpdate) {
-			velocityBuffer.bind();
-			glReadPixels(0, 0, width, height, GL_RG, GL_FLOAT, flowFloats);
-			velocityBuffer.unbind();
-			
-			for (int i=0; i<width * height; i++) {
-				flowVectors[i] = ofVec2f(flowFloats[i * 2], flowFloats[i * 2 + 1]);
-			}
-		}
-		flowVectorsDidUpdate = true;
-		
-		return flowVectors;
-	}
-	
-	float ftOpticalFlow::getAverageFlow(){
-		getFlowVectors();
-		float avgFlow = 0;
-		for (int i=0; i<width * height; i++) {
-			avgFlow += flowVectors[i].length();
-		}
-		avgFlow /= width * height;
-		return avgFlow;
-	}
- */
 	
 }

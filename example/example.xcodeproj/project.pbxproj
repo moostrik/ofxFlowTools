@@ -60,6 +60,7 @@
 		04CE6A84FA111F88EB08CDAA /* ftOpticalFlowShader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ftOpticalFlowShader.h; path = ../../../addons/ofxFlowTools/src/opticalflow/ftOpticalFlowShader.h; sourceTree = SOURCE_ROOT; };
 		07818DEA3E42B969F242F634 /* ftTemperatureField.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ftTemperatureField.h; path = ../../../addons/ofxFlowTools/src/visualisation/ftTemperatureField.h; sourceTree = SOURCE_ROOT; };
 		0A1DAC09F322AE313A40706D /* ofxToggle.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxToggle.h; path = ../../../addons/ofxGui/src/ofxToggle.h; sourceTree = SOURCE_ROOT; };
+		0B6EE04E1C6B7970008AC5DE /* ftDecayShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ftDecayShader.h; path = ../src/filters/ftDecayShader.h; sourceTree = "<group>"; };
 		0D418D07961710BA2605389F /* ftVelocityField.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ftVelocityField.h; path = ../../../addons/ofxFlowTools/src/visualisation/ftVelocityField.h; sourceTree = SOURCE_ROOT; };
 		141AF1017959EBF9939C1BD1 /* ftVelocitySpheresShader.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ftVelocitySpheresShader.h; path = ../../../addons/ofxFlowTools/src/visualisation/ftVelocitySpheresShader.h; sourceTree = SOURCE_ROOT; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
@@ -253,6 +254,7 @@
 				4E5273AB4C11B2F746600298 /* ftHSLShader.h */,
 				71D7178293405647AB85798E /* ftLuminanceShader.h */,
 				E3D886AF0718D649FD059D29 /* ftTimeBlurShader.h */,
+				0B6EE04E1C6B7970008AC5DE /* ftDecayShader.h */,
 			);
 			name = filters;
 			sourceTree = "<group>";

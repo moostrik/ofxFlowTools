@@ -72,23 +72,23 @@ namespace flowTools {
 		
 		
 		particleAgeLifespanMassSizeSwapBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F, GL_NEAREST);
-		particleAgeLifespanMassSizeSwapBuffer.clear();
+		particleAgeLifespanMassSizeSwapBuffer.black();
 		particlePositionSwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity, GL_NEAREST);
-		particlePositionSwapBuffer.clear();
+		particlePositionSwapBuffer.black();
 		initPositionShader.update(*particlePositionSwapBuffer.getBuffer());
 		particlePositionSwapBuffer.swap();
 		particleHomeBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
-		particleHomeBuffer.clear();
+		particleHomeBuffer.black();
 		initPositionShader.update(particleHomeBuffer);
 		
 		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		fluidVelocitySwapBuffer.clear();
+		fluidVelocitySwapBuffer.black();
 		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		flowVelocitySwapBuffer.clear();
+		flowVelocitySwapBuffer.black();
 		densitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
-		densitySwapBuffer.clear();
+		densitySwapBuffer.black();
 		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB); // GL_RED??
-		obstacleBuffer.clear();
+		obstacleBuffer.black();
 		
 		ofPopStyle();
 		
@@ -136,10 +136,10 @@ namespace flowTools {
 			
 			ofPopStyle();
 	 
-			flowVelocitySwapBuffer.clear();
-			fluidVelocitySwapBuffer.clear();
-			densitySwapBuffer.clear();
-			obstacleBuffer.clear();
+			flowVelocitySwapBuffer.black();
+			fluidVelocitySwapBuffer.black();
+			densitySwapBuffer.black();
+			obstacleBuffer.black();
 		}
 	}
 	
@@ -177,7 +177,7 @@ namespace flowTools {
 	void ftParticleFlow::setObstacle (ofTexture& _tex) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		obstacleBuffer.clear();
+		obstacleBuffer.black();
 		obstacleBuffer.begin();
 		_tex.draw(0,0,simulationWidth,simulationHeight);
 		obstacleBuffer.end();

@@ -2,12 +2,13 @@
 #pragma once
 #include "ofMain.h"
 #include "ftShader.h"
+#include "ftFbo.h"
 
 namespace flowTools {
 	
-	class ftDarkenShader : public ftShader {
+	class ftDecayShader : public ftShader {
 	public:
-		ftDarkenShader(){
+		ftDecayShader(){
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())
@@ -16,26 +17,24 @@ namespace flowTools {
 				glTwo();
 			
 			if (bInitialized)
-				ofLogNotice("ftContrastShader initialized");
+				ofLogNotice("ftDecayShader initialized");
 			else
-				ofLogWarning("ftContrastShader failed to initialize");
+				ofLogWarning("ftDecayShader failed to initialize");
 		}
 		
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex0;
-									 uniform float darken;
+									 uniform sampler2DRect tex1;
+									 uniform float decay;
 									 
 									 void main(){
-										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
-										 float alpha = color.a;
-										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
-										 p = p * brightness;
-										 color = vec4(p,p,p,1.0);
-										 color = mix( vec4(1.0,1.0,1.0,1.0),color,contrast);
+										 vec4 color0 = texture2DRect(tex0,gl_TexCoord[0].st);
+										 vec4 color1 = texture2DRect(tex1,gl_TexCoord[0].st);
+										 color0.xyz *= vec3(1.0 - decay);
 										 
-										 gl_FragColor =  vec4(color.r , color.g, color.b, alpha);
+										 gl_FragColor = vec4(color0.xyz + color1.xyz, 1.0);
 									 }
 									 );
 			
@@ -48,21 +47,18 @@ namespace flowTools {
 			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect tex0;
-									 uniform float contrast;
-									 uniform float brightness;
+									 uniform sampler2DRect tex1;
+									 uniform float decay;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
 									 void main(){
-										 vec4 color = texture(tex0, texCoordVarying);
-										 float alpha = color.a;
-										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
-										 p = p * brightness;
-										 color = vec4(p,p,p,1.0);
-										 color = mix( vec4(1.0,1.0,1.0,1.0),color,contrast);
+										 vec4 color0 = texture(tex0, texCoordVarying);
+										 vec4 color1 = texture(tex1, texCoordVarying);
+										 color0.xyz *= vec3(1.0 - decay);
 										 
-										 fragColor =  vec4(color.r , color.g, color.b, alpha);
+										 fragColor = vec4(color0.xyz + color1.xyz, 1.0);
 									 }
 									 );
 			
@@ -74,15 +70,15 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture, float _contrast, float _brightness){
-			_drawBuffer.begin();
+		void update(ofFbo& _buffer, ofTexture& _backBufferTexture,  ofTexture& _texture, float _decay){
+			_buffer.begin();
 			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTexture, 0 );
-			shader.setUniform1f("contrast", _contrast);
-			shader.setUniform1f("brightness", _brightness);
-			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
+			shader.setUniformTexture("tex0", _backBufferTexture, 0);
+			shader.setUniformTexture("tex1", _texture, 1);
+			shader.setUniform1f("decay", MAX(_decay, 0.0));
+			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
-			_drawBuffer.end();
+			_buffer.end();
 		}
 	};
 }

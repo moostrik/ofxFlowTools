@@ -13,7 +13,7 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			displayScalarBuffer.allocate(width, height);
-			displayScalarBuffer.clear();
+			displayScalarBuffer.black();
 			parameters.setName("display scalar");
 			parameters.add(scale.set("scale", .15, 0, 1));
 		};
@@ -28,7 +28,7 @@ namespace flowTools {
 		ofTexture& getTexture() {return displayScalarBuffer.getTexture();}
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height) {
-			displayScalarBuffer.clear();
+			displayScalarBuffer.black();
 			displayScalarShader.update(displayScalarBuffer, *floatTexture, scale.get());
 			displayScalarBuffer.draw(_x, _y, _width, _height);
 		};

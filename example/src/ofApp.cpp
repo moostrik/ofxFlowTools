@@ -161,7 +161,10 @@ void ofApp::update(){
 		ofPopStyle();
 		
 		opticalFlow.setSource(cameraFbo.getTexture());
-		opticalFlow.update(deltaTime);
+		
+		// opticalFlow.update(deltaTime);
+		// use internal deltatime instead
+		opticalFlow.update();
 		
 		velocityMask.setDensity(cameraFbo.getTexture());
 		velocityMask.setVelocity(opticalFlow.getOpticalFlow());

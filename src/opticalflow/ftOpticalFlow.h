@@ -5,6 +5,7 @@
 #include "ftSwapBuffer.h"
 #include "ftOpticalFlowShader.h"
 #include "ftTimeBlurShader.h"
+#include "ftDecayShader.h"
 
 namespace flowTools {
 	
@@ -76,6 +77,7 @@ namespace flowTools {
 		ftSwapBuffer		sourceSwapBuffer;
 		ftOpticalFlowShader opticalFlowShader;
 		ftTimeBlurShader	timeBlurShader;
+		ftDecayShader		decayShader;
 		
 		
 //		float*	flowFloats;

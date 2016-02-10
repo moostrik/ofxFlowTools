@@ -36,7 +36,7 @@ namespace flowTools {
 	}
 	
 	void ftAverageVelocity::setTexture(ofTexture &_textureReference) {
-		averageFbo.clear();
+		averageFbo.black();
 		averageFbo.stretchIntoMe(_textureReference);
 	}
 	

@@ -4,7 +4,7 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 
-#define USE_PROGRAMMABLE_GL					// Maybe there is a reason you would want to
+//#define USE_PROGRAMMABLE_GL					// Maybe there is a reason you would want to
 
 using namespace flowTools;
 

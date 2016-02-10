@@ -38,7 +38,7 @@ namespace flowTools {
 	
 	ftOpticalFlow::ftOpticalFlow(){
 		parameters.setName("optical flow");
-		parameters.add(strength.set("strength", 50, 0, 100));
+		parameters.add(strength.set("strength", 10, 0, 100));
 		parameters.add(offset.set("offset", 3, 1, 10));
 		parameters.add(lambda.set("lambda", 0.01, 0.1, 1));
 		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
@@ -48,7 +48,7 @@ namespace flowTools {
 		doTimeBlurDecay.set("do time blur", true);
 		timeBlurParameters.setName("time decay blur");
 		timeBlurParameters.add(timeBlurDecay.set("decay", 3, 0, 10));
-		timeBlurParameters.add(timeBlurRadius.set("blur radius", 2, 0, 10));
+		timeBlurParameters.add(timeBlurRadius.set("blur radius", 3, 0, 10));
 		parameters.add(timeBlurParameters);
 		
 		lastTime = ofGetElapsedTimef();

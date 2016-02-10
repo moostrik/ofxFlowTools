@@ -168,7 +168,7 @@ namespace flowTools {
 			}
 			
 			
-			pingPong.clear();
+			pingPong.black();
 			pingPong.getBuffer()->stretchIntoMe(_buffer);
 			pingPong.swap();
 	
@@ -196,7 +196,7 @@ namespace flowTools {
 		
 		void allocate(int _width, int _height, int _internalFormat = GL_RGBA){
 			pingPong.allocate( _width, _height, _internalFormat);
-			pingPong.clear();
+			pingPong.black();
 		}
 		
 		ofShader    blurShader[2];

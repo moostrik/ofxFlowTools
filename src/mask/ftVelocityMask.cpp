@@ -39,10 +39,10 @@ namespace flowTools {
 		height = _height;
 		
 		colorMaskSwapBuffer.allocate(width, height, GL_RGBA);
-		colorMaskSwapBuffer.clear();
+		colorMaskSwapBuffer.black();
 		
 		luminanceMaskFbo.allocate(width, height, GL_RGB);
-		luminanceMaskFbo.clear();
+		luminanceMaskFbo.black();
 		
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
@@ -58,7 +58,7 @@ namespace flowTools {
 	void ftVelocityMask::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		colorMaskSwapBuffer.clear();
+		colorMaskSwapBuffer.black();
 		
 		if (!bVelocityTextureSet || !bDensityTextureSet) {
 			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");

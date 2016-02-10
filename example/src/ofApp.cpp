@@ -40,7 +40,7 @@ void ofApp::setup(){
 	simpleCam.setup(640, 480, true);
 	didCamUpdate = false;
 	cameraFbo.allocate(640, 480);
-	cameraFbo.clear();
+	cameraFbo.black();
 	
 	// GUI
 	setupGui();

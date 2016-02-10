@@ -21,7 +21,7 @@ namespace flowTools {
 				FBOs[i].allocate(mySettings);
 			}
 			
-			clear();
+			black();
 			flag = 0;
 			swap();
 		}
@@ -31,9 +31,9 @@ namespace flowTools {
 			buffer = &(FBOs[++(flag)%2]);
 		}
 		
-		void clear(){
+		void black(){
 			for(int i = 0; i < 2; i++){
-				FBOs[i].clear();
+				FBOs[i].black();
 			}
 		}
 				

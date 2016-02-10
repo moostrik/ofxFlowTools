@@ -82,30 +82,30 @@ namespace flowTools {
 		int	internalFormatObstacle = GL_R8;
 			
 		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
-		densitySwapBuffer.clear();
+		densitySwapBuffer.black();
 		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
-		velocitySwapBuffer.clear();
+		velocitySwapBuffer.black();
 		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		//		temperatureSwapBuffer.clear(ambientTemperature.get());
-		temperatureSwapBuffer.clear();
+		temperatureSwapBuffer.black();
 		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		
 		obstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		obstacleBuffer.clear();
+		obstacleBuffer.black();
 		createEdgeImage(obstacleBuffer);
 		
 		divergenceBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		smokeBuoyancyBuffer.clear();
+		smokeBuoyancyBuffer.black();
 		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		addPressureBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		addPressureBufferDidChange = false;
 		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		addTempObstacleBuffer.clear();
+		addTempObstacleBuffer.black();
 		addTempObstacleBufferDidChange = false;
 		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		combinedObstacleBuffer.clear();
+		combinedObstacleBuffer.black();
 		combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 		
 		deltaTime = 0;
@@ -135,7 +135,7 @@ namespace flowTools {
 		// OBSTACLE BUFFER;
 		
 		if (combinedObstacleNeedsToBeCleaned) {
-			combinedObstacleBuffer.clear();
+			combinedObstacleBuffer.black();
 			combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 			combinedObstacleNeedsToBeCleaned = false;
 		}
@@ -144,7 +144,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			combinedObstacleBuffer.stretchIntoMe(addTempObstacleBuffer);
 			addTempObstacleBufferDidChange = false;
-			addTempObstacleBuffer.clear();
+			addTempObstacleBuffer.black();
 			combinedObstacleNeedsToBeCleaned = true;
 		}
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -246,17 +246,17 @@ namespace flowTools {
 	
 		}
 		else
-			temperatureSwapBuffer.clear();
+			temperatureSwapBuffer.black();
 		
 		
 		// DIVERGENCE AND JACOBI
-		divergenceBuffer.clear();
+		divergenceBuffer.black();
 		divergenceShader.update(divergenceBuffer,
 								velocitySwapBuffer.getBackTexture(),
 								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
-		pressureSwapBuffer.clear();
+		pressureSwapBuffer.black();
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			jacobiShader.update(*pressureSwapBuffer.getBuffer(),
 								pressureSwapBuffer.getBackTexture(),
@@ -344,7 +344,7 @@ namespace flowTools {
 	void ftFluidSimulation::addPressure(ofTexture& _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		addPressureBuffer.clear();
+		addPressureBuffer.black();
 		
 		addShader.update(addPressureBuffer,
 						 addPressureBuffer.getTexture(), // dubious
@@ -383,16 +383,16 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftFluidSimulation::reset() {
 		
-		densitySwapBuffer.clear();
-		velocitySwapBuffer.clear();
-		temperatureSwapBuffer.clear();
+		densitySwapBuffer.black();
+		velocitySwapBuffer.black();
+		temperatureSwapBuffer.black();
 		createEdgeImage(obstacleBuffer);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::resetBackground() {
-		obstacleBuffer.clear();
+		obstacleBuffer.black();
 		createEdgeImage(obstacleBuffer);
 		combinedObstacleNeedsToBeCleaned = true;
 	}

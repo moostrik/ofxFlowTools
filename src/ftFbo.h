@@ -9,7 +9,12 @@ namespace flowTools {
 	class ftFbo : public ofFbo {
 	public:
 		
-		void clear() { begin(); ofClear(0, 0); end(); }
+		void clear() {
+			ofLogWarning("clear() was used by flowtools to clear the contents of the fbo. OF 0.9 uses this method to destroy the fbo. Use 'black()' instead'");
+			black();
+		}
+		
+		void black() { begin(); ofClear(0, 0); end(); }
 		
 		// draw texture in fbo using dimensions of texture
 		void drawIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTexture()); };

@@ -15,6 +15,7 @@ namespace flowTools {
 		}
 		
 		void black() { begin(); ofClear(0, 0); end(); }
+		void white() { begin(); ofClear(255); end(); }
 		
 		// draw texture in fbo using dimensions of texture
 		void drawIntoMe(ofFbo& _fbo) { drawIntoMe(_fbo.getTexture()); };

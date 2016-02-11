@@ -75,7 +75,7 @@ namespace flowTools {
 			shader.begin();
 			shader.setUniformTexture("tex0", _backBufferTexture, 0);
 			shader.setUniformTexture("tex1", _texture, 1);
-			shader.setUniform1f("decay", MAX(_decay, 0.0));
+			shader.setUniform1f("decay", max(_decay, 0.0f));
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
 			_buffer.end();

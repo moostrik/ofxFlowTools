@@ -34,7 +34,7 @@ namespace flowTools {
 									  vec2 st = gl_TexCoord[0].st;
 									  vec2 st2 = st * Scale;
 									  
-									  vec2 velocity = texture2DRect(VelocityTexture, st).xy * Force;
+									  vec2 velocity = texture2DRect(VelocityTexture, st2).xy * Force;
 									  vec2 pVel = max(velocity, vec2(0,0));
 									  vec2 nVel = abs(min(velocity, vec2(0,0)));
 									  
@@ -60,7 +60,7 @@ namespace flowTools {
 									  vec2 st = texCoordVarying;
 									  vec2 st2 = st * Scale;
 									  
-									  vec2 velocity = texture(VelocityTexture, st).xy * Force;
+									  vec2 velocity = texture(VelocityTexture, st2).xy * Force;
 									  vec2 pVel = max(velocity, vec2(0,0));
 									  vec2 nVel = abs(min(velocity, vec2(0,0)));
 									  fragColor = vec4(pVel, nVel);

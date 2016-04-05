@@ -69,7 +69,7 @@ namespace flowTools {
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
 		ofFloatColor	getColor()					{ return color.get(); }
-		void	getMaxArrowLenth()					{ return maxArrowLength.get(); }
+		float	getMaxArrowLength()					{ return maxArrowLength.get(); }
 		
 		ofParameterGroup	parameters;
 		

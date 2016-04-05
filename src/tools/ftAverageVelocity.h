@@ -21,6 +21,7 @@ public:
 	ofVec2f		getDirection() { return direction; }
 	float		getMagnitude()	{ return totalMagnitude; }
 	float		getAverageMagnitude()	{ return averageMagnitude; }
+	float		getHighMagnitude()	{ return highMagnitude; }
 	
 	ofParameterGroup parameters;
 	
@@ -38,6 +39,7 @@ private:
 	ofVec2f		direction;
 	float		totalMagnitude;
 	float		averageMagnitude;
+	float		highMagnitude;
 	
 	
 };

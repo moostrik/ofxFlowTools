@@ -62,8 +62,15 @@ namespace flowTools {
 										   
 										   // apply treshold
 										   float strength = length(flow);
-										   strength = max(0.0, strength - threshold) / (1.0 - threshold);
-										   flow = normalize(flow) * vec2(strength);
+										   if (strength * threshold > 0.0) {
+											   if (strength < threshold) {
+												   flow = vec2(0.0);
+											   }
+											   else {
+												   strength = (strength - threshold) / (1.0 - threshold);
+												   flow = normalize(flow) * vec2(strength);
+											   }
+										   }
 										   
 										   // apply force
 										   flow *= vec2(force);
@@ -119,8 +126,15 @@ namespace flowTools {
 									  
 									  // apply treshold
 									  float strength = length(flow);
-									  strength = max(0.0, strength - threshold) / (1.0 - threshold);
-									  flow = normalize(flow) * vec2(strength);
+									  if (strength * threshold > 0.0) {
+										  if (strength < threshold) {
+											  flow = vec2(0.0);
+										  }
+										  else {
+											  strength = (strength - threshold) / (1.0 - threshold);
+											  flow = normalize(flow) * vec2(strength);
+										  }
+									  }
 									  
 									  // apply force
 									  flow *= vec2(force);

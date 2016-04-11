@@ -6,9 +6,10 @@ openframeworks addon. Combines 2D fluid simulation, optical flow and more using 
 
 DEPENDENCIES & SYSTEM SPECS
 
-- created for OF 0.9.3 (OF 0.8.4 version can be found in branches)
-- ofxGui
-- A discrete graphics card is recommended
+- This version of the addon was created using OSX 10.11 and OF 0.9.3 (OF 0.8.4 version can be found in branches)
+- The addon should work on older versions of OSX, Windows and Linux.
+- dependent on ofxGui.
+- A discrete graphics card is recommended.
 
 
 INTRODUCTION

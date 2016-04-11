@@ -9,7 +9,7 @@ DEPENDENCIES & SYSTEM SPECS
 - This version of the addon was created using OSX 10.11 and OF 0.9.3 (OF 0.8.4 version can be found in branches)
 - The addon should work on older versions of OSX, Windows and Linux.
 - dependent on ofxGui.
-- A discrete graphics card is recommended. (thanx to @shenberg it is not longer bound to nVidia cards)
+- A discrete graphics card is recommended. (thanx to shenberg it is not longer bound to nVidia cards https://github.com/moostrik/ofxFlowTools/issues/11)
 
 
 INTRODUCTION

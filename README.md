@@ -4,8 +4,12 @@ ofxFlowTools
 
 openframeworks addon. Combines 2D fluid simulation, optical flow and more using GLSL shaders. Works best with live camera input.
 
-* created for OF 0.9.0 
-* OF 0.8.4 version can be found in releases
+DEPENDENCIES & SYSTEM SPECS
+
+- created for OF 0.9.0 (OF 0.8.4 version for nVidia can be found in releases)
+- ofxGui
+- A discrete graphics card is recommended
+
 
 INTRODUCTION
 
@@ -19,15 +23,6 @@ I also wanted to have some simple draw functions for testing and completion. Thi
 To complete the addon (what is a fluid sim without particles?) I added experimental GLSL particle engine.
 
 Have fun!
-
-
-DEPENDENCIES & SYSTEM SPECS
-
-- The last version of the addon was created using OSX 10.10 and OF 0.8.4, using nVidia Geforce graphics cards.
-- The addon should work on older versions of OSX, Windows and Linux, using nVidia Geforce, AMD Radeon cards.
-- The addon might work on professional nVidia and AMD cards (it did work on the MacPro FirePro card, but not as fast as expected).
-- The addon does NOT work on most integrated Intel graphics solutions, like the MacMini Iris graphics.
-
 
 
 CREDITS AND ACKNOWLEDGEMENTS:

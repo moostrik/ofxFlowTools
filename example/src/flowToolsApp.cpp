@@ -17,13 +17,9 @@ void flowToolsApp::setup(){
 	velocityMask.setup(drawWidth, drawHeight);
 	
 	// FLUID & PARTICLES
-#ifdef USE_FASTER_INTERNAL_FORMATS
-	fluidSimulation.setup(flowWidth, flowHeight, drawWidth, drawHeight, true);
-	particleFlow.setup(flowWidth, flowHeight, drawWidth, drawHeight, true);
-#else
-	fluidSimulation.setup(flowWidth, flowHeight, drawWidth, drawHeight, false);
-	particleFlow.setup(flowWidth, flowHeight, drawWidth, drawHeight, false);
-#endif
+	
+	fluidSimulation.setup(flowWidth, flowHeight, drawWidth, drawHeight);
+	particleFlow.setup(flowWidth, flowHeight, drawWidth, drawHeight);
 	
 	flowToolsLogoImage.loadImage("flowtools.png");
 	fluidSimulation.addObstacle(flowToolsLogoImage.getTextureReference());

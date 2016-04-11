@@ -5,7 +5,6 @@
 #include "ofxFlowTools.h"
 
 #define USE_PROGRAMMABLE_GL					// Maybe there is a reason you would want to
-#define USE_FASTER_INTERNAL_FORMATS			// about 15% faster but gives errors from ofGLUtils
 
 using namespace flowTools;
 

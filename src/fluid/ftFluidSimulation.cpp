@@ -70,26 +70,17 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool _doFasterInternalFormat) {
+	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
 		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		densityWidth = (!_densityWidth)? simulationWidth : _densityWidth;
 		densityHeight = (!_densityHeight)? simulationHeight: _densityHeight;
 		
-		int internalFormatDensity, internalFormatVelocity, interformatPressure, internalFormatObstacle;
-		if (_doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
-			internalFormatDensity = GL_RGBA32F;
-			internalFormatVelocity = GL_RG32F;
-			interformatPressure = GL_R32F;
-			internalFormatObstacle = GL_RED;
-			
-		}
-		else {							 // This gives no errors
-			internalFormatDensity = GL_RGBA32F;
-			internalFormatVelocity = GL_RGB32F;
-			interformatPressure = GL_RGB32F;
-			internalFormatObstacle = GL_RGB;
-		}
+		int	internalFormatDensity = GL_RGBA32F;
+		int	internalFormatVelocity = GL_RG32F;
+		int	interformatPressure = GL_R32F;
+		int	internalFormatObstacle = GL_R8;
+		
 		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
 		densitySwapBuffer.clear();
 		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);

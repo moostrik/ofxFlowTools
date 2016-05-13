@@ -29,7 +29,7 @@ namespace flowTools {
 		void stretchIntoMe(ofFbo& _fbo) { stretchIntoMe(_fbo.getTexture()); };
 		void stretchIntoMe(ofTexture& _tex) {  begin(); _tex.draw(0, 0, getWidth(), getHeight()); end(); };
 		
-		// draw texture in fbo using aspectratio of texture, showing the complete texture, but not filling thye fbo
+		// draw texture in fbo using aspectratio of texture, showing the complete texture, but not filling the fbo
 		void fitIntoMe(ofFbo& _fbo) { fitIntoMe(_fbo.getTexture()); };
 		void fitIntoMe(ofTexture& _tex) {
 			

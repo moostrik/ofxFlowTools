@@ -36,6 +36,12 @@ namespace flowTools {
 				FBOs[i].black();
 			}
 		}
+		
+		void white(){
+			for(int i = 0; i < 2; i++){
+				FBOs[i].white();
+			}
+		}
 				
 		ofFbo& operator[]( int n ){ return FBOs[n]; }
 		

@@ -6,10 +6,10 @@
 
 namespace flowTools {
 	
-	class ftSplitVelocityAverage {
+	class ftSvAverage {
 	public:
-		ftSplitVelocityAverage() { ; }
-		virtual	~ftSplitVelocityAverage() { ; }
+		ftSvAverage() { ; }
+		virtual	~ftSvAverage() { ; }
 		
 		void		setup(int _width, int _height, string _name = "none") ;
 		

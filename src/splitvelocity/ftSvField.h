@@ -2,11 +2,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftSplitVelocityFieldShader.h"
+#include "ftSvFieldShader.h"
 
 namespace flowTools {
 	
-	class ftSplitVelocityField {
+	class ftSvField {
 	public:
 		
 		void	setup(int _width, int _height){
@@ -46,7 +46,7 @@ namespace flowTools {
 			ofScale(_width, _height);
 			
 			float NormalizedMaxArrowLength =  (2.0 / (width + 1)) * maxArrowLength.get();
-			splitVelocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), NormalizedMaxArrowLength, color.get());
+			SvFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), NormalizedMaxArrowLength, color.get());
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -87,7 +87,7 @@ namespace flowTools {
 		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		
-		ftSplitVelocityFieldShader splitVelocityFieldShader;
+		ftSvFieldShader SvFieldShader;
 		
 	};
 }

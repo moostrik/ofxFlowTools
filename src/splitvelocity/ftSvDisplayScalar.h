@@ -2,11 +2,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftSplitVelocityDisplayScalarShader.h"
+#include "ftSvDisplayScalarShader.h"
 
 namespace flowTools {
 	
-	class ftSplitVelocityDisplayScalar {
+	class ftSvDisplayScalar {
 	public:
 		
 		void	setup(int _width, int _height){
@@ -40,7 +40,7 @@ namespace flowTools {
 		int		height;
 		ftFbo	displayScalarBuffer;
 		ofTexture* floatTexture;
-		ftSplitVelocityDisplayScalarShader displayScalarShader;
+		ftSvDisplayScalarShader displayScalarShader;
 		
 	};
 }

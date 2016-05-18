@@ -7,9 +7,9 @@
 
 namespace flowTools {
 	
-	class ftSplitVelocityDisplayScalarShader : public ftShader {
+	class ftSvDisplayScalarShader : public ftShader {
 	public:
-		ftSplitVelocityDisplayScalarShader() {
+		ftSvDisplayScalarShader() {
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())

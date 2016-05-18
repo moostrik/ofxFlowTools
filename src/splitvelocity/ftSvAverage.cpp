@@ -1,12 +1,12 @@
 
 
-#include "ftSplitVelocityAverage.h"
+#include "ftSvAverage.h"
 
 // TO FTSPILTVELOCITYAVERAGE
 
 namespace flowTools {
 	
-	void ftSplitVelocityAverage::setup(int _width, int _height, string _name) {
+	void ftSvAverage::setup(int _width, int _height, string _name) {
 		width = _width;
 		height = _height;
 		pixelCount = width * height;
@@ -28,7 +28,7 @@ namespace flowTools {
 		
 	}
 	
-	void ftSplitVelocityAverage::update(ofTexture _texture) {
+	void ftSvAverage::update(ofTexture _texture) {
 		// scale
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

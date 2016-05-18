@@ -14,7 +14,10 @@ namespace flowTools {
 		scaleFbo.allocate(width, height, GL_RGBA32F);
 		pixels.allocate(_width, _height, 4);
 		
-		magnitudes = new float [pixelCount];
+		magnitudes.resize(pixelCount, 0);
+		velocities.resize(pixelCount, ofVec4f(0,0,0,0));
+//		velocities.resize(pixelCount, ofVec4f());
+//		magnitudes = new float [pixelCount];
 		
 		direction = ofVec4f(0,0,0,0);
 		totalMagnitude = 0;
@@ -29,6 +32,7 @@ namespace flowTools {
 	}
 	
 	void ftSvAverage::setTexture(ofTexture _texture) {
+		// remove style and blendmode
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		scaleFbo.black();
@@ -47,7 +51,7 @@ namespace flowTools {
 		float* floatPixelData = pixels.getData();
 		
 		// calculate magnitudes
-		ofVec4f velocity;
+		
 		totalVelocity = ofVec4f(0,0,0,0);
 		
 		totalMagnitude = 0;
@@ -56,13 +60,14 @@ namespace flowTools {
 		
 		
 		for (int i=0; i<pixelCount; i++) {
-			velocity.x = floatPixelData[i*4];
-			velocity.y = floatPixelData[i*4+1];
-			velocity.z = floatPixelData[i*4+2];
-			velocity.w = floatPixelData[i*4+3];
-			totalVelocity += velocity;
+			ofVec4f *velocity = &velocities[i];
+			velocity->x = floatPixelData[i*4];
+			velocity->y = floatPixelData[i*4+1];
+			velocity->z = floatPixelData[i*4+2];
+			velocity->w = floatPixelData[i*4+3];
+			totalVelocity += *velocity;
 			
-			magnitudes[i] = velocity.length();
+			magnitudes[i] = velocity->length();
 			totalMagnitude += magnitudes[i];
 			highMagnitude = max(highMagnitude, magnitudes[i]);
 			if(magnitudes[i] > 0) activePixelCount++;

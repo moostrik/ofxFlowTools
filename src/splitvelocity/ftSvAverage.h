@@ -20,11 +20,15 @@ namespace flowTools {
 		
 		float		getMagnitude()			{ return totalMagnitude; }
 		float		getAverageMagnitude()	{ return averageMagnitude; }
-		float		getActiveMagnitude()	{ return activeMagnitude; }
 		float		getHighMagnitude()		{ return highMagnitude; }
-		ofVec4f		getDirection()			{ return direction; }
+		float		getActiveMagnitude()	{ return activeMagnitude; } // the average of all magnitudes > 0;
+		vector<float>& getMagnitudes()		{ return magnitudes; }
 		
+		ofVec4f		getDirection()			{ return direction; }
 		ofVec4f		getTotalVelocity()		{ return totalVelocity; }
+		vector<ofVec4f>& getVelocities()	{ return velocities; }
+		
+		int			getSize()				{ return pixelCount; }
 		
 		ofParameterGroup parameters;
 		
@@ -36,7 +40,8 @@ namespace flowTools {
 		ftFbo		scaleFbo;
 		ofFloatPixels pixels;
 		
-		float*		magnitudes;
+		vector<float>	magnitudes;
+		vector<ofVec4f>	velocities;
 		
 		ofVec4f		direction;
 		ofVec4f		totalVelocity;

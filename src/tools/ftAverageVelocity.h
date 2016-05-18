@@ -18,10 +18,10 @@ public:
 	void		setTexture(ofTexture& _textureReference);
 	void		update();
 	
-	ofVec2f		getDirection() { return direction; }
-	float		getMagnitude()	{ return totalMagnitude; }
+	ofVec2f		getDirection()			{ return direction; }
+	float		getMagnitude()			{ return totalMagnitude; }
 	float		getAverageMagnitude()	{ return averageMagnitude; }
-	float		getHighMagnitude()	{ return highMagnitude; }
+	float		getHighMagnitude()		{ return highMagnitude; }
 	
 	ofParameterGroup parameters;
 	

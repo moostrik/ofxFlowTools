@@ -13,7 +13,10 @@ namespace flowTools {
 		
 		void		setup(int _width, int _height, string _name = "none") ;
 		
-		void		update(ofTexture _texture);
+		
+		void		setTexture(ofTexture _texture);
+		void		update();
+		void		update(ofTexture _texture) { setTexture(_texture); update(); }
 		
 		float		getMagnitude()			{ return totalMagnitude; }
 		float		getAverageMagnitude()	{ return averageMagnitude; }

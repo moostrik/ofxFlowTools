@@ -28,13 +28,15 @@ namespace flowTools {
 		
 	}
 	
-	void ftSvAverage::update(ofTexture _texture) {
-		// scale
+	void ftSvAverage::setTexture(ofTexture _texture) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		scaleFbo.black();
 		scaleFbo.stretchIntoMe(_texture);
 		ofPopStyle();
+	}
+	
+	void ftSvAverage::update() {
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
 		
 		// read to pixels

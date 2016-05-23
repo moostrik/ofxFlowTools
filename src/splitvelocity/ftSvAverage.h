@@ -18,10 +18,11 @@ namespace flowTools {
 		void		update();
 		void		update(ofTexture _texture) { setTexture(_texture); update(); }
 		
-		float		getMagnitude()			{ return totalMagnitude; }
-		float		getAverageMagnitude()	{ return averageMagnitude; }
-		float		getHighMagnitude()		{ return highMagnitude; }
-		float		getActiveMagnitude()	{ return activeMagnitude; } // the average of all magnitudes > 0;
+		float		getTotalMagnitude()		{ return totalMagnitude; }
+		float		getAverageMagnitude()	{ return getMeanMagnitude(); }
+		float		getMeanMagnitude()		{ return meanMagnitude; }
+		float		getSt_devMagnitude()	{ return stdevMagnitude; }
+		
 		vector<float>& getMagnitudes()		{ return magnitudes; }
 		
 		ofVec4f		getDirection()			{ return direction; }
@@ -34,11 +35,13 @@ namespace flowTools {
 		
 	private:
 		ofParameter<ofVec4f>	pDirection;
-		ofParameter<float>		pMagnitude;
-		ofParameter<float>		pAverageMagnitude;
+		ofParameter<string>		pTotalMagnitude;
+		ofParameter<string>		pMeanMagnitude;
+		ofParameter<string>		pStdevMagnitude;
 		
 		ftFbo		scaleFbo;
 		ofFloatPixels pixels;
+		
 		
 		vector<float>	magnitudes;
 		vector<ofVec4f>	velocities;
@@ -46,9 +49,8 @@ namespace flowTools {
 		ofVec4f		direction;
 		ofVec4f		totalVelocity;
 		float		totalMagnitude;
-		float		averageMagnitude;
-		float		activeMagnitude;
-		float		highMagnitude;
+		float		meanMagnitude;
+		float		stdevMagnitude;
 		
 		int width;
 		int	height;

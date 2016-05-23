@@ -27,7 +27,8 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 								  uniform sampler2DRect Texture;
-								  uniform float Normalization;
+								  uniform float Min;
+								  uniform float Range;
 								  uniform vec2	Scale;
 								  
 								  void main(){
@@ -36,9 +37,12 @@ namespace flowTools {
 									  
 									  vec4 color = texture2DRect(Texture, st);
 									  
-									  float magnitude = length(color);
+									  float magnitude = length(color) - Min;
 									  if(magnitude > 0.0) {
-										  color = normalize(color) * (magnitude / Normalization);
+										  color = normalize(color) * (magnitude / Range);
+									  }
+									  else {
+										  color = vec4(0.0);
 									  }
 									  
 									  gl_FragColor = color ;
@@ -53,7 +57,8 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL150(
 								  uniform sampler2DRect Texture;
-								  uniform float Normalization;
+								  uniform float Min;
+								  uniform float Range;
 								  uniform vec2	Scale;
 								  
 								  in vec2 texCoordVarying;
@@ -65,9 +70,12 @@ namespace flowTools {
 									  
 									  vec4 color = texture(Texture, st);
 									  
-									  float magnitude = length(color);
+									  float magnitude = length(color) - Min;
 									  if(magnitude > 0.0) {
-										  color = normalize(color) * (magnitude / Normalization);
+										  color = normalize(color) * (magnitude / Range);
+									  }
+									  else {
+										  color = vec4(0.0);
 									  }
 									  
 									  fragColor = color ;
@@ -82,11 +90,12 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _texture, float _normalization){
+		void update(ofFbo& _buffer, ofTexture& _texture, float _min, float _range){
 			_buffer.begin();
 			shader.begin();
 			shader.setUniformTexture("Texture", _texture, 0);
-			shader.setUniform1f("Normalization", _normalization);
+			shader.setUniform1f("Min", _min);
+			shader.setUniform1f("Range", _range);
 			shader.setUniform2f("Scale", _texture.getWidth() / _buffer.getWidth(), _texture.getHeight()/ _buffer.getHeight());
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();

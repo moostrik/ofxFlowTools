@@ -21,13 +21,14 @@ namespace flowTools {
 		
 		direction = ofVec4f(0,0,0,0);
 		totalMagnitude = 0;
-		averageMagnitude = 0;
-		activeMagnitude = 0;
+		meanMagnitude = 0;
+		stdevMagnitude = 0;
 		
 		parameters.setName("average " + _name);
 		parameters.add(pDirection.set("direction", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
-		parameters.add(pMagnitude.set("magnitude", 0, 0, 100));
-		parameters.add(pAverageMagnitude.set("magnitude", 0, 0, 1));
+		parameters.add(pTotalMagnitude.set("total mag", "0"));
+		parameters.add(pMeanMagnitude.set("mean mag", "0"));
+		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
 		
 	}
 	
@@ -42,7 +43,6 @@ namespace flowTools {
 	
 	void ftSvAverage::update() {
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
-		
 		// read to pixels
 		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,4);
 		glBindTexture(texData.textureTarget, texData.textureID);
@@ -55,9 +55,6 @@ namespace flowTools {
 		totalVelocity = ofVec4f(0,0,0,0);
 		
 		totalMagnitude = 0;
-		highMagnitude = 0;
-		int activePixelCount = 0;
-		
 		
 		for (int i=0; i<pixelCount; i++) {
 			ofVec4f *velocity = &velocities[i];
@@ -69,16 +66,21 @@ namespace flowTools {
 			
 			magnitudes[i] = velocity->length();
 			totalMagnitude += magnitudes[i];
-			highMagnitude = max(highMagnitude, magnitudes[i]);
-			if(magnitudes[i] > 0) activePixelCount++;
 		}
 		
-		averageMagnitude = totalMagnitude / pixelCount;
-		activeMagnitude = (activePixelCount)? totalMagnitude / activePixelCount : 0;
 		direction = totalVelocity.normalize();
+		meanMagnitude = totalMagnitude / pixelCount;
 		
-		pMagnitude.set(totalMagnitude);
+		std::vector<float> diff(magnitudes.size());
+		std::transform(magnitudes.begin(), magnitudes.end(), diff.begin(),
+					   std::bind2nd(std::minus<float>(), meanMagnitude));
+		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+		stdevMagnitude = std::sqrt(sq_sum / magnitudes.size());
+		
 		pDirection.set(direction);
+		pTotalMagnitude.set(ofToString(totalMagnitude));
+		pMeanMagnitude.set(ofToString(meanMagnitude));
+		pStdevMagnitude.set(ofToString(stdevMagnitude));
 		
 	}
 }

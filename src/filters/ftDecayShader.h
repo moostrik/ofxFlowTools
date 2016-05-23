@@ -32,9 +32,9 @@ namespace flowTools {
 									 void main(){
 										 vec4 color0 = texture2DRect(tex0,gl_TexCoord[0].st);
 										 vec4 color1 = texture2DRect(tex1,gl_TexCoord[0].st);
-										 color0.xyz *= vec3(1.0 - decay);
+										 color0 *= vec4(1.0 - decay);
 										 
-										 gl_FragColor = vec4(color0.xyz + color1.xyz, 1.0);
+										 gl_FragColor = color0 + color1;
 									 }
 									 );
 			
@@ -56,9 +56,9 @@ namespace flowTools {
 									 void main(){
 										 vec4 color0 = texture(tex0, texCoordVarying);
 										 vec4 color1 = texture(tex1, texCoordVarying);
-										 color0.xyz *= vec3(1.0 - decay);
+										 color0 *= vec4(1.0 - decay);
 										 
-										 fragColor = vec4(color0.xyz + color1.xyz, 1.0);
+										 fragColor = color0 + color1;
 									 }
 									 );
 			

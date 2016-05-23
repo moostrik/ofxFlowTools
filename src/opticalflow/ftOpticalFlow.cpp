@@ -102,8 +102,7 @@ namespace flowTools {
 								 inverseX,
 								 inverseY);
 		
-		decayBuffer.drawIntoMe(velocityBuffer);
-		timeBlurShader.update(decayBuffer, timeBlurDecay * deltaTime, timeBlurRadius);
+		timeBlurShader.update(decayBuffer, velocityBuffer.getTexture(), timeBlurDecay * deltaTime, timeBlurRadius);
 
 		ofPopStyle();
 	}

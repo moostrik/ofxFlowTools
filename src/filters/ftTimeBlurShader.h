@@ -162,7 +162,7 @@ namespace flowTools {
 	public:
 		
 		
-		void update(ftFbo& _buffer, float _decay, int _radius = 5, int _passes = 1){
+		void update(ftFbo& _buffer, ofTexture _texture, float _decay, int _radius = 5, int _passes = 1){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
 				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
@@ -175,12 +175,12 @@ namespace flowTools {
 			
 			if (_decay > 0) {
 				pingPong.swap();
-				decayShader.update(*pingPong.getBuffer(), pingPong.getBackTexture(), _buffer.getTexture(), _decay);
+				decayShader.update(*pingPong.getBuffer(), pingPong.getBackTexture(), _texture, _decay);
 			}
 			else {
 				pingPong.getBuffer()->black();
 				pingPong.getBuffer()->begin();
-				_buffer.getTexture().draw(0, 0, pingPong.getWidth(), pingPong.getHeight());
+				_texture.draw(0, 0, pingPong.getWidth(), pingPong.getHeight());
 				pingPong.getBuffer()->end();
 			}
 			

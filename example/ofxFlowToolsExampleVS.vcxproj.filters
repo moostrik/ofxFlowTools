@@ -43,11 +43,11 @@
     <ClCompile Include="..\..\..\addons\ofxFlowTools\src\particles\ftParticleFlow.cpp">
       <Filter>addons\ofxFlowTools\src\particles</Filter>
     </ClCompile>
-    <ClCompile Include="src\flowToolsApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\drawforces\ftDrawMouseForces.cpp">
       <Filter>addons\ofxFlowTools\src\drawforces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,11 +248,11 @@
     <ClInclude Include="..\..\..\addons\ofxFlowTools\src\visualisation\ftVelocityFieldShader.h">
       <Filter>addons\ofxFlowTools\src\visualisation</Filter>
     </ClInclude>
-    <ClInclude Include="src\flowToolsApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\drawforces\ftDrawMouseForces.h">
       <Filter>addons\ofxFlowTools\src\drawforces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

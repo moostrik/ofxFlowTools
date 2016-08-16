@@ -30,6 +30,12 @@
 xcuserdata
 *.xcworkspace
 
+*.xcconfig
+*.pbxproj
+*.xcscheme
+openFrameworks-Info.plist
+
+
 #Visual Studio files
 *.[Oo]bj
 *.user

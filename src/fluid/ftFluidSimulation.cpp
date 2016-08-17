@@ -57,7 +57,7 @@ namespace flowTools {
 		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.01,0), ofVec2f(-.1,-.1), ofVec2f(.1,.1)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.0, 0.0981), ofVec2f(-.1, -.1), ofVec2f(.1, .1)));
 		parameters.add(smokeBuoyancyParameters);
 		maxValues.setName("maximum");
 		maxValues.add(clampForce.set("clampForce", 0.05, 0, .1));

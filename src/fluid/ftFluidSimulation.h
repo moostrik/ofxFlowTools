@@ -27,7 +27,10 @@ namespace flowTools {
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void    update(float _deltaTime = 0);
-		void    draw(int x = 0, int y = 0, float _width = -1, float _height = -1);
+		void    draw() { draw(0, 0, densityWidth, densityHeight); }
+		void    draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
+		void    draw(int _x, int _y, float _width, float _height);
+		
 		void	reset();
 		void	resetBackground();
 		
@@ -53,48 +56,49 @@ namespace flowTools {
 		int		getDensityWidth() {return densityWidth;}
 		int		getDensityHeight() {return densityHeight;}
 		
-		float getTimeStep() {return timeStep;}
-		float getSpeed() {return speed.get();}
-		float getCellSize() {return cellSize.get();}
-		float getNumJacobiIterations() {return numJacobiIterations.get();}
-		float getViscosity() {return viscosity.get();}
-		float getVorticity() {return vorticity.get();}
-		float getDissipation() {return dissipation.get();}
-		float getDissipationVelocityOffset() {return velocityOffset.get();}
-		float getDissipationDensityOffset() {return densityOffset.get();}
-		float getDissipationTemperatureOffset() {return temperatureOffset.get();}
-		float getSmokeSigma() {return smokeSigma.get();}
-		float getSmokeWeight() {return smokeWeight.get();}
-		float getAmbientTemperature() {return ambientTemperature.get();}
+		float	getTimeStep() {return timeStep;}
+		float	getSpeed() {return speed.get();}
+		float	getCellSize() {return cellSize.get();}
+		float	getNumJacobiIterations() {return numJacobiIterations.get();}
+		float	getViscosity() {return viscosity.get();}
+		float	getVorticity() {return vorticity.get();}
+		float	getDissipation() {return dissipation.get();}
+		float	getDissipationVelocityOffset() {return velocityOffset.get();}
+		float	getDissipationDensityOffset() {return densityOffset.get();}
+		float	getDissipationTemperatureOffset() {return temperatureOffset.get();}
+		float	getSmokeSigma() {return smokeSigma.get();}
+		float	getSmokeWeight() {return smokeWeight.get();}
+		float	getAmbientTemperature() {return ambientTemperature.get();}
 		ofVec2f getGravity() {return gravity.get();}
-		float getClampForce() {return clampForce.get();}
-		float getMaxVelocity() {return maxVelocity.get();}
-		float getMaxDensity() {return maxDensity.get();}
-		float getMaxTemperature() {return maxTemperature.get();}
-		float getDensityFromVorticity() {return densityFromVorticity.get();}
-		float getDensityFromPressure() {return densityFromPressure.get();}
+		float	getClampForce() {return clampForce.get();}
+		float	getMaxVelocity() {return maxVelocity.get();}
+		float	getMaxDensity() {return maxDensity.get();}
+		float	getMaxTemperature() {return maxTemperature.get();}
+		float	getDensityFromVorticity() {return densityFromVorticity.get();}
+		float	getDensityFromPressure() {return densityFromPressure.get();}
 		
-		void setSpeed(float value) {speed.set(value);}
-		void setCellSize(float value) {cellSize.set(value);}
-		void setNumJacobiIterations(float value) {numJacobiIterations.set(value);}
-		void setViscosity(float value) {viscosity.set(value);}
-		void setVorticity(float value) {vorticity.set(value);}
-		void setDissipation(float value) {dissipation.set(value);}
-		void setDissipationVelocityOffset(float value) {velocityOffset.set(value);}
-		void setDissipationDensityOffset(float value) {densityOffset.set(value);}
-		void setDissipationTemperatureOffset(float value) {temperatureOffset.set(value);}
-		void setSmokeSigma(float value) {smokeSigma.set(value);}
-		void setSmokeWeight(float value) {smokeWeight.set(value);}
-		void setAmbientTemperature(float value) {ambientTemperature.set(value);}
-		void setGravity(ofVec2f value) {gravity.set(value);}
-		void setClampForce(float value) {clampForce.set(value);}
-		void setMaxVelocity(float value) {maxVelocity.set(value);}
-		void setMaxDensity(float value) {maxDensity.set(value);}
-		void setMaxTemperature(float value) {maxTemperature.set(value);}
-		void setDensityFromVorticity(float value) {densityFromVorticity.set(value);}
-		void setDensityFromPressure(float value) {densityFromPressure.set(value);}
+		void	setSpeed(float value) {speed.set(value);}
+		void	setCellSize(float value) {cellSize.set(value);}
+		void	setNumJacobiIterations(float value) {numJacobiIterations.set(value);}
+		void	setViscosity(float value) {viscosity.set(value);}
+		void	setVorticity(float value) {vorticity.set(value);}
+		void	setDissipation(float value) {dissipation.set(value);}
+		void	setDissipationVelocityOffset(float value) {velocityOffset.set(value);}
+		void	setDissipationDensityOffset(float value) {densityOffset.set(value);}
+		void	setDissipationTemperatureOffset(float value) {temperatureOffset.set(value);}
+		void	setSmokeSigma(float value) {smokeSigma.set(value);}
+		void	setSmokeWeight(float value) {smokeWeight.set(value);}
+		void	setAmbientTemperature(float value) {ambientTemperature.set(value);}
+		void	setGravity(ofVec2f value) {gravity.set(value);}
+		void	setClampForce(float value) {clampForce.set(value);}
+		void	setMaxVelocity(float value) {maxVelocity.set(value);}
+		void	setMaxDensity(float value) {maxDensity.set(value);}
+		void	setMaxTemperature(float value) {maxTemperature.set(value);}
+		void	setDensityFromVorticity(float value) {densityFromVorticity.set(value);}
+		void	setDensityFromPressure(float value) {densityFromPressure.set(value);}
 		
 		ofParameterGroup	parameters;
+		
 	private:
 		ofParameter<bool>	doReset;
 		ofParameter<float>	speed;

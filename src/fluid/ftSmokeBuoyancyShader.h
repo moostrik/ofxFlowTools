@@ -104,7 +104,7 @@ namespace flowTools {
 			shader.setUniform1f("Sigma", _smokeBuoyancy);
 			shader.setUniform1f("Kappa", _smokeWeight);
 			
-			shader.setUniform2f("Gravity", (float)_gForce.x, (float)_gForce.y );
+			shader.setUniform2f("Gravity", _gForce.x, _gForce.y );
 			
 			shader.setUniformTexture("Velocity", _velocityTexture, 0);
 			shader.setUniformTexture("Temperature", _temperatureTexture, 1);

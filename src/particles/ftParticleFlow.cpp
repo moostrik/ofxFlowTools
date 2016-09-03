@@ -48,6 +48,7 @@ namespace flowTools {
 		parameters.add(size.set("size", 2, 0, 10));
 		parameters.add(sizeSpread.set("size spread", .75, 0, 1));
 		parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
+		parameters.add(gravity.set("gravity", ofVec2f(0, 9.80665), ofVec2f(-10,-10), ofVec2f(10,10)));
 	}
 	
 	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {
@@ -131,7 +132,8 @@ namespace flowTools {
 									  fluidVelocitySwapBuffer.getBackTexture(),
 									  particleHomeBuffer.getTexture(),
 									  timeStep,
-									  cellSize.get());
+									  cellSize.get(),
+									  gravity);
 			particlePositionSwapBuffer.swap();
 			
 			ofPopStyle();

@@ -35,6 +35,7 @@ namespace flowTools {
 								  uniform float InverseCellSize;
 								  uniform vec2	Scale;
 								  uniform vec2	Dimensions;
+								  uniform vec2	Gravity;
 								  
 								  void main(){
 									  vec2 st = gl_TexCoord[0].st;
@@ -50,7 +51,7 @@ namespace flowTools {
 										  vec2 u = texture2DRect(Velocity, st2).rg / Scale;
 										  vec2 coord =  TimeStep * InverseCellSize * u;
 										  
-										  particlePos += coord * (1.0 / mass);
+										  particlePos += coord * (1.0 / mass) + Gravity;
 									  }
 									  else {
 										  particlePos = texture2DRect(HomeTexture, st).xy;
@@ -76,6 +77,7 @@ namespace flowTools {
 								  uniform float InverseCellSize;
 								  uniform vec2	Scale;
 								  uniform vec2	Dimensions;
+								  uniform vec2	Gravity;
 								  
 								  in vec2 texCoordVarying;
 								  out vec4 fragColor;
@@ -94,7 +96,7 @@ namespace flowTools {
 										  vec2 u = texture(Velocity, st2).rg / Scale;
 										  vec2 coord =  TimeStep * InverseCellSize * u;
 										  
-										  particlePos += coord * (1.0 / mass);
+										  particlePos += coord * (1.0 / mass) + Gravity;
 									  }
 									  else {
 										  particlePos = texture(HomeTexture, st).xy;
@@ -116,7 +118,7 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _ALMSTexture, ofTexture& _velocityTexture, ofTexture& _homeTexture, float _timeStep, float _cellSize){
+		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _ALMSTexture, ofTexture& _velocityTexture, ofTexture& _homeTexture, float _timeStep, float _cellSize, ofVec2f _gravity){
 			_buffer.begin();
 			shader.begin();
 			shader.setUniformTexture("Backbuffer", _backBufferTexture, 0);
@@ -125,6 +127,7 @@ namespace flowTools {
 			shader.setUniformTexture("HomeTexture", _homeTexture, 3);
 			shader.setUniform1f("TimeStep", _timeStep);
 			shader.setUniform1f("InverseCellSize", 1.0 / _cellSize);
+			shader.setUniform2f("Gravity", _gravity.x * _timeStep, _gravity.y * _timeStep);
 			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
 			shader.setUniform2f("Dimensions", _buffer.getWidth(), _buffer.getHeight());
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());

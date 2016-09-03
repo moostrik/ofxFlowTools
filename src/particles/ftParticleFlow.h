@@ -16,16 +16,16 @@ namespace flowTools {
 	public:
 		ftParticleFlow();
 		
-		void setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
+		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
-		void addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
-		void addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
-		void setObstacle (ofTexture& _tex) ;
+		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
+		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
+		void	setObstacle (ofTexture& _tex) ;
 		
-		void update(float _deltaTime = 0);
+		void	update(float _deltaTime = 0);
 		
-		void draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
-		void draw(int _x, int _y, int _width, int _height);
+		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
+		void	draw(int _x, int _y, int _width, int _height);
 		
 		bool	isActive() {return bIsActive; }
 		void	activate(bool _state) {bIsActive.set(_state);}
@@ -40,6 +40,7 @@ namespace flowTools {
 		float	getMassSpread() { return massSpread.get(); }
 		float	getSize() { return size.get(); }
 		float	getSizeSpread() { return sizeSpread.get(); }
+		ofVec2f getGravity() {return gravity.get();}
 		
 		void	setSpeed(float value) { speed.set(value); }
 		void	setCellSize(float value) { cellSize.set(value); }
@@ -51,6 +52,7 @@ namespace flowTools {
 		void	setMassSpread(float value) { massSpread.set(value); }
 		void	setSize(float value) { size.set(value); }
 		void	setSizeSpread(float value) { sizeSpread.set(value); }
+		void	setGravity(ofVec2f value) { gravity.set(value); }
 		
 		ofParameterGroup parameters;
 	private:
@@ -66,6 +68,7 @@ namespace flowTools {
 		ofParameter<float>	size;
 		ofParameter<float>	sizeSpread;
 		ofParameter<float>	twinkleSpeed;
+		ofParameter<ofVec2f>gravity;
 		
 		float	simulationWidth;
 		float	simulationHeight;

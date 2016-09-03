@@ -57,7 +57,7 @@ namespace flowTools {
 		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.0, 0.0981), ofVec2f(-.1, -.1), ofVec2f(.1, .1)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0., 9.80665), ofVec2f(-10, -10), ofVec2f(10, 10)));
 		parameters.add(smokeBuoyancyParameters);
 		maxValues.setName("maximum");
 		maxValues.add(clampForce.set("clampForce", 0.05, 0, .1));
@@ -214,7 +214,7 @@ namespace flowTools {
 				diffuseShader.update(*velocitySwapBuffer.getBuffer(),
 									 velocitySwapBuffer.getBackTexture(),
 									 combinedObstacleBuffer.getTexture(),
-									 viscosity.get() * deltaTime);
+									 viscosity.get() * timeStep);
 				velocitySwapBuffer.swap();
 			}
 		 }
@@ -229,7 +229,7 @@ namespace flowTools {
 								velocitySwapBuffer.getBackTexture(),
 								combinedObstacleBuffer.getTexture(),
 								timeStep,
-								1.0 - (dissipation.get() + temperatureOffset.get()),
+								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
 								cellSize.get());
 			temperatureSwapBuffer.swap();
 			
@@ -241,7 +241,7 @@ namespace flowTools {
 									   timeStep,
 									   smokeSigma.get(),
 									   smokeWeight.get(),
-									   gravity.get());
+									   gravity.get() * timeStep);
 			addVelocity(smokeBuoyancyBuffer.getTexture());
 	
 		}
@@ -374,10 +374,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::draw(int x, int y, float _width, float _height){
-		if (_width == -1) _width = densityWidth;
-		if (_height == -1) _height = densityHeight;
-		
-		densitySwapBuffer.getBackTexture().draw(x,y,_width,_height);
+		densitySwapBuffer.getBackTexture().draw(x,y,_width,_height); // why BACK texture?
 	}
 	
 	//--------------------------------------------------------------

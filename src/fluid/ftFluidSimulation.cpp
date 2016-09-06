@@ -45,7 +45,7 @@ namespace flowTools {
 		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
+		parameters.add(viscosity.set("viscosity", 0.1, 0, .4));
 		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
 		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
 		advancedDissipationParameters.setName("advanced dissipation");
@@ -214,6 +214,7 @@ namespace flowTools {
 				diffuseShader.update(*velocitySwapBuffer.getBuffer(),
 									 velocitySwapBuffer.getBackTexture(),
 									 combinedObstacleBuffer.getTexture(),
+//									 viscosity.get() * deltaTime); // works better than timeStep
 									 viscosity.get() * timeStep);
 				velocitySwapBuffer.swap();
 			}
@@ -221,31 +222,31 @@ namespace flowTools {
 		 
 		
 		
-		// SMOKE BUOYANCY
-		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
-			
-			advectShader.update(*temperatureSwapBuffer.getBuffer(),
-								temperatureSwapBuffer.getBackTexture(),
-								velocitySwapBuffer.getBackTexture(),
-								combinedObstacleBuffer.getTexture(),
-								timeStep,
-								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
-								cellSize.get());
-			temperatureSwapBuffer.swap();
-			
-			smokeBuoyancyShader.update(smokeBuoyancyBuffer,
-									   velocitySwapBuffer.getBackTexture(),
-									   temperatureSwapBuffer.getBackTexture(),
-									   densitySwapBuffer.getBackTexture(),
-									   ambientTemperature.get(),
-									   timeStep,
-									   smokeSigma.get(),
-									   smokeWeight.get(),
-									   gravity.get() * timeStep);
-			addVelocity(smokeBuoyancyBuffer.getTexture());
-	
-		}
-		else
+		// SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
+//		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
+//			
+//			advectShader.update(*temperatureSwapBuffer.getBuffer(),
+//								temperatureSwapBuffer.getBackTexture(),
+//								velocitySwapBuffer.getBackTexture(),
+//								combinedObstacleBuffer.getTexture(),
+//								timeStep,
+//								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
+//								cellSize.get());
+//			temperatureSwapBuffer.swap();
+//			
+//			smokeBuoyancyShader.update(smokeBuoyancyBuffer,
+//									   velocitySwapBuffer.getBackTexture(),
+//									   temperatureSwapBuffer.getBackTexture(),
+//									   densitySwapBuffer.getBackTexture(),
+//									   ambientTemperature.get(),
+//									   timeStep,
+//									   smokeSigma.get(),
+//									   smokeWeight.get(),
+//									   gravity.get() * timeStep);
+//			addVelocity(smokeBuoyancyBuffer.getTexture());
+//	
+//		}
+//		else
 			temperatureSwapBuffer.black();
 		
 		

@@ -30,7 +30,7 @@ namespace flowTools {
 									 uniform sampler2DRect Velocity;
 									 uniform sampler2DRect Density;
 									 uniform sampler2DRect Obstacle;
-									 uniform vec2	Scale;
+									 uniform vec2  Scale;
 									 uniform float GlobalTime;
 									 uniform float DeltaTime;
 									 uniform float BirthChance;

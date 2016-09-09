@@ -26,41 +26,59 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			
-			fragmentShader = GLSL120(
-								  uniform sampler2DRect Backbuffer;
-								  uniform sampler2DRect ALMSTexture;
-								  uniform sampler2DRect Velocity;
-								  uniform sampler2DRect HomeTexture;
-								  uniform float TimeStep;
-								  uniform float InverseCellSize;
-								  uniform vec2	Scale;
-								  uniform vec2	Dimensions;
-								  uniform vec2	Gravity;
-								  uniform float StSize;
-								  
-								  void main(){
-									  vec2 st = gl_TexCoord[0].st;
-									  vec2 particlePos = texture2DRect(Backbuffer, st).xy;
-									  
-									  vec4 alms = texture2DRect(ALMSTexture, st);
-									  float age = alms.x;
-									  float life = alms.y;
-									  float mass = alms.z;
-									  float size = alms.w;
-									  
-									  if (age > 0.0) {
-										  vec2 st2 = particlePos * Scale;
-										  vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										  vec2 coord =  TimeStep * InverseCellSize * u;
-										  
-										  particlePos += coord * (size / StSize) * 2 + Gravity * mass;
-									  }
-									  else {
-										  particlePos = texture2DRect(HomeTexture, st).xy;
-									  }
-									  
-									  
-									  gl_FragColor = vec4(particlePos, 0.0, 1.0); ;
+			fragmentShader = GLSL120PI(
+									   uniform sampler2DRect Backbuffer;
+									   uniform sampler2DRect ALMSTexture;
+									   uniform sampler2DRect Velocity;
+									   uniform sampler2DRect HomeTexture;
+									   uniform sampler2DRect Obstacle;
+									   uniform float TimeStep;
+									   uniform float InverseCellSize;
+									   uniform vec2	Scale;
+									   uniform vec2	Dimensions;
+									   uniform vec2	Gravity;
+									   uniform float StSize;
+									   
+									   // hash based 3d value noise
+									   float random(float p) {
+										   return fract(sin(p)*13420.123);
+									   }
+									   
+									   float noise(vec2 p) {
+										   return random(p.x + sin(p.y*112.5345));
+									   }
+									   
+									   void main(){
+										   vec2 st = gl_TexCoord[0].st;
+										   vec2 particlePos = texture2DRect(Backbuffer, st).xy;
+										   
+										   vec4 alms = texture2DRect(ALMSTexture, st);
+										   float age = alms.x;
+										   float life = alms.y;
+										   float mass = alms.z;
+										   float size = alms.w;
+										   
+										   if (age > 0.0) {
+											   vec2 st2 = particlePos * Scale;
+											   vec2 u = texture2DRect(Velocity, st2).rg / Scale;
+											   vec2 coord =  TimeStep * InverseCellSize * u;
+											   coord *= (size / StSize) * PI; // why this magic number
+											   coord += Gravity * mass;
+											   
+											   float obstNoise = texture2DRect(Obstacle, st2).x + noise(st) - 1.0;
+											   float solid = ceil(obstNoise - 0.1);
+											   
+											   float inverseSolid = 1 - solid;
+											   coord *= inverseSolid;
+											   
+											   particlePos += coord;
+										   }
+										   else {
+											   particlePos = texture2DRect(HomeTexture, st).xy;
+										   }
+										   
+										   
+										   gl_FragColor = vec4(particlePos, 0.0, 1.0);
 								  }
 								  );
 			
@@ -71,64 +89,64 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL150PI(
-									 uniform sampler2DRect Backbuffer;
-									 uniform sampler2DRect ALMSTexture;
-									 uniform sampler2DRect Velocity;
-									 uniform sampler2DRect HomeTexture;
-									 uniform sampler2DRect Obstacle;
-									 uniform float TimeStep;
-									 uniform float InverseCellSize;
-									 uniform vec2	Scale;
-									 uniform vec2	Dimensions;
-									 uniform vec2	Gravity;
-									 uniform float StSize;
-
-									 in vec2 texCoordVarying;
-									 out vec4 fragColor;
-									 
-									 
-									 // hash based 3d value noise
-									 float random(float p) {
-										 return fract(sin(p)*13420.123);
-									 }
-									 
-									 float noise(vec2 p) {
-										 return random(p.x + sin(p.y*112.5345));
-									 }
-								  
-									 void main(){
-										 vec2 st = texCoordVarying;
-										 vec2 particlePos = texture(Backbuffer, st).xy;
-									  
-										 vec4 alms = texture(ALMSTexture, st);
-										 float age = alms.x;
-										 float life = alms.y;
-										 float mass = alms.z;
-										 float size = alms.w;
-									  
-										 
-										 if (age > 0.0) {
-											 vec2 st2 = particlePos * Scale;
-											 vec2 u = texture(Velocity, st2).rg / Scale;
-											 vec2 coord =  TimeStep * InverseCellSize * u;
-											 coord *= (size / StSize) * PI; // why this magic number
-											 coord += Gravity * mass;
-											 
-											 float obstNoise = texture(Obstacle, st2).x + noise(st) - 1.0;
-											 float solid = ceil(obstNoise - 0.1);
-											 
-											 float inverseSolid = 1 - solid;
-											 coord *= inverseSolid;
-											 
-											 particlePos += coord;
-										 }
-										 
-										 else {
-											 particlePos = texture(HomeTexture, st).xy;
-										 }
-										 
-										 fragColor = vec4(particlePos, 0.0, 1.0);
-									 }
+									   uniform sampler2DRect Backbuffer;
+									   uniform sampler2DRect ALMSTexture;
+									   uniform sampler2DRect Velocity;
+									   uniform sampler2DRect HomeTexture;
+									   uniform sampler2DRect Obstacle;
+									   uniform float TimeStep;
+									   uniform float InverseCellSize;
+									   uniform vec2	Scale;
+									   uniform vec2	Dimensions;
+									   uniform vec2	Gravity;
+									   uniform float StSize;
+									   
+									   in vec2 texCoordVarying;
+									   out vec4 fragColor;
+									   
+									   
+									   // hash based 3d value noise
+									   float random(float p) {
+										   return fract(sin(p)*13420.123);
+									   }
+									   
+									   float noise(vec2 p) {
+										   return random(p.x + sin(p.y*112.5345));
+									   }
+									   
+									   void main(){
+										   vec2 st = texCoordVarying;
+										   vec2 particlePos = texture(Backbuffer, st).xy;
+										   
+										   vec4 alms = texture(ALMSTexture, st);
+										   float age = alms.x;
+										   float life = alms.y;
+										   float mass = alms.z;
+										   float size = alms.w;
+										   
+										   
+										   if (age > 0.0) {
+											   vec2 st2 = particlePos * Scale;
+											   vec2 u = texture(Velocity, st2).rg / Scale;
+											   vec2 coord =  TimeStep * InverseCellSize * u;
+											   coord *= (size / StSize) * PI; // why this magic number
+											   coord += Gravity * mass;
+											   
+											   float obstNoise = texture(Obstacle, st2).x + noise(st) - 1.0;
+											   float solid = ceil(obstNoise - 0.1);
+											   
+											   float inverseSolid = 1 - solid;
+											   coord *= inverseSolid;
+											   
+											   particlePos += coord;
+										   }
+										   
+										   else {
+											   particlePos = texture(HomeTexture, st).xy;
+										   }
+										   
+										   fragColor = vec4(particlePos, 0.0, 1.0);
+									   }
 								  );
 			
 			

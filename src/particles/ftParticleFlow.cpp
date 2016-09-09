@@ -82,15 +82,19 @@ namespace flowTools {
 		particleHomeBuffer.black();
 		initPositionShader.update(particleHomeBuffer);
 		
-		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		fluidVelocitySwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
 		fluidVelocitySwapBuffer.black();
-		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		flowVelocitySwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
 		flowVelocitySwapBuffer.black();
-		densitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
+		densitySwapBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F);
 		densitySwapBuffer.black();
-		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB); // GL_RED??
+		obstacleBuffer.allocate(numParticlesX, numParticlesY, GL_R8); // GL_R??
 		obstacleBuffer.black();
+		dampingBuffer.allocate(_numParticlesX, _numParticlesY, GL_R8);
+		dampingBuffer.black();
 		
+		lifeCountFbo.allocate(_simulationWidth, _simulationHeight, GL_R32F);
+		lifeCountPixelData = new float [_simulationWidth * _simulationHeight];
 		ofPopStyle();
 		
 	}
@@ -108,7 +112,6 @@ namespace flowTools {
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			
 			
 			particleAgeLifespanMassSizeSwapBuffer.swap();
 			ALMSParticleShader.update(*particleAgeLifespanMassSizeSwapBuffer.getBuffer(),
@@ -129,10 +132,12 @@ namespace flowTools {
 									  particlePositionSwapBuffer.getBackTexture(),
 									  particleAgeLifespanMassSizeSwapBuffer.getTexture(),
 									  fluidVelocitySwapBuffer.getTexture(),
+									  dampingBuffer.getTexture(),
 									  particleHomeBuffer.getTexture(),
 									  timeStep,
 									  cellSize.get(),
-									  gravity);
+									  gravity.get(),
+									  size.get());
 			
 			ofPopStyle();
 	 
@@ -144,12 +149,14 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::draw(int _x, int _y, int _width, int _height) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		ofPushView();
 		ofTranslate(_x, _y);
 		ofScale(_width / numParticlesX, _height / numParticlesY);
 		drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.getTexture(), particleAgeLifespanMassSizeSwapBuffer.getTexture(), twinkleSpeed.get());
-		
 		ofPopView();
+		ofPopStyle();
 	}
 
 	void ftParticleFlow::addFlowVelocity(ofTexture & _tex, float _strength) {
@@ -174,13 +181,51 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftParticleFlow::setObstacle (ofTexture& _tex) {
+	void ftParticleFlow::addObstacle (ofTexture& _tex) {
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		obstacleBuffer.black();
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		obstacleBuffer.begin();
-		_tex.draw(0,0,simulationWidth,simulationHeight);
+		_tex.draw(0,0,obstacleBuffer.getWidth(),obstacleBuffer.getHeight());
 		obstacleBuffer.end();
 		ofPopStyle();
+	}
+	
+	void ftParticleFlow::addDamping (ofTexture& _tex) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		dampingBuffer.begin();
+		_tex.draw(0,0,dampingBuffer.getWidth(),dampingBuffer.getHeight());
+		dampingBuffer.end();
+		ofPopStyle();
+	}
+	
+	int ftParticleFlow::getLifeParticles() {
+		ofPushStyle();
+		int width = lifeCountFbo.getWidth();
+		int height = lifeCountFbo.getHeight();
+		int pixelCount = width * height;
+		
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		lifeCountFbo.black();
+		lifeCountFbo.begin();
+		particleAgeLifespanMassSizeSwapBuffer.getTexture().draw(0, 0, width, height);
+		lifeCountFbo.end();
+		ofPopStyle();
+		
+		
+		ofTextureData& data = lifeCountFbo.getTexture().getTextureData();
+		
+		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,2);
+		glBindTexture(data.textureTarget, data.textureID);
+		glGetTexImage(data.textureTarget, 0, GL_RG, GL_FLOAT, lifeCountPixelData);
+		glBindTexture(data.textureTarget, 0);
+		
+		int count = 0;
+		for (int i=0; i<pixelCount; i++) {
+			(lifeCountPixelData[i] > 0)? count++: count;
+		}
+		float normalizedCount = count / float(pixelCount);
+		return normalizedCount * numParticles;
+		
 	}
 }

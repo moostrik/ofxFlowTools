@@ -4,7 +4,7 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 
-//#define USE_PROGRAMMABLE_GL
+#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 
@@ -59,6 +59,9 @@ public:
 	ofImage				flowToolsLogoImage;
 	bool				showLogo;
 	
+	ofImage				backgroundImage;
+	bool				showBackground;
+	
 	// MouseDraw
 	ftDrawMouseForces	mouseForces;
 	
@@ -94,6 +97,9 @@ public:
 	deque<float>		deltaTimeDeque;
 	ofParameter<bool>	doFullScreen;
 	void				setFullScreen(bool& _value) { ofSetFullscreen(_value);}
+	ofParameter<int>	numParticles;
+	ofParameter<bool>	reset;
+	void				resetListner(bool& _value) { if(_value) { _value = false; fluidSimulation.reset(); particleFlow.reset();} ;}
 	
 	// DRAW
 	ofParameter<bool>	doDrawCamBackground;

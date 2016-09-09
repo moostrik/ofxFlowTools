@@ -30,7 +30,7 @@ namespace flowTools {
 									 uniform sampler2DRect Velocity;
 									 uniform sampler2DRect Density;
 									 uniform sampler2DRect Obstacle;
-									 uniform vec2  Scale;
+									 uniform vec2	Scale;
 									 uniform float GlobalTime;
 									 uniform float DeltaTime;
 									 uniform float BirthChance;
@@ -84,10 +84,10 @@ namespace flowTools {
 											p_age = 0.0;
 										 }
 										 
-										 vec2 particlePos = texture2DRect(Position, st).xy;
-										 particlePos *= Scale;
-										 float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, particlePos).x - 0.5);
-										 p_age *= inverseSolid;
+//										 vec2 particlePos = texture2DRect(Position, st).xy;
+//										 particlePos *= Scale;
+//										 float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, particlePos).x - 0.5);
+//										 p_age *= inverseSolid;
 									  
 										 gl_FragColor = vec4(p_age, p_life, p_mass, p_size);
 								  }
@@ -160,11 +160,11 @@ namespace flowTools {
 										if (p_age > p_life ) {
 											p_age = 0.0;
 										}
-										vec2 particlePos = texture(Position, st).xy;
-										particlePos *= Scale;
-										float inverseSolid = 1.0 - ceil(texture(Obstacle, particlePos).x - 0.5);
-										p_age *= inverseSolid;
-									  
+//										vec2 particlePos = texture(Position, st).xy;
+//										particlePos *= Scale;
+//										float inverseSolid = 1.0 - ceil(texture(Obstacle, particlePos).x - 0.5);
+//										p_age *= inverseSolid;
+										
 										fragColor = vec4(p_age, p_life, p_mass, p_size);
 									}
 									);

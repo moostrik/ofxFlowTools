@@ -20,7 +20,14 @@ namespace flowTools {
 		
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
 		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
-		void	setObstacle (ofTexture& _tex) ;
+		void	setObstacle (ofTexture& _tex)	{ obstacleBuffer.black();	addObstacle(_tex); }
+		void	setDamping (ofTexture& _tex)	{ dampingBuffer.black();	addDamping(_tex); }
+		void	addObstacle (ofTexture& _tex) ;
+		void	addDamping (ofTexture& _tex) ;
+		
+		int		getLifeParticles() ;
+		
+		void	reset() {particleAgeLifespanMassSizeSwapBuffer.black();}
 		
 		void	update(float _deltaTime = 0);
 		
@@ -94,12 +101,17 @@ namespace flowTools {
 		ftSwapBuffer			fluidVelocitySwapBuffer;
 		ftSwapBuffer			densitySwapBuffer;
 		ftFbo					obstacleBuffer;
+		ftFbo					dampingBuffer;
 		
 		ftInitPositionShader	initPositionShader;
 		ftDrawParticleShader	drawParticleShader;
 		ftMoveParticleShader	moveParticleShader;
 		ftAgeLifespanMassSizeParticleShader	ALMSParticleShader;
 		ftAddForceShader		addShader;
+		
+		ftFbo		lifeCountFbo;
+		float*		lifeCountPixelData;
+		
 	};
 		
 }

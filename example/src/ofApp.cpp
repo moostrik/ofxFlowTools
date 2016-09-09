@@ -6,8 +6,8 @@ void ofApp::setup(){
 	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-	drawWidth = 1280;
-	drawHeight = 720;
+	drawWidth = 1920;
+	drawHeight = 1080;
 	// process all but the density on 16th resolution
 	flowWidth = drawWidth / 4;
 	flowHeight = drawHeight / 4;
@@ -23,6 +23,12 @@ void ofApp::setup(){
 	flowToolsLogoImage.load("flowtools.png");
 	fluidSimulation.addObstacle(flowToolsLogoImage.getTexture());
 	showLogo = true;
+	
+	
+	backgroundImage.load("mountain_gradient_inv.png");
+	particleFlow.setDamping(backgroundImage.getTexture());
+//	particleFlow.addDamping(flowToolsLogoImage.getTexture());
+	showBackground = true;
 	
 	velocityDots.setup(flowWidth / 4, flowHeight / 4);
 	
@@ -55,6 +61,7 @@ void ofApp::setupGui() {
 	gui.setup("settings");
 	gui.setDefaultBackgroundColor(ofColor(0, 0, 0, 127));
 	gui.setDefaultFillColor(ofColor(160, 160, 160, 160));
+	gui.add(numParticles.set("num Particles", 0, 0, drawWidth * drawHeight));
 	gui.add(guiFPS.set("average FPS", 0, 0, 60));
 	gui.add(guiMinFPS.set("minimum FPS", 0, 0, 60));
 	gui.add(doFullScreen.set("fullscreen (F)", false));
@@ -65,7 +72,8 @@ void ofApp::setupGui() {
 	gui.add(drawMode.set("draw mode", DRAW_COMPOSITE, DRAW_COMPOSITE, DRAW_MOUSE));
 	drawMode.addListener(this, &ofApp::drawModeSetName);
 	gui.add(drawName.set("MODE", "draw name"));
-		
+	gui.add(reset.set("reset", false));
+	reset.addListener(this, &ofApp::resetListner);
 	
 	int guiColorSwitch = 0;
 	ofColor guiHeaderColor[2];
@@ -219,6 +227,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch (key) {
+		case ' ': reset.set(true); break;
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
 		case 'f':
@@ -306,17 +315,18 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::drawComposite(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
-	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	
+	if (showBackground)
+		backgroundImage.draw(_x, _y, _width, _height);
+	
 	fluidSimulation.draw(_x, _y, _width, _height);
 	
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	if (particleFlow.isActive())
 		particleFlow.draw(_x, _y, _width, _height);
 	
-	if (showLogo) {
+	if (showLogo)
 		flowToolsLogoImage.draw(_x, _y, _width, _height);
-	}
 	
 	ofPopStyle();
 }
@@ -559,6 +569,8 @@ void ofApp::drawGui() {
 	}
 	
 	guiMinFPS.set(1.0 / longestTime);
+	
+	numParticles.set(particleFlow.getLifeParticles());
 	
 	
 	ofPushStyle();

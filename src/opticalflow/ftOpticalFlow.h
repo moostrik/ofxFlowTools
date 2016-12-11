@@ -14,13 +14,13 @@ namespace flowTools {
 		
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
+		void		reset() { decayBuffer.black(); timeBlurShader.reset(); }
 		void		update(float _deltaTime = 0);
 		void		setSource(ofTexture& _tex);
 		
-		ofTexture&	getTexture() {return getOpticalFlow() ;};
-		ofTexture&	getOpticalFlow() {return velocityBuffer.getTexture();};
-		ofTexture&	getOpticalFlowDecay() {if(doTimeBlurDecay.get()) return decayBuffer.getTexture(); else return velocityBuffer.getTexture();
-											};
+		ofTexture&	getTexture()		{ return getOpticalFlow(); }
+		ofTexture&	getOpticalFlow()	{ return velocityBuffer.getTexture(); }
+		ofTexture&	getOpticalFlowDecay(){return (doTimeBlurDecay.get())? decayBuffer.getTexture(): velocityBuffer.getTexture(); }
 //		int			getFlowVectorSize(){return width * height;};
 //		ofVec2f*	getFlowVectors();
 //		float		getAverageFlow();

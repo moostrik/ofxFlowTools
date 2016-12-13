@@ -14,7 +14,7 @@ namespace flowTools {
 		
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
-		void		reset() { decayBuffer.black(); timeBlurShader.reset(); }
+		void		reset() { sourceSwapBuffer.black(); decayBuffer.black(); timeBlurShader.reset(); bSourceSet = false; }
 		void		update(float _deltaTime = 0);
 		void		setSource(ofTexture& _tex);
 		

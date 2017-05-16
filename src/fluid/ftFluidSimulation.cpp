@@ -183,7 +183,7 @@ namespace flowTools {
 		// VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityFirstPassShader.update(vorticityFirstPassBuffer,
-											velocitySwapBuffer.getBackTexture(),
+											velocitySwapBuffer.getTexture(),
 											combinedObstacleBuffer.getTexture());
 			
 			vorticitySecondPassShader.update(vorticitySecondPassBuffer,
@@ -208,7 +208,7 @@ namespace flowTools {
 		densitySwapBuffer.swap();
 		advectShader.update(*densitySwapBuffer.getBuffer(),
 							densitySwapBuffer.getBackTexture(),
-							velocitySwapBuffer.getBackTexture(),
+							velocitySwapBuffer.getTexture(),
 							combinedObstacleBuffer.getTexture(),
 							timeStep,
 							1.0 - (dissipation.get() + densityOffset.get()),
@@ -235,16 +235,16 @@ namespace flowTools {
 //			temperatureSwapBuffer.swap();
 //			advectShader.update(*temperatureSwapBuffer.getBuffer(),
 //								temperatureSwapBuffer.getBackTexture(),
-//								velocitySwapBuffer.getBackTexture(),
+//								velocitySwapBuffer.getTexture(),
 //								combinedObstacleBuffer.getTexture(),
 //								timeStep,
 //								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
 //								cellSize.get());
 //			
 //			smokeBuoyancyShader.update(smokeBuoyancyBuffer,
-//									   velocitySwapBuffer.getBackTexture(),
-//									   temperatureSwapBuffer.getBackTexture(),
-//									   densitySwapBuffer.getBackTexture(),
+//									   velocitySwapBuffer.getTexture(),
+//									   temperatureSwapBuffer.getTexture(),
+//									   densitySwapBuffer.getTexture(),
 //									   ambientTemperature.get(),
 //									   timeStep,
 //									   smokeSigma.get(),
@@ -260,7 +260,7 @@ namespace flowTools {
 		// DIVERGENCE AND JACOBI
 		divergenceBuffer.black();
 		divergenceShader.update(divergenceBuffer,
-								velocitySwapBuffer.getBackTexture(),
+								velocitySwapBuffer.getTexture(),
 								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
@@ -279,7 +279,7 @@ namespace flowTools {
 			densitySwapBuffer.swap();
 			densityFloatMultiplierShader.update(*densitySwapBuffer.getBuffer(),
 												densitySwapBuffer.getBackTexture(),
-												pressureSwapBuffer.getBackTexture(),
+												pressureSwapBuffer.getTexture(),
 												densityFromPressure.get());
 		}
 		
@@ -297,7 +297,7 @@ namespace flowTools {
 			addPressureBufferDidChange = false;
 			pressureSwapBuffer.swap();
 			addShader.update(*pressureSwapBuffer.getBuffer(),
-							 pressureSwapBuffer.getBackTexture(),
+							 pressureSwapBuffer.getTexture(),
 							 addPressureBuffer.getTexture(),
 							 1.0);
 		}
@@ -305,7 +305,7 @@ namespace flowTools {
 		velocitySwapBuffer.swap();
 		substractGradientShader.update(*velocitySwapBuffer.getBuffer(),
 									   velocitySwapBuffer.getBackTexture(),
-									   pressureSwapBuffer.getBackTexture(),
+									   pressureSwapBuffer.getTexture(),
 									   combinedObstacleBuffer.getTexture(),
 									   cellSize.get());
 		
@@ -382,7 +382,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::draw(int x, int y, float _width, float _height){
-		densitySwapBuffer.getBackTexture().draw(x,y,_width,_height); // why BACK texture?
+		densitySwapBuffer.getTexture().draw(x,y,_width,_height);
 	}
 	
 	//--------------------------------------------------------------

@@ -143,7 +143,7 @@ void ofApp::setupGui() {
 //--------------------------------------------------------------
 void ofApp::update(){
 	
-	deltaTime = ofGetElapsedTimef() - lastTime;
+	deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
 	lastTime = ofGetElapsedTimef();
 	
 	simpleCam.update();
@@ -162,9 +162,7 @@ void ofApp::update(){
 		
 		opticalFlow.setSource(cameraFbo.getTexture());
 		
-		// opticalFlow.update(deltaTime);
-		// use internal deltatime instead
-		opticalFlow.update();
+		opticalFlow.update(deltaTime);
 		
 		velocityMask.setDensity(cameraFbo.getTexture());
 		velocityMask.setVelocity(opticalFlow.getOpticalFlow());
@@ -202,7 +200,7 @@ void ofApp::update(){
 		}
 	}
 	
-	fluidSimulation.update();
+	fluidSimulation.update(deltaTime);
 	
 	if (particleFlow.isActive()) {
 		particleFlow.setSpeed(fluidSimulation.getSpeed());
@@ -212,7 +210,7 @@ void ofApp::update(){
 //		particleFlow.addDensity(fluidSimulation.getDensity());
 		particleFlow.setObstacle(fluidSimulation.getObstacle());
 	}
-	particleFlow.update();
+	particleFlow.update(deltaTime);
 	
 }
 

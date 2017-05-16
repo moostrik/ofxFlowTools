@@ -49,7 +49,7 @@ namespace flowTools {
 		
 		parameters.setName("velocity mask");
 		parameters.add(strength.set("strength", 2.5, 0, 10));
-		parameters.add(hue.set("hue", 0, -180, 180));
+		parameters.add(hue.set("hue", 0, -1, 1));
 		parameters.add(saturation.set("saturation", 3, 1, 5));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
@@ -66,19 +66,19 @@ namespace flowTools {
 		}
 		else {
 			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, strength.get());
+			colorMaskSwapBuffer.swap();
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),
 							 hue.get(),
 							 saturation.get(),
 							 1);
-			colorMaskSwapBuffer.swap();
 			
 			if (blurPasses.get() > 0 && blurRadius.get() > 0) {
 				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
 			}
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.getBackTexture());
+			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.getTexture());
 		}
 		
 		ofPopStyle();

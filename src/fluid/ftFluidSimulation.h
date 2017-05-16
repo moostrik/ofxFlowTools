@@ -121,6 +121,7 @@ namespace flowTools {
 		ofParameter<float>	maxVelocity;
 		ofParameter<float>	maxDensity;
 		ofParameter<float>	maxTemperature;
+		ofParameter<float>	maxPressure;
 		ofParameter<float>	densityFromPressure;
 		ofParameter<float>	densityFromVorticity;
 		

@@ -49,6 +49,7 @@ namespace flowTools {
 		
 		parameters.setName("velocity mask");
 		parameters.add(strength.set("strength", 2.5, 0, 10));
+		parameters.add(hue.set("hue", 0, -180, 180));
 		parameters.add(saturation.set("saturation", 3, 1, 5));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
@@ -67,7 +68,7 @@ namespace flowTools {
 			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, strength.get());
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),
-							 0,
+							 hue.get(),
 							 saturation.get(),
 							 1);
 			colorMaskSwapBuffer.swap();

@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "ftFbo.h"
+#include <numeric>
 
 namespace flowTools {
 	

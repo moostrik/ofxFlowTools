@@ -4,7 +4,7 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 
-//#define USE_PROGRAMMABLE_GL
+#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 

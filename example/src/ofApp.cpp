@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-	ofSetVerticalSync(false);
+//	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	drawWidth = 1280;

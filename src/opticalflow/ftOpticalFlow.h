@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ftSwapBuffer.h"
-#include "ftOpticalFlowShader.h"
+#include "ftOpticalFlowShaderExp.h"
 #include "ftTimeBlurShader.h"
 #include "ftDecayShader.h"
 
@@ -75,7 +75,7 @@ namespace flowTools {
 		ftFbo				velocityBuffer;
 		ftFbo				decayBuffer;
 		ftSwapBuffer		sourceSwapBuffer;
-		ftOpticalFlowShader opticalFlowShader;
+		ftOpticalFlowShaderExp opticalFlowShader;
 		ftTimeBlurShader	timeBlurShader;
 		ftDecayShader		decayShader;
 		

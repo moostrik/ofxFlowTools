@@ -110,6 +110,7 @@ namespace flowTools {
 		ofParameterGroup	advancedDissipationParameters;
 		ofParameter<float>	velocityOffset;
 		ofParameter<float>	densityOffset;
+		ofParameter<float>	pressureOffset;
 		ofParameter<float>	temperatureOffset;
 		ofParameterGroup	smokeBuoyancyParameters;
 		ofParameter<float>	smokeSigma;

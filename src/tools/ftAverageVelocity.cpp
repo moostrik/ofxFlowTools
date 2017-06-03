@@ -22,7 +22,7 @@ namespace flowTools {
 		parameters.setName("average " + _name);
 		parameters.add(pDirection.set("direction", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
 		parameters.add(pMagnitude.set("magnitude", 0, 0, 100));
-		parameters.add(pAverageMagnitude.set("magnitude", 0, 0, 1));
+		parameters.add(pAverageMagnitude.set("average mag", 0, 0, 1));
 		
 	}
 	

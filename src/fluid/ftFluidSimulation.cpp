@@ -273,7 +273,7 @@ namespace flowTools {
 								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
-		pressureSwapBuffer.black();
+//		pressureSwapBuffer.black();
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureSwapBuffer.swap();
 			jacobiShader.update(*pressureSwapBuffer.getBuffer(),

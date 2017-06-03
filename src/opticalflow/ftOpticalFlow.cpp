@@ -78,7 +78,7 @@ namespace flowTools {
 		if (_deltaTime != 0)
 			deltaTime = _deltaTime;
 		else
-			deltaTime = time - lastTime;
+            deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
 		lastTime = time;
 		timeStep = deltaTime * strength.get();
 		

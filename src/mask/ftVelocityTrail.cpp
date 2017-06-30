@@ -39,12 +39,9 @@ namespace flowTools {
 	ftVelocityTrail::ftVelocityTrail(){
 		parameters.setName("flow trail");
 		parameters.add(strength.set("strength", 10, 0, 100));
-		//		parameters.add(doTimeBlurDecay.set("do time blur", true));
-		doTimeBlurDecay.set("do time blur", true);
-		timeBlurParameters.setName("time decay blur");
-		timeBlurParameters.add(timeBlurDecay.set("decay", 3, 0, 10));
-		timeBlurParameters.add(timeBlurRadius.set("blur radius", 3, 0, 10));
-		parameters.add(timeBlurParameters);
+		parameters.add(trailWeight.set("trail weight", .3, .1, 1));
+		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
+		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 		lastTime = ofGetElapsedTimef();
 	};
@@ -53,8 +50,8 @@ namespace flowTools {
 		width = _width;
 		height = _height;
 		
-		trailBuffer.allocate(width, height, GL_RGB32F);
-		trailBuffer.black();
+		trailSwapBuffer.allocate(width, height, GL_RGB32F);
+		trailSwapBuffer.black();
 	};
 	
 	void ftVelocityTrail::update(float _deltaTime) {
@@ -69,7 +66,12 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-		timeBlurShader.update(trailBuffer, *velocityTexture, timeBlurDecay * deltaTime, timeBlurRadius);
+		trailSwapBuffer.swap();
+		trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get(), strength.get());
+		
+		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
+			blurShader.update(*trailSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
+		}
 		
 		ofPopStyle();
 	}

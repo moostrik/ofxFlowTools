@@ -167,7 +167,7 @@ void ofApp::update(){
 		ofPopStyle();
 		
 		opticalFlow.setSource(cameraFbo.getTexture());
-		opticalFlow.update(deltaTime);
+		opticalFlow.update();
 		
 		velocityTrail.setSource(opticalFlow.getTexture());
 		velocityTrail.update();

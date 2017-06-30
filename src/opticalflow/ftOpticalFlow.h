@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ftSwapBuffer.h"
-#include "ftOpticalFlowShaderExp.h"
+#include "ftOpticalFlowShader.h"
 #include "ftTimeBlurShader.h"
 #include "ftDecayShader.h"
 
@@ -14,16 +14,13 @@ namespace flowTools {
 		
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
-		void		reset() { sourceSwapBuffer.black(); decayBuffer.black(); timeBlurShader.reset(); bSourceSet = false; }
+		void		reset() { sourceSwapBuffer.black(); bSourceSet = false; }
 		void		update(float _deltaTime = 0);
 		void		setSource(ofTexture& _tex);
 		
 		ofTexture&	getTexture()		{ return getOpticalFlow(); }
 		ofTexture&	getOpticalFlow()	{ return velocityBuffer.getTexture(); }
-		ofTexture&	getOpticalFlowDecay(){return (doTimeBlurDecay.get())? decayBuffer.getTexture(): velocityBuffer.getTexture(); }
-//		int			getFlowVectorSize(){return width * height;};
-//		ofVec2f*	getFlowVectors();
-//		float		getAverageFlow();
+//		ofTexture&	getOpticalFlowDecay(){return (doTimeBlurDecay.get())? decayBuffer.getTexture(): velocityBuffer.getTexture(); }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};
@@ -70,19 +67,14 @@ namespace flowTools {
 		
 		bool bSourceSet;
 		
-		ofTexture			velocityTexture;
+//		ofTexture			velocityTexture;
 		
 		ftFbo				velocityBuffer;
+		ftFbo				velocityBufferHalf;
+		ftFbo				velocityBufferQuarter;
 		ftFbo				decayBuffer;
 		ftSwapBuffer		sourceSwapBuffer;
-		ftOpticalFlowShaderExp opticalFlowShader;
-		ftTimeBlurShader	timeBlurShader;
-		ftDecayShader		decayShader;
-		
-		
-//		float*	flowFloats;
-//		ofVec2f* flowVectors;
-//		bool	flowVectorsDidUpdate;
+		ftOpticalFlowShader opticalFlowShader;
 		
 	};
 }

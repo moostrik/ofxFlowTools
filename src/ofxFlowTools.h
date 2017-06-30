@@ -34,6 +34,7 @@
 #include "ftFluidSimulation.h"
 #include "ftOpticalFlow.h"
 #include "ftVelocityMask.h"
+#include "ftVelocityTrail.h"
 #include "ftParticleFlow.h"
 #include "ftDrawForce.h"
 #include "ftDrawMouseForces.h"

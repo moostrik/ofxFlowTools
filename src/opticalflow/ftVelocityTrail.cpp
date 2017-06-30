@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftVelocityMask
+ *  ftVelocityTrail
  *
  *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -28,69 +28,51 @@
  *  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  *  OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ *	The Optical Flow Shader is based on a Quartz Composer patch, but was also inspired by ofxMIOFlowGLSL by Princemio
+ *
  *  ************************************************************************************ */
 
-#include "ftVelocityMask.h"
+#include "ftVelocityTrail.h"
 
 namespace flowTools {
 	
-	void ftVelocityMask::setup(int _width, int _height){
+	ftVelocityTrail::ftVelocityTrail(){
+		parameters.setName("flow trail");
+		parameters.add(strength.set("strength", 10, 0, 100));
+		//		parameters.add(doTimeBlurDecay.set("do time blur", true));
+		doTimeBlurDecay.set("do time blur", true);
+		timeBlurParameters.setName("time decay blur");
+		timeBlurParameters.add(timeBlurDecay.set("decay", 3, 0, 10));
+		timeBlurParameters.add(timeBlurRadius.set("blur radius", 3, 0, 10));
+		parameters.add(timeBlurParameters);
+		
+		lastTime = ofGetElapsedTimef();
+	};
+	
+	void	ftVelocityTrail::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
-		colorMaskSwapBuffer.allocate(width, height, GL_RGBA);
-		colorMaskSwapBuffer.black();
-		
-		luminanceMaskFbo.allocate(width, height, GL_RGB);
-		luminanceMaskFbo.black();
-		
-		bVelocityTextureSet = false;
-		bDensityTextureSet = false;
-		
-		parameters.setName("flow mask");
-		parameters.add(strength.set("strength", 1, 0, 10));
-//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
-		parameters.add(saturation.set("saturation", 3, 0, 3));
-		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
-		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
-		
+		trailBuffer.allocate(width, height, GL_RGB32F);
+		trailBuffer.black();
 	};
 	
-	void ftVelocityMask::update() {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		colorMaskSwapBuffer.black();
+	void ftVelocityTrail::update(float _deltaTime) {
+		float time = ofGetElapsedTimef();
+		if (_deltaTime != 0)
+			deltaTime = _deltaTime;
+		else
+			deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
+		lastTime = time;
+		timeStep = deltaTime * strength.get();
 		
-		if (!bVelocityTextureSet || !bDensityTextureSet) {
-			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");
-		}
-		else {
-			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, strength.get());
-			colorMaskSwapBuffer.swap();
-			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
-							 colorMaskSwapBuffer.getBackTexture(),
-							 hue.get(),
-							 saturation.get(),
-							 1);
-			
-			if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
-			}
-			
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.getTexture());
-		}
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		
+		timeBlurShader.update(trailBuffer, *velocityTexture, timeBlurDecay * deltaTime, timeBlurRadius);
 		
 		ofPopStyle();
 	}
 	
-	void ftVelocityMask::setDensity(ofTexture &tex) {
-		densityTexture = &tex;
-		bDensityTextureSet = true;
-	}
 	
-	void ftVelocityMask::setVelocity(ofTexture &tex) {
-		velocityTexture = &tex;
-		bVelocityTextureSet = true;
-	}
 }

@@ -50,6 +50,7 @@ public:
 	int					drawHeight;
 	
 	ftOpticalFlow		opticalFlow;
+	ftVelocityTrail		velocityTrail;
 	ftVelocityMask		velocityMask;
 	ftFluidSimulation	fluidSimulation;
 	ftParticleFlow		particleFlow;

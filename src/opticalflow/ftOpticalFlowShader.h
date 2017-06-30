@@ -49,7 +49,7 @@ namespace flowTools {
 										   vec4 gradx; vec4 grady; vec4 gradmag; vec4 vx; vec4 vy;
 										   gradx =	texture2DRect(LastTexture, st + off_x) - texture2DRect(LastTexture, st - off_x);
 										   gradx += texture2DRect(CurrTexture, st + off_x) - texture2DRect(CurrTexture, st - off_x);
-										   grady =	texture2DRect(LastTexture, st + off_y) - texture2DRect(LastTexture, st -off_y);
+										   grady =	texture2DRect(LastTexture, st + off_y) - texture2DRect(LastTexture, st - off_y);
 										   grady += texture2DRect(CurrTexture, st + off_y) - texture2DRect(CurrTexture, st - off_y);
 										   
 										   gradmag = sqrt((gradx*gradx)+(grady*grady)+vec4(lambda));

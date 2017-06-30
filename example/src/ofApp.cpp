@@ -14,6 +14,7 @@ void ofApp::setup(){
 	
 	// FLOW & MASK
 	opticalFlow.setup(flowWidth, flowHeight);
+	velocityTrail.setup(flowWidth, flowHeight);
 	velocityMask.setup(drawWidth, drawHeight);
 	
 	// FLUID & PARTICLES
@@ -79,6 +80,11 @@ void ofApp::setupGui() {
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(opticalFlow.parameters);
+	
+	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
+	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
+	guiColorSwitch = 1 - guiColorSwitch;
+	gui.add(velocityTrail.parameters);
 	
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
@@ -161,18 +167,19 @@ void ofApp::update(){
 		ofPopStyle();
 		
 		opticalFlow.setSource(cameraFbo.getTexture());
-		
 		opticalFlow.update(deltaTime);
+		
+		velocityTrail.setSource(opticalFlow.getTexture());
+		velocityTrail.update();
 		
 		velocityMask.setDensity(cameraFbo.getTexture());
 		velocityMask.setVelocity(opticalFlow.getOpticalFlow());
 		velocityMask.update();
+		
+		fluidSimulation.addVelocity(velocityTrail.getTexture());
+		fluidSimulation.addDensity(velocityMask.getColorMask());
+		fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
 	}
-	
-	
-	fluidSimulation.addVelocity(opticalFlow.getOpticalFlowDecay());
-	fluidSimulation.addDensity(velocityMask.getColorMask());
-	fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
 	
 	mouseForces.update(deltaTime);
 	
@@ -473,12 +480,12 @@ void ofApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	if (showScalar.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		displayScalar.setSource(opticalFlow.getOpticalFlowDecay());
+		displayScalar.setSource(velocityTrail.getTexture());
 		displayScalar.draw(0, 0, _width, _height);
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		velocityField.setVelocity(opticalFlow.getOpticalFlowDecay());
+		displayScalar.setSource(velocityTrail.getTexture());
 		velocityField.draw(0, 0, _width, _height);
 	}
 	ofPopStyle();

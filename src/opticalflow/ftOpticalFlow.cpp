@@ -61,15 +61,7 @@ namespace flowTools {
 		sourceSwapBuffer.allocate(width, height);
 		velocityBuffer.allocate(width, height, GL_RGB32F);
 		velocityBuffer.black();
-		
-		velocityTexture.allocate(width, height, GL_RGB32F);
-		
-		decayBuffer.allocate(width, height, GL_RGB32F);
-		decayBuffer.black();
-		
-//		flowVectors = new ofVec2f[int(width * height)];
-//		flowFloats = new float [int(width * height) * 2];
-		
+			
 		bSourceSet = false;
 	};
 	
@@ -81,8 +73,6 @@ namespace flowTools {
             deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
 		lastTime = time;
 		timeStep = deltaTime * strength.get();
-		
-//		flowVectorsDidUpdate = false;
 		
 		float inverseX = 1;
 		if (doInverseX)inverseX = -1;
@@ -102,7 +92,7 @@ namespace flowTools {
 								 inverseX,
 								 inverseY);
 		
-		timeBlurShader.update(decayBuffer, velocityBuffer.getTexture(), timeBlurDecay * deltaTime, timeBlurRadius);
+//		timeBlurShader.update(decayBuffer, velocityBuffer.getTexture(), timeBlurDecay * deltaTime, timeBlurRadius);
 
 		ofPopStyle();
 	}

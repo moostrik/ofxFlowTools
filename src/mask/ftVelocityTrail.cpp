@@ -38,8 +38,8 @@ namespace flowTools {
 	
 	ftVelocityTrail::ftVelocityTrail(){
 		parameters.setName("flow trail");
-		parameters.add(strength.set("strength", 10, 0, 100));
-		parameters.add(trailWeight.set("trail weight", .3, .1, 1));
+		parameters.add(strength.set("strength", 8, 0, 10));
+		parameters.add(trailWeight.set("trail weight", .2, .1, 1));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		

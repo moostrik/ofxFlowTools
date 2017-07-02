@@ -48,9 +48,9 @@ namespace flowTools {
 		bDensityTextureSet = false;
 		
 		parameters.setName("flow mask");
-		parameters.add(strength.set("strength", 1, 0, 10));
+		parameters.add(strength.set("strength", 2, 0, 10));
 //		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
-		parameters.add(saturation.set("saturation", 3, 0, 3));
+		parameters.add(saturation.set("saturation", 2, 0, 3));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		

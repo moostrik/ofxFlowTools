@@ -42,7 +42,7 @@ namespace flowTools {
 		
 		parameters.setName("fluid solver");
 		parameters.add(doReset.set("reset", false));
-		parameters.add(speed.set("speed", 20, 0, 100));
+		parameters.add(speed.set("speed", 140, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
 		parameters.add(viscosity.set("viscosity", 0.1, 0, .4));
@@ -124,7 +124,7 @@ namespace flowTools {
 		else
 			deltaTime = time - lastTime;
 		lastTime = time;
-		timeStep = deltaTime * speed.get();
+		timeStep = deltaTime * speed.get();// * simulationWidth;
 		
 		if (doReset) {
 			doReset.set(false);
@@ -273,7 +273,7 @@ namespace flowTools {
 								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
-//		pressureSwapBuffer.black();
+		pressureSwapBuffer.black();
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureSwapBuffer.swap();
 			jacobiShader.update(*pressureSwapBuffer.getBuffer(),

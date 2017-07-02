@@ -485,7 +485,7 @@ void ofApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		displayScalar.setSource(velocityTrail.getTexture());
+		velocityField.setVelocity(velocityTrail.getTexture());
 		velocityField.draw(0, 0, _width, _height);
 	}
 	ofPopStyle();

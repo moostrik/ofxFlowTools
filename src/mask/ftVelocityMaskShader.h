@@ -40,7 +40,7 @@ namespace flowTools {
 										 vec4 color = texture2DRect(colorTex, stc);
 										 vec4 vel = texture2DRect(velocityTex, stv);
 										 float alpha = length(vel.xy) * force;
-										 color.rgb *= vec3(alpha);
+//										 color.rgb *= vec3(alpha);
 										 color.w = alpha;
 									  
 										 gl_FragColor = color;
@@ -71,7 +71,7 @@ namespace flowTools {
 										 vec4 color = texture(colorTex, stc);
 										 vec4 vel = texture(velocityTex, stv);
 										 float alpha = length(vel.xy) * force;
-										 color.rgb *= vec3(alpha);
+//										 color.rgb *= vec3(alpha);
 										 color.w = alpha;
 									  
 										fragColor = color;

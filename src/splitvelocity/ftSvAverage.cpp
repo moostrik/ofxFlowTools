@@ -25,7 +25,7 @@ namespace flowTools {
 		stdevMagnitude = 0;
 		
 		parameters.setName("average " + _name);
-		parameters.add(pDirection.set("direction", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
+		parameters.add(pDirection.set("direction", ofVec4f(0), ofVec4f(0), ofVec4f(1)));
 		parameters.add(pTotalMagnitude.set("total mag", "0"));
 		parameters.add(pMeanMagnitude.set("mean mag", "0"));
 		parameters.add(pStdevMagnitude.set("stdev mag", "0"));

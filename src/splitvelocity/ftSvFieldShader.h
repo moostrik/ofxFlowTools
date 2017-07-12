@@ -45,21 +45,17 @@ namespace flowTools {
 								  uniform vec2 texResolution;
 								  uniform vec4 baseColor;
 								  uniform float vectorSize;
-								  uniform float maxArrowSize;
+								  uniform float arrowSize;
 									   
 								  void main(){
 										   
 									  vec4 lineStart = gl_PositionIn[0];
 									  vec2 uv = lineStart.xy * texResolution;
 									  
-									  vec4 splitVelocity = texture2DRect(fieldTexture, uv) * vectorSize;
+									  vec4 splitVelocity = texture2DRect(fieldTexture, uv) * arrowSize;
 									  
 									  vec2 pVel = splitVelocity.xy;
-									  if (length(pVel) > maxArrowSize)
-										  pVel = normalize(pVel) * maxArrowSize;
 									  vec2 nVel = splitVelocity.zw;
-									  if (length(nVel) > maxArrowSize)
-										  nVel = normalize(nVel) * maxArrowSize;
 									  
 											   
 									  gl_Position = gl_ModelViewProjectionMatrix * (lineStart + vec4(pVel, 0, 0));
@@ -97,16 +93,16 @@ namespace flowTools {
 								   uniform mat4 modelViewProjectionMatrix;
 								   uniform mat4 textureMatrix;
 								   
-								   in vec4 position;
+								   in vec4	position;
 								   in vec2	texcoord;
 								   in vec4	color;
 								   
 								   out vec2 texCoordVarying;
-								   out vec4 colorVarying;
+								   out vec4 vColor;
 								   
 								   void main()
 								   {
-									   colorVarying = color;
+									   vColor = color;
 									   gl_Position = position;
 								   }
 								   
@@ -117,36 +113,34 @@ namespace flowTools {
 									 uniform sampler2DRect fieldTexture;
 									 uniform vec2 texResolution;
 									 uniform vec4 baseColor;
-									 uniform float vectorSize;
-									 uniform float maxArrowSize;
+									 uniform float arrowSize;
 									
 									 layout (points) in;
 									 layout (line_strip) out;
-									 layout (max_vertices=5) out;
+									 layout (max_vertices=3) out;
+									 
+									 in vec4 vColor[];
+									 out vec4 gColor;
 									 
 									 void main(){
 										 vec4 lineStart = gl_in[0].gl_Position;
 										 vec2 uv = lineStart.xy * texResolution;
 									  
-										 vec4 splitVelocity = texture(fieldTexture, uv) * vectorSize;
+										 vec4 splitVelocity = texture(fieldTexture, uv) * arrowSize;
 									  
 										 vec2 pVel = splitVelocity.xy;
-										 if (length(pVel) > maxArrowSize)
-											pVel = normalize(pVel) * maxArrowSize;
 										 vec2 nVel = splitVelocity.zw;
-										 if (length(nVel) > maxArrowSize)
-											nVel = normalize(nVel) * maxArrowSize;
 									  
-										 gl_Position = gl_ModelViewProjectionMatrix * (lineStart + vec4(pVel, 0, 0));
-									//	 gl_FrontColor = vec4(normalize(pVel),0,1);
+										 gl_Position = modelViewProjectionMatrix * (lineStart + vec4(pVel, 0, 0));
+										 gColor = vec4(normalize(pVel),0,1);
 										 EmitVertex();
 										 
-										 gl_Position = gl_ModelViewProjectionMatrix * lineStart;
-									//	 gl_FrontColor = vec4(0,0,0,.2);
+										 gl_Position = modelViewProjectionMatrix * lineStart;
+										 gColor = vec4(0,0,0,.2);
 										 EmitVertex();
 										 
-										 gl_Position = gl_ModelViewProjectionMatrix * (lineStart - vec4(nVel, 0, 0));
-									//	 gl_FrontColor = vec4(0,normalize(nVel),1);
+										 gl_Position = modelViewProjectionMatrix * (lineStart - vec4(nVel, 0, 0));
+										 gColor = vec4(0,normalize(nVel),1);
 										 EmitVertex();
 										 
 										 EndPrimitive();
@@ -154,11 +148,12 @@ namespace flowTools {
 										);
 			
 			fragmentShader = GLSL150(
+									 in vec4 gColor;
 									 out vec4 fragColor;
 									 
 									 void main()
 									 {
-										 fragColor = vec4(1.0,1.0,1.0,1.0);
+										 fragColor = gColor;
 									 }
 									 );
 			
@@ -170,7 +165,7 @@ namespace flowTools {
 		}
 	
 	public:	
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _velocityScale, float _maxArrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
+		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
 			int width = _floatTexture.getWidth();
 			int height = _floatTexture.getHeight();
 			
@@ -178,8 +173,7 @@ namespace flowTools {
 			shader.setUniformTexture("fieldTexture", _floatTexture,0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
-			shader.setUniform1f("vectorSize", _velocityScale);
-			shader.setUniform1f("maxArrowSize", _maxArrowSize);
+			shader.setUniform1f("arrowSize", _arrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
 		}

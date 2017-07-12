@@ -46,8 +46,6 @@ namespace flowTools {
 			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			
-//			float NormalizedMaxArrowLength =  (2.0 / (width + 1)) * maxArrowLength.get();
-//			cout << NormalizedMaxArrowLength << endl;
 			velocityFieldShader.update(fieldVbo, *velocityTexture, (1.0 / width) * arrowSize.get() * velocityScale.get(), color.get());
 			
 			if (lineSmooth.get()) {

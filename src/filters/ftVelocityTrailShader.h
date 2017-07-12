@@ -30,8 +30,8 @@ namespace flowTools {
 									 uniform float weight;
 									 
 									 void main(){
-										 vec2 u0 = texture2DRect(tex0,gl_TexCoord[0].st); // * (1.0 - weight);
-										 vec2 u1 = texture2DRect(tex1,gl_TexCoord[0].st) * vec2(weight);
+										 vec2 u0 = texture2DRect(tex0,gl_TexCoord[0].st).xy; // * (1.0 - weight);
+										 vec2 u1 = texture2DRect(tex1,gl_TexCoord[0].st).xy * vec2(weight);
 										 
 										 vec2 u = u0 + u1;
 										 float magnitude = length(u);

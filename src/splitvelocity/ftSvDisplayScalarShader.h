@@ -18,9 +18,9 @@ namespace flowTools {
 				glTwo();
 			
 			if (bInitialized)
-				ofLogNotice("ftDisplayScalarShader initialized");
+				ofLogNotice("ftSvDisplayScalarShader initialized");
 			else
-				ofLogWarning("ftDisplayScalarShader failed to initialize");
+				ofLogWarning("ftSvDisplayScalarShader failed to initialize");
 		}
 		
 	protected:
@@ -61,7 +61,7 @@ namespace flowTools {
 										 vec4	velocity = texture(FloatTexture, st);
 										 
 										 vec3 cLeft = vec3(velocity.x) * vec3(0.75, 0.00, 0.00); // red
-										 vec3 cDown = vec3(velocity.y) * vec3(0.75, 0.09, 0.00); // blue
+										 vec3 cDown = vec3(velocity.y) * vec3(0.00, 0.09, 0.75); // blue
 										 vec3 cRight= vec3(velocity.z) * vec3(0.00, 0.75, 0.17); // green
 										 vec3 cUp	= vec3(velocity.w) * vec3(0.75, 0.59, 0.00); // ocre
 										 

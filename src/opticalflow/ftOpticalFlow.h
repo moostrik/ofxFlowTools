@@ -4,8 +4,8 @@
 #include "ofMain.h"
 #include "ftSwapBuffer.h"
 #include "ftOpticalFlowShader.h"
-#include "ftTimeBlurShader.h"
-#include "ftDecayShader.h"
+
+#include "ftAddForceShader.h"
 
 namespace flowTools {
 	
@@ -15,12 +15,12 @@ namespace flowTools {
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
 		void		reset() { sourceSwapBuffer.black(); bSourceSet = false; }
-		void		update(float _deltaTime = 0);
 		void		setSource(ofTexture& _tex);
+		void		update();
+		void		update(ofTexture& _tex) { setSource(_tex); update(); }
 		
 		ofTexture&	getTexture()		{ return getOpticalFlow(); }
-		ofTexture&	getOpticalFlow()	{ return velocityBuffer.getTexture(); }
-//		ofTexture&	getOpticalFlowDecay(){return (doTimeBlurDecay.get())? decayBuffer.getTexture(): velocityBuffer.getTexture(); }
+		ofTexture&	getOpticalFlow()	{ if(doCombinedFlow){ return velocityBufferCombined.getTexture(); } else { return velocityBuffer.getTexture();}; }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};
@@ -32,9 +32,6 @@ namespace flowTools {
 		float		getThreshold()	{return threshold.get();}
 		bool		getInverseX()	{return doInverseX.get();}
 		bool		getInverseY()	{return doInverseY.get();}
-		bool		getTimeBlurActive()	{return doTimeBlurDecay.get();}
-		float		getTimeBlurRadius() {return timeBlurRadius.get();}
-		float		getTimeBlurDecay() {return timeBlurDecay.get();}
 		
 		void		setStrength(float value)	{strength.set(value);}
 		void		setOffset(int value)		{offset.set(value);}
@@ -42,9 +39,6 @@ namespace flowTools {
 		void		setThreshold(float value)	{threshold.set(value);}
 		void		setInverseX(bool value)		{doInverseX.set(value);}
 		void		setInverseY(bool value)		{doInverseY.set(value);}
-		void		setTimeBlurActive(bool value) {doTimeBlurDecay.set(value);}
-		void		setTimeBlurRadius(float value) {timeBlurRadius.set(value);}
-		void		setTimeBlurDecay(float value) {timeBlurDecay.set(value);}
 		
 		ofParameterGroup	parameters;
 	protected:
@@ -54,27 +48,29 @@ namespace flowTools {
 		ofParameter<float>	threshold;
 		ofParameter<bool>	doInverseX;
 		ofParameter<bool>	doInverseY;
-		ofParameter<bool>	doTimeBlurDecay;
-		ofParameterGroup	timeBlurParameters;
-		ofParameter<float>	timeBlurRadius;
-		ofParameter<float>	timeBlurDecay;
+		ofParameter<bool>	doCombinedFlow;
+		void doCombinedFlowListener(bool& _value) { if(_value) bSourceSet = false; }
 		
 		int		width;
 		int		height;
-		float	deltaTime;
-		float   lastTime;
-		float	timeStep;
 		
-		bool bSourceSet;
-		
-//		ofTexture			velocityTexture;
+		bool	bSourceSet;
 		
 		ftFbo				velocityBuffer;
 		ftFbo				velocityBufferHalf;
 		ftFbo				velocityBufferQuarter;
+		ftFbo				velocityBufferEighth;
+		ftFbo				velocityBufferCombined;
 		ftFbo				decayBuffer;
+		
 		ftSwapBuffer		sourceSwapBuffer;
+		ftSwapBuffer		sourceSwapBufferHalf;
+		ftSwapBuffer		sourceSwapBufferQuarter;
+		ftSwapBuffer		sourceSwapBufferEighth;
+		
 		ftOpticalFlowShader opticalFlowShader;
+		
+		ftAddForceShader	addShader;
 		
 	};
 }

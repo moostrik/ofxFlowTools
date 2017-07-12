@@ -69,12 +69,14 @@ namespace flowTools {
 											   else {
 												   strength = (strength - threshold) / (1.0 - threshold);
 												   flow = normalize(flow) * vec2(strength);
-												   
 											   }
 										   }
 										   
 										   // apply force
 										   flow *= vec2(force);
+										   
+										   // clamp to 0 - 1;
+										   flow = normalize(flow) * vec2(min(length(flow), 1));
 										   
 										   // set color
 										   gl_FragColor = vec4(flow, 0.0, 1.0);
@@ -134,12 +136,14 @@ namespace flowTools {
 										  else {
 											  strength = (strength - threshold) / (1.0 - threshold);
 											  flow = normalize(flow) * vec2(strength);
-											  
 										  }
 									  }
 									  
 									  // apply force
 									  flow *= vec2(force);
+									  
+									  // clamp to 0 - 1;
+									  flow = normalize(flow) * vec2(min(length(flow), 1));
 									  
 									  // set color
 									  fragColor = vec4(flow, 0.0, 1.0);

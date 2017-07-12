@@ -38,41 +38,44 @@ namespace flowTools {
 	
 	ftOpticalFlow::ftOpticalFlow(){
 		parameters.setName("optical flow");
-		parameters.add(strength.set("strength", 50, 0, 100));
-		parameters.add(offset.set("offset", 3, 1, 10));
-		parameters.add(lambda.set("lambda", 0.01, 0.1, 1));
+		
+		parameters.add(strength.set("strength", 3, 1, 13));
+//		parameters.add(offset.set("offset", 1, 1, 10));
+		offset.set("offset", 1, 1, 10);
+//		parameters.add(lambda.set("lambda", 0.01, 0.1, 1));
+		lambda.set("lambda", 0.01, 0.1, 1);
 		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));
-//		parameters.add(doTimeBlurDecay.set("do time blur", true));
-		doTimeBlurDecay.set("do time blur", true);
-		timeBlurParameters.setName("time decay blur");
-		timeBlurParameters.add(timeBlurDecay.set("decay", 3, 0, 10));
-		timeBlurParameters.add(timeBlurRadius.set("blur radius", 3, 0, 10));
-		parameters.add(timeBlurParameters);
-		
-		lastTime = ofGetElapsedTimef();
+		parameters.add(doCombinedFlow.set("combined flow", false));
+		doCombinedFlow.addListener(this, &ftOpticalFlow::doCombinedFlowListener);
 	};
 	
 	void	ftOpticalFlow::setup(int _width, int _height){
 		width = _width;
 		height = _height;
-				
+		
 		sourceSwapBuffer.allocate(width, height);
+		sourceSwapBufferHalf.allocate(width / 2, height / 2);
+		sourceSwapBufferQuarter.allocate(width / 4, height / 4);
+		sourceSwapBufferEighth.allocate(width / 8, height / 8);
+		
+		velocityBufferCombined.allocate(width, height, GL_RGB32F);
 		velocityBuffer.allocate(width, height, GL_RGB32F);
+		velocityBufferHalf.allocate(width / 2, height / 2, GL_RGB32F);
+		velocityBufferQuarter.allocate(width /4, height / 4, GL_RGB32F);
+		velocityBufferEighth.allocate(width / 8, height / 8, GL_RGB32F);
+		
 		velocityBuffer.black();
+		velocityBufferHalf.black();
+		velocityBufferQuarter.black();
+		velocityBufferEighth.black();
+		velocityBufferCombined.black();
 			
 		bSourceSet = false;
 	};
 	
-	void ftOpticalFlow::update(float _deltaTime) {
-		float time = ofGetElapsedTimef();
-		if (_deltaTime != 0)
-			deltaTime = _deltaTime;
-		else
-            deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
-		lastTime = time;
-		timeStep = deltaTime * strength.get();
+	void ftOpticalFlow::update() {
 		
 		float inverseX = 1;
 		if (doInverseX)inverseX = -1;
@@ -82,17 +85,56 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
+		
+		
 		opticalFlowShader.update(velocityBuffer,
 								 sourceSwapBuffer.getTexture(),
 								 sourceSwapBuffer.getBackTexture(),
-								 timeStep,
+								 strength.get(),
 								 offset.get(),
 								 lambda.get(),
 								 threshold.get(),
 								 inverseX,
 								 inverseY);
 		
-//		timeBlurShader.update(decayBuffer, velocityBuffer.getTexture(), timeBlurDecay * deltaTime, timeBlurRadius);
+		if (doCombinedFlow.get()) {
+			velocityBufferCombined.black();
+			
+			addShader.update(velocityBufferCombined, velocityBufferCombined.getTexture(), velocityBuffer.getTexture(), 0.25);
+			
+			opticalFlowShader.update(velocityBufferHalf,
+									 sourceSwapBufferHalf.getTexture(),
+									 sourceSwapBufferHalf.getBackTexture(),
+									 strength.get(),
+									 offset.get(),
+									 lambda.get(),
+									 threshold.get(),
+									 inverseX,
+									 inverseY);
+			addShader.update(velocityBufferCombined, velocityBufferCombined.getTexture(), velocityBufferHalf.getTexture(), 0.25);
+			
+			opticalFlowShader.update(velocityBufferQuarter,
+									 sourceSwapBufferQuarter.getTexture(),
+									 sourceSwapBufferQuarter.getBackTexture(),
+									 strength.get(),
+									 offset.get(),
+									 lambda.get(),
+									 threshold.get(),
+									 inverseX,
+									 inverseY);
+			addShader.update(velocityBufferCombined, velocityBufferCombined.getTexture(), velocityBufferQuarter.getTexture(), 0.25);
+			
+			opticalFlowShader.update(velocityBufferEighth,
+									 sourceSwapBufferEighth.getTexture(),
+									 sourceSwapBufferEighth.getBackTexture(),
+									 strength.get(),
+									 offset.get(),
+									 lambda.get(),
+									 threshold.get(),
+									 inverseX,
+									 inverseY);
+			addShader.update(velocityBufferCombined, velocityBufferCombined.getTexture(), velocityBufferEighth.getTexture(), 0.25);
+		}
 
 		ofPopStyle();
 	}
@@ -104,10 +146,30 @@ namespace flowTools {
 		sourceSwapBuffer.swap();
 		sourceSwapBuffer.getBuffer()->stretchIntoMe(_tex);
 		
+		if (doCombinedFlow.get()) {
+			sourceSwapBufferHalf.swap();
+			sourceSwapBufferHalf.getBuffer()->stretchIntoMe(_tex);
+			
+			sourceSwapBufferQuarter.swap();
+			sourceSwapBufferQuarter.getBuffer()->stretchIntoMe(_tex);
+			
+			sourceSwapBufferEighth.swap();
+			sourceSwapBufferEighth.getBuffer()->stretchIntoMe(_tex);
+		}
+		
 		if (!bSourceSet) { // on start set both buffers
 			bSourceSet = true;
 			sourceSwapBuffer.swap();
 			sourceSwapBuffer.getBuffer()->stretchIntoMe(_tex);
+			
+			sourceSwapBufferHalf.swap();
+			sourceSwapBufferHalf.getBuffer()->stretchIntoMe(_tex);
+			
+			sourceSwapBufferQuarter.swap();
+			sourceSwapBufferQuarter.getBuffer()->stretchIntoMe(_tex);
+			
+			sourceSwapBufferEighth.swap();
+			sourceSwapBufferEighth.getBuffer()->stretchIntoMe(_tex);
 		}
 		
 		ofPopStyle();

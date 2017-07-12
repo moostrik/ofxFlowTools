@@ -136,8 +136,7 @@ namespace flowTools {
 									 uniform sampler2DRect fieldTexture;
 									 uniform vec2 texResolution;
 									 uniform vec4 baseColor;
-									 uniform float vectorSize;
-									 uniform float maxArrowSize;
+									 uniform float arrowSize;
 									
 									 layout (points) in;
 									 layout (line_strip) out;
@@ -147,12 +146,12 @@ namespace flowTools {
 										 vec4 lineStart = gl_in[0].gl_Position;
 										 
 										 vec2 uv = lineStart.xy * texResolution;
-										 vec2 line = texture(fieldTexture, uv).xy * vectorSize;
-										 if (length(line) > maxArrowSize)
-											 line = normalize(line) * maxArrowSize;
+										 vec2 line = texture(fieldTexture, uv).xy * arrowSize;
+//										 if (length(line) > maxArrowSize)
+//											 line = normalize(line) * maxArrowSize;
 										 vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 										 
-										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / maxArrowSize);
+										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / arrowSize);
 										 vec4 color = baseColor;
 										 color.w *= alpha;
 										 
@@ -206,7 +205,7 @@ namespace flowTools {
 		}
 	
 	public:	
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _velocityScale, float _maxArrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
+		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
 			int width = _floatTexture.getWidth();
 			int height = _floatTexture.getHeight();
 			
@@ -214,8 +213,7 @@ namespace flowTools {
 			shader.setUniformTexture("fieldTexture", _floatTexture,0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
-			shader.setUniform1f("vectorSize", _velocityScale);
-			shader.setUniform1f("maxArrowSize", _maxArrowSize);
+			shader.setUniform1f("arrowSize", _arrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			shader.end();
 		}

@@ -29,7 +29,8 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect	colorTex;
 									 uniform sampler2DRect	velocityTex;
-									 uniform float	force;
+									 uniform float power;
+									 uniform float cutOff;
 									 uniform vec2 colorScale;
 									 uniform vec2 velocityScale;
 								  
@@ -39,8 +40,9 @@ namespace flowTools {
 										 
 										 vec4 color = texture2DRect(colorTex, stc);
 										 vec4 vel = texture2DRect(velocityTex, stv);
-										 float alpha = length(vel.xy) * force;
-//										 color.rgb *= vec3(alpha);
+										 
+										 float alpha = pow(length(vel.xy), power);
+										 alpha = min(alpha,cutOff);;
 										 color.w = alpha;
 									  
 										 gl_FragColor = color;
@@ -57,7 +59,8 @@ namespace flowTools {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect colorTex;
 									 uniform sampler2DRect velocityTex;
-									 uniform float force;
+									 uniform float power;
+									 uniform float cutOff;
 									 uniform vec2 colorScale;
 									 uniform vec2 velocityScale;
 								  
@@ -70,11 +73,12 @@ namespace flowTools {
 									  
 										 vec4 color = texture(colorTex, stc);
 										 vec4 vel = texture(velocityTex, stv);
-										 float alpha = length(vel.xy) * force;
-//										 color.rgb *= vec3(alpha);
+										 
+										 float alpha = pow(length(vel.xy), power);
+										 alpha = min(alpha,cutOff);
 										 color.w = alpha;
 									  
-										fragColor = color;
+										 fragColor = color;
 									 }
 									 );
 			
@@ -86,12 +90,13 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _densityTexture, ofTexture& _velocityTexture, float _force){
+		void update(ofFbo& _buffer, ofTexture& _densityTexture, ofTexture& _velocityTexture, float _power, float _cutOff = 1.0){
 			_buffer.begin();
 			shader.begin();
 			shader.setUniformTexture("colorTex", _densityTexture, 0);
 			shader.setUniformTexture("velocityTex", _velocityTexture, 1);
-			shader.setUniform1f("force", _force);
+			shader.setUniform1f("power", _power);
+			shader.setUniform1f("cutOff", _cutOff);
 			shader.setUniform2f("colorScale", _densityTexture.getWidth() / _buffer.getWidth() , _densityTexture.getHeight() / _buffer.getHeight() );
 			shader.setUniform2f("velocityScale", _velocityTexture.getWidth() / _buffer.getWidth() , _velocityTexture.getHeight() / _buffer.getHeight());
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());

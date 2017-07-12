@@ -36,7 +36,8 @@ namespace flowTools {
 		ofParameterGroup	parameters;
 		
 	protected:
-		ofParameter<float>	strength;
+		ofParameter<float>	power;
+		ofParameter<float>	cutOff;
 		ofParameter<float>	saturation;
 		ofParameter<float>	hue;
 		ofParameter<int>	blurPasses;

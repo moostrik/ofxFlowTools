@@ -48,9 +48,10 @@ namespace flowTools {
 		bDensityTextureSet = false;
 		
 		parameters.setName("flow mask");
-		parameters.add(strength.set("strength", 2, 0, 10));
+		parameters.add(power.set("mag. power", .5, 0, 1));
+		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
 //		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
-		parameters.add(saturation.set("saturation", 2, 0, 3));
+		parameters.add(saturation.set("color saturation", 1.5, 0, 3));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
@@ -65,7 +66,7 @@ namespace flowTools {
 			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");
 		}
 		else {
-			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, strength.get());
+			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, power.get(), cutOff.get());
 			colorMaskSwapBuffer.swap();
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),

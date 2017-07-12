@@ -6,9 +6,9 @@
 
 namespace flowTools {
 	
-	class ftTrailShader : public ftShader {
+	class ftVelocityTrailShader : public ftShader {
 	public:
-		ftTrailShader(){
+		ftVelocityTrailShader(){
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())
@@ -17,9 +17,9 @@ namespace flowTools {
 				glTwo();
 			
 			if (bInitialized)
-				ofLogNotice("ftDecayShader initialized");
+				ofLogNotice("ftVelocityTrailShader initialized");
 			else
-				ofLogWarning("ftDecayShader failed to initialize");
+				ofLogWarning("ftVelocityTrailShader failed to initialize");
 		}
 		
 	protected:
@@ -27,13 +27,17 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex0;
 									 uniform sampler2DRect tex1;
-									 uniform float sourceWeight;
+									 uniform float weight;
 									 
 									 void main(){
-										 vec4 color0 = texture2DRect(tex0,gl_TexCoord[0].st) * sourceWeight;
-										 vec4 color1 = texture2DRect(tex1,gl_TexCoord[0].st) * (1.0 - sourceWeight);
+										 vec2 u0 = texture2DRect(tex0,gl_TexCoord[0].st); // * (1.0 - weight);
+										 vec2 u1 = texture2DRect(tex1,gl_TexCoord[0].st) * vec2(weight);
 										 
-										 gl_FragColor = color0 + color1;
+										 vec2 u = u0 + u1;
+										 float magnitude = length(u);
+										 u = normalize(u) * vec2(min(magnitude, 1.0));
+										 
+										 gl_FragColor = vec4(u, 0.0, 1.0);
 									 }
 									 );
 			
@@ -48,16 +52,19 @@ namespace flowTools {
 									 uniform sampler2DRect tex0;
 									 uniform sampler2DRect tex1;
 									 uniform float weight;
-									 uniform float strength;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
 									 void main(){
-										 vec4 color0 = texture(tex0, texCoordVarying) * weight * strength;
-										 vec4 color1 = texture(tex1, texCoordVarying) * (1.0 - weight);
+										 vec2 u0 = texture(tex0, texCoordVarying).xy; // * (1.0 - weight);
+										 vec2 u1 = texture(tex1, texCoordVarying).xy * vec2(weight);
 										 
-										 fragColor = color0 + color1;
+										 vec2 u = u0 + u1;
+										 float magnitude = length(u);
+										 u = normalize(u) * vec2(min(magnitude, 1.0));
+										 
+										 fragColor = vec4(u, 0.0, 1.0);
 									 }
 									 );
 			
@@ -69,13 +76,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _buffer, ofTexture& _texture0,  ofTexture& _texture1, float _weight, float _strength = 1.0){
+		void update(ofFbo& _buffer, ofTexture& _texture0,  ofTexture& _texture1, float _weight){
 			_buffer.begin();
 			shader.begin();
 			shader.setUniformTexture("tex0", _texture0, 0);
 			shader.setUniformTexture("tex1", _texture1, 1);
 			shader.setUniform1f("weight", _weight);
-			shader.setUniform1f("strength", _strength);
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
 			_buffer.end();

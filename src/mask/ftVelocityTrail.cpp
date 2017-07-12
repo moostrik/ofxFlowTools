@@ -38,8 +38,7 @@ namespace flowTools {
 	
 	ftVelocityTrail::ftVelocityTrail(){
 		parameters.setName("flow trail");
-		parameters.add(strength.set("strength", 8, 0, 10));
-		parameters.add(trailWeight.set("trail weight", .2, .1, 1));
+		parameters.add(trailWeight.set("trail weight", .5, 0, .99));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
@@ -54,21 +53,18 @@ namespace flowTools {
 		trailSwapBuffer.black();
 	};
 	
-	void ftVelocityTrail::update(float _deltaTime) {
-		float time = ofGetElapsedTimef();
-		if (_deltaTime != 0)
-			deltaTime = _deltaTime;
-		else
-			deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
-		lastTime = time;
-		timeStep = deltaTime * strength.get();
-		
+	void ftVelocityTrail::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-		trailSwapBuffer.swap();
-		trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get(), strength.get());
-		
+		if (trailWeight.get() > 0.0) {
+			trailSwapBuffer.swap();
+			trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get());
+		}
+		else {
+			trailSwapBuffer.getBuffer()->stretchIntoMe(*velocityTexture);
+		}
+			
 		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
 			blurShader.update(*trailSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
 		}

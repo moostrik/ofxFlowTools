@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ftSwapBuffer.h"
-#include "ftTrailShader.h"
+#include "ftVelocityTrailShader.h"
 #include "ftGaussianBlurShader.h"
 
 namespace flowTools {
@@ -14,7 +14,7 @@ namespace flowTools {
 		ftVelocityTrail();
 		void		setup(int _width, int _height);
 		void		reset() { trailSwapBuffer.black(); }
-		void		update(float _deltaTime = 0);
+		void		update();
 		void		setSource(ofTexture& _tex) { velocityTexture = &_tex; }
 		
 		ofTexture&	getTexture()		{ return trailSwapBuffer.getTexture(); }
@@ -23,19 +23,16 @@ namespace flowTools {
 		int			getHeight(){return height;};
 		
 		
-		float		getStrength()		{ return strength.get(); }
 		float		getTrailWeight()	{ return trailWeight.get(); }
 		float		getBlurRadius()		{ return blurRadius.get(); }
 		float		getBlurPasses()		{ return blurPasses.get(); }
 		
-		void		setStrength(float value)		{ strength.set(value); }
 		void		setTrailWeight(float value)		{ trailWeight.set(value); }
 		void		setBlurRadius(float value)		{ blurRadius.set(value); }
 		void		setBlurPasses(float value)		{ blurPasses.set(value); }
 		
 		ofParameterGroup	parameters;
 	protected:
-		ofParameter<float>	strength;
 		ofParameter<float>	trailWeight;
 		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
@@ -50,7 +47,7 @@ namespace flowTools {
 		
 		ftSwapBuffer		trailSwapBuffer;
 		
-		ftTrailShader		trailShader;
+		ftVelocityTrailShader	trailShader;
 		ftGaussianBlurShader	blurShader;
 		
 	};

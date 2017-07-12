@@ -24,8 +24,9 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("velocity field");
-			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
-			parameters.add(maxArrowLength.set("max arrow size", 1, 0, 10));
+			parameters.add(velocityScale.set("velocity scale", 1, 0, 2));
+//			parameters.add(arrowSize.set("arrow size", 4, 1, 8));
+			arrowSize.set("arrow size", 4, 1, 8);
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -45,8 +46,9 @@ namespace flowTools {
 			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			
-			float NormalizedMaxArrowLength =  (2.0 / (width + 1)) * maxArrowLength.get();
-			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), NormalizedMaxArrowLength, color.get());
+//			float NormalizedMaxArrowLength =  (2.0 / (width + 1)) * maxArrowLength.get();
+//			cout << NormalizedMaxArrowLength << endl;
+			velocityFieldShader.update(fieldVbo, *velocityTexture, (1.0 / width) * arrowSize.get() * velocityScale.get(), color.get());
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -62,14 +64,14 @@ namespace flowTools {
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		void	setColor(ofFloatColor _value)		{ color.set(_value); }
-		void	setMaxArrowLength(float _value)		{ maxArrowLength.set(_value); }
+		void	setArrowSize(float _value)			{ arrowSize.set(_value); }
 		
 		float	getVelocityScale()					{ return velocityScale.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
 		ofFloatColor	getColor()					{ return color.get(); }
-		float	getMaxArrowLength()					{ return maxArrowLength.get(); }
+//		float	getMaxArrowLength()					{ return maxArrowLength.get(); }
 		
 		ofParameterGroup	parameters;
 		
@@ -79,7 +81,7 @@ namespace flowTools {
 		
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
 		ofParameter<bool>	lineSmooth;
-		ofParameter<float>	maxArrowLength;
+		ofParameter<float>	arrowSize;
 		ofParameter<ofFloatColor>	color;
 
 		

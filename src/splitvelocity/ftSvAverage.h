@@ -11,8 +11,9 @@ namespace flowTools {
 		ftSvAverage() { ; }
 		virtual	~ftSvAverage() { ; }
 		
-		void		setup(int _width, int _height, string _name = "none") ;
+		void		setup(int _width, int _height, string _name = "") ;
 		
+		void		setSize(int _width, int _height) ;
 		
 		void		setTexture(ofTexture _texture);
 		void		update();
@@ -22,6 +23,7 @@ namespace flowTools {
 		float		getAverageMagnitude()	{ return getMeanMagnitude(); }
 		float		getMeanMagnitude()		{ return meanMagnitude; }
 		float		getSt_devMagnitude()	{ return stdevMagnitude; }
+		float		getHighMagnitude()		{ return highMagnitude; }
 		
 		vector<float>& getMagnitudes()		{ return magnitudes; }
 		
@@ -42,7 +44,6 @@ namespace flowTools {
 		ftFbo		scaleFbo;
 		ofFloatPixels pixels;
 		
-		
 		vector<float>	magnitudes;
 		vector<ofVec4f>	velocities;
 		
@@ -51,11 +52,10 @@ namespace flowTools {
 		float		totalMagnitude;
 		float		meanMagnitude;
 		float		stdevMagnitude;
+		float		highMagnitude;
 		
 		int width;
 		int	height;
 		int	pixelCount;
-		
-		
 	};
 }

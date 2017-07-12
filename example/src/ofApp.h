@@ -22,6 +22,7 @@ enum drawModeEnum{
 	DRAW_FLUID_BUOYANCY,
 	DRAW_FLUID_OBSTACLE,
 	DRAW_FLOW_MASK,
+	DRAW_FLOW_TRAIL,
 	DRAW_OPTICAL_FLOW,
 	DRAW_SOURCE,
 	DRAW_MOUSE
@@ -127,6 +128,8 @@ public:
 	void				drawFluidObstacle(int _x, int _y, int _width, int _height);
 	void				drawMask()				{ drawMask(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
 	void				drawMask(int _x, int _y, int _width, int _height);
+	void				drawTrail()				{ drawTrail(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
+	void				drawTrail(int _x, int _y, int _width, int _height);
 	void				drawOpticalFlow()		{ drawOpticalFlow(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }
 	void				drawOpticalFlow(int _x, int _y, int _width, int _height);
 	void				drawSource()			{ drawSource(0, 0, ofGetWindowWidth(), ofGetWindowHeight()); }

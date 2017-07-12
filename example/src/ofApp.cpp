@@ -113,10 +113,10 @@ void ofApp::setupGui() {
 	
 	visualizeParameters.setName("visualizers");
 	visualizeParameters.add(showScalar.set("show scalar", true));
-	visualizeParameters.add(showField.set("show field", true));
-	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.15, 0.05, 1.0));
+	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.3, 0.1, 1.0));
 	displayScalarScale.addListener(this, &ofApp::setDisplayScalarScale);
-	visualizeParameters.add(velocityFieldScale.set("velocity scale", 0.1, 0.0, 0.5));
+	visualizeParameters.add(showField.set("show field", true));
+	visualizeParameters.add(velocityFieldScale.set("field scale", 0.3, 0.1, 1.0));
 	velocityFieldScale.addListener(this, &ofApp::setVelocityFieldScale);
 	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
 	temperatureFieldScale.addListener(this, &ofApp::setTemperatureFieldScale);
@@ -148,10 +148,6 @@ void ofApp::setupGui() {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
-	deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f / 30.f);
-	lastTime = ofGetElapsedTimef();
-	
 	simpleCam.update();
 	
 	if (simpleCam.isFrameNew()) {
@@ -173,13 +169,16 @@ void ofApp::update(){
 		velocityTrail.update();
 		
 		velocityMask.setDensity(cameraFbo.getTexture());
-		velocityMask.setVelocity(opticalFlow.getOpticalFlow());
+		velocityMask.setVelocity(opticalFlow.getTexture());
 		velocityMask.update();
-		
-		fluidSimulation.addVelocity(velocityTrail.getTexture());
-		fluidSimulation.addDensity(velocityMask.getColorMask());
-		fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
 	}
+	
+	deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f); 
+	lastTime = ofGetElapsedTimef();
+	
+	fluidSimulation.addVelocity(velocityTrail.getTexture(), deltaTime * fluidSimulation.getSpeed());
+	fluidSimulation.addDensity(velocityMask.getColorMask(), deltaTime * max(ofGetFrameRate(), 1.f));
+	fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
 	
 	mouseForces.update(deltaTime);
 	
@@ -236,9 +235,10 @@ void ofApp::keyPressed(int key){
 		case '3': drawMode.set(DRAW_FLUID_VELOCITY); break;
 		case '4': drawMode.set(DRAW_FLUID_PRESSURE); break;
 		case '5': drawMode.set(DRAW_FLUID_TEMPERATURE); break;
-		case '6': drawMode.set(DRAW_OPTICAL_FLOW); break;
-		case '7': drawMode.set(DRAW_FLOW_MASK); break;
-		case '8': drawMode.set(DRAW_MOUSE); break;
+		case '6': drawMode.set(DRAW_FLOW_MASK); break;
+		case '7': drawMode.set(DRAW_FLOW_TRAIL); break;
+		case '8': drawMode.set(DRAW_OPTICAL_FLOW); break;
+		case '9': drawMode.set(DRAW_MOUSE); break;
 			
 		case 'r':
 		case 'R':
@@ -265,11 +265,12 @@ void ofApp::drawModeSetName(int &_value) {
 		case DRAW_FLUID_VORTICITY:	drawName.set("Fluid Vorticity"); break;
 		case DRAW_FLUID_BUOYANCY:	drawName.set("Fluid Buoyancy "); break;
 		case DRAW_FLUID_OBSTACLE:	drawName.set("Fluid Obstacle "); break;
-		case DRAW_OPTICAL_FLOW:		drawName.set("Optical Flow   (6)"); break;
-		case DRAW_FLOW_MASK:		drawName.set("Flow Mask      (7)"); break;
+		case DRAW_FLOW_MASK:		drawName.set("Flow Mask      (6)"); break;
+		case DRAW_FLOW_TRAIL:		drawName.set("Flow Trail     (7)"); break;
+		case DRAW_OPTICAL_FLOW:		drawName.set("Optical Flow   (8)"); break;
 		case DRAW_SOURCE:			drawName.set("Source         "); break;
-		case DRAW_MOUSE:			drawName.set("Left Mouse     (8)"); break;
-		case DRAW_VELDOTS:			drawName.set("VelDots        (0)"); break;
+		case DRAW_MOUSE:			drawName.set("Left Mouse     (9)"); break;
+//		case DRAW_VELDOTS:			drawName.set("VelDots        (0)"); break;
 	}
 }
 
@@ -299,6 +300,7 @@ void ofApp::draw(){
 			case DRAW_FLUID_BUOYANCY: drawFluidBuoyance(); break;
 			case DRAW_FLUID_OBSTACLE: drawFluidObstacle(); break;
 			case DRAW_FLOW_MASK: drawMask(); break;
+			case DRAW_FLOW_TRAIL: drawTrail(); break;
 			case DRAW_OPTICAL_FLOW: drawOpticalFlow(); break;
 			case DRAW_SOURCE: drawSource(); break;
 			case DRAW_MOUSE: drawMouseForces(); break;
@@ -312,7 +314,7 @@ void ofApp::draw(){
 void ofApp::drawComposite(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	fluidSimulation.draw(_x, _y, _width, _height);
 	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -476,16 +478,36 @@ void ofApp::drawMask(int _x, int _y, int _width, int _height) {
 }
 
 //--------------------------------------------------------------
-void ofApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
+void ofApp::drawTrail(int _x, int _y, int _width, int _height) {
 	ofPushStyle();
 	if (showScalar.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		displayScalar.setScale(1);
 		displayScalar.setSource(velocityTrail.getTexture());
 		displayScalar.draw(0, 0, _width, _height);
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		velocityField.setVelocityScale(1);
 		velocityField.setVelocity(velocityTrail.getTexture());
+		velocityField.draw(0, 0, _width, _height);
+	}
+	ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void ofApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
+	ofPushStyle();
+	if (showScalar.get()) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		displayScalar.setScale(1);
+		displayScalar.setSource(opticalFlow.getTexture());
+		displayScalar.draw(0, 0, _width, _height);
+	}
+	if (showField.get()) {
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		velocityField.setVelocityScale(1);
+		velocityField.setVelocity(opticalFlow.getTexture());
 		velocityField.draw(0, 0, _width, _height);
 	}
 	ofPopStyle();

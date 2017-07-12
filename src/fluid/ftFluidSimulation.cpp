@@ -42,7 +42,7 @@ namespace flowTools {
 		
 		parameters.setName("fluid solver");
 		parameters.add(doReset.set("reset", false));
-		parameters.add(speed.set("speed", 140, 0, 200));
+		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
 		parameters.add(viscosity.set("viscosity", 0.1, 0, .4));

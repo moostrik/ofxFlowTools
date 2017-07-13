@@ -10,7 +10,17 @@ namespace flowTools {
 		pixelCount = _width * _height;
 		
 		scaleFbo.allocate(_width, _height, GL_RG32F);
+		scaleFbo.black();
 		pixels.allocate(_width, _height, 2);
+		
+		quad.getVertices().resize(4);
+		quad.getTexCoords().resize(4);
+		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+		
+		quad.setVertex(0, ofVec3f(0,0,0));
+		quad.setVertex(1, ofVec3f(width,0,0));
+		quad.setVertex(2, ofVec3f(width,height,0));
+		quad.setVertex(3, ofVec3f(0,height,0));
 		
 		magnitudes.resize(pixelCount, 0);
 		velocities.resize(pixelCount, ofVec2f(0,0));
@@ -25,6 +35,17 @@ namespace flowTools {
 		parameters.add(pTotalMagnitude.set("total mag", "0"));
 		parameters.add(pMeanMagnitude.set("mean mag", "0"));
 		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
+		
+		roiParameters.setName("ROI ");
+		roiParameters.add(pRoiX.set("x", 0, 0, 1));
+		pRoiX.addListener(this, &ftAverageVelocity::pRoiXListener);
+		roiParameters.add(pRoiY.set("y", 0, 0, 1));
+		pRoiY.addListener(this, &ftAverageVelocity::pRoiYListener);
+		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
+//		pRoiWidth.addListener(this, &ftAverageVelocity::pRoiWidthListener);
+		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
+//		pRoiHeight.addListener(this, &ftAverageVelocity::pRoiHeightListener);
+		parameters.add(roiParameters);
 	}
 	
 	void ftAverageVelocity::setSize(int _width, int _height) {
@@ -38,6 +59,11 @@ namespace flowTools {
 			
 			magnitudes.resize(pixelCount, 0);
 			velocities.resize(pixelCount, ofVec2f(0,0));
+			
+			quad.setVertex(0, ofVec3f(0,0,0));
+			quad.setVertex(1, ofVec3f(width,0,0));
+			quad.setVertex(2, ofVec3f(width,height,0));
+			quad.setVertex(3, ofVec3f(0,height,0));
 		}
 	}
 	
@@ -45,7 +71,26 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		scaleFbo.black();
-		scaleFbo.stretchIntoMe(_texture);
+		
+//		scaleFbo.stretchIntoMe(_texture);
+
+		int x,y,w,h;
+		x = pRoiX.get() * _texture.getWidth();
+		y = pRoiY.get() * _texture.getHeight();
+		w = pRoiWidth.get() * _texture.getWidth();
+		h = pRoiHeight.get() * _texture.getHeight();
+		
+		quad.setTexCoord(0, ofVec2f(x, y));
+		quad.setTexCoord(1, ofVec2f(x+w, y));
+		quad.setTexCoord(2, ofVec2f(x+w, y+h));
+		quad.setTexCoord(3, ofVec2f(x, y+h));
+		
+		scaleFbo.begin();
+		_texture.bind();
+		quad.draw();
+		_texture.unbind();
+		scaleFbo.end();
+		
 		ofPopStyle();
 	}
 	

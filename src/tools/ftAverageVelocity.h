@@ -19,6 +19,8 @@ namespace flowTools {
 		void		update();
 		void		update(ofTexture _texture) { setTexture(_texture); update(); }
 		
+		ofTexture&		getTexture() { return scaleFbo.getTexture(); }
+		
 		float		getTotalMagnitude()		{ return totalMagnitude; }
 		float		getAverageMagnitude()	{ return getMeanMagnitude(); }
 		float		getMeanMagnitude()		{ return meanMagnitude; }
@@ -41,8 +43,19 @@ namespace flowTools {
 		ofParameter<string>		pMeanMagnitude;
 		ofParameter<string>		pStdevMagnitude;
 		
+		ofParameterGroup		roiParameters;
+		ofParameter<float>		pRoiX;
+		void pRoiXListener(float& _value) { pRoiWidth.setMax(1 - _value); if (pRoiWidth.get() > pRoiWidth.getMax()) { pRoiWidth.set(pRoiWidth.getMax());} else { pRoiWidth.set(pRoiWidth.get());} } // last else for update
+		ofParameter<float>		pRoiY;
+		void pRoiYListener(float& _value) { pRoiHeight.setMax(1 - _value); if (pRoiHeight.get() > pRoiHeight.getMax()) { pRoiHeight.set(pRoiHeight.getMax());}  else { pRoiHeight.set(pRoiHeight.get());} }
+		ofParameter<float>		pRoiWidth;
+		//		void pRoiWidthListener(float& _value) { pRoiX.setMax(1 - _value); if (pRoiX.get() > pRoiX.getMax()) { pRoiX.set(pRoiX.getMax());} }
+		ofParameter<float>		pRoiHeight;
+//		void pRoiHeightListener(float& _value) { pRoiY.setMax(1 - _value); if (pRoiY.get() > pRoiY.getMax()) { pRoiY.set(pRoiY.getMax());} }
+		
 		ftFbo		scaleFbo;
 		ofFloatPixels pixels;
+		ofMesh		quad;
 		
 		vector<float>	magnitudes;
 		vector<ofVec2f>	velocities;
@@ -57,6 +70,5 @@ namespace flowTools {
 		int width;
 		int	height;
 		int	pixelCount;
-		
 	};
 }

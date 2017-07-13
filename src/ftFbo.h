@@ -10,8 +10,8 @@ namespace flowTools {
 	public:
 		
 		void clear() {
-			ofLogWarning("clear() was used by flowtools to clear the contents of the fbo. OF 0.9 uses this method to destroy the fbo. Use 'black()' instead'");
-			black();
+			ofLogError("clear() was used by flowtools to clear the contents of the fbo. OF 0.9 uses this method to destroy the fbo. Use 'black()' instead'");
+			ofFbo::clear();
 		}
 		
 		void black() { begin(); ofClear(0,0,0,0); end(); }

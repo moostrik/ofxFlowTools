@@ -45,5 +45,3 @@
 #include "ftPressureField.h"
 #include "ftVTField.h"
 #include "ftVelocitySpheres.h"
-
-#include "ftAverageVelocity.h"

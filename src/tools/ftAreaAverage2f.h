@@ -6,14 +6,16 @@
 
 namespace flowTools {
 	
-	class ftAverageVelocity {
+	class ftAreaAverage2f {
 	public:
-		ftAverageVelocity() { ; }
-		virtual	~ftAverageVelocity() { ; }
+		ftAreaAverage2f() { ; }
+		virtual	~ftAreaAverage2f() { ; }
 		
 		void		setup(int _width, int _height, string _name = "") ;
 		
 		void		setSize(int _width, int _height) ;
+//		void		setRoi(int _x, int _y, int _width, int _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
+//		void		setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
 		void		setTexture(ofTexture _texture);
 		void		update();
@@ -37,8 +39,7 @@ namespace flowTools {
 		
 		ofParameterGroup parameters;
 		
-	private:
-		ofParameter<ofVec2f>	pDirection;
+	protected:
 		ofParameter<string>		pTotalMagnitude;
 		ofParameter<string>		pMeanMagnitude;
 		ofParameter<string>		pStdevMagnitude;
@@ -49,7 +50,7 @@ namespace flowTools {
 		ofParameter<float>		pRoiY;
 		void pRoiYListener(float& _value) { pRoiHeight.setMax(1 - _value); if (pRoiHeight.get() > pRoiHeight.getMax()) { pRoiHeight.set(pRoiHeight.getMax());}  else { pRoiHeight.set(pRoiHeight.get());} }
 		ofParameter<float>		pRoiWidth;
-		//		void pRoiWidthListener(float& _value) { pRoiX.setMax(1 - _value); if (pRoiX.get() > pRoiX.getMax()) { pRoiX.set(pRoiX.getMax());} }
+//		void pRoiWidthListener(float& _value) { pRoiX.setMax(1 - _value); if (pRoiX.get() > pRoiX.getMax()) { pRoiX.set(pRoiX.getMax());} }
 		ofParameter<float>		pRoiHeight;
 //		void pRoiHeightListener(float& _value) { pRoiY.setMax(1 - _value); if (pRoiY.get() > pRoiY.getMax()) { pRoiY.set(pRoiY.getMax());} }
 		
@@ -58,10 +59,6 @@ namespace flowTools {
 		ofMesh		quad;
 		
 		vector<float>	magnitudes;
-		vector<ofVec2f>	velocities;
-		
-		ofVec2f		direction;
-		ofVec2f		totalVelocity;
 		float		totalMagnitude;
 		float		meanMagnitude;
 		float		stdevMagnitude;
@@ -70,5 +67,12 @@ namespace flowTools {
 		int width;
 		int	height;
 		int	pixelCount;
+		
+	private:
+		ofParameter<ofVec2f>	pDirection;
+		vector<ofVec2f>	velocities;
+		
+		ofVec2f		direction;
+		ofVec2f		totalVelocity;
 	};
 }

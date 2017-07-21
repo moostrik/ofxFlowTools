@@ -34,5 +34,4 @@
 #include "ftSvFromVelocity.h"
 #include "ftSvDisplayScalar.h"
 #include "ftSvField.h"
-#include "ftSvAverage.h"
 

@@ -1,9 +1,9 @@
 
-#include "ftAverageVelocity.h"
+#include "ftAreaAverage2f.h"
 
 namespace flowTools {
 	
-	void ftAverageVelocity::setup(int _width, int _height, string _name) {
+	void ftAreaAverage2f::setup(int _width, int _height, string _name) {
 		width = _width;
 		height = _height;
 		
@@ -38,9 +38,9 @@ namespace flowTools {
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
-		pRoiX.addListener(this, &ftAverageVelocity::pRoiXListener);
+		pRoiX.addListener(this, &ftAreaAverage2f::pRoiXListener);
 		roiParameters.add(pRoiY.set("y", 0, 0, 1));
-		pRoiY.addListener(this, &ftAverageVelocity::pRoiYListener);
+		pRoiY.addListener(this, &ftAreaAverage2f::pRoiYListener);
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
 //		pRoiWidth.addListener(this, &ftAverageVelocity::pRoiWidthListener);
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
@@ -48,7 +48,7 @@ namespace flowTools {
 		parameters.add(roiParameters);
 	}
 	
-	void ftAverageVelocity::setSize(int _width, int _height) {
+	void ftAreaAverage2f::setSize(int _width, int _height) {
 		if ( _width != width || _height != height ) {
 			width = _width;
 			height = _height;
@@ -67,7 +67,7 @@ namespace flowTools {
 		}
 	}
 	
-	void ftAverageVelocity::setTexture(ofTexture _texture) {
+	void ftAreaAverage2f::setTexture(ofTexture _texture) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		scaleFbo.black();
@@ -94,7 +94,7 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftAverageVelocity::update() {
+	void ftAreaAverage2f::update() {
 		// read to pixels
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
 		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,2);

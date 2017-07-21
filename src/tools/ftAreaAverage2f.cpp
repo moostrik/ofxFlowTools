@@ -9,6 +9,8 @@ namespace flowTools {
 		
 		pixelCount = _width * _height;
 		
+		scaleFactor = 1.0;
+		
 		scaleFbo.allocate(_width, _height, GL_RG32F);
 		scaleFbo.black();
 		pixels.allocate(_width, _height, 2);
@@ -23,18 +25,18 @@ namespace flowTools {
 		quad.setVertex(3, ofVec3f(0,height,0));
 		
 		magnitudes.resize(pixelCount, 0);
-		velocities.resize(pixelCount, ofVec2f(0,0));
+		velocities.resize(pixelCount, ofVec2f(0));
 		
-		direction = ofVec2f(0,0);
+		direction = ofVec2f(0);
 		totalMagnitude = 0;
 		meanMagnitude = 0;
 		stdevMagnitude = 0;
 		
 		parameters.setName("average " + _name);
-		parameters.add(pDirection.set("direction", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
-		parameters.add(pTotalMagnitude.set("total mag", "0"));
-		parameters.add(pMeanMagnitude.set("mean mag", "0"));
-		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
+		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 0.1));
+		parameters.add(pDirection.set("direction", ofVec2f(0), ofVec2f(-1), ofVec2f(1)));
+//		parameters.add(pTotalMagnitude.set("total mag", "0"));
+//		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
@@ -42,10 +44,10 @@ namespace flowTools {
 		roiParameters.add(pRoiY.set("y", 0, 0, 1));
 		pRoiY.addListener(this, &ftAreaAverage2f::pRoiYListener);
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
-//		pRoiWidth.addListener(this, &ftAverageVelocity::pRoiWidthListener);
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
-//		pRoiHeight.addListener(this, &ftAverageVelocity::pRoiHeightListener);
 		parameters.add(roiParameters);
+		parameters.add(pScaleFactor.set("scale", 0.5, 0.1, 1));
+		pScaleFactor.addListener(this, &ftAreaAverage2f::pScaleFactorListener);
 	}
 	
 	void ftAreaAverage2f::setSize(int _width, int _height) {
@@ -58,40 +60,13 @@ namespace flowTools {
 			pixels.allocate(_width, _height, 2);
 			
 			magnitudes.resize(pixelCount, 0);
-			velocities.resize(pixelCount, ofVec2f(0,0));
+			velocities.resize(pixelCount, ofVec2f(0));
 			
 			quad.setVertex(0, ofVec3f(0,0,0));
 			quad.setVertex(1, ofVec3f(width,0,0));
 			quad.setVertex(2, ofVec3f(width,height,0));
 			quad.setVertex(3, ofVec3f(0,height,0));
 		}
-	}
-	
-	void ftAreaAverage2f::setTexture(ofTexture _texture) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		scaleFbo.black();
-		
-//		scaleFbo.stretchIntoMe(_texture);
-
-		int x,y,w,h;
-		x = pRoiX.get() * _texture.getWidth();
-		y = pRoiY.get() * _texture.getHeight();
-		w = pRoiWidth.get() * _texture.getWidth();
-		h = pRoiHeight.get() * _texture.getHeight();
-		
-		quad.setTexCoord(0, ofVec2f(x, y));
-		quad.setTexCoord(1, ofVec2f(x+w, y));
-		quad.setTexCoord(2, ofVec2f(x+w, y+h));
-		quad.setTexCoord(3, ofVec2f(x, y+h));
-		
-		scaleFbo.begin();
-		_texture.bind();
-		quad.draw();
-		_texture.unbind();
-		scaleFbo.end();
-		
-		ofPopStyle();
 	}
 	
 	void ftAreaAverage2f::update() {
@@ -104,7 +79,7 @@ namespace flowTools {
 		float* floatPixelData = pixels.getData();
 		
 		// calculate magnitudes
-		totalVelocity = ofVec2f(0,0);
+		totalVelocity = ofVec2f(0);
 		totalMagnitude = 0;
 		float highMagnitude = 0;
 		
@@ -128,9 +103,10 @@ namespace flowTools {
 		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
 		stdevMagnitude = std::sqrt(sq_sum / magnitudes.size());
 		
+		pMeanMagnitude.set(meanMagnitude);
 		pDirection.set(direction);
-		pTotalMagnitude.set(ofToString(totalMagnitude));
-		pMeanMagnitude.set(ofToString(meanMagnitude));
-		pStdevMagnitude.set(ofToString(stdevMagnitude));
+		//		pTotalMagnitude.set(ofToString(totalMagnitude));
+		//		pStdevMagnitude.set(ofToString(stdevMagnitude));
+		
 	}
 }

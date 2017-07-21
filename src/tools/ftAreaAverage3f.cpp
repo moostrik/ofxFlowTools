@@ -9,8 +9,20 @@ namespace flowTools {
 		
 		pixelCount = _width * _height;
 		
+		scaleFactor = 1.0;
+		
 		scaleFbo.allocate(_width, _height, GL_RGB32F);
+		scaleFbo.black();
 		pixels.allocate(_width, _height, 3);
+		
+		quad.getVertices().resize(4);
+		quad.getTexCoords().resize(4);
+		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
+		
+		quad.setVertex(0, ofVec3f(0,0,0));
+		quad.setVertex(1, ofVec3f(width,0,0));
+		quad.setVertex(2, ofVec3f(width,height,0));
+		quad.setVertex(3, ofVec3f(0,height,0));
 		
 		magnitudes.resize(pixelCount, 0);
 		velocities.resize(pixelCount, ofVec3f(0));
@@ -21,10 +33,21 @@ namespace flowTools {
 		stdevMagnitude = 0;
 		
 		parameters.setName("average " + _name);
+		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 0.1));
 		parameters.add(pDirection.set("direction", ofVec3f(0), ofVec3f(0), ofVec3f(1)));
-		parameters.add(pTotalMagnitude.set("total mag", "0"));
-		parameters.add(pMeanMagnitude.set("mean mag", "0"));
-		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
+//		parameters.add(pTotalMagnitude.set("total mag", "0"));
+//		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
+		
+		roiParameters.setName("ROI ");
+		roiParameters.add(pRoiX.set("x", 0, 0, 1));
+		pRoiX.addListener(this, &ftAreaAverage3f::pRoiXListener);
+		roiParameters.add(pRoiY.set("y", 0, 0, 1));
+		pRoiY.addListener(this, &ftAreaAverage3f::pRoiYListener);
+		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
+		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
+		parameters.add(roiParameters);
+		parameters.add(pScaleFactor.set("scale", 0.5, 0.1, 1));
+		pScaleFactor.addListener(this, &ftAreaAverage3f::pScaleFactorListener);
 	}
 
 	void ftAreaAverage3f::setSize(int _width, int _height) {
@@ -33,20 +56,17 @@ namespace flowTools {
 			height = _height;
 			pixelCount = _width * _height;
 			
-			scaleFbo.allocate(_width, _height, GL_RGBA32F);
+			scaleFbo.allocate(_width, _height, GL_RGB32F);
 			pixels.allocate(_width, _height, 3);
 			
 			magnitudes.resize(pixelCount, 0);
 			velocities.resize(pixelCount, ofVec3f(0));
+			
+			quad.setVertex(0, ofVec3f(0,0,0));
+			quad.setVertex(1, ofVec3f(width,0,0));
+			quad.setVertex(2, ofVec3f(width,height,0));
+			quad.setVertex(3, ofVec3f(0,height,0));
 		}
-	}
-	
-	void ftAreaAverage3f::setTexture(ofTexture _texture) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		scaleFbo.black();
-		scaleFbo.stretchIntoMe(_texture);
-		ofPopStyle();
 	}
 	
 	void ftAreaAverage3f::update() {
@@ -84,10 +104,10 @@ namespace flowTools {
 		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
 		stdevMagnitude = std::sqrt(sq_sum / magnitudes.size());
 		
+		pMeanMagnitude.set(meanMagnitude);
 		pDirection.set(direction);
-		pTotalMagnitude.set(ofToString(totalMagnitude));
-		pMeanMagnitude.set(ofToString(meanMagnitude));
-		pStdevMagnitude.set(ofToString(stdevMagnitude));
+//		pTotalMagnitude.set(ofToString(totalMagnitude));
+//		pStdevMagnitude.set(ofToString(stdevMagnitude));
 		
 	}
 }

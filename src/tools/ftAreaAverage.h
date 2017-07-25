@@ -76,14 +76,15 @@ namespace flowTools {
 		
 		int			getSize()				{ return pixelCount; }
 		
+		float		getScaleFactor()		{ return scaleFactor; }
 		ofRectangle	getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()) ; }
 		
 		ofParameterGroup parameters;
 		
 	protected:
-//		ofParameter<string>		pTotalMagnitude;
+		ofParameter<string>		pTotalMagnitude;
 		ofParameter<float>		pMeanMagnitude;
-//		ofParameter<string>		pStdevMagnitude;
+		ofParameter<string>		pStdevMagnitude;
 		
 		virtual void			allocate(int _width, int _height) = 0;
 		

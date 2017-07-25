@@ -20,8 +20,8 @@ namespace flowTools {
 		parameters.setName("average " + _name);
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 0.1));
 		parameters.add(pDirection.set("direction", ofVec4f(0), ofVec4f(0), ofVec4f(1)));
-//		parameters.add(pTotalMagnitude.set("total mag", "0"));
-//		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
+		parameters.add(pTotalMagnitude.set("total mag", "0"));
+		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
@@ -91,8 +91,8 @@ namespace flowTools {
 		
 		pMeanMagnitude.set(meanMagnitude);
 		pDirection.set(direction);
-//		pTotalMagnitude.set(ofToString(totalMagnitude));
-//		pStdevMagnitude.set(ofToString(stdevMagnitude));
+		pTotalMagnitude.set(ofToString(totalMagnitude));
+		pStdevMagnitude.set(ofToString(stdevMagnitude));
 		
 	}
 }

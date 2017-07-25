@@ -173,14 +173,16 @@ void ofApp::update(){
 		velocityMask.update();
 	}
 	
-	deltaTime = min(ofGetElapsedTimef() - lastTime, 1.f); 
+	deltaTime = ofGetElapsedTimef() - lastTime;
 	lastTime = ofGetElapsedTimef();
 	
-	fluidSimulation.addVelocity(velocityTrail.getTexture(), deltaTime * fluidSimulation.getSpeed());
-	fluidSimulation.addDensity(velocityMask.getColorMask(), deltaTime * max(ofGetFrameRate(), 1.f));
+	float dt = min(deltaTime, 1.f / 30.f);
+	
+	fluidSimulation.addVelocity(velocityTrail.getTexture(), dt * fluidSimulation.getSpeed());
+	fluidSimulation.addDensity(velocityMask.getColorMask(), dt * ofGetFrameRate()); // why not 1?
 	fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
 	
-	mouseForces.update(deltaTime);
+	mouseForces.update(dt);
 	
 	for (int i=0; i<mouseForces.getNumForces(); i++) {
 		if (mouseForces.didChange(i)) {
@@ -206,7 +208,7 @@ void ofApp::update(){
 		}
 	}
 	
-	fluidSimulation.update(deltaTime);
+	fluidSimulation.update(dt);
 	
 	if (particleFlow.isActive()) {
 		particleFlow.setSpeed(fluidSimulation.getSpeed());
@@ -216,7 +218,7 @@ void ofApp::update(){
 //		particleFlow.addDensity(fluidSimulation.getDensity());
 		particleFlow.setObstacle(fluidSimulation.getObstacle());
 	}
-	particleFlow.update(deltaTime);
+	particleFlow.update(dt);
 	
 }
 

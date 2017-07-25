@@ -11,8 +11,7 @@ namespace flowTools {
 		ftAreaAverage() { ; }
 		virtual	~ftAreaAverage() { ; }
 		
-		virtual void		setup(int _width, int _height, string _name = "") = 0;
-		virtual void		setSize(int _width, int _height) = 0;
+		virtual void		setup(int _scaleFactor = 1, string _name = "") = 0;
 		virtual void		update() = 0;
 		
 //		ofVec2f		getDirection()			{ return direction; }
@@ -32,12 +31,12 @@ namespace flowTools {
 			
 			scaleFactor = pScaleFactor.get();
 			
-			int mw = max(_texture.getWidth() * pRoiWidth.get() * scaleFactor, 1.f);
-			int mh = max(_texture.getHeight() * pRoiHeight.get() * scaleFactor, 1.f);
+			int mw = max(_texture.getWidth() * pRoiWidth.get() * scaleFactor, 16.f);
+			int mh = max(_texture.getHeight() * pRoiHeight.get() * scaleFactor, 16.f);
 			
 			if (mw != scaleFbo.getWidth() ||
 				mh != scaleFbo.getHeight()) {
-				setSize(mw, mh);
+				allocate(mw, mh);
 			}
 			
 			//		scaleFbo.stretchIntoMe(_texture);
@@ -85,6 +84,8 @@ namespace flowTools {
 //		ofParameter<string>		pTotalMagnitude;
 		ofParameter<float>		pMeanMagnitude;
 //		ofParameter<string>		pStdevMagnitude;
+		
+		virtual void			allocate(int _width, int _height) = 0;
 		
 		ofParameterGroup		roiParameters;
 		ofParameter<float>		pRoiX;

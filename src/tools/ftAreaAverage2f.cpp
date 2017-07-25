@@ -3,29 +3,14 @@
 
 namespace flowTools {
 	
-	void ftAreaAverage2f::setup(int _width, int _height, string _name) {
-		width = _width;
-		height = _height;
-		
-		pixelCount = _width * _height;
-		
-		scaleFactor = 1.0;
-		
-		scaleFbo.allocate(_width, _height, GL_RG32F);
-		scaleFbo.black();
-		pixels.allocate(_width, _height, 2);
+	void ftAreaAverage2f::setup(int _scaleFactor, string _name) {
+		scaleFactor = _scaleFactor;
 		
 		quad.getVertices().resize(4);
 		quad.getTexCoords().resize(4);
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-		
-		quad.setVertex(0, ofVec3f(0,0,0));
-		quad.setVertex(1, ofVec3f(width,0,0));
-		quad.setVertex(2, ofVec3f(width,height,0));
-		quad.setVertex(3, ofVec3f(0,height,0));
-		
-		magnitudes.resize(pixelCount, 0);
-		velocities.resize(pixelCount, ofVec2f(0));
+
+		allocate(16,16);
 		
 		direction = ofVec2f(0);
 		totalMagnitude = 0;
@@ -50,23 +35,22 @@ namespace flowTools {
 		pScaleFactor.addListener(this, &ftAreaAverage2f::pScaleFactorListener);
 	}
 	
-	void ftAreaAverage2f::setSize(int _width, int _height) {
-		if ( _width != width || _height != height ) {
-			width = _width;
-			height = _height;
-			pixelCount = _width * _height;
-			
-			scaleFbo.allocate(_width, _height, GL_RG32F);
-			pixels.allocate(_width, _height, 2);
-			
-			magnitudes.resize(pixelCount, 0);
-			velocities.resize(pixelCount, ofVec2f(0));
-			
-			quad.setVertex(0, ofVec3f(0,0,0));
-			quad.setVertex(1, ofVec3f(width,0,0));
-			quad.setVertex(2, ofVec3f(width,height,0));
-			quad.setVertex(3, ofVec3f(0,height,0));
-		}
+	void ftAreaAverage2f::allocate(int _width, int _height) {
+		width = _width;
+		height = _height;
+		pixelCount = _width * _height;
+		
+		scaleFbo.allocate(_width, _height, GL_RG32F);
+		scaleFbo.black();
+		pixels.allocate(_width, _height, 2);
+		
+		magnitudes.resize(pixelCount, 0);
+		velocities.resize(pixelCount, ofVec2f(0));
+		
+		quad.setVertex(0, ofVec3f(0,0,0));
+		quad.setVertex(1, ofVec3f(width,0,0));
+		quad.setVertex(2, ofVec3f(width,height,0));
+		quad.setVertex(3, ofVec3f(0,height,0));
 	}
 	
 	void ftAreaAverage2f::update() {
@@ -105,8 +89,8 @@ namespace flowTools {
 		
 		pMeanMagnitude.set(meanMagnitude);
 		pDirection.set(direction);
-		//		pTotalMagnitude.set(ofToString(totalMagnitude));
-		//		pStdevMagnitude.set(ofToString(stdevMagnitude));
+//		pTotalMagnitude.set(ofToString(totalMagnitude));
+//		pStdevMagnitude.set(ofToString(stdevMagnitude));
 		
 	}
 }

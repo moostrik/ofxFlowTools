@@ -3,29 +3,14 @@
 
 namespace flowTools {
 	
-	void ftAreaAverage3f::setup(int _width, int _height, string _name) {
-		width = _width;
-		height = _height;
-		
-		pixelCount = _width * _height;
-		
-		scaleFactor = 1.0;
-		
-		scaleFbo.allocate(_width, _height, GL_RGB32F);
-		scaleFbo.black();
-		pixels.allocate(_width, _height, 3);
+	void ftAreaAverage3f::setup(int _scaleFactor, string _name) {
+		scaleFactor = _scaleFactor;
 		
 		quad.getVertices().resize(4);
 		quad.getTexCoords().resize(4);
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-		
-		quad.setVertex(0, ofVec3f(0,0,0));
-		quad.setVertex(1, ofVec3f(width,0,0));
-		quad.setVertex(2, ofVec3f(width,height,0));
-		quad.setVertex(3, ofVec3f(0,height,0));
-		
-		magnitudes.resize(pixelCount, 0);
-		velocities.resize(pixelCount, ofVec3f(0));
+
+		allocate(16,16);
 		
 		direction = ofVec3f(0);
 		totalMagnitude = 0;
@@ -49,24 +34,23 @@ namespace flowTools {
 		parameters.add(pScaleFactor.set("scale", 0.5, 0.1, 1));
 		pScaleFactor.addListener(this, &ftAreaAverage3f::pScaleFactorListener);
 	}
-
-	void ftAreaAverage3f::setSize(int _width, int _height) {
-		if ( _width != width || _height != height ) {
-			width = _width;
-			height = _height;
-			pixelCount = _width * _height;
-			
-			scaleFbo.allocate(_width, _height, GL_RGB32F);
-			pixels.allocate(_width, _height, 3);
-			
-			magnitudes.resize(pixelCount, 0);
-			velocities.resize(pixelCount, ofVec3f(0));
-			
-			quad.setVertex(0, ofVec3f(0,0,0));
-			quad.setVertex(1, ofVec3f(width,0,0));
-			quad.setVertex(2, ofVec3f(width,height,0));
-			quad.setVertex(3, ofVec3f(0,height,0));
-		}
+	
+	void ftAreaAverage3f::allocate(int _width, int _height) {
+		width = _width;
+		height = _height;
+		pixelCount = _width * _height;
+		
+		scaleFbo.allocate(_width, _height, GL_RGB32F);
+		scaleFbo.black();
+		pixels.allocate(_width, _height, 3);
+		
+		magnitudes.resize(pixelCount, 0);
+		velocities.resize(pixelCount, ofVec3f(0));
+		
+		quad.setVertex(0, ofVec3f(0,0,0));
+		quad.setVertex(1, ofVec3f(width,0,0));
+		quad.setVertex(2, ofVec3f(width,height,0));
+		quad.setVertex(3, ofVec3f(0,height,0));
 	}
 	
 	void ftAreaAverage3f::update() {

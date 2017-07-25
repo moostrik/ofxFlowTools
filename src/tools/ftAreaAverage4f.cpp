@@ -3,29 +3,14 @@
 
 namespace flowTools {
 	
-	void ftAreaAverage4f::setup(int _width, int _height, string _name) {
-		width = _width;
-		height = _height;
-		
-		pixelCount = _width * _height;
-		
-		scaleFactor = 1.0;
-		
-		scaleFbo.allocate(_width, _height, GL_RGBA32F);
-		scaleFbo.black();
-		pixels.allocate(_width, _height, 4);
+	void ftAreaAverage4f::setup(int _scaleFactor, string _name) {
+		scaleFactor = _scaleFactor;
 		
 		quad.getVertices().resize(4);
 		quad.getTexCoords().resize(4);
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		
-		quad.setVertex(0, ofVec3f(0,0,0));
-		quad.setVertex(1, ofVec3f(width,0,0));
-		quad.setVertex(2, ofVec3f(width,height,0));
-		quad.setVertex(3, ofVec3f(0,height,0));
-		
-		magnitudes.resize(pixelCount, 0);
-		velocities.resize(pixelCount, ofVec4f(0));
+		allocate(16,16);
 		
 		direction = ofVec4f(0);
 		totalMagnitude = 0;
@@ -50,23 +35,22 @@ namespace flowTools {
 		pScaleFactor.addListener(this, &ftAreaAverage4f::pScaleFactorListener);
 	}
 
-	void ftAreaAverage4f::setSize(int _width, int _height) {
-		if ( _width != width || _height != height ) {
-			width = _width;
-			height = _height;
-			pixelCount = _width * _height;
-			
-			scaleFbo.allocate(_width, _height, GL_RGBA32F);
-			pixels.allocate(_width, _height, 4);
-			
-			magnitudes.resize(pixelCount, 0);
-			velocities.resize(pixelCount, ofVec4f(0,0,0,0));
-			
-			quad.setVertex(0, ofVec3f(0,0,0));
-			quad.setVertex(1, ofVec3f(width,0,0));
-			quad.setVertex(2, ofVec3f(width,height,0));
-			quad.setVertex(3, ofVec3f(0,height,0));
-		}
+	void ftAreaAverage4f::allocate(int _width, int _height) {
+		width = _width;
+		height = _height;
+		pixelCount = _width * _height;
+		
+		scaleFbo.allocate(_width, _height, GL_RGBA32F);
+		scaleFbo.black();
+		pixels.allocate(_width, _height, 4);
+		
+		magnitudes.resize(pixelCount, 0);
+		velocities.resize(pixelCount, ofVec4f(0));
+		
+		quad.setVertex(0, ofVec3f(0,0,0));
+		quad.setVertex(1, ofVec3f(width,0,0));
+		quad.setVertex(2, ofVec3f(width,height,0));
+		quad.setVertex(3, ofVec3f(0,height,0));
 	}
 	
 	void ftAreaAverage4f::update() {
@@ -79,7 +63,7 @@ namespace flowTools {
 		float* floatPixelData = pixels.getData();
 		
 		// calculate magnitudes
-		totalVelocity = ofVec4f(0,0,0,0);
+		totalVelocity = ofVec4f(0);
 		totalMagnitude = 0;
 		float highMagnitude = 0;
 		

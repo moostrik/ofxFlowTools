@@ -12,8 +12,7 @@ namespace flowTools {
 		ftAreaAverage3f(){ ; }
 		virtual	~ftAreaAverage3f() { ; }
 		
-		void		setup(int _width, int _height, string _name = "") ;
-		void		setSize(int _width, int _height) ;
+		void		setup(int _scaleFactor = 1, string _name = "") ;
 		void		update();
 		
 		ofVec3f		getDirection()			{ return direction; }
@@ -25,6 +24,8 @@ namespace flowTools {
 		ofVec3f					totalVelocity;
 		ofParameter<ofVec3f>	pDirection;
 		vector<ofVec3f>			velocities;
+		
+		void allocate(int _width, int _height) ;
 		
 		void pRoiXListener(float& _value)		{ ftAreaAverage::pRoiXListener(_value); }
 		void pRoiYListener(float& _value)		{ ftAreaAverage::pRoiXListener(_value); }

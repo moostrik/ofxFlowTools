@@ -3,7 +3,7 @@
 
 namespace flowTools {
 	
-	void ftAreaAverage3f::setup(int _scaleFactor, string _name) {
+	void ftAreaAverage3f::setup(float _scaleFactor, string _name) {
 		scaleFactor = _scaleFactor;
 		
 		quad.getVertices().resize(4);

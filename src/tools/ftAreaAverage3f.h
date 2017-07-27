@@ -12,7 +12,7 @@ namespace flowTools {
 		ftAreaAverage3f(){ ; }
 		virtual	~ftAreaAverage3f() { ; }
 		
-		void		setup(int _scaleFactor = 1, string _name = "") ;
+		void		setup(float _scaleFactor = 1, string _name = "") ;
 		void		update();
 		
 		ofVec3f		getDirection()			{ return direction; }

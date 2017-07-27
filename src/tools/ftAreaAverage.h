@@ -11,7 +11,7 @@ namespace flowTools {
 		ftAreaAverage() { ; }
 		virtual	~ftAreaAverage() { ; }
 		
-		virtual void		setup(int _scaleFactor = 1, string _name = "") = 0;
+		virtual void		setup(float _scaleFactor = 1, string _name = "") = 0;
 		virtual void		update() = 0;
 		
 //		ofVec2f		getDirection()			{ return direction; }
@@ -19,8 +19,8 @@ namespace flowTools {
 //		vector<ofVec2f>& getVelocities()	{ return velocities; }
 		
 		
-		void		setScaleFactor(int _value) { pScaleFactor.set(_value); }
-		void		setRoi(int _x, int _y, int _width, int _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
+		void		setScaleFactor(float _value) { pScaleFactor.set(_value); }
+		void		setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
 		void		setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
 		void		setTexture(ofTexture _texture) {

@@ -19,7 +19,7 @@ namespace flowTools {
 		ofVec4f		getTotalVelocity()		{ return totalVelocity; }
 		vector<ofVec4f>& getVelocities()	{ return velocities; }
 		
-	private:
+	protected:
 		ofVec4f					direction;
 		ofVec4f					totalVelocity;
 		ofParameter<ofVec4f>	pDirection;

@@ -99,7 +99,7 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		
-	private:
+	protected:
 		ofParameter<bool>	doReset;
 		ofParameter<float>	speed;
 		ofParameter<float>	cellSize;

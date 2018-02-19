@@ -18,12 +18,12 @@ namespace flowTools {
 //		ofVec2f		getTotalVelocity()		{ return totalVelocity; }
 //		vector<ofVec2f>& getVelocities()	{ return velocities; }
 		
-		
+		// get rid of this scalefactor, just setup with dimensions
 		void		setScaleFactor(float _value) { pScaleFactor.set(_value); }
 		void		setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
 		void		setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
-		void		setTexture(ofTexture _texture) {
+		void		setTexture(ofTexture& _texture) {
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -31,13 +31,14 @@ namespace flowTools {
 			
 			scaleFactor = pScaleFactor.get();
 			
-			int mw = max(_texture.getWidth() * pRoiWidth.get() * scaleFactor, 16.f);
-			int mh = max(_texture.getHeight() * pRoiHeight.get() * scaleFactor, 16.f);
-			
-			if (mw != scaleFbo.getWidth() ||
-				mh != scaleFbo.getHeight()) {
-				allocate(mw, mh);
-			}
+//			int mw = max(_texture.getWidth() * pRoiWidth.get() * scaleFactor, 16.f);
+//			int mh = max(_texture.getHeight() * pRoiHeight.get() * scaleFactor, 16.f);
+//			
+//			if (mw != scaleFbo.getWidth() ||
+//				mh != scaleFbo.getHeight()) {
+//				allocate(mw, mh);
+//				cout << "allocating" << endl;
+//			}
 			
 			//		scaleFbo.stretchIntoMe(_texture);
 			
@@ -61,7 +62,16 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void		update(ofTexture _texture) { setTexture(_texture); update(); }
+		void 		setMask(ofTexture _texture) {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+			scaleFbo.begin();
+			_texture.draw(0,0,scaleFbo.getWidth(), scaleFbo.getHeight());
+			scaleFbo.end();
+			ofPopStyle();
+		}
+		
+		void		update(ofTexture& _texture) { setTexture(_texture); update(); }
 		
 		ofTexture&		getTexture() { return scaleFbo.getTexture(); }
 		

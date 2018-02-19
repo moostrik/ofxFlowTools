@@ -10,7 +10,7 @@ namespace flowTools {
 		quad.getTexCoords().resize(4);
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 
-		allocate(16,16);
+		allocate(32,32);
 		
 		direction = ofVec3f(0);
 		totalMagnitude = 0;

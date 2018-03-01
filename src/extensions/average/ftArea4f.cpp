@@ -1,9 +1,9 @@
 
-#include "ftAreaAverage4f.h"
+#include "ftArea4f.h"
 
 namespace flowTools {
 	
-	void ftAreaAverage4f::setup(int _width, int _height, string _name) {
+	void ftArea4f::setup(int _width, int _height, string _name) {
 		allocate(_width, _height);
 		
 		direction = ofVec4f(0);
@@ -19,15 +19,15 @@ namespace flowTools {
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
-		pRoiX.addListener(this, &ftAreaAverage4f::pRoiXListener);
+		pRoiX.addListener(this, &ftArea4f::pRoiXListener);
 		roiParameters.add(pRoiY.set("y", 0, 0, 1));
-		pRoiY.addListener(this, &ftAreaAverage4f::pRoiYListener);
+		pRoiY.addListener(this, &ftArea4f::pRoiYListener);
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaAverage4f::allocate(int _width, int _height) {
+	void ftArea4f::allocate(int _width, int _height) {
 		width = _width;
 		height = _height;
 		pixelCount = _width * _height;
@@ -40,7 +40,7 @@ namespace flowTools {
 		velocities.resize(pixelCount, ofVec4f(0));
 	}
 	
-	void ftAreaAverage4f::update() {
+	void ftArea4f::update() {
 		// read to pixels
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
 		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,4);

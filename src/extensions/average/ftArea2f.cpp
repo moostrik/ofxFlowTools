@@ -1,64 +1,63 @@
 
-#include "ftAreaAverage3f.h"
+#include "ftArea2f.h"
 
 namespace flowTools {
 	
-	void ftAreaAverage3f::setup(int _width, int _height, string _name) {
+	void ftArea2f::setup(int _width, int _height, string _name) {
 		allocate(_width, _height);
 		
-		direction = ofVec3f(0);
+		direction = ofVec2f(0);
 		totalMagnitude = 0;
 		meanMagnitude = 0;
 		stdevMagnitude = 0;
 		
 		parameters.setName("average " + _name);
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 0.1));
-		parameters.add(pDirection.set("direction", ofVec3f(0), ofVec3f(0), ofVec3f(1)));
+		parameters.add(pDirection.set("direction", ofVec2f(0), ofVec2f(-1), ofVec2f(1)));
 		parameters.add(pTotalMagnitude.set("total mag", "0"));
 		parameters.add(pStdevMagnitude.set("stdev mag", "0"));
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
-		pRoiX.addListener(this, &ftAreaAverage3f::pRoiXListener);
+		pRoiX.addListener(this, &ftArea2f::pRoiXListener);
 		roiParameters.add(pRoiY.set("y", 0, 0, 1));
-		pRoiY.addListener(this, &ftAreaAverage3f::pRoiYListener);
+		pRoiY.addListener(this, &ftArea2f::pRoiYListener);
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaAverage3f::allocate(int _width, int _height) {
+	void ftArea2f::allocate(int _width, int _height) {
 		width = _width;
 		height = _height;
 		pixelCount = _width * _height;
 		
-		scaleFbo.allocate(_width, _height, GL_RGB32F);
+		scaleFbo.allocate(_width, _height, GL_RG32F);
 		ftUtil::black(scaleFbo);
-		pixels.allocate(_width, _height, 3);
+		pixels.allocate(_width, _height, 2);
 		
 		magnitudes.resize(pixelCount, 0);
-		velocities.resize(pixelCount, ofVec3f(0));
+		velocities.resize(pixelCount, ofVec2f(0));
 	}
 	
-	void ftAreaAverage3f::update() {
+	void ftArea2f::update() {
 		// read to pixels
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
-		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,3);
+		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,2);
 		glBindTexture(texData.textureTarget, texData.textureID);
-		glGetTexImage(texData.textureTarget, 0, GL_RGB, GL_FLOAT, pixels.getData());
+		glGetTexImage(texData.textureTarget, 0, GL_RG, GL_FLOAT, pixels.getData());
 		glBindTexture(texData.textureTarget, 0);
 		float* floatPixelData = pixels.getData();
 		
 		// calculate magnitudes
-		totalVelocity = ofVec3f(0);
+		totalVelocity = ofVec2f(0);
 		totalMagnitude = 0;
 		float highMagnitude = 0;
 		
 		for (int i=0; i<pixelCount; i++) {
-			ofVec3f *velocity = &velocities[i];
-			velocity->x = floatPixelData[i*3];
-			velocity->y = floatPixelData[i*3+1];
-			velocity->z = floatPixelData[i*3+2];
+			ofVec2f *velocity = &velocities[i];
+			velocity->x = floatPixelData[i*2];
+			velocity->y = floatPixelData[i*2+1];
 			totalVelocity += *velocity;
 			
 			magnitudes[i] = velocity->length();

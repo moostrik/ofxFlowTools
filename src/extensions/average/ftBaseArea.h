@@ -6,10 +6,10 @@
 
 namespace flowTools {
 	
-	class ftAreaAverage {
+	class ftBaseArea {
 	public:
-		ftAreaAverage() { ; }
-		virtual	~ftAreaAverage() { ; }
+		ftBaseArea() { ; }
+		virtual	~ftBaseArea() { ; }
 		
 		virtual void	setup(int _width = 32, int _height = 32, string _name = "") = 0;
 		virtual void	update() = 0;
@@ -17,22 +17,8 @@ namespace flowTools {
 		void			setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
 		void			setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
-		void			setTexture(ofTexture& _texture) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			ftUtil::black(scaleFbo);
-			ftUtil::roi(scaleFbo, _texture, ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()));
-			ofPopStyle();
-		}
-		
-		void 			setMask(ofTexture& _texture) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-			ftUtil::stretch(scaleFbo, _texture);
-			ofPopStyle();
-		}
-		
-		void			update(ofTexture& _texture) { setTexture(_texture); update(); }
+		void			setTexture(ofTexture& _texture);
+		void 			setMask(ofTexture& _texture);
 	
 		ofTexture&		getTexture() 			{ return scaleFbo.getTexture(); }
 		
@@ -42,11 +28,11 @@ namespace flowTools {
 		float			getSt_devMagnitude()	{ return stdevMagnitude; }
 		float			getHighMagnitude()		{ return highMagnitude; }
 		
-		vector<float>& getMagnitudes()			{ return magnitudes; }
+		vector<float>& 	getMagnitudes()			{ return magnitudes; }
 		
 		int				getSize()				{ return pixelCount; }
 		
-		ofRectangle		getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()) ; }
+		ofRectangle		getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()); }
 		
 		ofParameterGroup parameters;
 		

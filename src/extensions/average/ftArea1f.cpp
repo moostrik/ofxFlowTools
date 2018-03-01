@@ -1,9 +1,9 @@
 
-#include "ftAreaAverage1f.h"
+#include "ftArea1f.h"
 
 namespace flowTools {
 	
-	void ftAreaAverage1f::setup(int _width, int _height, string _name) {
+	void ftArea1f::setup(int _width, int _height, string _name) {
 		allocate(_width, _height);
 		
 		totalMagnitude = 0;
@@ -17,15 +17,15 @@ namespace flowTools {
 		
 		roiParameters.setName("ROI ");
 		roiParameters.add(pRoiX.set("x", 0, 0, 1));
-		pRoiX.addListener(this, &ftAreaAverage1f::pRoiXListener);
+		pRoiX.addListener(this, &ftArea1f::pRoiXListener);
 		roiParameters.add(pRoiY.set("y", 0, 0, 1));
-		pRoiY.addListener(this, &ftAreaAverage1f::pRoiYListener);
+		pRoiY.addListener(this, &ftArea1f::pRoiYListener);
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaAverage1f::allocate(int _width, int _height) {
+	void ftArea1f::allocate(int _width, int _height) {
 		width = _width;
 		height = _height;
 		pixelCount = _width * _height;
@@ -37,7 +37,7 @@ namespace flowTools {
 		magnitudes.resize(pixelCount, 0);
 	}
 	
-	void ftAreaAverage1f::update() {
+	void ftArea1f::update() {
 		// read to pixels
 		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
 		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,1);

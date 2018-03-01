@@ -2,14 +2,14 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftAreaAverage.h"
+#include "ftBaseArea.h"
 
 namespace flowTools {
 	
-	class ftAreaAverage3f : public ftAreaAverage {
+	class ftArea3f : public ftBaseArea {
 	public:
-		ftAreaAverage3f(){ ; }
-		virtual	~ftAreaAverage3f() { ; }
+		ftArea3f(){ ; }
+		virtual	~ftArea3f() { ; }
 		
 		void		setup(int _width = 32, int _height = 32, string _name = "");
 		void		update();
@@ -26,7 +26,7 @@ namespace flowTools {
 		
 		void allocate(int _width, int _height) ;
 		
-		void pRoiXListener(float& _value)		{ ftAreaAverage::pRoiXListener(_value); }
-		void pRoiYListener(float& _value)		{ ftAreaAverage::pRoiXListener(_value); }
+		void pRoiXListener(float& _value)		{ ftBaseArea::pRoiXListener(_value); }
+		void pRoiYListener(float& _value)		{ ftBaseArea::pRoiXListener(_value); }
 	};
 }

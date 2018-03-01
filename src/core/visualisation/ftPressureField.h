@@ -35,6 +35,7 @@ namespace flowTools {
 			ofEnableAlphaBlending();
 			ofDisableAntiAliasing();
 			
+			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			float radius = 2.0 / (height) * 0.275;
 			pressureFieldShader.update(fieldVbo, *pressureTexture, pressureScale.get(), radius);

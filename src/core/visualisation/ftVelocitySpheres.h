@@ -40,6 +40,7 @@ namespace flowTools {
 			ofEnableAlphaBlending();
 			ofDisableAntiAliasing();
 			
+			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			velocityFieldShader.update(fieldVbo, *velocityTexture, distanceScale.get(), sizeScale.get(), minDotSize.get(), maxDotSize.get());
 			

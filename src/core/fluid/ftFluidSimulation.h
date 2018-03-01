@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ftFbo.h"
 #include "ftSwapBuffer.h"
+
 #include "ftDiffuseShader.h"
 #include "ftAdvectShader.h"
 #include "ftDivergenceShader.h"
@@ -12,13 +13,12 @@
 #include "ftSmokeBuoyancyShader.h"
 #include "ftVorticityFirstPassShader.h"
 #include "ftVorticitySecondPassShader.h"
+
 #include "ftAddForceShader.h"
-#include "ftToScalarShader.h"
 #include "ftClampLengthShader.h"
 
 #include "ftDensityVec2Multiplier.h"
 #include "ftDensityFloatMultiplier.h"
-
 
 namespace flowTools {
 	class ftFluidSimulation {

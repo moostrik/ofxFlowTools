@@ -40,7 +40,8 @@ namespace flowTools {
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
 			}
-						
+			
+			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			float barHeight =  2.0 * 0.9 / height;
 			float barWidth = 5.0;

@@ -41,6 +41,7 @@ namespace flowTools {
 				glEnable(GL_LINE_SMOOTH);
 			}
 			
+			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			float maxArrowLength =  2.0 / (width + 1);
 			velocityTemperatureFieldShader.update(fieldVbo, *velocityTexture, *temperatureTexture, velocityScale.get(), temperatureScale.get(), maxArrowLength);

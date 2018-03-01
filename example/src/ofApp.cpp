@@ -279,14 +279,9 @@ void ofApp::drawModeSetName(int &_value) {
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofClear(0,0);
-	if (doDrawCamBackground.get())
-		drawSource();
-		
-		
-	if (!toggleGuiDraw) {
-		ofHideCursor();
-		drawComposite();
-	}
+	if (doDrawCamBackground.get()) { drawSource(); }
+	
+	if (!toggleGuiDraw) { ofHideCursor(); drawComposite(); }
 	else {
 		ofShowCursor();
 		switch(drawMode.get()) {
@@ -308,6 +303,7 @@ void ofApp::draw(){
 			case DRAW_MOUSE: drawMouseForces(); break;
 			case DRAW_VELDOTS: drawVelocityDots(); break;
 		}
+		
 		drawGui();
 	}
 }
@@ -486,13 +482,13 @@ void ofApp::drawTrail(int _x, int _y, int _width, int _height) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		displayScalar.setScale(1);
 		displayScalar.setSource(velocityTrail.getTexture());
-		displayScalar.draw(0, 0, _width, _height);
+		displayScalar.draw(_x, _y, _width, _height);
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		velocityField.setVelocityScale(1);
 		velocityField.setVelocity(velocityTrail.getTexture());
-		velocityField.draw(0, 0, _width, _height);
+		velocityField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
 }
@@ -504,13 +500,13 @@ void ofApp::drawOpticalFlow(int _x, int _y, int _width, int _height) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		displayScalar.setScale(1);
 		displayScalar.setSource(opticalFlow.getTexture());
-		displayScalar.draw(0, 0, _width, _height);
+		displayScalar.draw(_x, _y, _width, _height);
 	}
 	if (showField.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		velocityField.setVelocityScale(1);
 		velocityField.setVelocity(opticalFlow.getTexture());
-		velocityField.draw(0, 0, _width, _height);
+		velocityField.draw(_x, _y, _width, _height);
 	}
 	ofPopStyle();
 }
@@ -593,12 +589,6 @@ void ofApp::drawGui() {
 	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	gui.draw();
-	
-	// HACK TO COMPENSATE FOR DISSAPEARING MOUSE
-	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	ofDrawCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 300.0);
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	ofDrawCircle(ofGetMouseX(), ofGetMouseY(), ofGetWindowWidth() / 600.0);
 	ofPopStyle();
 }
 

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
+#include "ftUtil.h"
 
 namespace flowTools {
 	
@@ -11,83 +11,42 @@ namespace flowTools {
 		ftAreaAverage() { ; }
 		virtual	~ftAreaAverage() { ; }
 		
-		virtual void		setup(float _scaleFactor = 1, string _name = "") = 0;
-		virtual void		update() = 0;
+		virtual void	setup(int _width = 32, int _height = 32, string _name = "") = 0;
+		virtual void	update() = 0;
 		
-//		ofVec2f		getDirection()			{ return direction; }
-//		ofVec2f		getTotalVelocity()		{ return totalVelocity; }
-//		vector<ofVec2f>& getVelocities()	{ return velocities; }
+		void			setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
+		void			setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
-		// get rid of this scalefactor, just setup with dimensions
-		void		setScaleFactor(float _value) { pScaleFactor.set(_value); }
-		void		setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
-		void		setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
-		
-		void		setTexture(ofTexture& _texture) {
-			
+		void			setTexture(ofTexture& _texture) {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			scaleFbo.black();
-			
-			scaleFactor = pScaleFactor.get();
-			
-//			int mw = max(_texture.getWidth() * pRoiWidth.get() * scaleFactor, 16.f);
-//			int mh = max(_texture.getHeight() * pRoiHeight.get() * scaleFactor, 16.f);
-//			
-//			if (mw != scaleFbo.getWidth() ||
-//				mh != scaleFbo.getHeight()) {
-//				allocate(mw, mh);
-//				cout << "allocating" << endl;
-//			}
-			
-			//		scaleFbo.stretchIntoMe(_texture);
-			
-			int x,y,w,h;
-			x = pRoiX.get() * _texture.getWidth();
-			y = pRoiY.get() * _texture.getHeight();
-			w = pRoiWidth.get() * _texture.getWidth();
-			h = pRoiHeight.get() * _texture.getHeight();
-			
-			quad.setTexCoord(0, ofVec2f(x, y));
-			quad.setTexCoord(1, ofVec2f(x+w, y));
-			quad.setTexCoord(2, ofVec2f(x+w, y+h));
-			quad.setTexCoord(3, ofVec2f(x, y+h));
-			
-			scaleFbo.begin();
-			_texture.bind();
-			quad.draw();
-			_texture.unbind();
-			scaleFbo.end();
-			
+			ftUtil::black(scaleFbo);
+			ftUtil::roi(scaleFbo, _texture, ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()));
 			ofPopStyle();
 		}
 		
-		void 		setMask(ofTexture _texture) {
+		void 			setMask(ofTexture& _texture) {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-			scaleFbo.begin();
-			_texture.draw(0,0,scaleFbo.getWidth(), scaleFbo.getHeight());
-			scaleFbo.end();
+			ftUtil::stretch(scaleFbo, _texture);
 			ofPopStyle();
 		}
 		
-		void		update(ofTexture& _texture) { setTexture(_texture); update(); }
+		void			update(ofTexture& _texture) { setTexture(_texture); update(); }
+	
+		ofTexture&		getTexture() 			{ return scaleFbo.getTexture(); }
 		
-		ofTexture&		getTexture() { return scaleFbo.getTexture(); }
+		float			getTotalMagnitude()		{ return totalMagnitude; }
+		float			getAverageMagnitude()	{ return getMeanMagnitude(); }
+		float			getMeanMagnitude()		{ return meanMagnitude; }
+		float			getSt_devMagnitude()	{ return stdevMagnitude; }
+		float			getHighMagnitude()		{ return highMagnitude; }
 		
-		float		getTotalMagnitude()		{ return totalMagnitude; }
-		float		getAverageMagnitude()	{ return getMeanMagnitude(); }
-		float		getMeanMagnitude()		{ return meanMagnitude; }
-		float		getSt_devMagnitude()	{ return stdevMagnitude; }
-		float		getHighMagnitude()		{ return highMagnitude; }
+		vector<float>& getMagnitudes()			{ return magnitudes; }
 		
-		vector<float>& getMagnitudes()		{ return magnitudes; }
+		int				getSize()				{ return pixelCount; }
 		
-		
-		int			getSize()				{ return pixelCount; }
-		
-		float		getScaleFactor()		{ return scaleFactor; }
-		ofRectangle	getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()) ; }
+		ofRectangle		getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()) ; }
 		
 		ofParameterGroup parameters;
 		
@@ -107,31 +66,20 @@ namespace flowTools {
 		//		void pRoiWidthListener(float& _value) { pRoiX.setMax(1 - _value); if (pRoiX.get() > pRoiX.getMax()) { pRoiX.set(pRoiX.getMax());} }
 		ofParameter<float>		pRoiHeight;
 		//		void pRoiHeightListener(float& _value) { pRoiY.setMax(1 - _value); if (pRoiY.get() > pRoiY.getMax()) { pRoiY.set(pRoiY.getMax());} }
-		ofParameter<float>		pScaleFactor;
-		void pScaleFactorListener(float& _value) { scaleFactor = _value; }
 		
-		ftFbo		scaleFbo;
-		ofFloatPixels pixels;
-		ofMesh		quad;
+		ofFbo					scaleFbo;
+		ofFloatPixels 			pixels;
 		
 		vector<float>	magnitudes;
-		float		totalMagnitude;
-		float		meanMagnitude;
-		float		stdevMagnitude;
-		float		highMagnitude;
+		float			totalMagnitude;
+		float			meanMagnitude;
+		float			stdevMagnitude;
+		float			highMagnitude;
 		
-		float scaleFactor;
 		int width;
 		int height;
 		int	pixelCount;
 		
 		int internalformat;
-		
-	private:
-//		ofParameter<ofVec2f>	pDirection;
-//		vector<ofVec2f>			velocities;
-//		
-//		ofVec2f		direction;
-//		ofVec2f		totalVelocity;
 	};
 }

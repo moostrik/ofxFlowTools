@@ -3,14 +3,8 @@
 
 namespace flowTools {
 	
-	void ftAreaAverage3f::setup(float _scaleFactor, string _name) {
-		scaleFactor = _scaleFactor;
-		
-		quad.getVertices().resize(4);
-		quad.getTexCoords().resize(4);
-		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-
-		allocate(32,32);
+	void ftAreaAverage3f::setup(int _width, int _height, string _name) {
+		allocate(_width, _height);
 		
 		direction = ofVec3f(0);
 		totalMagnitude = 0;
@@ -31,8 +25,6 @@ namespace flowTools {
 		roiParameters.add(pRoiWidth.set("width", 1, 0, 1));
 		roiParameters.add(pRoiHeight.set("height", 1, 0, 1));
 		parameters.add(roiParameters);
-		parameters.add(pScaleFactor.set("scale", 0.5, 0.1, 1));
-		pScaleFactor.addListener(this, &ftAreaAverage3f::pScaleFactorListener);
 	}
 	
 	void ftAreaAverage3f::allocate(int _width, int _height) {
@@ -41,16 +33,11 @@ namespace flowTools {
 		pixelCount = _width * _height;
 		
 		scaleFbo.allocate(_width, _height, GL_RGB32F);
-		scaleFbo.black();
+		ftUtil::black(scaleFbo);
 		pixels.allocate(_width, _height, 3);
 		
 		magnitudes.resize(pixelCount, 0);
 		velocities.resize(pixelCount, ofVec3f(0));
-		
-		quad.setVertex(0, ofVec3f(0,0,0));
-		quad.setVertex(1, ofVec3f(width,0,0));
-		quad.setVertex(2, ofVec3f(width,height,0));
-		quad.setVertex(3, ofVec3f(0,height,0));
 	}
 	
 	void ftAreaAverage3f::update() {

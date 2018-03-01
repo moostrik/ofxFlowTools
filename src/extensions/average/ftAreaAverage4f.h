@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
 #include "ftAreaAverage.h"
 
 namespace flowTools {
@@ -12,7 +11,7 @@ namespace flowTools {
 		ftAreaAverage4f(){ ; }
 		virtual	~ftAreaAverage4f() { ; }
 		
-		void		setup(float _scaleFactor = 1, string _name = "") ;
+		void		setup(int _width = 32, int _height = 32, string _name = "") ;
 		void		update();
 		
 		ofVec4f		getDirection()			{ return direction; }
@@ -25,10 +24,9 @@ namespace flowTools {
 		ofParameter<ofVec4f>	pDirection;
 		vector<ofVec4f>			velocities;
 		
-		void allocate(int _width, int _height) ;
+		void allocate(int _width, int _height);
 
 		void pRoiXListener(float& _value)		{ ftAreaAverage::pRoiXListener(_value); }
 		void pRoiYListener(float& _value)		{ ftAreaAverage::pRoiYListener(_value); }
-		void pScaleFactorListener(float& _value){ ftAreaAverage::pScaleFactorListener(_value); }
 	};
 }

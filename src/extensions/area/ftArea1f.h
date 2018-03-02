@@ -13,12 +13,5 @@ namespace flowTools {
 		
 		void		setup(int _width = 32, int _height = 32, string _name = "");
 		void		update();
-		
-	private:
-		
-		void allocate(int _width, int _height) ;
-
-		void pRoiXListener(float& _value)		{ ftBaseArea::pRoiXListener(_value); }
-		void pRoiYListener(float& _value)		{ ftBaseArea::pRoiYListener(_value); }
 	};
 }

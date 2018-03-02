@@ -23,10 +23,5 @@ namespace flowTools {
 		ofVec3f					totalVelocity;
 		ofParameter<ofVec3f>	pDirection;
 		vector<ofVec3f>			velocities;
-		
-		void allocate(int _width, int _height) ;
-		
-		void pRoiXListener(float& _value)		{ ftBaseArea::pRoiXListener(_value); }
-		void pRoiYListener(float& _value)		{ ftBaseArea::pRoiXListener(_value); }
 	};
 }

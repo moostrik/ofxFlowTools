@@ -11,9 +11,6 @@ namespace flowTools {
 		ftBaseArea() { ; }
 		virtual	~ftBaseArea() { ; }
 		
-		virtual void	setup(int _width = 32, int _height = 32, string _name = "") = 0;
-		virtual void	update() = 0;
-		
 		void			setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
 		void			setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
@@ -37,11 +34,13 @@ namespace flowTools {
 		ofParameterGroup parameters;
 		
 	protected:
+		
+		void	setup(int _numchannels, int _width = 32, int _height = 32, string _name = "");
+		void	update();
+		
 		ofParameter<string>		pTotalMagnitude;
 		ofParameter<float>		pMeanMagnitude;
 		ofParameter<string>		pStdevMagnitude;
-		
-		virtual void			allocate(int _width, int _height) = 0;
 		
 		ofParameterGroup		roiParameters;
 		ofParameter<float>		pRoiX;
@@ -66,6 +65,12 @@ namespace flowTools {
 		int height;
 		int	pixelCount;
 		
-		int internalformat;
+		int numChannels;
+		int internalFormat;
+		int internalReadFormat;
+		
+		void readPixels();
+		
+		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 	};
 }

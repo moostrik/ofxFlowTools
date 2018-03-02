@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
+#include "ftArea.h"
 
 #define USE_PROGRAMMABLE_GL
 
@@ -60,6 +61,9 @@ public:
 	
 	ofImage				flowToolsLogoImage;
 	bool				showLogo;
+	
+	// Area
+	ftArea				area;
 	
 	// MouseDraw
 	ftDrawMouseForces	mouseForces;

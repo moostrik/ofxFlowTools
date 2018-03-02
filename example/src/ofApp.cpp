@@ -27,6 +27,9 @@ void ofApp::setup(){
 	
 	velocityDots.setup(flowWidth / 4, flowHeight / 4);
 	
+	// AREA
+	area.setup();
+	
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);
 	velocityField.setup(flowWidth / 4, flowHeight / 4);
@@ -80,6 +83,11 @@ void ofApp::setupGui() {
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
 	guiColorSwitch = 1 - guiColorSwitch;
 	gui.add(opticalFlow.parameters);
+	
+	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
+	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
+	guiColorSwitch = 1 - guiColorSwitch;
+	gui.add(area.parameters);
 	
 	gui.setDefaultHeaderBackgroundColor(guiHeaderColor[guiColorSwitch]);
 	gui.setDefaultFillColor(guiFillColor[guiColorSwitch]);
@@ -171,6 +179,8 @@ void ofApp::update(){
 		velocityMask.setDensity(cameraFbo.getTexture());
 		velocityMask.setVelocity(opticalFlow.getTexture());
 		velocityMask.update();
+		
+		area.update(opticalFlow.getTexture());
 	}
 	
 	deltaTime = ofGetElapsedTimef() - lastTime;

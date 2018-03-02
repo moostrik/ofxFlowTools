@@ -11,7 +11,7 @@ namespace flowTools {
 		ftBaseArea() { ; }
 		virtual	~ftBaseArea() { ; }
 		
-		void			setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); }
+		void			setRoi(float _x, float _y, float _width, float _height) { pRoiX.set(_x); pRoiY.set(_y); pRoiWidth.set(_width); pRoiHeight.set(_height); roi = ofRectangle(pRoiX, pRoiY, pRoiWidth, pRoiHeight); }
 		void			setRoi(ofRectangle _rect) { setRoi(_rect.x, _rect.y, _rect.width, _rect.height); }
 		
 		void			setTexture(ofTexture& _texture);
@@ -29,9 +29,11 @@ namespace flowTools {
 		
 		int				getSize()				{ return pixelCount; }
 		
-		ofRectangle		getRoi()				{ return ofRectangle(pRoiX.get(), pRoiY.get(), pRoiWidth.get(), pRoiHeight.get()); }
+		ofRectangle		getRoi()				{ return roi; }
+		ofPoint			getCentre()				{ return ofPoint(roi.x + roi.width / 2, roi.y + roi.height / 2); }
 		
-		ofParameterGroup parameters;
+		ofParameterGroup 	parameters;
+		ofParameterGroup 	roiParameters;
 		
 	protected:
 		
@@ -42,18 +44,17 @@ namespace flowTools {
 		ofParameter<float>		pMeanMagnitude;
 		ofParameter<string>		pStdevMagnitude;
 		
-		ofParameterGroup		roiParameters;
 		ofParameter<float>		pRoiX;
 		void pRoiXListener(float& _value) { pRoiWidth.setMax(1 - _value); if (pRoiWidth.get() > pRoiWidth.getMax()) { pRoiWidth.set(pRoiWidth.getMax());} else { pRoiWidth.set(pRoiWidth.get());} } // last else for update
 		ofParameter<float>		pRoiY;
 		void pRoiYListener(float& _value) { pRoiHeight.setMax(1 - _value); if (pRoiHeight.get() > pRoiHeight.getMax()) { pRoiHeight.set(pRoiHeight.getMax());}  else { pRoiHeight.set(pRoiHeight.get());} }
 		ofParameter<float>		pRoiWidth;
-		//		void pRoiWidthListener(float& _value) { pRoiX.setMax(1 - _value); if (pRoiX.get() > pRoiX.getMax()) { pRoiX.set(pRoiX.getMax());} }
 		ofParameter<float>		pRoiHeight;
-		//		void pRoiHeightListener(float& _value) { pRoiY.setMax(1 - _value); if (pRoiY.get() > pRoiY.getMax()) { pRoiY.set(pRoiY.getMax());} }
 		
 		ofFbo					scaleFbo;
 		ofFloatPixels 			pixels;
+		
+		ofRectangle 			roi;
 		
 		vector<float>	magnitudes;
 		float			totalMagnitude;

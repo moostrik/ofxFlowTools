@@ -18,7 +18,7 @@ namespace flowTools {
 		// calculate magnitudes
 		
 		totalMagnitude = 0;
-		float highMagnitude = 0;
+		highMagnitude = 0;
 		
 		for (int i=0; i<pixelCount; i++) {
 			magnitudes[i] = floatPixelData[i];

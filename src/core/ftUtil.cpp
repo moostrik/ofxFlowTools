@@ -7,19 +7,19 @@ namespace flowTools {
 	
 	ofMesh ftUtil::quad = ofMesh();
 	
-	// draw texture in fbo using dimensions of texture
-	void ftUtil::draw(ofFbo& _dst, ofTexture& _tex) {
-		_dst.begin();
-		_tex.draw(0, 0);
-		_dst.end();
-	};
-	
-	// draw texture in fbo using dimensions of texture, aligned to the centre of the fbo
-	void ftUtil::centre(ofFbo& _dst, ofTexture& _tex) {
-		_dst.begin();
-		_tex.draw((_dst.getWidth() - _tex.getWidth()) / 2, (_dst.getHeight() - _tex.getHeight()) / 2, 0, 0);
-		_dst.end();
-	};
+//	// draw texture in fbo using dimensions of texture
+//	void ftUtil::draw(ofFbo& _dst, ofTexture& _tex) {
+//		_dst.begin();
+//		_tex.draw(0, 0);
+//		_dst.end();
+//	};
+//	
+//	// draw texture in fbo using dimensions of texture, aligned to the centre of the fbo
+//	void ftUtil::centre(ofFbo& _dst, ofTexture& _tex) {
+//		_dst.begin();
+//		_tex.draw((_dst.getWidth() - _tex.getWidth()) / 2, (_dst.getHeight() - _tex.getHeight()) / 2, 0, 0);
+//		_dst.end();
+//	};
 	
 	// draw texture in fbo using dimensions of fbo, filling the fbo but distorting the texture
 	void ftUtil::stretch(ofFbo& _dst, ofTexture& _tex) {
@@ -142,8 +142,52 @@ namespace flowTools {
 		_dst.end();
 	}
 	
-	// warp texture in fbo using four arbitrary points
-	static void warp(ofFbo& _dst, ofTexture& _tex, ofPoint _P0, ofPoint _P1, ofPoint _P2, ofPoint _P3) {
+		// warp texture in fbo using four arbitrary points
+	void ftUtil::warp(ofFbo& _dst, ofTexture& _tex, ofPoint _P0, ofPoint _P1, ofPoint _P2, ofPoint _P3) {
 		
+	}
+	
+	void ftUtil::toPixels(ofTexture& _tex, ofFloatPixels& _pixels) {
+		ofTextureData& texData = _tex.getTextureData();
+		int format = texData.glInternalFormat;
+		int readFormat, numChannels;
+		
+		switch(format){
+			case GL_R32F: 		readFormat = GL_R, 		numChannels = 1; break;
+			case GL_RG32F: 		readFormat = GL_RG, 	numChannels = 2; break;
+			case GL_RGB32F: 	readFormat = GL_RGB, 	numChannels = 3; break;
+			case GL_RGBA32F:	readFormat = GL_RGBA,	numChannels = 4; break;
+			default:
+				ofLogWarning("ftUtil") << "toPixels: " << "can only read float textures to ofFloatPixels";
+				return;
+		}
+		
+		_pixels.allocate(texData.width, texData.height, numChannels);
+		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT, texData.width, 4, numChannels);
+		glBindTexture(texData.textureTarget, texData.textureID);
+		glGetTexImage(texData.textureTarget, 0, readFormat, GL_FLOAT, _pixels.getData());
+		glBindTexture(texData.textureTarget, 0);
+	}
+	
+	void ftUtil::toPixels(ofTexture& _tex, ofPixels& _pixels) {
+		ofTextureData& texData = _tex.getTextureData();
+		int format = texData.glInternalFormat;
+		int readFormat, numChannels;
+		
+		switch(format){
+			case GL_R8: 	readFormat = GL_R, 		numChannels = 1; break;
+			case GL_RG8: 	readFormat = GL_RG, 	numChannels = 2; break;
+			case GL_RGB8: 	readFormat = GL_RGB, 	numChannels = 3; break;
+			case GL_RGBA8:	readFormat = GL_RGBA,	numChannels = 4; break;
+			default:
+				ofLogWarning("ftUtil") << "toPixels: " << "can only read char texturs to ofPixels";
+				return;
+		}
+		
+		_pixels.allocate(texData.width, texData.height, numChannels);
+		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT, texData.width, 1, numChannels);
+		glBindTexture(texData.textureTarget, texData.textureID);
+		glGetTexImage(texData.textureTarget, 0, readFormat, GL_FLOAT, _pixels.getData());
+		glBindTexture(texData.textureTarget, 0);
 	}
 }

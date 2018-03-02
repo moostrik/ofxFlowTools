@@ -56,11 +56,7 @@ namespace flowTools {
 	}
 	
 	void ftBaseArea::readPixels() {
-		ofTextureData& texData = scaleFbo.getTexture().getTextureData();
-		ofSetPixelStoreiAlignment(GL_PACK_ALIGNMENT,width,4,numChannels);
-		glBindTexture(texData.textureTarget, texData.textureID);
-		glGetTexImage(texData.textureTarget, 0, internalReadFormat, GL_FLOAT, pixels.getData());
-		glBindTexture(texData.textureTarget, 0);
+		ftUtil::toPixels(scaleFbo, pixels);
 	}
 	
 	void ftBaseArea::setTexture(ofTexture& _texture) {
@@ -79,7 +75,7 @@ namespace flowTools {
 	}
 	
 	void ftBaseArea::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
-		float mean = accumulate(_v.begin(), _v.end(), 0) / (float)_v.size();
+		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
 		std::vector<float> diff(_v.size());
 		std::transform(_v.begin(), _v.end(), diff.begin(), std::bind2nd(std::minus<float>(), mean));
 		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);

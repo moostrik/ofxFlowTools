@@ -60,11 +60,11 @@ namespace flowTools {
 		sourceSwapBufferQuarter.allocate(width / 4, height / 4);
 		sourceSwapBufferEighth.allocate(width / 8, height / 8);
 		
-		velocityBufferCombined.allocate(width, height, GL_RGB32F);
-		velocityBuffer.allocate(width, height, GL_RGB32F);
-		velocityBufferHalf.allocate(width / 2, height / 2, GL_RGB32F);
-		velocityBufferQuarter.allocate(width /4, height / 4, GL_RGB32F);
-		velocityBufferEighth.allocate(width / 8, height / 8, GL_RGB32F);
+		velocityBufferCombined.allocate(width, height, GL_RG32F);
+		velocityBuffer.allocate(width, height, GL_RG32F);
+		velocityBufferHalf.allocate(width / 2, height / 2, GL_RG32F);
+		velocityBufferQuarter.allocate(width /4, height / 4, GL_RG32F);
+		velocityBufferEighth.allocate(width / 8, height / 8, GL_RG32F);
 		
 		velocityBuffer.black();
 		velocityBufferHalf.black();

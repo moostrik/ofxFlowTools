@@ -4,7 +4,7 @@
 namespace flowTools {
 	
 	void ftArea3f::setup(int _width, int _height, string _name) {
-		parameters.add(pDirection.set("direction", ofVec3f(0), ofVec3f(0), ofVec3f(1)));
+		parameters.add(pDirection.set("direction", ofVec3f(0), ofVec3f(-1), ofVec3f(1)));
 		ftBaseArea::setup(3, _width, _height, _name);
 		velocities.resize(pixelCount, ofVec3f(0));
 		direction = ofVec3f(0);
@@ -18,7 +18,7 @@ namespace flowTools {
 		// calculate magnitudes
 		totalVelocity = ofVec3f(0);
 		totalMagnitude = 0;
-		float highMagnitude = 0;
+		highMagnitude = 0;
 		
 		for (int i=0; i<pixelCount; i++) {
 			ofVec3f *velocity = &velocities[i];

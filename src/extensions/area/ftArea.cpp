@@ -19,13 +19,12 @@ namespace flowTools {
 		parameters.setName("area " + _name);
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
 		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
-		pMeanMagnitude.addListener(this, &ftArea::floatListener);
-		pStdevMagnitude.addListener(this, &ftArea::floatListener);
-//		parameters.add(pHighMagnitude.set("high mag", 0, 0, .1));
+		pMeanMagnitude.addListener(this, &ftArea::pFloatListener);
+		pStdevMagnitude.addListener(this, &ftArea::pFloatListener);
 		pVelocity.resize(4);
 		for (int i=0; i<4; i++) {
 			parameters.add(pVelocity[i].set("velocity " + ofToString(i), 0, -1, 1));
-			pVelocity[i].addListener(this, &ftArea::floatListener);
+			pVelocity[i].addListener(this, &ftArea::pFloatListener);
 		}
 		
 		roiParameters.setName("ROI " + _name);
@@ -52,7 +51,7 @@ namespace flowTools {
 			default:
 				numChannels = 0;
 				bAllocated = false;
-				ofLogWarning("ftArea") << "allocate: " << "only works with float float textures";
+				ofLogWarning("ftArea") << "allocate: " << "ftArea works with float textures only";
 				return;
 		}
 		
@@ -63,9 +62,6 @@ namespace flowTools {
 		direction.resize(numChannels, 0);
 		velocity.clear();
 		velocity.resize(numChannels, 0);
-		
-//		directions.clear();
-//		directions.resize(numPixels, direction);
 		
 		pixels.allocate(width, height, numChannels);
 	}
@@ -82,8 +78,6 @@ namespace flowTools {
 		ftUtil::toPixels(scaleFbo, pixels);
 		float* floatPixelData = pixels.getData();
 		
-//		highMagnitude = 0;
-		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
 		for (int i=0; i<numPixels; i++) {
@@ -94,7 +88,6 @@ namespace flowTools {
 				mag += vel * vel;
 			}
 			magnitudes[i] = sqrt(mag);
-//			highMagnitude = max(highMagnitude, magnitudes[i]);
 		}
 		getMeanStDev(magnitudes, meanMagnitude, stdevMagnitude);
 		
@@ -104,7 +97,7 @@ namespace flowTools {
 		}
 		length = sqrt(length);
 		for (int i=0; i<numChannels; i++) {
-			direction[i] = totalVelocity[i] / length;
+			direction[i] = totalVelocity[i] / length; // normalized velocity
 			velocity[i] = direction[i] * meanMagnitude;
 		}
 		
@@ -118,8 +111,6 @@ namespace flowTools {
 		
 		pMeanMagnitude.set(meanMagnitude);
 		pStdevMagnitude.set(stdevMagnitude);
-//		pHighMagnitude.set(highMagnitude);
-		
 	}
 	
 	void ftArea::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {

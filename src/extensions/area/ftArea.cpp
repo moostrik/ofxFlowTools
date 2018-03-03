@@ -89,7 +89,7 @@ namespace flowTools {
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
-				float vel = floatPixelData[i * numChannels + j] * 10.0;
+				float vel = floatPixelData[i * numChannels + j] * 10.0 ; // times 10 should give values closer to 1
 				totalVelocity[j] += vel;
 				mag += vel * vel;
 			}
@@ -118,7 +118,7 @@ namespace flowTools {
 		
 		pMeanMagnitude.set(meanMagnitude);
 		pStdevMagnitude.set(stdevMagnitude);
-		pHighMagnitude.set(highMagnitude);
+//		pHighMagnitude.set(highMagnitude);
 		
 	}
 	

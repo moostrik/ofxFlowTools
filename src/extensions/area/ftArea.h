@@ -21,12 +21,12 @@ namespace flowTools {
 
 		int				getNumChannels()		{ return numChannels; }
 		float			getDirection(int _index){ if (_index < numChannels) { return direction[_index]; } else { return 0; } }
-		float			getelocity(int _index) 	{ if (_index < numChannels) { return velocity[_index];  } else { return 0; } }
+		float			getVelocity(int _index) 	{ if (_index < numChannels) { return velocity[_index];  } else { return 0; } }
 
 		float			getAverageMagnitude()	{ return getMeanMagnitude(); }
 		float			getMeanMagnitude()		{ return meanMagnitude; }
-		float			getSt_devMagnitude()	{ return stdevMagnitude; }
-		float			getHighMagnitude()		{ return highMagnitude; }
+		float			getStDevMagnitude()		{ return stdevMagnitude; }
+//		float			getHighMagnitude()		{ return highMagnitude; }
 
 //		vector<float>& 	getMagnitudes()			{ return magnitudes; }
 //		vector<float>& 	getDirections(int _index){ if (_index < numChannels) { return directions[_index]; } else { return directions[0]; } }
@@ -44,7 +44,7 @@ namespace flowTools {
 		void allocate(ofTexture& _tex);
 		
 		ofParameter<float>		pMeanMagnitude;
-		ofParameter<float>		pHighMagnitude;
+//		ofParameter<float>		pHighMagnitude;
 		ofParameter<float>		pStdevMagnitude;
 		vector< ofParameter<float> > pVelocity;
 		void floatListener(float& _value) { _value = int(_value * 100) / 100.0; }
@@ -64,7 +64,7 @@ namespace flowTools {
 		
 		float			meanMagnitude;
 		float			stdevMagnitude;
-		float			highMagnitude;
+//		float			highMagnitude;
 		vector<float>	magnitudes;
 		
 		vector<float> 	direction;

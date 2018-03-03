@@ -28,7 +28,7 @@ void ofApp::setup(){
 	velocityDots.setup(flowWidth / 4, flowHeight / 4);
 	
 	// AREA
-	area.setup();
+	area.setup(32, 32, "flow");
 	
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);

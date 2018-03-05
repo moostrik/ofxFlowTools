@@ -14,8 +14,8 @@ namespace flowTools {
 		void			setup(int _width = 32, int _height = 32, string _name = "");
 		void			update(ofTexture& _texture);
 		
-//		void			setWidth(int _value)	{ bAllocated = false; width = _value; }
-//		void			setHeight(int _value)	{ bAllocated = false; height = _value; }
+		void			setWidth(int _value)	{ allocate(_value, height); }
+		void			setHeight(int _value)	{ allocate(width, _value); }
 
 		void			setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void			setRoi(ofRectangle _rect);
@@ -28,8 +28,8 @@ namespace flowTools {
 		float			getMeanMagnitude()		{ return meanMagnitude; }
 		float			getStDevMagnitude()		{ return stdevMagnitude; }
 //
-//		int				getWidth()				{ return width; }
-//		int				getHeight()				{ return height; }
+		int				getWidth()				{ return width; }
+		int				getHeight()				{ return height; }
 
 		ofRectangle		getRoi()				{ return roi; }
 		ofPoint			getRoiCentre()			{ return ofPoint(roi.x + roi.width / 2, roi.y + roi.height / 2); }
@@ -38,11 +38,9 @@ namespace flowTools {
 		ofParameterGroup 	roiParameters;
 	protected:
 		
-		void allocate(ofTexture& _tex);
-		
 		int 			width;
 		int 			height;
-		int				numPixels;
+//		int				numPixels;
 		int 			numChannels;
 		int 			internalFormat;
 		bool			bAllocated;
@@ -57,6 +55,10 @@ namespace flowTools {
 		
 		vector<float> 	direction;
 		vector<float> 	velocity;
+		
+			//		void allocate(ofTexture& _tex);
+		void allocate(int _width, int _height) { allocate(_width, _height, numChannels);}
+		void allocate(int _width, int _height, int _numChannels);
 		
 		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		

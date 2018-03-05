@@ -15,9 +15,6 @@ namespace flowTools {
 		static void black(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
 		static void white(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
 		
-		static GLint getInternalFormat(ofFbo& _fbo) { return getInternalFormat(_fbo.getTexture()); };
-		static GLint getInternalFormat(ofTexture& _tex) { return _tex.getTextureData().glInternalFormat; };
-		
 //		// draw texture in fbo using dimensions of texture
 //		static void draw(ofFbo& _dst, ofFbo& _src) { draw(_dst, _src.getTexture()); };
 //		static void draw(ofFbo& _dst, ofTexture& _tex);
@@ -50,9 +47,25 @@ namespace flowTools {
 		static void toPixels(ofFbo& _fbo, ofFloatPixels& _pixels) { toPixels(_fbo.getTexture(), _pixels); }
 		static void toPixels(ofTexture& _tex, ofFloatPixels& _pixels);
 		
-		// get pixels from a fbo or texture
+		// get pixels from a fbo or texture // untested
 		static void toPixels(ofFbo& _fbo, ofPixels& _pixels) { toPixels(_fbo.getTexture(), _pixels); }
 		static void toPixels(ofTexture& _tex, ofPixels& _pixels);
+		
+		// get texture internatFormat
+		static GLint getInternalFormat(ofFbo& _fbo) { return getInternalFormat(_fbo.getTexture()); };
+		static GLint getInternalFormat(ofTexture& _tex) { return _tex.getTextureData().glInternalFormat; };
+		
+		// get number of channels in texture internatFormat
+		static int getNumChannelsFromInternalFormat(GLint format);
+		
+		// get unsigned char internatFormat from number of channels;
+		static GLint getUCharInternalFormat(int _numChannels);
+		
+		// get float internatFormat from number of channels;
+		static GLint getFloatInternalFormat(int _numChannels);
+		
+		// get if internalFormat is a float;
+		bool isFloat(GLint _format);
 		
 	protected:
 		static ofMesh quad;

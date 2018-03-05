@@ -3,21 +3,15 @@
 namespace flowTools {
 	
 	void ftArea::setup(int _width, int _height, string _name) {
-		
-		numChannels = 0;
 		bAllocated = false;
-	
+		numChannels = 0;
 		width = _width;
 		height = _height;
-//		scaleFbo.allocate(width, height); // allocate 
-//		allocate(scaleFbo.getTexture());
 		
-		numPixels = _width * _height;
 		roi = ofRectangle(0,0,1,1);
 		
 		meanMagnitude = 0;
 		stdevMagnitude = 0;
-		magnitudes.resize(numPixels, 0);
 		
 		parameters.setName("area " + _name);
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
@@ -44,7 +38,13 @@ namespace flowTools {
 	}
 	
 	void ftArea::update(ofTexture& _texture) {
-		if (!bAllocated || ftUtil::getInternalFormat(_texture) != ftUtil::getInternalFormat(scaleFbo)) { allocate(_texture); }
+		int texFormat = ftUtil::getInternalFormat(_texture);
+		if (!bAllocated || texFormat != ftUtil::getInternalFormat(scaleFbo)) { allocate(width, height, ftUtil::getNumChannelsFromInternalFormat(texFormat)); }
+		
+		if (!bAllocated) {
+			ofLogWarning("ftArea") << "not allocated";
+			return;
+		}
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -57,6 +57,7 @@ namespace flowTools {
 		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
+		int numPixels = width * height;
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
@@ -90,27 +91,20 @@ namespace flowTools {
 		pStdevMagnitude.set(stdevMagnitude);
 	}
 	
-	void ftArea::allocate(ofTexture &_tex) {
-		ofTextureData& texData = _tex.getTextureData();
+	void ftArea::allocate(int _width, int _height, int _numChannels) {
+		width = _width;
+		height = _height;
 		
-		cout << "allocate" << endl;
-		
-		internalFormat = texData.glInternalFormat;
-		bAllocated = true;
-		
-		switch(internalFormat){
-			case GL_R32F: 		numChannels = 1; break;
-			case GL_RG32F: 		numChannels = 2; break;
-			case GL_RGB32F: 	numChannels = 3; break;
-			case GL_RGBA32F:	numChannels = 4; break;
-			default:
-				numChannels = 0;
-				bAllocated = false;
-				ofLogWarning("ftArea") << "allocate: " << "ftArea works with float textures only";
-				return;
+		if (_numChannels > 0 && _numChannels <= 4 && _width > 0 && _height > 0) { bAllocated = true; }
+		else {
+			numChannels = false;
+			ofLogWarning("ftArea") << "failed to allocate";
+			return;
 		}
+	
+		numChannels = _numChannels;
 		
-		scaleFbo.allocate(width, height, internalFormat);
+		scaleFbo.allocate(width, height, ftUtil::getFloatInternalFormat(_numChannels));
 		ftUtil::black(scaleFbo);
 		
 		direction.clear();
@@ -119,6 +113,7 @@ namespace flowTools {
 		velocity.resize(numChannels, 0);
 		
 		pixels.allocate(width, height, numChannels);
+		magnitudes.resize(width * height, 0);
 	}
 	
 	void ftArea::setRoi(ofRectangle _rect) {

@@ -70,14 +70,20 @@ namespace flowTools {
 		}
 		getMeanStDev(magnitudes, meanMagnitude, stdevMagnitude);
 		
-		float length;
-		for (int i=0; i<numChannels; i++) {
-			length += totalVelocity[i] * totalVelocity[i];
+		if (numChannels > 1) {
+			float length;
+			for (int i=0; i<numChannels; i++) {
+				length += totalVelocity[i] * totalVelocity[i];
+			}
+			length = sqrt(length);
+			for (int i=0; i<numChannels; i++) {
+				direction[i] = totalVelocity[i] / length;
+				velocity[i] = direction[i] * meanMagnitude;
+			}
 		}
-		length = sqrt(length);
-		for (int i=0; i<numChannels; i++) {
-			direction[i] = totalVelocity[i] / length; // normalized velocity
-			velocity[i] = direction[i] * meanMagnitude;
+		else {
+			direction[0] = 1; // or 0 or what?
+			velocity[0] = meanMagnitude;
 		}
 		
 		for (int i=0; i<numChannels; i++) {

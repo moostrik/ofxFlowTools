@@ -40,7 +40,6 @@ namespace flowTools {
 		
 		int 			width;
 		int 			height;
-//		int				numPixels;
 		int 			numChannels;
 		int 			internalFormat;
 		bool			bAllocated;
@@ -56,7 +55,6 @@ namespace flowTools {
 		vector<float> 	direction;
 		vector<float> 	velocity;
 		
-			//		void allocate(ofTexture& _tex);
 		void allocate(int _width, int _height) { allocate(_width, _height, numChannels);}
 		void allocate(int _width, int _height, int _numChannels);
 		

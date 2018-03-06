@@ -5,6 +5,7 @@ namespace flowTools {
 	void ftArea::setup(int _width, int _height, string _name) {
 		bAllocated = false;
 		numChannels = 0;
+		
 		width = _width;
 		height = _height;
 		
@@ -97,7 +98,8 @@ namespace flowTools {
 		
 		if (_numChannels > 0 && _numChannels <= 4 && _width > 0 && _height > 0) { bAllocated = true; }
 		else {
-			numChannels = false;
+			bAllocated = false;
+			numChannels = 0;
 			ofLogWarning("ftArea") << "failed to allocate";
 			return;
 		}

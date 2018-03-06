@@ -3,18 +3,37 @@
 namespace flowTools {
 	
 	void ftAreaEvent::setup(int _width, int _height, string _name) {
-		ftNormalizedArea::setup(_width, _height, _name);
-				
-		parameters.add(pTreshold.set("event threshold", 2, 0, 100));
-		parameters.add(pBaseFactor.set("event base", 0, 0, 3));
+		ftAreaNormalized::setup(_width, _height, _name);
+		
+		eventParameters.setName("events");
+		eventParameters.add(pTreshold.set("event threshold", .25, .1, .3));
+		eventParameters.add(pBaseFactor.set("event base", .6, .5, .75));
+		pEvent.resize(4);
+		for (int i=0; i<4; i++) {
+			eventParameters.add(pEvent[i].set("event " + ofToString(i), 0, -1, 1));
+		}
+		parameters.add(eventParameters);
+		pTreshold.addListener(this, &ftAreaEvent::pFloatListener);
+		pBaseFactor.addListener(this, &ftAreaEvent::pFloatListener);
 	}
 	
 	void ftAreaEvent::update(ofTexture& _texture) {
-		ftNormalizedArea::update(_texture);
+		ftAreaNormalized::update(_texture);
+		if (!bAllocated) { return; }
+		if (event.size() != numChannels) {
+			event.clear();
+			event.resize(numChannels, 0);
+			activeHigh.clear();
+			activeHigh.resize(numChannels, 0);
+			inActiveLow.clear();
+			inActiveLow.resize(numChannels, 0);
+			eventActive.clear();
+			eventActive.resize(numChannels, 0);
+		}
 				
 		for (int i=0; i<numChannels; i++) {
 			event[i] = 0;
-			float nV = normalizedVelocity[i];
+			float nV = fabs(normalizedVelocity[i]);
 			if (!eventActive[i]) {
 				if (nV < inActiveLow[i]) { inActiveLow[i] = nV; }
 				
@@ -35,18 +54,13 @@ namespace flowTools {
 				}
 			}
 		}
-	}
-	
-	void ftAreaEvent::allocate(int _width, int _height, int _numChannels) {
-		ftNormalizedArea::allocate(_width, _height, _numChannels);
 		
-		event.clear();
-		event.resize(numChannels, 0);
-		activeHigh.clear();
-		activeHigh.resize(numChannels, 0);
-		inActiveLow.clear();
-		inActiveLow.resize(numChannels, 0);
-		eventActive.clear();
-		eventActive.resize(numChannels, 0);
+		for (int i=0; i<numChannels; i++) {
+			pEvent[i] = event[i];
+		}
+		
+		for (int i=numChannels; i<pVelocity.size(); i++) {
+			pEvent[i] = 0;
+		}
 	}
 }

@@ -6,10 +6,10 @@
 
 namespace flowTools {
 	
-	class ftNormalizedArea: public ftArea {
+	class ftAreaNormalized: public ftArea {
 	public:
-		ftNormalizedArea() { ; }
-		virtual	~ftNormalizedArea() { ; }
+		ftAreaNormalized() { ; }
+		virtual	~ftAreaNormalized() { ; }
 		
 		void	setup(int _width = 32, int _height = 32, string _name = "");
 		void	update(ofTexture& _texture);
@@ -17,8 +17,8 @@ namespace flowTools {
 		float 	getNormalizedMagnitude()	{ return normalizedMagnitude; }
 		float	getNormalizedVelocity(int _index) { if (_index < numChannels) { return normalizedVelocity[_index];  } else { return 0; } }
 		
-		float	getNormalization()		{ return pNormalization.get(); }
-		float	getComponentBoost()		{ return pComponentBoost.get(); }
+		float	getNormalization()				{ return pNormalization.get(); }
+		float	getComponentBoost()				{ return pComponentBoost.get(); }
 		
 		float	setNormalization(float _value)	{ pNormalization.set(_value); }
 		void	setComponentBoost(float _value)	{ pComponentBoost.set(_value); }
@@ -28,10 +28,10 @@ namespace flowTools {
 		ofParameter<float>		pNormalization;
 		ofParameter<float>		pComponentBoost;
 		
-		float 					normalizedMagnitude;
-		vector<float> 			normalizedVelocity;
+		float 			normalizedMagnitude;
+		vector<float> 	normalizedVelocity;
 		
-		void allocate(int _width, int _height, int _numChannels);
+		void pFloatListener(float& _value) { ftArea::pFloatListener(_value); }
 		
 	};
 }

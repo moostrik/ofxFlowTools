@@ -65,7 +65,7 @@ namespace flowTools {
 		static GLint getFloatInternalFormat(int _numChannels);
 		
 		// get if internalFormat is a float;
-		bool isFloat(GLint _format);
+		static bool isFloat(GLint _format);
 		
 	protected:
 		static ofMesh quad;

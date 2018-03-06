@@ -275,6 +275,5 @@ namespace flowTools {
 				break;
 		}
 	}
-	
 }
 

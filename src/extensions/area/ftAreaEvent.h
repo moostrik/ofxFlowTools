@@ -2,11 +2,11 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftNormalizedArea.h"
+#include "ftAreaNormalized.h"
 
 namespace flowTools {
 	
-	class ftAreaEvent: public ftNormalizedArea {
+	class ftAreaEvent: public ftAreaNormalized {
 	public:
 		ftAreaEvent() { ; }
 		virtual	~ftAreaEvent() { ; }
@@ -16,23 +16,24 @@ namespace flowTools {
 		
 		float	getEvent(int _index) { if (_index < numChannels) { return event[_index];  } else { return 0; } }
 		
-		float	getThreshold()			{ return pTreshold.get(); }
-		float	getBasefactor()			{ return pBaseFactor.get(); }
+		float	getThreshold()				{ return pTreshold.get(); }
+		float	getBasefactor()				{ return pBaseFactor.get(); }
 		
-		void	setThreshold(float _value)		{ pTreshold.set(_value); }
-		void	setBaseFactor(float _value)		{ pBaseFactor.set(_value); }
+		void	setThreshold(float _value)	{ pTreshold.set(_value); }
+		void	setBaseFactor(float _value)	{ pBaseFactor.set(_value); }
 		
 	protected:
+		ofParameterGroup	eventParameters;
 		vector<int> 	event;
 		vector<float> 	activeHigh;
 		vector<float> 	inActiveLow;
 		vector<bool> 	eventActive;
 		
+		ofParameter<float>	pTreshold;
+		ofParameter<float>	pBaseFactor;
+		vector< ofParameter<int> > pEvent;
 		
-		ofParameter<float>		pTreshold;
-		ofParameter<float>		pBaseFactor;
-		
-		void allocate(int _width, int _height, int _numChannels);
+		void pFloatListener(float& _value) { ftArea::pFloatListener(_value); }
 		
 	};
 }

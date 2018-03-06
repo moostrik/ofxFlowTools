@@ -67,5 +67,6 @@ namespace flowTools {
 		
 		vector< ofParameter<float> > pRoi;
 		void pRoiListener(float& _value) { setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
+		
 	};
 }

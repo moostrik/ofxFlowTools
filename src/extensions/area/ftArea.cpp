@@ -25,7 +25,7 @@ namespace flowTools {
 			pVelocity[i].addListener(this, &ftArea::pFloatListener);
 		}
 		
-		roiParameters.setName("ROI " + _name);
+		roiParameters.setName("ROI");
 		pRoi.resize(4);
 		roiParameters.add(pRoi[0].set("x", 0, 0, 1));
 		roiParameters.add(pRoi[1].set("y", 0, 0, 1));

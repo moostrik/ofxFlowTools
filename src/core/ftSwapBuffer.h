@@ -8,6 +8,8 @@ namespace flowTools {
 	
 	class ftSwapBuffer {
 	public:
+		ftSwapBuffer() { bIsAllocated = false; }
+		
 		void allocate( int _width, int _height, int _internalformat = GL_RGBA, int _filter = GL_LINEAR){
 			
 			ofFbo::Settings mySettings;
@@ -20,6 +22,7 @@ namespace flowTools {
 			for(int i = 0; i < 2; i++){
 				FBOs[i].allocate(mySettings);
 			}
+			bIsAllocated = true;
 			
 			black();
 			flag = 0;
@@ -30,6 +33,8 @@ namespace flowTools {
 			backbuffer = &(FBOs[(flag)%2]);
 			buffer = &(FBOs[++(flag)%2]);
 		}
+		
+		bool isAllocated() { return bIsAllocated; }
 		
 		void black(){
 			for(int i = 0; i < 2; i++){
@@ -61,5 +66,7 @@ namespace flowTools {
 		
 		ftFbo   FBOs[2];    // Real addresses of ping/pong FBO´s
 		int     flag;       // Integer for making a quick swap
+		
+		bool				bIsAllocated;
 	};
 }

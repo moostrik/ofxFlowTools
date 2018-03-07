@@ -22,8 +22,7 @@ namespace flowTools {
 
 		int				getNumChannels()		{ return numChannels; }
 
-//		float			getDirection(int _index){ if (_index < numChannels) { return direction[_index]; } else { return 0; } } // why direction?
-		float			getVelocity(int _index) { if (_index < numChannels) { return velocity[_index];  } else { return 0; } } // else error message?
+		float			getVelocity(int _index) { if (_index < numChannels) { return velocity[_index];  } else { return 0; } } // else warning message?
 		float			getMagnitude()			{ return getMeanMagnitude(); }
 		float			getMeanMagnitude()		{ return meanMagnitude; }
 		float			getStDevMagnitude()		{ return stdevMagnitude; }

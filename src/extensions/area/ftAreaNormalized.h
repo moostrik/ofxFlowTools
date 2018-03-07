@@ -13,9 +13,9 @@ namespace flowTools {
 		
 		void	setup(int _width = 32, int _height = 32, string _name = "");
 		void	update(ofTexture& _texture);
-				
-		float 	getNormalizedMagnitude()	{ return normalizedMagnitude; }
-		float	getNormalizedVelocity(int _index) { if (_index < numChannels) { return normalizedVelocity[_index];  } else { return 0; } }
+		
+		float 	getMagnitude()	{ return normalizedMagnitude; }
+		float	getVelocity(int _index) { if (_index < numChannels) { return normalizedVelocity[_index];  } else { return 0; } }
 		
 		float	getNormalization()				{ return pNormalization.get(); }
 		float	getComponentBoost()				{ return pComponentBoost.get(); }
@@ -27,6 +27,7 @@ namespace flowTools {
 		
 		ofParameter<float>		pNormalization;
 		ofParameter<float>		pComponentBoost;
+		ofParameter<float>		pNormalizedMagnitude;
 		
 		float 			normalizedMagnitude;
 		vector<float> 	normalizedVelocity;

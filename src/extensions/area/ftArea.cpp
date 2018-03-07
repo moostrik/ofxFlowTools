@@ -25,7 +25,7 @@ namespace flowTools {
 			pVelocity[i].addListener(this, &ftArea::pFloatListener);
 		}
 		
-		roiParameters.setName("ROI");
+		roiParameters.setName("ROI " + _name);
 		pRoi.resize(4);
 		roiParameters.add(pRoi[0].set("x", 0, 0, 1));
 		roiParameters.add(pRoi[1].set("y", 0, 0, 1));
@@ -82,7 +82,7 @@ namespace flowTools {
 			}
 		}
 		else {
-			direction[0] = 1; // or 0 or what?
+			direction[0] = 1; // 1 for normalization with one component
 			velocity[0] = meanMagnitude;
 		}
 		

@@ -3,8 +3,9 @@
 namespace flowTools {
 	
 	void ftAreaNormalized::setup(int _width, int _height, string _name) {
-		parameters.add(pNormalization.set("normalization", .1, 0, 1));
+		parameters.add(pNormalization.set("normalization", .25, .1, 1));
 		parameters.add(pComponentBoost.set("boost high component", 0, 0, 3));
+		parameters.add(pNormalizedMagnitude.set("norm magnitude", 0, 0, 1));
 		pNormalization.addListener(this, &ftAreaNormalized::pFloatListener);
 		pComponentBoost.addListener(this, &ftAreaNormalized::pFloatListener);
 		
@@ -49,12 +50,11 @@ namespace flowTools {
 				normalizedVelocity[i] = 0;
 			}
 		}
-		
 		for (int i=0; i<numChannels; i++) {
 			pVelocity[i] = normalizedVelocity[i];
 		}
 		
-		pMeanMagnitude.set(normalizedMagnitude);
+		pNormalizedMagnitude.set(normalizedMagnitude);
 	}
 }
 

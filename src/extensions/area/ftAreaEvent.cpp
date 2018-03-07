@@ -6,61 +6,62 @@ namespace flowTools {
 		ftAreaNormalized::setup(_width, _height, _name);
 		
 		eventParameters.setName("events");
-		eventParameters.add(pTreshold.set("event threshold", .25, .1, .3));
-		eventParameters.add(pBaseFactor.set("event base", .6, .5, .75));
-		pEvent.resize(4);
+		eventParameters.add(pTreshold.set("threshold", .25, .1, .3));
+		eventParameters.add(pBase.set("base", .6, .5, .75));
+		eventParameters.add(pMagnitudeEvent.set("magnitude", 0, -1, 1));
+		pVelocityEvent.resize(4);
 		for (int i=0; i<4; i++) {
-			eventParameters.add(pEvent[i].set("event " + ofToString(i), 0, -1, 1));
+			eventParameters.add(pVelocityEvent[i].set("velocity " + ofToString(i), false));
 		}
 		parameters.add(eventParameters);
 		pTreshold.addListener(this, &ftAreaEvent::pFloatListener);
-		pBaseFactor.addListener(this, &ftAreaEvent::pFloatListener);
+		pBase.addListener(this, &ftAreaEvent::pFloatListener);
 	}
 	
 	void ftAreaEvent::update(ofTexture& _texture) {
 		ftAreaNormalized::update(_texture);
 		if (!bAllocated) { return; }
-		if (event.size() != numChannels) {
+		if (event.size() != numChannels + 1) {
 			event.clear();
-			event.resize(numChannels, 0);
+			event.resize(numChannels + 1, 0);
 			activeHigh.clear();
-			activeHigh.resize(numChannels, 0);
+			activeHigh.resize(numChannels + 1, 0);
 			inActiveLow.clear();
-			inActiveLow.resize(numChannels, 0);
+			inActiveLow.resize(numChannels + 1, 0);
 			eventActive.clear();
-			eventActive.resize(numChannels, 0);
+			eventActive.resize(numChannels + 1, 0);
 		}
 				
-		for (int i=0; i<numChannels; i++) {
+		for (int i=0; i<numChannels + 1; i++) {
 			event[i] = 0;
-			float nV = fabs(normalizedVelocity[i]);
+			float eV;
+			if (i==0) {eV = normalizedMagnitude; }
+			else { eV = fabs(normalizedVelocity[i - 1]); }
+			
 			if (!eventActive[i]) {
-				if (nV < inActiveLow[i]) { inActiveLow[i] = nV; }
+				if (eV < inActiveLow[i]) { inActiveLow[i] = eV; }
 				
-				if (nV > inActiveLow [i]+ pTreshold.get() && nV > normalizedMagnitude * pBaseFactor.get()) {
+				if (eV > inActiveLow [i] + pTreshold.get() && eV > normalizedMagnitude * pBase.get()) {
 					event[i] = 1;
 					eventActive[i] = true;
-					activeHigh[i] = nV;
+					activeHigh[i] = eV;
 				}
 			}
 			
 			if (eventActive[i]) {
-				if (nV > activeHigh[i]) { activeHigh[i] = nV; }
+				if (eV > activeHigh[i]) { activeHigh[i] = eV; }
 				
-				if (nV < activeHigh[i] * pTreshold.get()) {
+				if (eV < activeHigh[i] * pTreshold.get()) {
 					event[i] = -1;
 					eventActive[i] = false;
-					inActiveLow[i] = nV;
+					inActiveLow[i] = eV;
 				}
 			}
+			
+			if (i==0) { pMagnitudeEvent = (eventActive[i])? true : false; }
+			else { pVelocityEvent[i-1] = (eventActive[i])? true : false; }
 		}
 		
-		for (int i=0; i<numChannels; i++) {
-			pEvent[i] = event[i];
-		}
 		
-		for (int i=numChannels; i<pVelocity.size(); i++) {
-			pEvent[i] = 0;
-		}
 	}
 }

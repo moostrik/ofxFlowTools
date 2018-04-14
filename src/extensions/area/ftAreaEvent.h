@@ -14,13 +14,13 @@ namespace flowTools {
 		void	setup(int _width = 32, int _height = 32, string _name = "");
 		void	update(ofTexture& _texture);
 		
-		float	getMagnitudeEvent()			{ return event[0]; }
-		float 	getMagnitudeEventStart()	{ return event[0] == 1; }
-		float 	getMagnitudeEventEnd()		{ return event[0] == -1; }
-		float 	getMagnitudeEventActive()	{ return eventActive[0]; }
+		float	getMagnitudeEvent()			{ return (bAllocated)? event[0] : 0; }
+		float 	getMagnitudeEventStart()	{ return (bAllocated)? (event[0] == 1) : 0; }
+		float 	getMagnitudeEventEnd()		{ return (bAllocated)? (event[0] == -1) : 0; }
+		float 	getMagnitudeEventActive()	{ return (bAllocated)? eventActive[0] : 0; }
 		
-		float	getVelocityEvent(int _index)		{ if (_index < numChannels) { return event[_index+1]; } else { return 0; } }
-		float	getVelocityEventActive(int _index)	{ if (_index < numChannels) { return eventActive[_index+1]; } else {  return 0; } }
+		float	getVelocityEvent(int _index)		{ if (bAllocated && _index < numChannels) { return event[_index+1]; } else { return 0; } }
+		float	getVelocityEventActive(int _index)	{ if (bAllocated && _index < numChannels) { return eventActive[_index+1]; } else {  return 0; } }
 		float	getVelocityEventStart(int _index)	{ return getVelocityEvent(_index) == 1; }
 		float	getVelocityEventEnd(int _index)		{ return getVelocityEvent(_index) == 0; }
 		

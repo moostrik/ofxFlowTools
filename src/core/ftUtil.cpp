@@ -154,7 +154,7 @@ namespace flowTools {
 		int readFormat, numChannels;
 		
 		switch(format){
-			case GL_R32F: 		readFormat = GL_R, 		numChannels = 1; break;
+			case GL_R32F: 		readFormat = GL_RED, 	numChannels = 1; break; // or is it GL_R
 			case GL_RG32F: 		readFormat = GL_RG, 	numChannels = 2; break;
 			case GL_RGB32F: 	readFormat = GL_RGB, 	numChannels = 3; break;
 			case GL_RGBA32F:	readFormat = GL_RGBA,	numChannels = 4; break;
@@ -178,7 +178,7 @@ namespace flowTools {
 		int readFormat, numChannels;
 		
 		switch(format){
-			case GL_R8: 	readFormat = GL_R, 		numChannels = 1; break;
+			case GL_R8: 	readFormat = GL_RED, 	numChannels = 1; break; // or is it GL_R
 			case GL_RG8: 	readFormat = GL_RG, 	numChannels = 2; break;
 			case GL_RGB8: 	readFormat = GL_RGB, 	numChannels = 3; break;
 			case GL_RGBA8:	readFormat = GL_RGBA,	numChannels = 4; break;

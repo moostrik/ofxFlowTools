@@ -68,12 +68,5 @@ namespace flowTools {
 		static bool isFloat(GLint _format);
 		
 	protected:
-		static ofMesh quad;
-		
-		static void initQuad() {
-			quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
-			quad.getVertices().resize(4);
-			quad.getTexCoords().resize(4);
-		}
 	};
 }

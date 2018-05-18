@@ -40,7 +40,9 @@ namespace flowTools {
 	
 	void ftArea::update(ofTexture& _texture) {
 		int texFormat = ftUtil::getInternalFormat(_texture);
-		if (!bAllocated || texFormat != ftUtil::getInternalFormat(scaleFbo)) { allocate(width, height, ftUtil::getNumChannelsFromInternalFormat(texFormat)); }
+		if (!bAllocated || texFormat != ftUtil::getInternalFormat(scaleFbo)) {
+			allocate(width, height, ftUtil::getNumChannelsFromInternalFormat(texFormat));
+		}
 		
 		if (!bAllocated) {
 			ofLogWarning("ftArea") << "not allocated";
@@ -51,6 +53,7 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::black(scaleFbo);
 		ftUtil::roi(scaleFbo, _texture, roi);
+		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 		ofPopStyle();
 		
 		ftUtil::toPixels(scaleFbo, pixels);
@@ -101,6 +104,10 @@ namespace flowTools {
 	void ftArea::allocate(int _width, int _height, int _numChannels) {
 		width = _width;
 		height = _height;
+		
+		if (scaleFbo.isAllocated() && ftUtil::getFloatInternalFormat(_numChannels) != ftUtil::getInternalFormat(scaleFbo)) {
+			ofLogWarning("ftArea") << "ofFbo cannot change internal format once it is allocated (bug in OF 0.9.8)" ;
+		}
 		
 		if (_numChannels > 0 && _numChannels <= 4 && _width > 0 && _height > 0) { bAllocated = true; }
 		else {

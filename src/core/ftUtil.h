@@ -51,12 +51,15 @@ namespace flowTools {
 		static void toPixels(ofFbo& _fbo, ofPixels& _pixels) { toPixels(_fbo.getTexture(), _pixels); }
 		static void toPixels(ofTexture& _tex, ofPixels& _pixels);
 		
-		// get texture internatFormat
+		// get texture internalFormat
 		static GLint getInternalFormat(ofFbo& _fbo) { return getInternalFormat(_fbo.getTexture()); };
 		static GLint getInternalFormat(ofTexture& _tex) { return _tex.getTextureData().glInternalFormat; };
 		
 		// get number of channels in texture internatFormat
-		static int getNumChannelsFromInternalFormat(GLint format);
+		static int getNumChannelsFromInternalFormat(GLint internalFormat);
+		
+		// get number of channels in texture internatFormat
+		static int getNumChannelsFromFormat(int format);
 		
 		// get unsigned char internatFormat from number of channels;
 		static GLint getUCharInternalFormat(int _numChannels);

@@ -195,30 +195,47 @@ namespace flowTools {
 		glBindTexture(texData.textureTarget, 0);
 	}
 	
-		// get number of channels in texture format
+	// get number of channels in texture internalFormat
 	int ftUtil::getNumChannelsFromInternalFormat(GLint _internalFormat) {
-		int numC = 0;
 		switch(_internalFormat){
 			case GL_R8:
 			case GL_R32F:
-				numC = 1; break;
+				return 1;
 			case GL_RG:
 			case GL_RG8:
 			case GL_RG32F:
-				numC = 2; break;
+				return 2; ;
 			case GL_RGB:
 			case GL_RGB8:
 			case GL_RGB32F:
-				numC = 3; break;
+				return 3;
 			case GL_RGBA:
 			case GL_RGBA8:
 			case GL_RGBA32F:
-				numC = 4; break;
+				return 4;
+			default:
+				ofLogWarning("ftUtil") << "getNumChannelsFromInternalFormat: " << "flowtools does not use internalFormat " << ofToHex(_internalFormat);
+				break;
+				return 0;
+		}
+	}
+	
+	// get number of channels in texture format
+	int ftUtil::getNumChannelsFromFormat(GLint _internalFormat) {
+		switch(_internalFormat){
+			case GL_RED:
+				return 1;
+			case GL_RG:
+				return 2; ;
+			case GL_RGB:
+				return 3;
+			case GL_RGBA:
+				return 4;
 			default:
 				ofLogWarning("ftUtil") << "getNumChannelsFromFormat: " << "flowtools does not use format " << ofToHex(_internalFormat);
 				break;
+				return 0;
 		}
-		return numC;
 	}
 	
 		// get unsigned char format from number of channels;

@@ -1,7 +1,7 @@
-#include "ftCoreTools.h"
+#include "ftCore.h"
 
 //--------------------------------------------------------------
-void ftCoreTools::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _flowHeight){
+void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _flowHeight){
 	
 	densityWidth = _densityWidth;
 	densityHeight = _densityHeight;
@@ -37,12 +37,12 @@ void ftCoreTools::setup(int _densityWidth, int _densityHeight, int _flowWidth, i
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::setupParameters() {
+void ftCore::setupParameters() {
 	
 	parameters.setName("ofxFlowTools");
 	
 	parameters.add(drawMode.set("draw mode", FT_CORE_DRAW_FLUID_DENSITY, FT_CORE_DRAW_FLUID_DENSITY, FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY));
-	drawMode.addListener(this, &ftCoreTools::drawModeSetName);
+	drawMode.addListener(this, &ftCore::drawModeSetName);
 	parameters.add(drawName.set("MODE", "draw name"));
 	
 	parameters.add(opticalFlow.parameters);
@@ -53,39 +53,36 @@ void ftCoreTools::setupParameters() {
 	visualizeParameters.setName("visualizers");
 	visualizeParameters.add(showScalar.set("show scalar", true));
 	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.3, 0.1, 1.0));
-	displayScalarScale.addListener(this, &ftCoreTools::setDisplayScalarScale);
+	displayScalarScale.addListener(this, &ftCore::setDisplayScalarScale);
 	visualizeParameters.add(showField.set("show field", true));
 	visualizeParameters.add(velocityFieldScale.set("field scale", 0.3, 0.1, 1.0));
-	velocityFieldScale.addListener(this, &ftCoreTools::setVelocityFieldScale);
+	velocityFieldScale.addListener(this, &ftCore::setVelocityFieldScale);
 	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
-	temperatureFieldScale.addListener(this, &ftCoreTools::setTemperatureFieldScale);
+	temperatureFieldScale.addListener(this, &ftCore::setTemperatureFieldScale);
 	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.02, 0.0, 0.5));
-	pressureFieldScale.addListener(this, &ftCoreTools::setPressureFieldScale);
+	pressureFieldScale.addListener(this, &ftCore::setPressureFieldScale);
 	visualizeParameters.add(velocityLineSmooth.set("line smooth", false));
-	velocityLineSmooth.addListener(this, &ftCoreTools::setVelocityLineSmooth);
+	velocityLineSmooth.addListener(this, &ftCore::setVelocityLineSmooth);
 	
 	parameters.add(visualizeParameters);
 	
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::setFlowInput(ofTexture &_texture) {
-	opticalFlow.setSource(_texture);
+void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
+	opticalFlow.setSource(_forVelocity);
 	opticalFlow.update();
 	
 	velocityBridge.setSource(opticalFlow.getTexture());
 	velocityBridge.update();
-}
-
-//--------------------------------------------------------------
-void ftCoreTools::setDensityInput(ofTexture &_texture) {
-	densityBridge.setDensity(_texture);
+	
 	densityBridge.setVelocity(opticalFlow.getTexture());
+	densityBridge.setDensity(_forDensity);
 	densityBridge.update();
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::update(float _deltaTime){
+void ftCore::update(float _deltaTime){
 	if (_deltaTime == 0) {
 		deltaTime = ofGetElapsedTimef() - lastTime;
 		lastTime = ofGetElapsedTimef();
@@ -95,7 +92,6 @@ void ftCoreTools::update(float _deltaTime){
 	
 	float dt = min(deltaTime, 1.f / 30.f);
 	
-//	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt * fluidSimulation.getSpeed() * 10);
 	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt * fluidSimulation.getSpeed());
 	fluidSimulation.addDensity(densityBridge.getColorMask(), dt); // why not 1?
 	fluidSimulation.addTemperature(densityBridge.getLuminanceMask());
@@ -104,7 +100,7 @@ void ftCoreTools::update(float _deltaTime){
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::keyPressed(int key){
+void ftCore::keyPressed(int key){
 	switch (key) {
 		case '1': drawMode.set(FT_CORE_DRAW_FLUID_DENSITY); break;
 		case '2': drawMode.set(FT_CORE_DRAW_FLUID_FIELDS); break;
@@ -120,7 +116,7 @@ void ftCoreTools::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawModeSetName(int &_value) {
+void ftCore::drawModeSetName(int &_value) {
 	switch(_value) {
 		case FT_CORE_DRAW_FLUID_DENSITY:		drawName.set("Fluid Density  (1)");	break;
 		case FT_CORE_DRAW_FLUID_FIELDS:			drawName.set("Fluid Fields   (2)");	break;
@@ -138,7 +134,7 @@ void ftCoreTools::drawModeSetName(int &_value) {
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::draw(int _x, int _y, int _w, int _h) {
+void ftCore::draw(int _x, int _y, int _w, int _h) {
 	switch(drawMode.get()) {
 		case FT_CORE_DRAW_FLUID_DENSITY:	drawFluidDensity(_x,_y,_w,_h); break;
 		case FT_CORE_DRAW_FLUID_FIELDS:		drawFluidFields(_x,_y,_w,_h); break;
@@ -156,12 +152,12 @@ void ftCoreTools::draw(int _x, int _y, int _w, int _h) {
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	fluidSimulation.draw(_x, _y, _w, _h, _blendmode);
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidFields(int _x, int _y, int _w, int _h) {
+void ftCore::drawFluidFields(int _x, int _y, int _w, int _h) {
 	pressureField.setPressure(fluidSimulation.getPressure());
 	velocityTemperatureField.setVelocity(fluidSimulation.getVelocity());
 	velocityTemperatureField.setTemperature(fluidSimulation.getTemperature());
@@ -170,7 +166,7 @@ void ftCoreTools::drawFluidFields(int _x, int _y, int _w, int _h) {
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getVelocity());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
@@ -180,7 +176,7 @@ void ftCoreTools::drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode 
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getPressure());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
@@ -190,7 +186,7 @@ void ftCoreTools::drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode 
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getTemperature());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
@@ -200,7 +196,7 @@ void ftCoreTools::drawFluidTemperature(int _x, int _y, int _w, int _h, ofBlendMo
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getDivergence());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
@@ -210,7 +206,7 @@ void ftCoreTools::drawFluidDivergence(int _x, int _y, int _w, int _h, ofBlendMod
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidVorticity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidVorticity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getConfinement());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
@@ -220,7 +216,7 @@ void ftCoreTools::drawFluidVorticity(int _x, int _y, int _w, int _h, ofBlendMode
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidBuoyance(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidBuoyance(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 		displayScalar.setSource(fluidSimulation.getSmokeBuoyancy());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
@@ -230,18 +226,18 @@ void ftCoreTools::drawFluidBuoyance(int _x, int _y, int _w, int _h, ofBlendMode 
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawFluidObstacle(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawFluidObstacle(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	fluidSimulation.getObstacle().draw(_x, _y, _w, _h);
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	densityBridge.draw(_x, _y, _w, _h, _blendmode);
 	
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 //		displayScalarNormalized.setSource(velocityBridge.getTexture());
 //		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
@@ -255,7 +251,7 @@ void ftCoreTools::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmo
 }
 
 //--------------------------------------------------------------
-void ftCoreTools::drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
 //		displayScalarNormalized.setSource(opticalFlow.getTexture());
 //		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }

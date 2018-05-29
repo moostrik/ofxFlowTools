@@ -23,11 +23,11 @@
 	};
 
 
-class ftCoreTools {
+class ftCore {
 public:
 	void	setup(int _densityWidth = 1280, int _densityHeight = 720, int _flowWidth = 0, int _flowHeight = 0 );
-	void	setFlowInput(ofTexture &_texture);
-	void	setDensityInput(ofTexture &_texture);
+	void	setInput(ofTexture &_texture) { setInput(_texture, _texture); }
+	void	setInput(ofTexture &_forVelocity, ofTexture &_forDensity);
 	void	update(float _deltaTime = 0);
 	void	draw(int _x, int _y, int _w, int _h);
 

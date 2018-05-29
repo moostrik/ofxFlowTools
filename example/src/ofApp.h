@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
-#include "ftCoreTools.h"
+#include "ftCore.h"
 #include "ftArea.h"
 
 #define USE_PROGRAMMABLE_GL
@@ -17,7 +17,7 @@ public:
 	void	update();
 	void	draw();
 	
-	ftCoreTools			flowTools;
+	ftCore				flowTools;
 	
 	// GUI
 	ofxPanel			gui;

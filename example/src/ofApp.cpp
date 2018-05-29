@@ -97,8 +97,7 @@ void ofApp::update(){
 		cameraFbo.end();
 		ofPopStyle();
 		
-		flowTools.setFlowInput(cameraFbo.getTexture());
-		flowTools.setDensityInput(cameraFbo.getTexture());
+		flowTools.setInput(cameraFbo.getTexture());
 	}
 	
 	flowTools.update(dt);

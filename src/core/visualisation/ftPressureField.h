@@ -27,26 +27,28 @@ namespace flowTools {
 			parameters.add(pressureScale.set("pressure scale", .45, 0, 1));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height) {
+		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
 			
 			ofPushMatrix();
 			ofPushStyle();
 			
-			ofEnableAlphaBlending();
-			ofDisableAntiAliasing();
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			if (_antiAlias) { ofEnableAntiAliasing; }
+			else { ofDisableAntiAliasing(); }
 			
 			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			float radius = 2.0 / (height) * 0.275;
 			pressureFieldShader.update(fieldVbo, *pressureTexture, pressureScale.get(), radius);
 			
-			ofEnableAntiAliasing();
+			
 			ofPopStyle();
 			ofPopMatrix();
 		}
 		
 		void	setPressure(ofTexture& tex)		{ pressureTexture = &tex; }
-		void	setPressureScale(float _value)	{ pressureScale.set(_value); }
+		void	setScale(float _value)			{ pressureScale.set(_value); }
+		void	setPressureScale(float _value)	{ setScale(_value); }
 		
 		float	getPressureScale()				{ return pressureScale.get(); }
 		int		getWidth()						{ return width; }

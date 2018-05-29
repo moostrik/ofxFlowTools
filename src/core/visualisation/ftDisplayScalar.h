@@ -15,7 +15,7 @@ namespace flowTools {
 			displayScalarBuffer.allocate(width, height);
 			displayScalarBuffer.black();
 			parameters.setName("display scalar");
-			parameters.add(scale.set("scale", .15, 0, 1));
+			parameters.add(scale.set("scale", 1, 0, 10));
 		};
 		
 		void	setSource(ofTexture& tex)	{ floatTexture = &tex; }
@@ -27,10 +27,14 @@ namespace flowTools {
 		
 		ofTexture& getTexture() {return displayScalarBuffer.getTexture();}
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
-		void	draw(int _x, int _y, int _width, int _height) {
+		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_DISABLED) {
 			displayScalarBuffer.black();
 			displayScalarShader.update(displayScalarBuffer, *floatTexture, scale.get());
+			
+			ofPushStyle();
+			ofEnableBlendMode(_blendmode);
 			displayScalarBuffer.draw(_x, _y, _width, _height);
+			ofPopStyle();
 		};
 		
 		ofParameterGroup parameters;

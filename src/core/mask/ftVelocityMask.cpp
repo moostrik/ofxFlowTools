@@ -85,6 +85,13 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
+	void ftVelocityMask::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		colorMaskSwapBuffer.getTexture().draw(_x, _y, _width, _height);
+		ofPopStyle();
+	}
+	
 	void ftVelocityMask::setDensity(ofTexture &tex) {
 		densityTexture = &tex;
 		bDensityTextureSet = true;

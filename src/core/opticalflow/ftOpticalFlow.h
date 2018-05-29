@@ -2,10 +2,11 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ftUtil.h"
 #include "ftSwapBuffer.h"
 #include "ftOpticalFlowShader.h"
 
-#include "ftAddForceShader.h"
+#include "ftLuminanceShader.h"
 
 namespace flowTools {
 	
@@ -20,7 +21,7 @@ namespace flowTools {
 		void		update(ofTexture& _tex) { setSource(_tex); update(); }
 		
 		ofTexture&	getTexture()		{ return getOpticalFlow(); }
-		ofTexture&	getOpticalFlow()	{ if(doCombinedFlow){ return velocityBufferCombined.getTexture(); } else { return velocityBuffer.getTexture();}; }
+		ofTexture&	getOpticalFlow()	{ return velocityBuffer.getTexture(); }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};
@@ -42,35 +43,23 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 	protected:
+		ofParameter<float>	threshold;
 		ofParameter<float>	strength;
 		ofParameter<int>	offset;
 		ofParameter<float>	lambda;
-		ofParameter<float>	threshold;
 		ofParameter<bool>	doInverseX;
 		ofParameter<bool>	doInverseY;
-		ofParameter<bool>	doCombinedFlow;
-		void doCombinedFlowListener(bool& _value) { if(_value) bSourceSet = false; }
 		
 		int		width;
 		int		height;
 		
 		bool	bSourceSet;
 		
-		ftFbo				velocityBuffer;
-		ftFbo				velocityBufferHalf;
-		ftFbo				velocityBufferQuarter;
-		ftFbo				velocityBufferEighth;
-		ftFbo				velocityBufferCombined;
-		ftFbo				decayBuffer;
-		
 		ftSwapBuffer		sourceSwapBuffer;
-		ftSwapBuffer		sourceSwapBufferHalf;
-		ftSwapBuffer		sourceSwapBufferQuarter;
-		ftSwapBuffer		sourceSwapBufferEighth;
-		
+		ofFbo				velocityBuffer;
 		ftOpticalFlowShader opticalFlowShader;
-		
-		ftAddForceShader	addShader;
+		ftLuminanceShader	luminanceShader;
+		ofFbo				luminanceBuffer;
 		
 	};
 }

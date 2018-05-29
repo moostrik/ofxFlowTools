@@ -29,13 +29,14 @@ namespace flowTools {
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height) {
+		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
 			
 			ofPushMatrix();
 			ofPushStyle();
 			
 			ofEnableAlphaBlending();
-			ofDisableAntiAliasing();
+			if (_antiAlias) { ofEnableAntiAliasing; }
+			else { ofDisableAntiAliasing(); }
 			
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
@@ -50,7 +51,6 @@ namespace flowTools {
 				glDisable(GL_LINE_SMOOTH);
 			}
 			
-			ofEnableAntiAliasing();
 			ofPopStyle();
 			ofPopMatrix();
 		}

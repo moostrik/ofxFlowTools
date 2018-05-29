@@ -29,7 +29,7 @@ namespace flowTools {
 		void    update(float _deltaTime = 0);
 		void    draw() { draw(0, 0, densityWidth, densityHeight); }
 		void    draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
-		void    draw(int _x, int _y, float _width, float _height);
+		void    draw(int _x, int _y, float _width, float _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		
 		void	reset();
 		void	resetBackground();

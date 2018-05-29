@@ -57,14 +57,14 @@ namespace flowTools {
 		}
 		
 		void	setTemperature(ofTexture& tex)		{ temperatureTexture = &tex; }
-		void	setTemperatureScale(float _value)	{ temperatureScale.set(_value); }
+		void	setScale(float _value)				{ temperatureScale.set(_value); }
+		void	setTemperatureScale(float _value)	{ setScale(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
 		float	getTemperatureScale()				{ return temperatureScale.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
-		
 		
 		ofParameterGroup	parameters;
 		

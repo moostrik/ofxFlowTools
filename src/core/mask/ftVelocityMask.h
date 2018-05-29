@@ -22,8 +22,7 @@ namespace flowTools {
 		ofTexture& getTexture() {return getColorMask();};
 		ofTexture& getColorMask() {return colorMaskSwapBuffer.getTexture();};
 		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTexture();};
-		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
-		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.getTexture().draw(_x, _y, _width, _height);};
+		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		
 		int		getWidth() {return width;};
 		int		getHeight(){return height;};

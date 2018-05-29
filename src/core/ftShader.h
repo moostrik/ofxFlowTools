@@ -79,6 +79,9 @@ namespace flowTools {
 	protected:
 		
 		void renderFrame(float _width, float _height){
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			
 			quad.setVertex(0, ofVec3f(0,0,0));
 			quad.setVertex(1, ofVec3f(_width,0,0));
 			quad.setVertex(2, ofVec3f(_width,_height,0));
@@ -90,9 +93,14 @@ namespace flowTools {
 			quad.setTexCoord(3, ofVec2f(0,_height));
 			
 			quad.draw();
+			
+			ofPopStyle();
 		}
 		
 		void renderNormalizedFrame(float _width, float _height){
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			
 			quad.setVertex(0, ofVec3f(0,0,0));
 			quad.setVertex(1, ofVec3f(_width,0,0));
 			quad.setVertex(2, ofVec3f(_width,_height,0));
@@ -104,6 +112,8 @@ namespace flowTools {
 			quad.setTexCoord(3, ofVec2f(0,1));
 			
 			quad.draw();
+			
+			ofPopStyle();
 		}
 		
 		ofMesh		quad;

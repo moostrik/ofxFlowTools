@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "ofFbo.h"
+#include "ftSwapBuffer.h"
 
 
 
@@ -11,8 +12,9 @@ namespace flowTools {
 	
 	class ftUtil {
 	public:
-		
+		static void black(ftSwapBuffer &_swapBuffer) { black(*_swapBuffer.getBuffer()); black(*_swapBuffer.getBackBuffer()); }
 		static void black(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
+		static void white(ftSwapBuffer &_swapBuffer) { white(*_swapBuffer.getBuffer()); white(*_swapBuffer.getBackBuffer()); }
 		static void white(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
 		
 //		// draw texture in fbo using dimensions of texture
@@ -52,6 +54,7 @@ namespace flowTools {
 		static void toPixels(ofTexture& _tex, ofPixels& _pixels);
 		
 		// get texture internalFormat
+		static GLint getInternalFormat(ftSwapBuffer& _buffer) { return getInternalFormat(_buffer.getTexture()); };
 		static GLint getInternalFormat(ofFbo& _fbo) { return getInternalFormat(_fbo.getTexture()); };
 		static GLint getInternalFormat(ofTexture& _tex) { return _tex.getTextureData().glInternalFormat; };
 		

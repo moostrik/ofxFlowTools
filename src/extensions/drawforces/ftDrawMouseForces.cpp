@@ -61,6 +61,22 @@ namespace flowTools {
 		}
 	}
 	
+	void ftDrawMouseForces::draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		for(int i=0; i<getNumForces(); i++) {
+			ofEnableBlendMode(_blendmode);
+			if (didChange(i)) {
+				ftDrawForceType dfType = getType(i);
+				if (dfType == FT_DENSITY)
+					getTextureReference(i).draw(_x, _y, _w, _h);
+			}
+		}
+		
+		ofPopStyle();
+		
+	}
+	
 	//--------------------------------------------------------------
 	bool ftDrawMouseForces::didChange(int _index) {
 		if (_index < 0 || _index >= numDrawForces) {

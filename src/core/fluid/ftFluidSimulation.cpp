@@ -390,8 +390,11 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::draw(int x, int y, float _width, float _height){
+	void ftFluidSimulation::draw(int x, int y, float _width, float _height, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
 		densitySwapBuffer.getTexture().draw(x,y,_width,_height);
+		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------

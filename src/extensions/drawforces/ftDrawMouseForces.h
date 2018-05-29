@@ -17,6 +17,8 @@ namespace flowTools {
 		void				update(float _deltaTime);
 		void				reset()  { for (int i=0; i<numDrawForces; i++) drawForces[i].reset(); }
 		
+		void 				draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) ;
+		
 		int					getNumForces() { return numDrawForces; }
 		
 		bool				didChange(int _index);

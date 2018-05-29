@@ -24,20 +24,20 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("velocity field");
-			parameters.add(velocityScale.set("velocity scale", 1, 0, 2));
+			parameters.add(velocityScale.set("velocity scale", 1, 0, 10));
 //			parameters.add(arrowSize.set("arrow size", 4, 1, 8));
 			arrowSize.set("arrow size", 4, 1, 8);
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height) {
+		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
 			
 			ofPushMatrix();
 			ofPushStyle();
 			
-			ofEnableAlphaBlending();
-			ofDisableAntiAliasing();
-			
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			if (_antiAlias) { ofEnableAntiAliasing; }
+			else { ofDisableAntiAliasing(); }
 			
 			if (lineSmooth.get()) {
 				glEnable(GL_LINE_SMOOTH);
@@ -52,7 +52,7 @@ namespace flowTools {
 				glDisable(GL_LINE_SMOOTH);
 			}
 			
-			ofEnableAntiAliasing();
+//			ofEnableAntiAliasing();
 			ofPopStyle();
 			ofPopMatrix();
 		}

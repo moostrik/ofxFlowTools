@@ -31,17 +31,15 @@
 
 #pragma once
 
-#include "ftFluidSimulation.h"
+// CORE
 #include "ftOpticalFlow.h"
-#include "ftVelocityMask.h"
-#include "ftVelocityTrail.h"
-#include "ftParticleFlow.h"
-#include "ftDrawForce.h"
-#include "ftDrawMouseForces.h"
+#include "ftVelocityBridge.h"
+#include "ftDensityBridge.h"
+#include "ftFluidSimulation.h"
 
+// CORE VISUALISATION
 #include "ftDisplayScalar.h"
 #include "ftVelocityField.h"
 #include "ftTemperatureField.h"
 #include "ftPressureField.h"
 #include "ftVTField.h"
-#include "ftVelocitySpheres.h"

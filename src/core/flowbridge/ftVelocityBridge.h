@@ -3,15 +3,15 @@
 
 #include "ofMain.h"
 #include "ftSwapBuffer.h"
-#include "ftVelocityTrailShader.h"
+#include "ftVelocityBridgeShader.h"
 #include "ftGaussianBlurShader.h"
 
 namespace flowTools {
 	
-	class ftVelocityTrail {
+	class ftVelocityBridge {
 	public:
 		
-		ftVelocityTrail();
+		ftVelocityBridge();
 		void		setup(int _width, int _height);
 		void		reset() { trailSwapBuffer.black(); }
 		void		update();
@@ -34,6 +34,7 @@ namespace flowTools {
 		ofParameterGroup	parameters;
 	protected:
 		ofParameter<float>	trailWeight;
+		ofParameter<float>	trailStrength;
 		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
 		
@@ -47,7 +48,7 @@ namespace flowTools {
 		
 		ftSwapBuffer		trailSwapBuffer;
 		
-		ftVelocityTrailShader	trailShader;
+		ftVelocityBridgeShader	trailShader;
 		ftGaussianBlurShader	blurShader;
 		
 	};

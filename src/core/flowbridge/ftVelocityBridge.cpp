@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftVelocityTrail
+ *  ftVelocityBridge
  *
  *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -32,20 +32,21 @@
  *
  *  ************************************************************************************ */
 
-#include "ftVelocityTrail.h"
+#include "ftVelocityBridge.h"
 
 namespace flowTools {
 	
-	ftVelocityTrail::ftVelocityTrail(){
-		parameters.setName("flow trail");
-		parameters.add(trailWeight.set("trail weight", .5, 0, .99));
+	ftVelocityBridge::ftVelocityBridge(){
+		parameters.setName("fluid velocity input");
+		parameters.add(trailStrength.set("strength", 1, .1, 10));
+		parameters.add(trailWeight.set("weight", .5, 0, .99));
 		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 		lastTime = ofGetElapsedTimef();
 	};
 	
-	void	ftVelocityTrail::setup(int _width, int _height){
+	void	ftVelocityBridge::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
@@ -53,17 +54,17 @@ namespace flowTools {
 		trailSwapBuffer.black();
 	};
 	
-	void ftVelocityTrail::update() {
+	void ftVelocityBridge::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-		if (trailWeight.get() > 0.0) {
+//		if (trailWeight.get() > 0.0) {
 			trailSwapBuffer.swap();
-			trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get());
-		}
-		else {
-			trailSwapBuffer.getBuffer()->stretchIntoMe(*velocityTexture);
-		}
+			trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get(), trailStrength.get());
+//		}
+//		else {
+//			trailSwapBuffer.getBuffer()->stretchIntoMe(*velocityTexture);
+//		}
 			
 		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
 			blurShader.update(*trailSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());

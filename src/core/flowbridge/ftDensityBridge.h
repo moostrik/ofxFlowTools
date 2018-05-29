@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ftFbo.h"
-#include "ftVelocityMaskShader.h"
+#include "ftDensityBridgeShader.h"
 #include "ftContrastShader.h"
 #include "ftEOGShader.h"
 #include "ftHSLShader.h"
@@ -11,7 +11,7 @@
 
 namespace flowTools {
 	
-	class ftVelocityMask {
+	class ftDensityBridge {
 	public:
 		
 		void	setup(int _width, int _height);
@@ -50,7 +50,7 @@ namespace flowTools {
 		bool				bVelocityTextureSet;
 		ftSwapBuffer		colorMaskSwapBuffer;
 		ftFbo				luminanceMaskFbo;
-		ftVelocityMaskShader VelocityMaskShader;
+		ftDensityBridgeShader densityBridgeShader;
 		
 		ftEOGShader			EOGShader;
 		ftHSLShader			HSLShader;

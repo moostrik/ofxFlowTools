@@ -2,9 +2,7 @@
 #pragma once
 	
 #include "ofMain.h"
-#include "ofxGui.h"
 #include "ofxFlowTools.h"
-#include "ftArea.h"
 	
 	using namespace flowTools;
 	
@@ -49,8 +47,8 @@ private:
 	int					fieldHeight;
 	
 	ftOpticalFlow		opticalFlow;
-	ftVelocityTrail		velocityTrail;
-	ftVelocityMask		velocityMask;
+	ftVelocityBridge	velocityBridge;
+	ftDensityBridge		densityBridge;
 	ftFluidSimulation	fluidSimulation;
 //	ftParticleFlow		particleFlow;
 	
@@ -68,9 +66,9 @@ private:
 	// Visualisations
 	ofParameterGroup	visualizeParameters;
 	ftDisplayScalar		displayScalar;
-	ftDisplayScalar		displayScalarNormalized;
+//	ftDisplayScalar		displayScalarNormalized;
 	ftVelocityField		velocityField;
-	ftVelocityField		velocityFieldNormalized;
+//	ftVelocityField		velocityFieldNormalized;
 	ftTemperatureField	temperatureField;
 	ftPressureField		pressureField;
 	ftVTField			velocityTemperatureField;

@@ -152,33 +152,33 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 
 		// CLAMP LENGTH
-		if (maxDensity.get() > 0.0) {
-			densitySwapBuffer.swap();
-			clampLengthShader.update(*densitySwapBuffer.getBuffer(),
-									 densitySwapBuffer.getBackTexture(),
-									 maxDensity.get(),
-									 clampForce.get());
-		}
-		if (maxVelocity.get() > 0.0) {
-			velocitySwapBuffer.swap();
-			clampLengthShader.update(*velocitySwapBuffer.getBuffer(),
-									 velocitySwapBuffer.getBackTexture(),
-									 maxVelocity.get(),
-									 clampForce.get());
-		}
-		if (maxTemperature.get() > 0.0) {
-			temperatureSwapBuffer.swap();
-			clampLengthShader.update(*temperatureSwapBuffer.getBuffer(),
-									 temperatureSwapBuffer.getBackTexture(),
-									 maxTemperature.get(),
-									 clampForce.get());
-		}
-		if (maxPressure.get() > 0.0) {
-			pressureSwapBuffer.swap();
-			clampLengthShader.update(*pressureSwapBuffer.getBuffer(),
-									 pressureSwapBuffer.getBackTexture(),
-									 maxPressure.get(),
-									 clampForce.get());		}
+//		if (maxDensity.get() > 0.0) {
+//			densitySwapBuffer.swap();
+//			clampLengthShader.update(*densitySwapBuffer.getBuffer(),
+//									 densitySwapBuffer.getBackTexture(),
+//									 maxDensity.get(),
+//									 clampForce.get());
+//		}
+//		if (maxVelocity.get() > 0.0) {
+//			velocitySwapBuffer.swap();
+//			clampLengthShader.update(*velocitySwapBuffer.getBuffer(),
+//									 velocitySwapBuffer.getBackTexture(),
+//									 maxVelocity.get(),
+//									 clampForce.get());
+//		}
+//		if (maxTemperature.get() > 0.0) {
+//			temperatureSwapBuffer.swap();
+//			clampLengthShader.update(*temperatureSwapBuffer.getBuffer(),
+//									 temperatureSwapBuffer.getBackTexture(),
+//									 maxTemperature.get(),
+//									 clampForce.get());
+//		}
+//		if (maxPressure.get() > 0.0) {
+//			pressureSwapBuffer.swap();
+//			clampLengthShader.update(*pressureSwapBuffer.getBuffer(),
+//									 pressureSwapBuffer.getBackTexture(),
+//									 maxPressure.get(),
+//									 clampForce.get());		}
 		
 		
 		// VORTEX CONFINEMENT

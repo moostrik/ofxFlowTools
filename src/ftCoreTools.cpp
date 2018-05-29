@@ -13,24 +13,22 @@ void ftCoreTools::setup(int _densityWidth, int _densityHeight, int _flowWidth, i
 		
 	// CORE FLOW
 	opticalFlow.setup(flowWidth, flowHeight);
-	velocityTrail.setup(flowWidth, flowHeight);
-	velocityMask.setup(densityWidth, densityHeight);
+	velocityBridge.setup(flowWidth, flowHeight);
+	densityBridge.setup(densityWidth, densityHeight);
 	fluidSimulation.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);
-	displayScalarNormalized.setup(flowWidth, flowHeight);
+//	displayScalarNormalized.setup(flowWidth, flowHeight);
 	velocityField.setup(fieldWidth, fieldHeight);
-	velocityFieldNormalized.setup(flowWidth, flowHeight);
-	velocityFieldNormalized.setScale(10);
+//	velocityFieldNormalized.setup(fieldWidth, fieldHeight);
+//	velocityFieldNormalized.setScale(1);
 	temperatureField.setup(fieldWidth, fieldHeight);
 	pressureField.setup(fieldWidth, fieldHeight);
 	velocityTemperatureField.setup(fieldWidth, fieldHeight);
 	
 	setupParameters();
 	lastTime = ofGetElapsedTimef();
-	
-	
 	
 	flowToolsLogoImage.load("flowtools.png");
 	fluidSimulation.addObstacle(flowToolsLogoImage.getTexture());
@@ -48,8 +46,8 @@ void ftCoreTools::setupParameters() {
 	parameters.add(drawName.set("MODE", "draw name"));
 	
 	parameters.add(opticalFlow.parameters);
-	parameters.add(velocityTrail.parameters);
-	parameters.add(velocityMask.parameters);
+	parameters.add(velocityBridge.parameters);
+	parameters.add(densityBridge.parameters);
 	parameters.add(fluidSimulation.parameters);
 	
 	visualizeParameters.setName("visualizers");
@@ -75,15 +73,15 @@ void ftCoreTools::setFlowInput(ofTexture &_texture) {
 	opticalFlow.setSource(_texture);
 	opticalFlow.update();
 	
-	velocityTrail.setSource(opticalFlow.getTexture());
-	velocityTrail.update();
+	velocityBridge.setSource(opticalFlow.getTexture());
+	velocityBridge.update();
 }
 
 //--------------------------------------------------------------
 void ftCoreTools::setDensityInput(ofTexture &_texture) {
-	velocityMask.setDensity(_texture);
-	velocityMask.setVelocity(opticalFlow.getTexture());
-	velocityMask.update();
+	densityBridge.setDensity(_texture);
+	densityBridge.setVelocity(opticalFlow.getTexture());
+	densityBridge.update();
 }
 
 //--------------------------------------------------------------
@@ -97,9 +95,10 @@ void ftCoreTools::update(float _deltaTime){
 	
 	float dt = min(deltaTime, 1.f / 30.f);
 	
-	fluidSimulation.addVelocity(velocityTrail.getTexture(), dt * fluidSimulation.getSpeed() * 10);
-	fluidSimulation.addDensity(velocityMask.getColorMask(), dt * ofGetFrameRate()); // why not 1?
-	fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
+//	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt * fluidSimulation.getSpeed() * 10);
+	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt * fluidSimulation.getSpeed());
+	fluidSimulation.addDensity(densityBridge.getColorMask(), dt); // why not 1?
+	fluidSimulation.addTemperature(densityBridge.getLuminanceMask());
 	
 	fluidSimulation.update(dt);
 }
@@ -237,26 +236,34 @@ void ftCoreTools::drawFluidObstacle(int _x, int _y, int _w, int _h, ofBlendMode 
 
 //--------------------------------------------------------------
 void ftCoreTools::drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	velocityMask.draw(_x, _y, _w, _h, _blendmode);
+	densityBridge.draw(_x, _y, _w, _h, _blendmode);
 	
 }
 
 //--------------------------------------------------------------
 void ftCoreTools::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
-		displayScalarNormalized.setSource(velocityTrail.getTexture());
-		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
+//		displayScalarNormalized.setSource(velocityBridge.getTexture());
+//		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
+		displayScalar.setSource(velocityBridge.getTexture());
+		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
 	if (showField.get()) {
-		velocityFieldNormalized.setVelocity(velocityTrail.getTexture());
-		velocityFieldNormalized.draw(_x, _y, _w, _h); }
+//		velocityFieldNormalized.setVelocity(velocityBridge.getTexture());
+//		velocityFieldNormalized.draw(_x, _y, _w, _h); }
+		velocityField.setVelocity(velocityBridge.getTexture());
+		velocityField.draw(_x, _y, _w, _h); }
 }
 
 //--------------------------------------------------------------
 void ftCoreTools::drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
-		displayScalarNormalized.setSource(opticalFlow.getTexture());
-		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
+//		displayScalarNormalized.setSource(opticalFlow.getTexture());
+//		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
+		displayScalar.setSource(opticalFlow.getTexture());
+		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
 	if (showField.get()) {
-		velocityFieldNormalized.setVelocity(opticalFlow.getTexture());
-		velocityFieldNormalized.draw(_x, _y, _w, _h); }
-}
+//		velocityFieldNormalized.setVelocity(opticalFlow.getTexture());
+//		velocityFieldNormalized.draw(_x, _y, _w, _h); }
+		velocityField.setVelocity(opticalFlow.getTexture());
+		velocityField.draw(_x, _y, _w, _h); }
+	}

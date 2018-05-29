@@ -7,9 +7,9 @@
 
 namespace flowTools {
 	
-	class ftVelocityMaskShader : public ftShader {
+	class ftDensityBridgeShader : public ftShader {
 	public:
-		ftVelocityMaskShader() {
+		ftDensityBridgeShader() {
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())
@@ -18,9 +18,9 @@ namespace flowTools {
 				glTwo();
 			
 			if (bInitialized)
-				ofLogNotice("ftVelocityMaskShader initialized");
+				ofLogNotice("ftDensityBridgeShader initialized");
 			else
-				ofLogWarning("ftVelocityMaskShader failed to initialize");
+				ofLogWarning("ftDensityBridgeShader failed to initialize");
 			}
 		
 	protected:

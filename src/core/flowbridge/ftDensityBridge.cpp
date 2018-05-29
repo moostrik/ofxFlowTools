@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftVelocityMask
+ *  ftDensityBridge
  *
  *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -30,11 +30,11 @@
  *
  *  ************************************************************************************ */
 
-#include "ftVelocityMask.h"
+#include "ftDensityBridge.h"
 
 namespace flowTools {
 	
-	void ftVelocityMask::setup(int _width, int _height){
+	void ftDensityBridge::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
@@ -47,7 +47,7 @@ namespace flowTools {
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
-		parameters.setName("flow mask");
+		parameters.setName("fluid density input");
 		parameters.add(power.set("mag. power", .5, 0, 1));
 		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
 //		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
@@ -57,16 +57,16 @@ namespace flowTools {
 		
 	};
 	
-	void ftVelocityMask::update() {
+	void ftDensityBridge::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		colorMaskSwapBuffer.black();
 		
 		if (!bVelocityTextureSet || !bDensityTextureSet) {
-			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");
+			ofLogVerbose("ftDensityBridge: velocity or density texture not set, can't update");
 		}
 		else {
-			VelocityMaskShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, power.get(), cutOff.get());
+			densityBridgeShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, power.get(), cutOff.get());
 			colorMaskSwapBuffer.swap();
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),
@@ -85,19 +85,19 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftVelocityMask::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
+	void ftDensityBridge::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
 		colorMaskSwapBuffer.getTexture().draw(_x, _y, _width, _height);
 		ofPopStyle();
 	}
 	
-	void ftVelocityMask::setDensity(ofTexture &tex) {
+	void ftDensityBridge::setDensity(ofTexture &tex) {
 		densityTexture = &tex;
 		bDensityTextureSet = true;
 	}
 	
-	void ftVelocityMask::setVelocity(ofTexture &tex) {
+	void ftDensityBridge::setVelocity(ofTexture &tex) {
 		velocityTexture = &tex;
 		bVelocityTextureSet = true;
 	}

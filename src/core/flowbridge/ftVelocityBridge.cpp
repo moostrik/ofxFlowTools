@@ -37,38 +37,31 @@
 namespace flowTools {
 	
 	ftVelocityBridge::ftVelocityBridge(){
-		parameters.setName("fluid velocity input");
-		parameters.add(trailStrength.set("strength", 1, .1, 10));
-		parameters.add(trailWeight.set("weight", .5, 0, .99));
-		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
+		parameters.setName("velocity input");
+		parameters.add(trailWeight.set("trail weight", .5, 0, .99));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
-		
-		lastTime = ofGetElapsedTimef();
+		parameters.add(strength.set("speed", 1, .1, 100));
 	};
 	
 	void	ftVelocityBridge::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
-		trailSwapBuffer.allocate(width, height, GL_RGB32F);
-		trailSwapBuffer.black();
+		swapBuffer.allocate(width, height, GL_RG32F);
+		swapBuffer.black();
+		multiplyFbo.allocate(width, height, GL_RG32F);
 	};
 	
 	void ftVelocityBridge::update() {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-//		if (trailWeight.get() > 0.0) {
-			trailSwapBuffer.swap();
-			trailShader.update(*trailSwapBuffer.getBuffer(), *velocityTexture, trailSwapBuffer.getBackTexture(), trailWeight.get(), trailStrength.get());
-//		}
-//		else {
-//			trailSwapBuffer.getBuffer()->stretchIntoMe(*velocityTexture);
-//		}
-			
-		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-			blurShader.update(*trailSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
-		}
+		swapBuffer.swap();
+		trailShader.update(*swapBuffer.getBuffer(), *velocityTexture, swapBuffer.getBackTexture(), trailWeight.get());
+		
+		if (blurRadius.get() > 0) { blurShader.update(*swapBuffer.getBuffer(), 1, blurRadius.get()); }
+		
+		multiplyShader.update(multiplyFbo, swapBuffer.getTexture(), strength.get());
 		
 		ofPopStyle();
 	}

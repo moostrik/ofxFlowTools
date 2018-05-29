@@ -47,12 +47,11 @@ namespace flowTools {
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
-		parameters.setName("fluid density input");
+		parameters.setName("density input");
 		parameters.add(power.set("mag. power", .5, 0, 1));
 		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
 //		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
 		parameters.add(saturation.set("color saturation", 1.5, 0, 3));
-		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 	};
@@ -74,8 +73,8 @@ namespace flowTools {
 							 saturation.get(),
 							 1);
 			
-			if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), blurPasses.get(), blurRadius.get());
+			if (blurRadius.get() > 0) {
+				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), 1, blurRadius.get());
 			}
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);

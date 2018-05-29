@@ -77,7 +77,8 @@ namespace flowTools {
 									 uniform sampler2DRect	LastTexture;
 									 uniform float			offset;
 									 uniform float			threshold;
-									 uniform vec2			force;
+									 uniform vec2			invert;
+									 uniform float			power;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -103,14 +104,18 @@ namespace flowTools {
 										 flow.x = scr_dif*(gradx/gradmag);
 										 flow.y = scr_dif*(grady/gradmag);
 										 
+										 flow *= invert;
+										 
 										 // apply treshold & force
 										 float magnitude = length(flow);
 										 magnitude = max(magnitude, threshold);
 										 magnitude -= threshold;
-										 flow = flow * vec2(magnitude) * vec2(force);
+										 magnitude /= (1-threshold);
+										 magnitude = pow(magnitude, power);
+//										 flow = flow * vec2(magnitude) * vec2(force);
 										 
 										 // clamp to 0 - 1;
-										 flow = normalize(flow) * vec2(min(length(flow), 1));
+										 flow = normalize(flow) * vec2(min(magnitude, 1));
 										 
 										 // set color
 										 fragColor = vec4(flow, 0.0, 1.0);
@@ -133,7 +138,8 @@ namespace flowTools {
 			shader.setUniformTexture("LastTexture", _lastTexture, 1);
 			shader.setUniform1f("offset", _offset);
 			shader.setUniform1f("threshold", _threshold);
-			shader.setUniform2f("force", ofVec2f(_force * (_inverseX? -1 : 1), _force  * (_inverseY? -1 : 1)));
+			shader.setUniform2f("invert", ofVec2f(_inverseX? -1 : 1, _inverseY? -1 : 1));
+			shader.setUniform1f("power", _force);
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
 			_buffer.end();

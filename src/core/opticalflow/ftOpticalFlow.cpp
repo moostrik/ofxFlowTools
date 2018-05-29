@@ -40,7 +40,7 @@ namespace flowTools {
 		parameters.setName("optical flow");
 		offset.set("offset", 3, 1, 10);
 		threshold.set("threshold", 0.02, 0, 0.2);
-		strength.set("strength", 3, 1, 5);
+		strength.set("power", 1, .01, 1);
 		doInverseX.set("inverse x", true); // flow velocity is inverse to fluid velocity
 		doInverseY.set("inverse y", true); // flow velocity is inverse to fluid velocity
 		

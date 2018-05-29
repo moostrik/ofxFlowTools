@@ -83,7 +83,7 @@ void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
 
 //--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
-	if (_deltaTime == 0) {
+	if (_deltaTime < 0) {
 		deltaTime = ofGetElapsedTimef() - lastTime;
 		lastTime = ofGetElapsedTimef();
 	} else {
@@ -92,8 +92,8 @@ void ftCore::update(float _deltaTime){
 	
 	float dt = min(deltaTime, 1.f / 30.f);
 	
-	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt * fluidSimulation.getSpeed());
-	fluidSimulation.addDensity(densityBridge.getColorMask(), dt); // why not 1?
+	fluidSimulation.addVelocity(velocityBridge.getTexture(), dt);// * fluidSimulation.getSpeed());
+	fluidSimulation.addDensity(densityBridge.getColorMask(), dt);
 	fluidSimulation.addTemperature(densityBridge.getLuminanceMask());
 	
 	fluidSimulation.update(dt);

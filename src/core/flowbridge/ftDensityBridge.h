@@ -27,9 +27,7 @@ namespace flowTools {
 		int		getWidth() {return width;};
 		int		getHeight(){return height;};
 		
-		int		getBlurPasses() {return blurPasses.get();}
 		float	getBlurRadius() {return blurRadius.get();}
-		void	setBlurPasses(int value) {blurPasses.set(value);}
 		void	setBlurRadius(float value) {blurRadius.set(value);}
 		
 		ofParameterGroup	parameters;
@@ -39,11 +37,11 @@ namespace flowTools {
 		ofParameter<float>	cutOff;
 		ofParameter<float>	saturation;
 		ofParameter<float>	hue;
-		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
 		
 		int					width;
 		int					height;
+		
 		ofTexture*			densityTexture;
 		bool				bDensityTextureSet;
 		ofTexture*			velocityTexture;

@@ -30,12 +30,13 @@ namespace flowTools {
 									 uniform sampler2DRect	LastTexture;
 									 uniform float			offset;
 									 uniform float			threshold;
-									 uniform float			force;
+									 uniform vec2			force;
+									 uniform float			power;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
-										 vec2	off_x = vec2(offset, 0.0);
-										 vec2	off_y = vec2(0.0, offset);
+										 vec2 off_x = vec2(offset, 0.0);
+										 vec2 off_y = vec2(0.0, offset);
 										 
 										 //get the difference
 										 float scr_dif = texture2DRect(CurrTexture, st).x - texture2DRect(LastTexture, st).x;
@@ -46,20 +47,22 @@ namespace flowTools {
 										 gradx += texture2DRect(CurrTexture, st + off_x).x - texture2DRect(CurrTexture, st - off_x).x;
 										 grady =  texture2DRect(LastTexture, st + off_y).x - texture2DRect(LastTexture, st - off_y).x;
 										 grady += texture2DRect(CurrTexture, st + off_y).x - texture2DRect(CurrTexture, st - off_y).x;
-										 gradmag = sqrt((gradx*gradx)+(grady*grady)+vec4(lambda));
+										 gradmag = sqrt((gradx*gradx)+(grady*grady)+lambda);
 										 
 										 vec2 flow;
 										 flow.x = scr_dif*(gradx/gradmag);
 										 flow.y = scr_dif*(grady/gradmag);
 										 
-										 // apply treshold & force
+										 // apply force (to normalize)
+										 flow *= force;
+										 
+										 // apply treshold and clamp
 										 float magnitude = length(flow);
 										 magnitude = max(magnitude, threshold);
 										 magnitude -= threshold;
-										 flow = flow * vec2(magnitude) * vec2(force);
-										 
-										 // clamp to 0 - 1;
-										 flow = normalize(flow) * vec2(min(length(flow), 1));
+										 magnitude /= (1-threshold);
+										 magnitude = pow(magnitude, power);
+										 flow = normalize(flow) * vec2(min(magnitude, 1));
 										 
 										 // set color
 										 gl_FragColor = vec4(flow, 0.0, 1.0);
@@ -104,16 +107,15 @@ namespace flowTools {
 										 flow.x = scr_dif*(gradx/gradmag);
 										 flow.y = scr_dif*(grady/gradmag);
 										 
+										 // apply force (to normalize)
 										 flow *= force;
 										 
-										 // apply treshold & force
+										 // apply treshold and clamp
 										 float magnitude = length(flow);
 										 magnitude = max(magnitude, threshold);
 										 magnitude -= threshold;
 										 magnitude /= (1-threshold);
 										 magnitude = pow(magnitude, power);
-										 
-										 // clamp to 0 - 1;
 										 flow = normalize(flow) * vec2(min(magnitude, 1));
 										 
 										 // set color

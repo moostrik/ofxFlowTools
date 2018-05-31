@@ -37,10 +37,10 @@
 namespace flowTools {
 	
 	ftVelocityBridge::ftVelocityBridge(){
-		parameters.setName("velocity input");
-		parameters.add(trailWeight.set("trail weight", .5, 0, .99));
-		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
-		parameters.add(speed.set("speed", 1, .1, 100));
+		parameters.setName("flow velocity");
+		parameters.add(trailWeight.set("trail", .25, 0, .99));
+		parameters.add(blurRadius.set("blur", 2.5, 0, 10));
+		parameters.add(speed.set("speed", 30, .1, 100));
 	};
 	
 	void	ftVelocityBridge::setup(int _width, int _height){

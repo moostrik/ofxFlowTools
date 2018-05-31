@@ -29,10 +29,9 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect	colorTex;
 									 uniform sampler2DRect	velocityTex;
-									 uniform float power;
-									 uniform float cutOff;
 									 uniform vec2 colorScale;
 									 uniform vec2 velocityScale;
+									 uniform float speed;
 									 
 									 void main(){
 										 vec2 stc = gl_TexCoord[0].xy * colorScale;
@@ -41,9 +40,9 @@ namespace flowTools {
 										 vec4 color = texture2DRect(colorTex, stc);
 										 vec4 vel = texture2DRect(velocityTex, stv);
 										 
-										 float alpha = pow(length(vel.xy), power);
-										 alpha = min(alpha,cutOff);;
-										 color.w = alpha;
+										 float alpha = length(vel.xy); // magnitude of the velocity
+										 color.w = alpha * speed;
+										 color.xyz *= color.w;
 										 
 										 gl_FragColor = color;
 									 }
@@ -59,10 +58,8 @@ namespace flowTools {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect colorTex;
 									 uniform sampler2DRect velocityTex;
-									 
 									 uniform vec2 colorScale;
 									 uniform vec2 velocityScale;
-									 
 									 uniform float speed;
 									 
 									 in vec2 texCoordVarying;

@@ -47,13 +47,12 @@ namespace flowTools {
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
-		parameters.setName("density input");
+		parameters.setName("flow density");
 		parameters.add(trailWeight.set("trail", .5, 0, .99));
-		parameters.add(blurRadius.set("blur", 5, 0, 10));
-		parameters.add(saturation.set("saturation", 1.5, 0, 3));
-		//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
-		parameters.add(speed.set("speed", 1, 0, 100));
-		
+		parameters.add(blurRadius.set("blur", 10, 0, 10));
+		parameters.add(saturation.set("saturation", 1, 0, 3));
+//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
+		parameters.add(speed.set("speed", 8, 0, 20));
 	};
 	
 	void ftDensityBridge::update(float _deltaTime) {
@@ -81,7 +80,6 @@ namespace flowTools {
 							 saturation.get(),
 							 1);
 			
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			luminanceShader.update(luminanceMaskFbo, densitySwapBuffer.getTexture());
 		}
 		

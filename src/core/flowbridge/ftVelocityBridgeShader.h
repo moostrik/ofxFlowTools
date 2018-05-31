@@ -30,8 +30,8 @@ namespace flowTools {
 									 uniform float weight;
 									 
 									 void main(){
-										 vec4 col0 = texture2DRect(tex0, gl_TexCoord[0].st);
-										 vec4 col1 = texture2DRect(tex1, gl_TexCoord[0].st);
+										 vec2 vel0 = texture2DRect(tex0, gl_TexCoord[0].st).xy;
+										 vec2 vel1 = texture2DRect(tex1, gl_TexCoord[0].st).yx;
 										 vec2 vel = vel0 + vel1 * weight;
 										 float magnitude = min(length(vel), 1);
 										 vel = normalize(vel) * magnitude;
@@ -57,7 +57,7 @@ namespace flowTools {
 									 void main(){
 										 vec2 vel0 = texture(tex0, texCoordVarying).xy;
 										 vec2 vel1 = texture(tex1, texCoordVarying).xy;
-										 vec2 vel = vel0 + vel1 * vec2(weight);
+										 vec2 vel = vel0 + vel1 * weight;
 										 float magnitude = min(length(vel), 1);
 										 vel = normalize(vel) * magnitude;
 										 fragColor = vec4(vel, 0.0, 1.0);

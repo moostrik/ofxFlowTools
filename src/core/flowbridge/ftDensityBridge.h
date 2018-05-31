@@ -3,11 +3,9 @@
 #include "ofMain.h"
 #include "ofxFlowTools.h"
 
-#include "ftDensityBridgeShader.h"
 #include "ftVelocityBridgeShader.h"
-#include "ftContrastShader.h"
-#include "ftEOGShader.h"
-#include "ftHSLShader.h"
+#include "ftDensityBridgeShader.h"
+#include "ftHSVShader.h"
 #include "ftGaussianBlurShader.h"
 #include "ftLuminanceShader.h"
 #include "ftMultiplyForceShader.h"
@@ -42,8 +40,8 @@ namespace flowTools {
 		ofParameterGroup		parameters;
 		ofParameter<float>		blurRadius;
 		ofParameter<float>		trailWeight;
-		ofParameter<float>		saturation;
 //		ofParameter<float>		hue;
+		ofParameter<float>		saturation;
 		ofParameter<float>		speed;
 		
 		ofTexture*				velocityTexture;
@@ -58,7 +56,7 @@ namespace flowTools {
 		ftMultiplyForceShader	multiplyShader;
 		ofFbo					drawFbo;
 		
-		ftHSLShader				HSLShader;
+		ftHSVShader				HSVShader;
 		ftGaussianBlurShader 	blurShader;
 		ftLuminanceShader		luminanceShader;
 	};

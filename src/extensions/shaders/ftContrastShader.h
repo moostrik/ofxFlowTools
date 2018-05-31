@@ -31,7 +31,7 @@ namespace flowTools {
 									 void main(){
 										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
 										 float alpha = color.a;
-										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
+										 float p = 0.3 *color.r + 0.59*color.g + 0.11*color.b;
 										 p = p * brightness;
 										 color = vec4(p,p,p,1.0);
 										 color = mix( vec4(1.0,1.0,1.0,1.0),color,contrast);
@@ -58,7 +58,7 @@ namespace flowTools {
 									 void main(){
 										 vec4 color = texture(tex0, texCoordVarying);
 										 float alpha = color.a;
-										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
+										 float p = 0.3 *color.r + 0.59*color.g + 0.11*color.b;
 										 p = p * brightness;
 										 color = vec4(p,p,p,1.0);
 										 color = mix( vec4(1.0,1.0,1.0,1.0),color,contrast);

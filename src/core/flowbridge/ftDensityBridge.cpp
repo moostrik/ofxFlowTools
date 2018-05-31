@@ -54,7 +54,7 @@ namespace flowTools {
 		parameters.add(trailWeight.set("trail", .5, 0, .99));
 		parameters.add(blurRadius.set("blur", 5, 0, 10)); // blur works funky above 5
 		parameters.add(saturation.set("saturation", 1, 0, 3));
-//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
+//		parameters.add(hue.set("hue", 0, -.5, .5));
 		parameters.add(speed.set("speed", 8, 0, 20));
 	};
 	
@@ -77,11 +77,11 @@ namespace flowTools {
 									   velocitySwapBuffer.getTexture(),
 									   speed.get() * _deltaTime);
 			densitySwapBuffer.swap();
-			HSLShader.update(densitySwapBuffer,
+			HSVShader.update(densitySwapBuffer,
 							 densitySwapBuffer.getBackTexture(),
-							 0, // hue.get();
+							 0, // hue.get(),
 							 saturation.get(),
-							 1);
+							 1.0);
 			
 			luminanceShader.update(luminanceMaskFbo, densitySwapBuffer.getTexture());
 		}

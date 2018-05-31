@@ -60,18 +60,11 @@ namespace flowTools {
 									 out vec4 fragColor;
 									 
 									 void main(){
-										 vec2 st = texCoordVarying;
-										 vec2 st2 = st * blendScale;
-										 
-										 vec4 color = texture(baseTex, st) + texture(blendTex, st2) * blendWeight;
-										 fragColor = color ;
-
-										 
-//										 vec2 baseSt = texCoordVarying * baseScale;
-//										 vec2 blendSt = texCoordVarying * blendScale;
-//										 vec4 base = texture(baseTex, baseSt) * baseWeight;
-//										 vec4 blend = texture(blendTex, blendSt) * blendWeight;
-//										 fragColor = base + blend;
+										 vec2 baseSt = texCoordVarying * baseScale;
+										 vec2 blendSt = texCoordVarying * blendScale;
+										 vec4 base = texture(baseTex, baseSt) * baseWeight;
+										 vec4 blend = texture(blendTex, blendSt) * blendWeight;
+										 fragColor = base + blend;
 									 }
 									 );
 			
@@ -86,8 +79,8 @@ namespace flowTools {
 		void update(ofFbo& _buffer, ofTexture& _baseTexture, ofTexture& _blendTexture, float _baseMultiplier, float _blendMultiplier){
 			_buffer.begin();
 			shader.begin();
-			shader.setUniformTexture("_baseTexture", _baseTexture, 0);
-			shader.setUniformTexture("_blendTexture", _blendTexture, 1);
+			shader.setUniformTexture("baseTex", _baseTexture, 0);
+			shader.setUniformTexture("blendTex", _blendTexture, 1);
 			shader.setUniform1f("baseWeight", _baseMultiplier);
 			shader.setUniform1f("blendWeight", _blendMultiplier);
 			shader.setUniform2f("baseScale", _baseTexture.getWidth() / _buffer.getWidth(), _baseTexture.getHeight() / _buffer.getHeight());
@@ -98,4 +91,3 @@ namespace flowTools {
 		}
 	};
 }
-

@@ -10,6 +10,7 @@
 #include "ftGaussianBlurShader.h"
 #include "ftLuminanceShader.h"
 #include "ftUtil.h"
+#include "ftMultiplyForceShader.h"
 
 
 namespace flowTools {
@@ -36,9 +37,9 @@ namespace flowTools {
 		void	setSaturation(float value)		{ saturation.set(value); }
 		void	setSpeed(float value)			{ speed.set(value); }
 		
-		ofParameterGroup		parameters;
-		
+		ofParameterGroup&	getParameters() 	{ return parameters; }
 	protected:
+		ofParameterGroup		parameters;
 		ofParameter<float>		blurRadius;
 		ofParameter<float>		trailWeight;
 		ofParameter<float>		saturation;
@@ -54,11 +55,12 @@ namespace flowTools {
 		ftSwapBuffer			densitySwapBuffer;
 		ftDensityBridgeShader 	densityBridgeShader;
 		ftFbo					luminanceMaskFbo;
+		ftMultiplyForceShader	multiplyShader;
+		ofFbo					drawFbo;
 		
 		ftHSLShader				HSLShader;
 		ftGaussianBlurShader 	blurShader;
 		ftLuminanceShader		luminanceShader;
-		
 	};
 }
 

@@ -12,10 +12,10 @@ namespace flowTools {
 	
 	class ftUtil {
 	public:
-		static void black(ftSwapBuffer &_swapBuffer) { black(*_swapBuffer.getBuffer()); black(*_swapBuffer.getBackBuffer()); }
-		static void black(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
-		static void white(ftSwapBuffer &_swapBuffer) { white(*_swapBuffer.getBuffer()); white(*_swapBuffer.getBackBuffer()); }
-		static void white(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
+		static void zero(ftSwapBuffer &_swapBuffer) { zero(*_swapBuffer.getBuffer()); zero(*_swapBuffer.getBackBuffer()); }
+		static void zero(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
+		static void one(ftSwapBuffer &_swapBuffer) { one(*_swapBuffer.getBuffer()); one(*_swapBuffer.getBackBuffer()); }
+		static void one(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
 		
 //		// draw texture in fbo using dimensions of texture
 //		static void draw(ofFbo& _dst, ofFbo& _src) { draw(_dst, _src.getTexture()); };

@@ -51,7 +51,7 @@ namespace flowTools {
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::black(scaleFbo);
+		ftUtil::zero(scaleFbo);
 		ftUtil::roi(scaleFbo, _texture, roi);
 		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 		ofPopStyle();
@@ -120,7 +120,7 @@ namespace flowTools {
 		numChannels = _numChannels;
 		
 		scaleFbo.allocate(width, height, ftUtil::getFloatInternalFormat(_numChannels));
-		ftUtil::black(scaleFbo);
+		ftUtil::zero(scaleFbo);
 		
 		direction.clear();
 		direction.resize(numChannels, 0);

@@ -39,8 +39,10 @@ namespace flowTools {
 		void		setInverseX(bool value)		{doInverseX.set(value);}
 		void		setInverseY(bool value)		{doInverseY.set(value);}
 		
-		ofParameterGroup	parameters;
+		ofParameterGroup&	getParameters() 	{ return parameters; }
+		
 	protected:
+		ofParameterGroup	parameters;
 		ofParameter<float>	threshold;
 		ofParameter<int>	offset;
 		ofParameter<float>	strength;

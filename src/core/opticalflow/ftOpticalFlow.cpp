@@ -58,13 +58,13 @@ namespace flowTools {
 		height = _height;
 		
 		sourceSwapBuffer.allocate(width, height, GL_R8);
-		ftUtil::black(sourceSwapBuffer);
+		ftUtil::zero(sourceSwapBuffer);
 		
 		velocityBuffer.allocate(width, height, GL_RG32F);
-		ftUtil::black(velocityBuffer);
+		ftUtil::zero(velocityBuffer);
 		
 		luminanceBuffer.allocate(width, height, GL_R8);
-		ftUtil::black(luminanceBuffer);
+		ftUtil::zero(luminanceBuffer);
 			
 		bSourceSet = false;
 	};

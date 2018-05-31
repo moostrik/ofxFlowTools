@@ -97,9 +97,9 @@ namespace flowTools {
 		void	setDensityFromVorticity(float value) {densityFromVorticity.set(value);}
 		void	setDensityFromPressure(float value) {densityFromPressure.set(value);}
 		
-		ofParameterGroup	parameters;
-		
+		ofParameterGroup&	getParameters() 	{ return parameters; }
 	protected:
+		ofParameterGroup	parameters;
 		ofParameter<bool>	doReset;
 		ofParameter<float>	speed;
 		ofParameter<float>	cellSize;

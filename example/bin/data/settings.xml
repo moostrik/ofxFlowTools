@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>40</average_FPS>
-	<minimum_FPS>29.4015</minimum_FPS>
+	<average_FPS>60</average_FPS>
+	<minimum_FPS>46.7613</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
-	<draw_camera__C_>0</draw_camera__C_>
+	<draw_camera__C_>1</draw_camera__C_>
 	<ofxFlowTools>
-		<draw_mode>0</draw_mode>
-		<MODE>Fluid Density  (1)</MODE>
+		<draw_mode>11</draw_mode>
+		<MODE>Optical Flow   (9)</MODE>
 		<optical_flow>
 			<threshold>0.05</threshold>
 			<force>2.99042</force>
@@ -68,5 +68,16 @@
 			<pressure_scale>0.02</pressure_scale>
 			<line_smooth>0</line_smooth>
 		</visualizers>
+		<flow_velocity>
+			<trail>0.25</trail>
+			<blur>2.5</blur>
+			<speed>50</speed>
+		</flow_velocity>
+		<flow_density>
+			<trail>0.5</trail>
+			<blur>5</blur>
+			<saturation>1</saturation>
+			<speed>8</speed>
+		</flow_density>
 	</ofxFlowTools>
 </settings>

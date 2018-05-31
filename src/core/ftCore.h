@@ -30,7 +30,14 @@ public:
 	void	setInput(ofTexture &_forVelocity, ofTexture &_forDensity);
 	void	update(float _deltaTime = -1);
 	void	draw(int _x, int _y, int _w, int _h);
+	void	keyPressed(int key);
 
+	ofParameterGroup& getParameters() 				{ return parameters; }
+	ofParameterGroup& getCoreParameters() 			{ return flowCoreParameters; }
+	ofParameterGroup& getOpticalFlowParameters() 	{ return opticalFlow.getParameters(); }
+	ofParameterGroup& getVelocityBridgeParameters() { return velocityBridge.getParameters(); }
+	ofParameterGroup& getDensityBridgeParameters() 	{ return densityBridge.getParameters(); }
+	ofParameterGroup& getFluidSimulationParameters(){ return fluidSimulation.getParameters(); }
 	
 	ofParameterGroup	parameters;
 private:
@@ -64,6 +71,7 @@ private:
 //	ftDrawMouseForces	mouseForces;
 	
 	// Visualisations
+	ofParameterGroup	flowCoreParameters;
 	ofParameterGroup	visualizeParameters;
 	ftDisplayScalar		displayScalar;
 //	ftDisplayScalar		displayScalarNormalized;
@@ -88,7 +96,6 @@ private:
 	
 	// Parameters
 	void				setupParameters();
-	void				keyPressed(int key);
 	
 	// DRAW
 	ofParameter<int>	drawMode;

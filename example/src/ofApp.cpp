@@ -46,7 +46,15 @@ void ofApp::setupGui() {
 	
 	bool s = true;
 	switchGuiColor(s = !s);
-	gui.add(flowTools.parameters);
+	gui.add(flowTools.getCoreParameters());
+	switchGuiColor(s = !s);
+	gui.add(flowTools.getOpticalFlowParameters());
+	switchGuiColor(s = !s);
+	gui.add(flowTools.getVelocityBridgeParameters());
+	switchGuiColor(s = !s);
+	gui.add(flowTools.getDensityBridgeParameters());
+	switchGuiColor(s = !s);
+	gui.add(flowTools.getFluidSimulationParameters());
 	
 //	gui.add(area.parameters);
 //	gui.add(velocityDots.parameters);
@@ -120,6 +128,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	flowTools.keyPressed(key);
+	
 	switch (key) {
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;

@@ -36,20 +36,23 @@ namespace flowTools {
 	
 	void ftDensityBridge::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight){
 		velocitySwapBuffer.allocate(_flowWidth, _flowHeight, GL_RG32F);
-		ftUtil::black(velocitySwapBuffer);
+		ftUtil::zero(velocitySwapBuffer);
 		
 		densitySwapBuffer.allocate(_densityWidth, _densityHeight, GL_RGBA32F);
-		ftUtil::black(densitySwapBuffer);
+		ftUtil::zero(densitySwapBuffer);
 		
 		luminanceMaskFbo.allocate(_densityWidth, _densityHeight, GL_R32F);
-		ftUtil::black(luminanceMaskFbo);
+		ftUtil::zero(luminanceMaskFbo);
+		
+		drawFbo.allocate(_densityWidth, _densityHeight, GL_RGBA);
+		ftUtil::zero(drawFbo);
 		
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
 		parameters.setName("flow density");
 		parameters.add(trailWeight.set("trail", .5, 0, .99));
-		parameters.add(blurRadius.set("blur", 10, 0, 10));
+		parameters.add(blurRadius.set("blur", 5, 0, 10)); // blur works funky above 5
 		parameters.add(saturation.set("saturation", 1, 0, 3));
 //		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
 		parameters.add(speed.set("speed", 8, 0, 20));
@@ -58,7 +61,7 @@ namespace flowTools {
 	void ftDensityBridge::update(float _deltaTime) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::black(densitySwapBuffer);
+		ftUtil::zero(densitySwapBuffer);
 		
 		if (!bVelocityTextureSet || !bDensityTextureSet) {
 			ofLogVerbose("ftDensityBridge: velocity or density texture not set, can't update");
@@ -89,7 +92,8 @@ namespace flowTools {
 	void ftDensityBridge::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		densitySwapBuffer.getTexture().draw(_x, _y, _width, _height);
+		multiplyShader.update(drawFbo, densitySwapBuffer.getTexture(), ofGetFrameRate());
+		drawFbo.getTexture().draw(_x, _y, _width, _height);
 		ofPopStyle();
 	}
 	

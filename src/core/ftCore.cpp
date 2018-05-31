@@ -40,32 +40,35 @@ void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _f
 void ftCore::setupParameters() {
 	
 	parameters.setName("ofxFlowTools");
-	
 	parameters.add(drawMode.set("draw mode", FT_CORE_DRAW_FLUID_DENSITY, FT_CORE_DRAW_FLUID_DENSITY, FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY));
-	drawMode.addListener(this, &ftCore::drawModeSetName);
-	parameters.add(drawName.set("MODE", "draw name"));
+	parameters.add(drawName.set("MODE", "Fluid Density"));
 	
-	parameters.add(opticalFlow.parameters);
-	parameters.add(velocityBridge.parameters);
-	parameters.add(densityBridge.parameters);
-	parameters.add(fluidSimulation.parameters);
+	flowCoreParameters.setName("flow core");
+	flowCoreParameters.add(drawMode);
+	flowCoreParameters.add(drawName);
 	
-	visualizeParameters.setName("visualizers");
+	visualizeParameters.setName("flow visualisation");
 	visualizeParameters.add(showScalar.set("show scalar", true));
 	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.3, 0.1, 1.0));
-	displayScalarScale.addListener(this, &ftCore::setDisplayScalarScale);
 	visualizeParameters.add(showField.set("show field", true));
 	visualizeParameters.add(velocityFieldScale.set("field scale", 0.3, 0.1, 1.0));
-	velocityFieldScale.addListener(this, &ftCore::setVelocityFieldScale);
-	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
-	temperatureFieldScale.addListener(this, &ftCore::setTemperatureFieldScale);
-	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.02, 0.0, 0.5));
-	pressureFieldScale.addListener(this, &ftCore::setPressureFieldScale);
+//	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
+//	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.02, 0.0, 0.5));
 	visualizeParameters.add(velocityLineSmooth.set("line smooth", false));
-	velocityLineSmooth.addListener(this, &ftCore::setVelocityLineSmooth);
-	
+	flowCoreParameters.add(visualizeParameters);
 	parameters.add(visualizeParameters);
 	
+	drawMode.addListener(this, &ftCore::drawModeSetName);
+	displayScalarScale.addListener(this, &ftCore::setDisplayScalarScale);
+	velocityFieldScale.addListener(this, &ftCore::setVelocityFieldScale);
+	temperatureFieldScale.addListener(this, &ftCore::setTemperatureFieldScale);
+	pressureFieldScale.addListener(this, &ftCore::setPressureFieldScale);
+	velocityLineSmooth.addListener(this, &ftCore::setVelocityLineSmooth);
+	
+	parameters.add(opticalFlow.getParameters());
+	parameters.add(velocityBridge.getParameters());
+	parameters.add(densityBridge.getParameters());
+	parameters.add(fluidSimulation.getParameters());
 }
 
 //--------------------------------------------------------------
@@ -129,8 +132,8 @@ void ftCore::drawModeSetName(int &_value) {
 		case FT_CORE_DRAW_FLUID_VORTICITY:		drawName.set("Fluid Vorticity   ");	break;
 		case FT_CORE_DRAW_FLUID_BUOYANCY:		drawName.set("Fluid Buoyancy    ");	break;
 		case FT_CORE_DRAW_FLUID_OBSTACLE:		drawName.set("Fluid Obstacle (6)");	break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:	drawName.set("Flow Mask      (7)");	break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL:	drawName.set("Flow Trail     (8)");	break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:	drawName.set("Flow Density   (7)");	break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL:	drawName.set("Flow Velocity  (8)");	break;
 		case FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY:drawName.set("Optical Flow   (9)");	break;
 	}
 }

@@ -31,8 +31,9 @@ namespace flowTools {
 		void	setBlurRadius(float value)		{ blurRadius.set(value); }
 		void	setSpeed(float value)			{ speed.set(value); }
 		
-		ofParameterGroup	parameters;
+		ofParameterGroup&	getParameters() 	{ return parameters; }
 	protected:
+		ofParameterGroup	parameters;
 		ofParameter<float>	trailWeight;
 		ofParameter<float>	blurRadius;
 		ofParameter<float>	speed;

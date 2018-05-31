@@ -40,7 +40,7 @@ namespace flowTools {
 		parameters.setName("velocity input");
 		parameters.add(trailWeight.set("trail weight", .5, 0, .99));
 		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
-		parameters.add(strength.set("speed", 1, .1, 100));
+		parameters.add(speed.set("speed", 1, .1, 100));
 	};
 	
 	void	ftVelocityBridge::setup(int _width, int _height){
@@ -69,7 +69,7 @@ namespace flowTools {
 		
 		if (blurRadius.get() > 0) { blurShader.update(*swapBuffer.getBuffer(), 1, blurRadius.get()); }
 		
-		multiplyShader.update(multiplyFbo, swapBuffer.getTexture(), strength.get() * _deltaTime );
+		multiplyShader.update(multiplyFbo, swapBuffer.getTexture(), speed.get() * _deltaTime );
 		
 		ofPopStyle();
 		}

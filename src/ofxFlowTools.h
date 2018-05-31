@@ -32,6 +32,7 @@
 #pragma once
 
 // CORE
+#include "ftUtil.h"
 #include "ftOpticalFlow.h"
 #include "ftVelocityBridge.h"
 #include "ftDensityBridge.h"

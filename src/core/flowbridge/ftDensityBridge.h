@@ -3,59 +3,61 @@
 #include "ofMain.h"
 #include "ftFbo.h"
 #include "ftDensityBridgeShader.h"
+#include "ftVelocityBridgeShader.h"
 #include "ftContrastShader.h"
 #include "ftEOGShader.h"
 #include "ftHSLShader.h"
 #include "ftGaussianBlurShader.h"
 #include "ftLuminanceShader.h"
+#include "ftUtil.h"
+
 
 namespace flowTools {
 	
 	class ftDensityBridge {
 	public:
 		
-		void	setup(int _width, int _height);
+		void	setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void	setDensity(ofTexture& tex);
 		void	setVelocity(ofTexture& tex);
 		void	update(float _deltaTime);
-		
-		ofTexture& getTexture() {return getColorMask();};
-		ofTexture& getColorMask() {return colorMaskSwapBuffer.getTexture();};
-		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTexture();};
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		
-		int		getWidth() {return width;};
-		int		getHeight(){return height;};
+		ofTexture& getTexture() 				{ return densitySwapBuffer.getTexture(); };
+		ofTexture& getLuminanceMask()			{ return luminanceMaskFbo.getTexture(); };
 		
-		float	getBlurRadius() {return blurRadius.get();}
-		void	setBlurRadius(float value) {blurRadius.set(value);}
+		float	getTrailWeight()				{ return trailWeight.get(); }
+		float	getBlurRadius()					{ return blurRadius.get(); }
+		float	getSaturation()					{ return saturation.get(); }
+		float	getSpeed()						{ return speed.get(); }
 		
-		ofParameterGroup	parameters;
+		void	setTrailWeight(float value)		{ trailWeight.set(value); }
+		void	setBlurRadius(float value)		{ blurRadius.set(value); }
+		void	setSaturation(float value)		{ saturation.set(value); }
+		void	setSpeed(float value)			{ speed.set(value); }
+		
+		ofParameterGroup		parameters;
 		
 	protected:
-		ofParameter<float>	power;
-		ofParameter<float>	cutOff;
-		ofParameter<float>	saturation;
-		ofParameter<float>	hue;
-		ofParameter<float>	strength;
-		ofParameter<float>	blurRadius;
+		ofParameter<float>		blurRadius;
+		ofParameter<float>		trailWeight;
+		ofParameter<float>		saturation;
+//		ofParameter<float>		hue;
+		ofParameter<float>		speed;
 		
-		int					width;
-		int					height;
+		ofTexture*				velocityTexture;
+		bool					bVelocityTextureSet;
+		ftSwapBuffer			velocitySwapBuffer;
+		ftVelocityBridgeShader	velocityBridgeShader;
+		ofTexture*				densityTexture;
+		bool					bDensityTextureSet;
+		ftSwapBuffer			densitySwapBuffer;
+		ftDensityBridgeShader 	densityBridgeShader;
+		ftFbo					luminanceMaskFbo;
 		
-		ofTexture*			densityTexture;
-		bool				bDensityTextureSet;
-		ofTexture*			velocityTexture;
-		bool				bVelocityTextureSet;
-		ftSwapBuffer		colorMaskSwapBuffer;
-		ftFbo				luminanceMaskFbo;
-		ftDensityBridgeShader densityBridgeShader;
-		
-		ftEOGShader			EOGShader;
-		ftHSLShader			HSLShader;
-		ftContrastShader	contrastShader;
-		ftGaussianBlurShader gaussianBlurShader;
-		ftLuminanceShader	luminanceShader;
+		ftHSLShader				HSLShader;
+		ftGaussianBlurShader 	blurShader;
+		ftLuminanceShader		luminanceShader;
 		
 	};
 }

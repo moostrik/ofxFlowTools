@@ -34,57 +34,55 @@
 
 namespace flowTools {
 	
-	void ftDensityBridge::setup(int _width, int _height){
-		width = _width;
-		height = _height;
+	void ftDensityBridge::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight){
+		velocitySwapBuffer.allocate(_flowWidth, _flowHeight, GL_RG32F);
+		ftUtil::black(velocitySwapBuffer);
 		
-		colorMaskSwapBuffer.allocate(width, height, GL_RGBA32F);
-		colorMaskSwapBuffer.black();
+		densitySwapBuffer.allocate(_densityWidth, _densityHeight, GL_RGBA32F);
+		ftUtil::black(densitySwapBuffer);
 		
-		luminanceMaskFbo.allocate(width, height, GL_R32F);
-		luminanceMaskFbo.black();
+		luminanceMaskFbo.allocate(_densityWidth, _densityHeight, GL_R32F);
+		ftUtil::black(luminanceMaskFbo);
 		
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
 		parameters.setName("density input");
-//		parameters.add(power.set("mag. power", .5, 0, 1));
-//		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
+		parameters.add(trailWeight.set("trail", .5, 0, .99));
+		parameters.add(blurRadius.set("blur", 5, 0, 10));
+		parameters.add(saturation.set("saturation", 1.5, 0, 3));
 		//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
-		parameters.add(strength.set("speed", 1, 0, 100));
-		parameters.add(saturation.set("color saturation", 1.5, 0, 3));
-//		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
+		parameters.add(speed.set("speed", 1, 0, 100));
 		
 	};
 	
 	void ftDensityBridge::update(float _deltaTime) {
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		colorMaskSwapBuffer.black();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::black(densitySwapBuffer);
 		
 		if (!bVelocityTextureSet || !bDensityTextureSet) {
 			ofLogVerbose("ftDensityBridge: velocity or density texture not set, can't update");
 		}
 		else {
-			densityBridgeShader.update(*colorMaskSwapBuffer.getBuffer(),
+			velocitySwapBuffer.swap();
+			velocityBridgeShader.update(*velocitySwapBuffer.getBuffer(), *velocityTexture, velocitySwapBuffer.getBackTexture(), trailWeight.get());
+			if (blurRadius.get() > 0) { blurShader.update(*velocitySwapBuffer.getBuffer(), 1, blurRadius.get()); }
+			
+			densitySwapBuffer.swap();
+			densityBridgeShader.update(*densitySwapBuffer.getBuffer(),
 									   *densityTexture,
-									   *velocityTexture,
-									   power.get(),
-									   strength.get() * _deltaTime,
-									   cutOff.get());
-			colorMaskSwapBuffer.swap();
-			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
-							 colorMaskSwapBuffer.getBackTexture(),
-							 hue.get(),
+									   velocitySwapBuffer.getTexture(),
+									   speed.get() * _deltaTime);
+			densitySwapBuffer.swap();
+			HSLShader.update(*densitySwapBuffer.getBuffer(),
+							 densitySwapBuffer.getBackTexture(),
+							 0, // hue.get();
 							 saturation.get(),
 							 1);
 			
-//			if (blurRadius.get() > 0) {
-//				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), 3, blurRadius.get());
-//			}
-			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.getTexture());
+			luminanceShader.update(luminanceMaskFbo, densitySwapBuffer.getTexture());
 		}
 		
 		ofPopStyle();
@@ -93,7 +91,7 @@ namespace flowTools {
 	void ftDensityBridge::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		colorMaskSwapBuffer.getTexture().draw(_x, _y, _width, _height);
+		densitySwapBuffer.getTexture().draw(_x, _y, _width, _height);
 		ofPopStyle();
 	}
 	

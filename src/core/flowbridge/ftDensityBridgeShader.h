@@ -63,9 +63,7 @@ namespace flowTools {
 									 uniform vec2 colorScale;
 									 uniform vec2 velocityScale;
 									 
-									 uniform float power;
-									 uniform float cutOff;
-									 uniform float strength;
+									 uniform float speed;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -78,7 +76,7 @@ namespace flowTools {
 										 vec4 vel = texture(velocityTex, stv);
 										 
 										 float alpha = length(vel.xy); // magnitude of the velocity
-										 color.w = alpha * strength;
+										 color.w = alpha * speed;
 										 color.xyz *= color.w;
 										 
 										 fragColor = color;
@@ -93,16 +91,14 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _densityTexture, ofTexture& _velocityTexture, float _power, float _strength, float _cutOff = 1.0){
+		void update(ofFbo& _buffer, ofTexture& _densityTexture, ofTexture& _velocityTexture, float _speed){
 			_buffer.begin();
 			shader.begin();
 			shader.setUniformTexture("colorTex", _densityTexture, 0);
 			shader.setUniformTexture("velocityTex", _velocityTexture, 1);
-			shader.setUniform1f("power", _power);
-			shader.setUniform1f("strength", _strength);
-			shader.setUniform1f("cutOff", _cutOff);
 			shader.setUniform2f("colorScale", _densityTexture.getWidth() / _buffer.getWidth() , _densityTexture.getHeight() / _buffer.getHeight() );
 			shader.setUniform2f("velocityScale", _velocityTexture.getWidth() / _buffer.getWidth() , _velocityTexture.getHeight() / _buffer.getHeight());
+			shader.setUniform1f("speed", _speed);
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
 			_buffer.end();

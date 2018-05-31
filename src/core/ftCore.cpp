@@ -14,7 +14,7 @@ void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _f
 	// CORE FLOW
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridge.setup(flowWidth, flowHeight);
-	densityBridge.setup(densityWidth, densityHeight);
+	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidSimulation.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	// VISUALIZATION
@@ -75,7 +75,7 @@ void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
 	
 	velocityBridge.setSource(opticalFlow.getTexture());
 	
-//	densityBridge.setVelocity(opticalFlow.getTexture());
+	densityBridge.setVelocity(opticalFlow.getTexture());
 	densityBridge.setDensity(_forDensity);
 }
 
@@ -92,11 +92,10 @@ void ftCore::update(float _deltaTime){
 	float dt = 1.0 / ofGetFrameRate();
 	
 	velocityBridge.update(dt);
-	densityBridge.setVelocity(velocityBridge.getTexture());
 	densityBridge.update(dt);
 	
-	fluidSimulation.addVelocity(velocityBridge.getTexture());// * fluidSimulation.getSpeed());
-	fluidSimulation.addDensity(densityBridge.getColorMask());
+	fluidSimulation.addVelocity(velocityBridge.getTexture());
+	fluidSimulation.addDensity(densityBridge.getTexture());
 	fluidSimulation.addTemperature(densityBridge.getLuminanceMask());
 	
 	fluidSimulation.update(dt);

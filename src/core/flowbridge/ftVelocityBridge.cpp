@@ -48,7 +48,7 @@ namespace flowTools {
 		height = _height;
 		
 		swapBuffer.allocate(width, height, GL_RG32F);
-		swapBuffer.black();
+		ftUtil::zero(swapBuffer);
 		multiplyFbo.allocate(width, height, GL_RG32F);
 		
 		bSourceSet = false;

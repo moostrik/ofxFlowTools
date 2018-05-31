@@ -84,31 +84,31 @@ namespace flowTools {
 		int	internalFormatObstacle = GL_R8;
 			
 		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
-		densitySwapBuffer.black();
+		ftUtil::zero(densitySwapBuffer);
 		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
-		velocitySwapBuffer.black();
+		ftUtil::zero(velocitySwapBuffer);
 		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		//		temperatureSwapBuffer.clear(ambientTemperature.get());
-		temperatureSwapBuffer.black();
+		ftUtil::zero(temperatureSwapBuffer);
 		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
 		
 		obstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		obstacleBuffer.black();
+		ftUtil::zero(obstacleBuffer);
 		createEdgeImage(obstacleBuffer);
 		
 		divergenceBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		smokeBuoyancyBuffer.black();
+		ftUtil::zero(smokeBuoyancyBuffer);
 		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		addPressureBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
 		addPressureBufferDidChange = false;
 		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		addTempObstacleBuffer.black();
+		ftUtil::zero(addTempObstacleBuffer);
 		addTempObstacleBufferDidChange = false;
 		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		combinedObstacleBuffer.black();
-		combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
+		ftUtil::zero(combinedObstacleBuffer);
+		ftUtil::stretch(combinedObstacleBuffer, obstacleBuffer);
 		
 		deltaTime = 0;
 		lastTime = 0;
@@ -137,16 +137,16 @@ namespace flowTools {
 		// OBSTACLE BUFFER;
 		
 		if (combinedObstacleNeedsToBeCleaned) {
-			combinedObstacleBuffer.black();
-			combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
+			ftUtil::zero(combinedObstacleBuffer);
+			ftUtil::stretch(combinedObstacleBuffer, obstacleBuffer);
 			combinedObstacleNeedsToBeCleaned = false;
 		}
 		
 		if (addTempObstacleBufferDidChange) {
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
-			combinedObstacleBuffer.stretchIntoMe(addTempObstacleBuffer);
+			ftUtil::stretch(combinedObstacleBuffer, addTempObstacleBuffer);
 			addTempObstacleBufferDidChange = false;
-			addTempObstacleBuffer.black();
+			ftUtil::zero(addTempObstacleBuffer);
 			combinedObstacleNeedsToBeCleaned = true;
 		}
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -263,17 +263,17 @@ namespace flowTools {
 //	
 //		}
 //		else
-			temperatureSwapBuffer.black();
+			ftUtil::zero(temperatureSwapBuffer);
 		
 		
 		// DIVERGENCE AND JACOBI
-		divergenceBuffer.black();
+		ftUtil::zero(divergenceBuffer);
 		divergenceShader.update(divergenceBuffer,
 								velocitySwapBuffer.getTexture(),
 								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
-		pressureSwapBuffer.black();
+		ftUtil::zero(pressureSwapBuffer);
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureSwapBuffer.swap();
 			jacobiShader.update(*pressureSwapBuffer.getBuffer(),
@@ -361,7 +361,7 @@ namespace flowTools {
 	void ftFluidSimulation::addPressure(ofTexture& _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		addPressureBuffer.black();
+		ftUtil::zero(addPressureBuffer);
 		
 		addShader.update(addPressureBuffer,
 						 addPressureBuffer.getTexture(), // dubious
@@ -376,7 +376,7 @@ namespace flowTools {
 	void ftFluidSimulation::addObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		obstacleBuffer.stretchIntoMe(_obstacleTexture);
+		ftUtil::stretch(obstacleBuffer, _obstacleTexture);
 		ofPopStyle();
 	}
 	
@@ -384,7 +384,7 @@ namespace flowTools {
 	void ftFluidSimulation::addTempObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		addTempObstacleBuffer.stretchIntoMe(_obstacleTexture);
+		ftUtil::stretch(addTempObstacleBuffer, _obstacleTexture);
 		addTempObstacleBufferDidChange = true;
 		ofPopStyle();
 	}
@@ -400,22 +400,22 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftFluidSimulation::reset() {
 		
-		densitySwapBuffer.black();
-		velocitySwapBuffer.black();
-		pressureSwapBuffer.black();
-		temperatureSwapBuffer.black();
+		ftUtil::zero(densitySwapBuffer);
+		ftUtil::zero(velocitySwapBuffer);
+		ftUtil::zero(pressureSwapBuffer);
+		ftUtil::zero(temperatureSwapBuffer);
 		createEdgeImage(obstacleBuffer);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::resetBackground() {
-		obstacleBuffer.black();
+		ftUtil::zero(obstacleBuffer);
 		createEdgeImage(obstacleBuffer);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
-	void ftFluidSimulation::createEdgeImage(ftFbo &buffer, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
+	void ftFluidSimulation::createEdgeImage(ofFbo &buffer, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		buffer.begin();

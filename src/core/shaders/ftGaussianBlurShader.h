@@ -4,6 +4,7 @@
 #include "ofMain.h"
 #include "ftShader.h"
 #include "ftSwapBuffer.h"
+#include "ftUtil.h"
 
 namespace flowTools {
 
@@ -29,7 +30,7 @@ namespace flowTools {
 														  uniform sampler2DRect backbuffer;
 														  uniform float radius;
 														  
-														  const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
+														  const float total = (1. + *8. + 28. + 56.) * 2. + 70.;
 														  
 														  void main(void) {
 															  vec2 st = gl_TexCoord[0].st;
@@ -161,15 +162,15 @@ namespace flowTools {
 		void update(ofFbo& _buffer, int _passes, int _radius){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
-				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
+				ftUtil::getInternalFormat(pingPong) != ftUtil::getInternalFormat(_buffer)) {
 				
 				allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
 				
 			}
 			
 			
-			pingPong.black();
-			pingPong.getBuffer()->stretchIntoMe(_buffer);
+			ftUtil::zero(pingPong);
+			ftUtil::stretch(*pingPong.getBuffer(), _buffer);
 			pingPong.swap();
 	
 			for(int i = 0; i < _passes; i++) {
@@ -196,7 +197,7 @@ namespace flowTools {
 		
 		void allocate(int _width, int _height, int _internalFormat = GL_RGBA){
 			pingPong.allocate( _width, _height, _internalFormat);
-			pingPong.black();
+			ftUtil::zero(pingPong);
 		}
 		
 		ofShader    blurShader[2];

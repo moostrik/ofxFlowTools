@@ -2,8 +2,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
 #include "ftSwapBuffer.h"
+#include "ftUtil.h"
 
 #include "ftDiffuseShader.h"
 #include "ftAdvectShader.h"
@@ -143,16 +143,16 @@ namespace flowTools {
 		ftSwapBuffer	velocitySwapBuffer;
 		ftSwapBuffer	temperatureSwapBuffer;
 		ftSwapBuffer	pressureSwapBuffer;
-		ftFbo			divergenceBuffer;
-		ftFbo			smokeBuoyancyBuffer;
-		ftFbo			vorticityFirstPassBuffer;
-		ftFbo			vorticitySecondPassBuffer;
-		ftFbo			addPressureBuffer;
+		ofFbo			divergenceBuffer;
+		ofFbo			smokeBuoyancyBuffer;
+		ofFbo			vorticityFirstPassBuffer;
+		ofFbo			vorticitySecondPassBuffer;
+		ofFbo			addPressureBuffer;
 		bool			addPressureBufferDidChange;
-		ftFbo			obstacleBuffer;
-		ftFbo			addTempObstacleBuffer;
+		ofFbo			obstacleBuffer;
+		ofFbo			addTempObstacleBuffer;
 		bool			addTempObstacleBufferDidChange;
-		ftFbo			combinedObstacleBuffer;
+		ofFbo			combinedObstacleBuffer;
 		bool			combinedObstacleNeedsToBeCleaned;
 		
 		int simulationWidth;
@@ -163,7 +163,7 @@ namespace flowTools {
 		float lastTime;
 		float timeStep;
 		
-		void createEdgeImage(ftFbo& buffer, int _edgeWidth = 1, ofColor _backgroundColor = ofColor(255, 255, 255, 255), ofColor _edgeColor = ofColor(0, 0, 0, 255));
+		void createEdgeImage(ofFbo& buffer, int _edgeWidth = 1, ofColor _backgroundColor = ofColor(255, 255, 255, 255), ofColor _edgeColor = ofColor(0, 0, 0, 255));
 
 	};
 }

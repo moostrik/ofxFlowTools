@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
+#include "ftUtil.h"
 #include "ftDrawForceShader.h"
 
 
@@ -67,7 +67,7 @@ namespace flowTools {
 		
 		ftDrawForceShader	drawForceShader;
 		
-		ftFbo				forceBuffer;
+		ofFbo				forceBuffer;
 		
 		
 		ofParameter<ofFloatColor>	density;

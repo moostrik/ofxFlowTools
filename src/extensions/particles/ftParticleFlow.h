@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
+#include "ftUtil.h"
 #include "ftSwapBuffer.h"
 #include "ftInitPositionShader.h"
 #include "ftDrawParticleShader.h"
@@ -89,11 +89,11 @@ namespace flowTools {
 		ftSwapBuffer			particlePositionSwapBuffer;
 		ftSwapBuffer			particleColorSwapBuffer;
 		
-		ftFbo					particleHomeBuffer;
+		ofFbo					particleHomeBuffer;
 		ftSwapBuffer			flowVelocitySwapBuffer;
 		ftSwapBuffer			fluidVelocitySwapBuffer;
 		ftSwapBuffer			densitySwapBuffer;
-		ftFbo					obstacleBuffer;
+		ofFbo					obstacleBuffer;
 		
 		ftInitPositionShader	initPositionShader;
 		ftDrawParticleShader	drawParticleShader;

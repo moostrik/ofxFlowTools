@@ -2,7 +2,6 @@
 #pragma once
 #include "ofMain.h"
 #include "ftShader.h"
-#include "ftFbo.h"
 
 namespace flowTools {
 	

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
 #include "ftDensityBridgeShader.h"
 #include "ftVelocityBridgeShader.h"
 #include "ftContrastShader.h"
@@ -54,7 +53,7 @@ namespace flowTools {
 		bool					bDensityTextureSet;
 		ftSwapBuffer			densitySwapBuffer;
 		ftDensityBridgeShader 	densityBridgeShader;
-		ftFbo					luminanceMaskFbo;
+		ofFbo					luminanceMaskFbo;
 		ftMultiplyForceShader	multiplyShader;
 		ofFbo					drawFbo;
 		

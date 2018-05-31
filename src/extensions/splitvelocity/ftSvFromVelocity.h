@@ -13,7 +13,7 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			splitVelocityBuffer.allocate(width, height, GL_RGBA32F);
-			splitVelocityBuffer.black();
+			ftUtil::zero(splitVelocityBuffer);
 		};
 		
 		void	setSource(ofTexture& tex)	{ floatTexture = &tex; } // this is ambigue
@@ -21,7 +21,7 @@ namespace flowTools {
 		void	update() {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			splitVelocityBuffer.black();
+			ftUtil::zero(splitVelocityBuffer);
 			svFromVelocityShader.update(splitVelocityBuffer, *floatTexture, 1.0);
 			ofPopStyle();
 		}
@@ -34,7 +34,7 @@ namespace flowTools {
 	protected:
 		int		width;
 		int		height;
-		ftFbo	splitVelocityBuffer;
+		ofFbo	splitVelocityBuffer;
 		ofTexture* floatTexture;
 		ftSvFromVelocityShader svFromVelocityShader;
 		

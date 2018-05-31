@@ -162,7 +162,7 @@ namespace flowTools {
 	public:
 		
 		
-		void update(ftFbo& _buffer, ofTexture _texture, float _decay, int _radius = 5, int _passes = 1){
+		void update(ofFbo& _buffer, ofTexture _texture, float _decay, int _radius = 5, int _passes = 1){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
 				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
@@ -206,7 +206,7 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void reset() { pingPong.black(); }
+		void reset() { ftUtil::zero(pingPong); }
 		
 	protected:
 		

@@ -20,7 +20,7 @@ void ofApp::setup(){
 	simpleCam.setup(camWidth, camWidth, true);
 	didCamUpdate = false;
 	cameraFbo.allocate(camWidth, camWidth);
-	cameraFbo.black();
+	ftUtil::zero(cameraFbo);
 	
 	// GUI
 	setupGui();

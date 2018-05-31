@@ -54,7 +54,7 @@ namespace flowTools {
 		isTemporary.set(_isTemporary);
 			
 		forceBuffer.allocate(width, height, GL_RGBA32F);
-		forceBuffer.black();
+		ftUtil::zero(forceBuffer);
 			
 		density = ofFloatColor(1,1,1,1);
 		velocity = ofVec2f(0,0);
@@ -72,7 +72,7 @@ namespace flowTools {
 		absoluteRadius = radius * width;
 		
 		if (isTemporary && !forceApplied) // && allow for multiple temporal forces
-			forceBuffer.black();
+			ftUtil::zero(forceBuffer);
 		
 //		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 		
@@ -167,7 +167,7 @@ namespace flowTools {
 	}
 	
 	void ftDrawForce::reset() {
-		forceBuffer.black();
+		ftUtil::zero(forceBuffer);
 		forceChanged = false;
 		forceApplied = true;
 	}

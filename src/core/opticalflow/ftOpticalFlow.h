@@ -15,7 +15,7 @@ namespace flowTools {
 		
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
-		void		reset() { sourceSwapBuffer.black(); bSourceSet = false; }
+		void		reset() { ftUtil::zero(sourceSwapBuffer); bSourceSet = false; }
 		void		setSource(ofTexture& _tex);
 		void		update();
 		void		update(ofTexture& _tex) { setSource(_tex); update(); }

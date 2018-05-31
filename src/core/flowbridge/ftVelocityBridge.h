@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ftUtil.h"
 #include "ftSwapBuffer.h"
 #include "ftVelocityBridgeShader.h"
 #include "ftGaussianBlurShader.h"
@@ -14,7 +15,7 @@ namespace flowTools {
 		
 		ftVelocityBridge();
 		void	setup(int _width, int _height);
-		void	reset() { swapBuffer.black(); }
+		void	reset() { ftUtil::zero(swapBuffer); }
 		void	update(float _deltaTime);
 		void	setSource(ofTexture& _tex);
 		

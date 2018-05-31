@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ftUtil.h"
 #include "ftDisplayScalarShader.h"
 
 namespace flowTools {
@@ -13,7 +14,7 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			displayScalarBuffer.allocate(width, height);
-			displayScalarBuffer.black();
+			ftUtil::zero(displayScalarBuffer);
 			parameters.setName("display scalar");
 			parameters.add(scale.set("scale", 1, 0, 10));
 		};
@@ -28,7 +29,7 @@ namespace flowTools {
 		ofTexture& getTexture() {return displayScalarBuffer.getTexture();}
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_DISABLED) {
-			displayScalarBuffer.black();
+			ftUtil::zero(displayScalarBuffer);
 			displayScalarShader.update(displayScalarBuffer, *floatTexture, scale.get());
 			
 			ofPushStyle();
@@ -42,7 +43,7 @@ namespace flowTools {
 		ofParameter<float>	scale;
 		int		width;
 		int		height;
-		ftFbo	displayScalarBuffer;
+		ofFbo	displayScalarBuffer;
 		ofTexture* floatTexture;
 		ftDisplayScalarShader displayScalarShader;
 		

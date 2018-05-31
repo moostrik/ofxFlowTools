@@ -38,7 +38,7 @@ public:
 	int 				camWidth, camHeight;
 	ofVideoGrabber		simpleCam;
 	bool				didCamUpdate;
-	ftFbo				cameraFbo;
+	ofFbo				cameraFbo;
 	ofParameter<bool>	doFlipCamera;
 	ofParameter<bool>	doDrawCamera;
 	

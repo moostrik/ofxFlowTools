@@ -73,23 +73,23 @@ namespace flowTools {
 		
 		
 		particleAgeLifespanMassSizeSwapBuffer.allocate(numParticlesX, numParticlesY, GL_RGBA32F, GL_NEAREST);
-		particleAgeLifespanMassSizeSwapBuffer.black();
+		ftUtil::zero(particleAgeLifespanMassSizeSwapBuffer);
 		particlePositionSwapBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity, GL_NEAREST);
-		particlePositionSwapBuffer.black();
+		ftUtil::zero(particlePositionSwapBuffer);
 		initPositionShader.update(*particlePositionSwapBuffer.getBuffer());
 		particlePositionSwapBuffer.swap();
 		particleHomeBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
-		particleHomeBuffer.black();
+		ftUtil::zero(particleHomeBuffer);
 		initPositionShader.update(particleHomeBuffer);
 		
 		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		fluidVelocitySwapBuffer.black();
+		ftUtil::zero(fluidVelocitySwapBuffer);
 		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		flowVelocitySwapBuffer.black();
+		ftUtil::zero(flowVelocitySwapBuffer);
 		densitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
-		densitySwapBuffer.black();
+		ftUtil::zero(densitySwapBuffer);
 		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB); // GL_RED??
-		obstacleBuffer.black();
+		ftUtil::zero(obstacleBuffer);
 		
 		ofPopStyle();
 		
@@ -136,10 +136,10 @@ namespace flowTools {
 			
 			ofPopStyle();
 	 
-			flowVelocitySwapBuffer.black();
-			fluidVelocitySwapBuffer.black();
-			densitySwapBuffer.black();
-			obstacleBuffer.black();
+			ftUtil::zero(flowVelocitySwapBuffer);
+			ftUtil::zero(fluidVelocitySwapBuffer);
+			ftUtil::zero(densitySwapBuffer);
+			ftUtil::zero(obstacleBuffer);
 		}
 	}
 	
@@ -180,7 +180,7 @@ namespace flowTools {
 	void ftParticleFlow::setObstacle (ofTexture& _tex) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		obstacleBuffer.black();
+		ftUtil::zero(obstacleBuffer);
 		obstacleBuffer.begin();
 		_tex.draw(0,0,simulationWidth,simulationHeight);
 		obstacleBuffer.end();

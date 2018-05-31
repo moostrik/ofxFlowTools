@@ -47,8 +47,8 @@ namespace flowTools {
 									 }
 									 
 									 void main(){
-										 vec4 color = texture(tex0, gl_TexCoord[0].st);
-										 vec3 hsv = rgb2hsv(tex.rgb);
+										 vec4 color = texture2DRect(tex0, gl_TexCoord[0].st);
+										 vec3 hsv = rgb2hsv(color.rgb);
 										 hsv.x += hue;
 										 hsv.y *= saturation;
 										 vec3 result = hsv2rgb(hsv);

@@ -30,7 +30,7 @@ namespace flowTools {
 														  uniform sampler2DRect backbuffer;
 														  uniform float radius;
 														  
-														  const float total = (1. + *8. + 28. + 56.) * 2. + 70.;
+														  const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
 														  
 														  void main(void) {
 															  vec2 st = gl_TexCoord[0].st;

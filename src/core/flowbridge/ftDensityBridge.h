@@ -17,7 +17,7 @@ namespace flowTools {
 		void	setup(int _width, int _height);
 		void	setDensity(ofTexture& tex);
 		void	setVelocity(ofTexture& tex);
-		void	update();
+		void	update(float _deltaTime);
 		
 		ofTexture& getTexture() {return getColorMask();};
 		ofTexture& getColorMask() {return colorMaskSwapBuffer.getTexture();};
@@ -37,6 +37,7 @@ namespace flowTools {
 		ofParameter<float>	cutOff;
 		ofParameter<float>	saturation;
 		ofParameter<float>	hue;
+		ofParameter<float>	strength;
 		ofParameter<float>	blurRadius;
 		
 		int					width;

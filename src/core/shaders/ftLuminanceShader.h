@@ -28,7 +28,7 @@ namespace flowTools {
 									 
 									 void main(){
 										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
-										 float p = 0.3 *color.g + 0.59*color.r + 0.11*color.b;
+										 float p = 0.3 *color.r + 0.59*color.g + 0.11*color.b;
 										 color.xyz = vec3(p,p,p);
 										 gl_FragColor =  color;
 									 }

@@ -40,13 +40,15 @@ namespace flowTools {
 		parameters.setName("optical flow");
 		offset.set("offset", 3, 1, 10);
 		threshold.set("threshold", 0.02, 0, 0.2);
-		strength.set("power", 1, .01, 1);
-		doInverseX.set("inverse x", true); // flow velocity is inverse to fluid velocity
-		doInverseY.set("inverse y", true); // flow velocity is inverse to fluid velocity
+		strength.set("force", 3, .1, 10);			// 3 is best for normalization
+		power.set("power", 1.0, .01, 1);			// 
+		doInverseX.set("inverse x", true); 			// flow velocity is inverse to fluid velocity
+		doInverseY.set("inverse y", true); 			// flow velocity is inverse to fluid velocity
 		
 //		parameters.add(offset);
 		parameters.add(threshold);
-		parameters.add(strength);
+//		parameters.add(strength);
+//		parameters.add(power);
 //		parameters.add(doInverseX);
 //		parameters.add(doInverseY);
 	};
@@ -77,7 +79,8 @@ namespace flowTools {
 								 sourceSwapBuffer.getBackTexture(),
 								 offset.get(),
 								 threshold.get(),
-								 strength.get(),
+								 ofDefaultVec2(strength.get()),
+								 power.get(),
 								 doInverseX.get(),
 								 doInverseY.get());
 		

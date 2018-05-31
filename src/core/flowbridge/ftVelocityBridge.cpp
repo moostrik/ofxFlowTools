@@ -50,9 +50,17 @@ namespace flowTools {
 		swapBuffer.allocate(width, height, GL_RG32F);
 		swapBuffer.black();
 		multiplyFbo.allocate(width, height, GL_RG32F);
+		
+		bSourceSet = false;
 	};
 	
-	void ftVelocityBridge::update() {
+	void ftVelocityBridge::setSource(ofTexture& _tex) {
+		velocityTexture = &_tex;
+		bSourceSet = true;
+	}
+	
+	void ftVelocityBridge::update(float _deltaTime) {
+		if (bSourceSet) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
@@ -61,9 +69,10 @@ namespace flowTools {
 		
 		if (blurRadius.get() > 0) { blurShader.update(*swapBuffer.getBuffer(), 1, blurRadius.get()); }
 		
-		multiplyShader.update(multiplyFbo, swapBuffer.getTexture(), strength.get());
+		multiplyShader.update(multiplyFbo, swapBuffer.getTexture(), strength.get() * _deltaTime );
 		
 		ofPopStyle();
+		}
 	}
 	
 	

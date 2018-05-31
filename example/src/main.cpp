@@ -8,8 +8,7 @@ int main( ){
 #ifdef USE_PROGRAMMABLE_GL
     windowSettings.setGLVersion(4, 1);
 #endif
-    windowSettings.width = 1280;
-    windowSettings.height = 720;
+	windowSettings.setSize(1280, 720);
     windowSettings.windowMode = OF_WINDOW;
     
     ofCreateWindow(windowSettings);

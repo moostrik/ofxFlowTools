@@ -29,14 +29,12 @@ namespace flowTools {
 		
 		float		getStrength()	{return strength.get();}
 		int			getOffset()		{return offset.get();}
-		float		getLambda()		{return lambda.get();}
 		float		getThreshold()	{return threshold.get();}
 		bool		getInverseX()	{return doInverseX.get();}
 		bool		getInverseY()	{return doInverseY.get();}
 		
 		void		setStrength(float value)	{strength.set(value);}
 		void		setOffset(int value)		{offset.set(value);}
-		void		setLambda(float value)		{lambda.set(value);}
 		void		setThreshold(float value)	{threshold.set(value);}
 		void		setInverseX(bool value)		{doInverseX.set(value);}
 		void		setInverseY(bool value)		{doInverseY.set(value);}
@@ -44,9 +42,9 @@ namespace flowTools {
 		ofParameterGroup	parameters;
 	protected:
 		ofParameter<float>	threshold;
-		ofParameter<float>	strength;
 		ofParameter<int>	offset;
-		ofParameter<float>	lambda;
+		ofParameter<float>	strength;
+		ofParameter<float>	power;
 		ofParameter<bool>	doInverseX;
 		ofParameter<bool>	doInverseY;
 		

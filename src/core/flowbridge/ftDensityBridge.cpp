@@ -38,25 +38,26 @@ namespace flowTools {
 		width = _width;
 		height = _height;
 		
-		colorMaskSwapBuffer.allocate(width, height, GL_RGBA);
+		colorMaskSwapBuffer.allocate(width, height, GL_RGBA32F);
 		colorMaskSwapBuffer.black();
 		
-		luminanceMaskFbo.allocate(width, height, GL_RGB);
+		luminanceMaskFbo.allocate(width, height, GL_R32F);
 		luminanceMaskFbo.black();
 		
 		bVelocityTextureSet = false;
 		bDensityTextureSet = false;
 		
 		parameters.setName("density input");
-		parameters.add(power.set("mag. power", .5, 0, 1));
-		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
-//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
+//		parameters.add(power.set("mag. power", .5, 0, 1));
+//		parameters.add(cutOff.set("mag. cutOff", 1, 0, 1));
+		//		parameters.add(hue.set("hue", 0, -1, 1)); // does not work properly (does in the minus range?)
+		parameters.add(strength.set("speed", 1, 0, 100));
 		parameters.add(saturation.set("color saturation", 1.5, 0, 3));
-		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
+//		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 	};
 	
-	void ftDensityBridge::update() {
+	void ftDensityBridge::update(float _deltaTime) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		colorMaskSwapBuffer.black();
@@ -65,7 +66,12 @@ namespace flowTools {
 			ofLogVerbose("ftDensityBridge: velocity or density texture not set, can't update");
 		}
 		else {
-			densityBridgeShader.update(*colorMaskSwapBuffer.getBuffer(), *densityTexture, *velocityTexture, power.get(), cutOff.get());
+			densityBridgeShader.update(*colorMaskSwapBuffer.getBuffer(),
+									   *densityTexture,
+									   *velocityTexture,
+									   power.get(),
+									   strength.get() * _deltaTime,
+									   cutOff.get());
 			colorMaskSwapBuffer.swap();
 			HSLShader.update(*colorMaskSwapBuffer.getBuffer(),
 							 colorMaskSwapBuffer.getBackTexture(),
@@ -73,9 +79,9 @@ namespace flowTools {
 							 saturation.get(),
 							 1);
 			
-			if (blurRadius.get() > 0) {
-				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), 1, blurRadius.get());
-			}
+//			if (blurRadius.get() > 0) {
+//				gaussianBlurShader.update(*colorMaskSwapBuffer.getBuffer(), 3, blurRadius.get());
+//			}
 			
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.getTexture());

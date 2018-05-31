@@ -77,7 +77,7 @@ namespace flowTools {
 									 uniform sampler2DRect	LastTexture;
 									 uniform float			offset;
 									 uniform float			threshold;
-									 uniform vec2			invert;
+									 uniform vec2			force;
 									 uniform float			power;
 									 
 									 in vec2 texCoordVarying;
@@ -104,7 +104,7 @@ namespace flowTools {
 										 flow.x = scr_dif*(gradx/gradmag);
 										 flow.y = scr_dif*(grady/gradmag);
 										 
-										 flow *= invert;
+										 flow *= force;
 										 
 										 // apply treshold & force
 										 float magnitude = length(flow);
@@ -112,7 +112,6 @@ namespace flowTools {
 										 magnitude -= threshold;
 										 magnitude /= (1-threshold);
 										 magnitude = pow(magnitude, power);
-//										 flow = flow * vec2(magnitude) * vec2(force);
 										 
 										 // clamp to 0 - 1;
 										 flow = normalize(flow) * vec2(min(magnitude, 1));
@@ -130,7 +129,7 @@ namespace flowTools {
 		}
 		
 	public:	
-		void update(ofFbo& _buffer, ofTexture& _currentTexture, ofTexture& _lastTexture, float _offset = 3.0, float _threshold = 0.04, float _force = 1.0, bool _inverseX = 0, bool _inverseY = 0){
+		void update(ofFbo& _buffer, ofTexture& _currentTexture, ofTexture& _lastTexture, float _offset = 3.0, float _threshold = 0.04, ofDefaultVec2 _force = ofDefaultVec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
 			
 			_buffer.begin();
 			shader.begin();
@@ -138,8 +137,8 @@ namespace flowTools {
 			shader.setUniformTexture("LastTexture", _lastTexture, 1);
 			shader.setUniform1f("offset", _offset);
 			shader.setUniform1f("threshold", _threshold);
-			shader.setUniform2f("invert", ofVec2f(_inverseX? -1 : 1, _inverseY? -1 : 1));
-			shader.setUniform1f("power", _force);
+			shader.setUniform2f("force", _force * ofDefaultVec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
+			shader.setUniform1f("power", _power);
 			renderFrame(_buffer.getWidth(), _buffer.getHeight());
 			shader.end();
 			_buffer.end();

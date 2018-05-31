@@ -15,8 +15,8 @@ namespace flowTools {
 		ftVelocityBridge();
 		void		setup(int _width, int _height);
 		void		reset() { swapBuffer.black(); }
-		void		update();
-		void		setSource(ofTexture& _tex) { velocityTexture = &_tex; }
+		void		update(float _deltaTime);
+		void		setSource(ofTexture& _tex);
 		
 		ofTexture&	getTexture()		{ return multiplyFbo.getTexture(); }
 		
@@ -41,6 +41,7 @@ namespace flowTools {
 		int			height;
 		
 		ofTexture*				velocityTexture;
+		bool					bSourceSet;
 		ftSwapBuffer			swapBuffer;
 		ftVelocityBridgeShader	trailShader;
 		ftGaussianBlurShader	blurShader;

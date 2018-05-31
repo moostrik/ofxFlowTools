@@ -116,7 +116,7 @@ namespace flowTools {
 		ofParameter<float>	smokeSigma;
 		ofParameter<float>	smokeWeight;
 		ofParameter<float>	ambientTemperature;
-		ofParameter<ofVec2f>gravity;
+		ofParameter<ofDefaultVec2>gravity;
 		ofParameterGroup	maxValues;
 		ofParameter<float>	clampForce;
 		ofParameter<float>	maxVelocity;

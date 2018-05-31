@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ftUtil.h"
-#include "ftSwapBuffer.h"
+#include "ftSwapFbo.h"
 #include "ftInitPositionShader.h"
 #include "ftDrawParticleShader.h"
 #include "ftMoveParticleShader.h"
@@ -85,14 +85,14 @@ namespace flowTools {
 		
 		ofVboMesh	particleMesh;
 		
-		ftSwapBuffer			particleAgeLifespanMassSizeSwapBuffer;
-		ftSwapBuffer			particlePositionSwapBuffer;
-		ftSwapBuffer			particleColorSwapBuffer;
+		ftSwapFbo				particleAgeLifespanMassSizeSwapBuffer;
+		ftSwapFbo				particlePositionSwapBuffer;
+		ftSwapFbo				particleColorSwapBuffer;
 		
 		ofFbo					particleHomeBuffer;
-		ftSwapBuffer			flowVelocitySwapBuffer;
-		ftSwapBuffer			fluidVelocitySwapBuffer;
-		ftSwapBuffer			densitySwapBuffer;
+		ftSwapFbo				flowVelocitySwapBuffer;
+		ftSwapFbo				fluidVelocitySwapBuffer;
+		ftSwapFbo				densitySwapBuffer;
 		ofFbo					obstacleBuffer;
 		
 		ftInitPositionShader	initPositionShader;

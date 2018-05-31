@@ -88,20 +88,24 @@ namespace flowTools {
 		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
 		ftUtil::zero(velocitySwapBuffer);
 		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
-		//		temperatureSwapBuffer.clear(ambientTemperature.get());
 		ftUtil::zero(temperatureSwapBuffer);
 		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
+		ftUtil::zero(pressureSwapBuffer);
 		
 		obstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		ftUtil::zero(obstacleBuffer);
 		createEdgeImage(obstacleBuffer);
 		
 		divergenceBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
+		ftUtil::zero(divergenceBuffer);
 		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		ftUtil::zero(smokeBuoyancyBuffer);
 		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(pressureSwapBuffer);
 		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(pressureSwapBuffer);
 		addPressureBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
+		ftUtil::zero(pressureSwapBuffer);
 		addPressureBufferDidChange = false;
 		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		ftUtil::zero(addTempObstacleBuffer);
@@ -198,7 +202,7 @@ namespace flowTools {
 		
 		// ADVECT
 		velocitySwapBuffer.swap();
-		advectShader.update(*velocitySwapBuffer.getBuffer(),
+		advectShader.update(velocitySwapBuffer,
 							velocitySwapBuffer.getBackTexture(),
 							velocitySwapBuffer.getBackTexture(),
 							combinedObstacleBuffer.getTexture(),
@@ -207,7 +211,7 @@ namespace flowTools {
 							cellSize.get());
 		
 		densitySwapBuffer.swap();
-		advectShader.update(*densitySwapBuffer.getBuffer(),
+		advectShader.update(densitySwapBuffer,
 							densitySwapBuffer.getBackTexture(),
 							velocitySwapBuffer.getTexture(),
 							combinedObstacleBuffer.getTexture(),
@@ -228,7 +232,7 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocitySwapBuffer.swap();
-				diffuseShader.update(*velocitySwapBuffer.getBuffer(),
+				diffuseShader.update(velocitySwapBuffer,
 									 velocitySwapBuffer.getBackTexture(),
 									 combinedObstacleBuffer.getTexture(),
 //									 viscosity.get() * deltaTime); // works better than timeStep
@@ -276,7 +280,7 @@ namespace flowTools {
 		ftUtil::zero(pressureSwapBuffer);
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureSwapBuffer.swap();
-			jacobiShader.update(*pressureSwapBuffer.getBuffer(),
+			jacobiShader.update(pressureSwapBuffer,
 								pressureSwapBuffer.getBackTexture(),
 								divergenceBuffer.getTexture(),
 								combinedObstacleBuffer.getTexture(),
@@ -286,7 +290,7 @@ namespace flowTools {
 		// Multiply density by pressure and or vorticity
 		if(densityFromPressure != 0) {
 			densitySwapBuffer.swap();
-			densityFloatMultiplierShader.update(*densitySwapBuffer.getBuffer(),
+			densityFloatMultiplierShader.update(densitySwapBuffer,
 												densitySwapBuffer.getBackTexture(),
 												pressureSwapBuffer.getTexture(),
 												densityFromPressure.get());
@@ -294,7 +298,7 @@ namespace flowTools {
 		
 		if(densityFromVorticity != 0) {
 			densitySwapBuffer.swap();
-			densityVec2MultiplierShader.update(*densitySwapBuffer.getBuffer(),
+			densityVec2MultiplierShader.update(densitySwapBuffer,
 											   densitySwapBuffer.getBackTexture(),
 											   vorticitySecondPassBuffer.getTexture(),
 											   -densityFromVorticity.get());
@@ -305,14 +309,14 @@ namespace flowTools {
 		if(addPressureBufferDidChange == true) {
 			addPressureBufferDidChange = false;
 			pressureSwapBuffer.swap();
-			addShader.update(*pressureSwapBuffer.getBuffer(),
+			addShader.update(pressureSwapBuffer,
 							 pressureSwapBuffer.getTexture(),
 							 addPressureBuffer.getTexture(),
 							 1.0);
 		}
 		
 		velocitySwapBuffer.swap();
-		substractGradientShader.update(*velocitySwapBuffer.getBuffer(),
+		substractGradientShader.update(velocitySwapBuffer,
 									   velocitySwapBuffer.getBackTexture(),
 									   pressureSwapBuffer.getTexture(),
 									   combinedObstacleBuffer.getTexture(),
@@ -326,7 +330,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		densitySwapBuffer.swap();
-		addShader.update(*densitySwapBuffer.getBuffer(),
+		addShader.update(densitySwapBuffer,
 						 densitySwapBuffer.getBackTexture(),
 						 _tex,
 						 _strength);
@@ -338,7 +342,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		velocitySwapBuffer.swap();
-		addShader.update(*velocitySwapBuffer.getBuffer(),
+		addShader.update(velocitySwapBuffer,
 						 velocitySwapBuffer.getBackTexture(),
 						 _tex,
 						 _strength);
@@ -350,7 +354,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		temperatureSwapBuffer.swap();
-		addShader.update(*temperatureSwapBuffer.getBuffer(),
+		addShader.update(temperatureSwapBuffer,
 						 temperatureSwapBuffer.getBackTexture(),
 						 _tex,
 						 _strength);

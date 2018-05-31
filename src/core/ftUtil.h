@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ofFbo.h"
-#include "ftSwapBuffer.h"
+#include "ftSwapFbo.h"
 
 
 
@@ -12,10 +12,10 @@ namespace flowTools {
 	
 	class ftUtil {
 	public:
-		static void zero(ftSwapBuffer &_swapBuffer) { zero(*_swapBuffer.getBuffer()); zero(*_swapBuffer.getBackBuffer()); }
 		static void zero(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
-		static void one(ftSwapBuffer &_swapBuffer) { one(*_swapBuffer.getBuffer()); one(*_swapBuffer.getBackBuffer()); }
+		static void zero(ftSwapFbo &_fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(0,0,0,0); _fbo.end();  }
 		static void one(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
+		static void one(ftSwapFbo &_fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(255,255,255,255); _fbo.end();  }
 		
 //		// draw texture in fbo using dimensions of texture
 //		static void draw(ofFbo& _dst, ofFbo& _src) { draw(_dst, _src.getTexture()); };
@@ -54,7 +54,6 @@ namespace flowTools {
 		static void toPixels(ofTexture& _tex, ofPixels& _pixels);
 		
 		// get texture internalFormat
-		static GLint getInternalFormat(ftSwapBuffer& _buffer) { return getInternalFormat(_buffer.getTexture()); };
 		static GLint getInternalFormat(ofFbo& _fbo) { return getInternalFormat(_fbo.getTexture()); };
 		static GLint getInternalFormat(ofTexture& _tex) { return _tex.getTextureData().glInternalFormat; };
 		

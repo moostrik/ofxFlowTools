@@ -2,8 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftSwapBuffer.h"
-#include "ftUtil.h"
+#include "ofxFlowTools.h"
 
 #include "ftDiffuseShader.h"
 #include "ftAdvectShader.h"
@@ -139,21 +138,21 @@ namespace flowTools {
 		ftDensityFloatMultiplier	densityFloatMultiplierShader;
 		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 				
-		ftSwapBuffer	densitySwapBuffer;
-		ftSwapBuffer	velocitySwapBuffer;
-		ftSwapBuffer	temperatureSwapBuffer;
-		ftSwapBuffer	pressureSwapBuffer;
-		ofFbo			divergenceBuffer;
-		ofFbo			smokeBuoyancyBuffer;
-		ofFbo			vorticityFirstPassBuffer;
-		ofFbo			vorticitySecondPassBuffer;
-		ofFbo			addPressureBuffer;
-		bool			addPressureBufferDidChange;
-		ofFbo			obstacleBuffer;
-		ofFbo			addTempObstacleBuffer;
-		bool			addTempObstacleBufferDidChange;
-		ofFbo			combinedObstacleBuffer;
-		bool			combinedObstacleNeedsToBeCleaned;
+		ftSwapFbo	densitySwapBuffer;
+		ftSwapFbo	velocitySwapBuffer;
+		ftSwapFbo	temperatureSwapBuffer;
+		ftSwapFbo	pressureSwapBuffer;
+		ofFbo		divergenceBuffer;
+		ofFbo		smokeBuoyancyBuffer;
+		ofFbo		vorticityFirstPassBuffer;
+		ofFbo		vorticitySecondPassBuffer;
+		ofFbo		addPressureBuffer;
+		bool		addPressureBufferDidChange;
+		ofFbo		obstacleBuffer;
+		ofFbo		addTempObstacleBuffer;
+		bool		addTempObstacleBufferDidChange;
+		ofFbo		combinedObstacleBuffer;
+		bool		combinedObstacleNeedsToBeCleaned;
 		
 		int simulationWidth;
 		int simulationHeight;

@@ -2,9 +2,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxFlowTools.h"
+
 #include "ftShader.h"
-#include "ftSwapBuffer.h"
-#include "ftUtil.h"
 
 namespace flowTools {
 
@@ -170,18 +170,18 @@ namespace flowTools {
 			
 			
 			ftUtil::zero(pingPong);
-			ftUtil::stretch(*pingPong.getBuffer(), _buffer);
+			ftUtil::stretch(pingPong, _buffer);
 			pingPong.swap();
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {
-					pingPong.getBuffer()->begin();
+					pingPong.begin();
 					blurShader[j].begin();
 					blurShader[j].setUniformTexture("backbuffer", pingPong.getBackTexture(), 0 );
 					blurShader[j].setUniform1f("radius", _radius);
 					renderFrame(pingPong.getWidth(), pingPong.getHeight());
 					blurShader[j].end();
-					pingPong.getBuffer()->end();
+					pingPong.end();
 					
 					pingPong.swap();
 				}
@@ -200,8 +200,8 @@ namespace flowTools {
 			ftUtil::zero(pingPong);
 		}
 		
-		ofShader    blurShader[2];
-		ftSwapBuffer pingPong;
+		ofShader	blurShader[2];
+		ftSwapFbo	pingPong;
 		
 		int		internalFormat;
 		int		width;

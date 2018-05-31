@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>60</average_FPS>
-	<minimum_FPS>46.7613</minimum_FPS>
+	<average_FPS>59</average_FPS>
+	<minimum_FPS>44.1868</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
@@ -80,4 +80,59 @@
 			<speed>8</speed>
 		</flow_density>
 	</ofxFlowTools>
+	<flow_core>
+		<draw_mode>11</draw_mode>
+		<MODE>Optical Flow   (9)</MODE>
+		<flow_visualisation>
+			<show_scalar>1</show_scalar>
+			<scalar_scale>0.3</scalar_scale>
+			<show_field>1</show_field>
+			<field_scale>0.3</field_scale>
+			<line_smooth>0</line_smooth>
+		</flow_visualisation>
+	</flow_core>
+	<optical_flow>
+		<threshold>0.02</threshold>
+	</optical_flow>
+	<flow_velocity>
+		<trail>0.25</trail>
+		<blur>2.5</blur>
+		<speed>30</speed>
+	</flow_velocity>
+	<flow_density>
+		<trail>0.5</trail>
+		<blur>5</blur>
+		<saturation>1</saturation>
+		<speed>8</speed>
+	</flow_density>
+	<fluid_solver>
+		<reset>0</reset>
+		<speed>100</speed>
+		<cell_size>1.25</cell_size>
+		<iterations>40</iterations>
+		<viscosity>0.1</viscosity>
+		<vorticity>0.6</vorticity>
+		<dissipation>0.002</dissipation>
+		<advanced_dissipation>
+			<velocity_offset>-0.001</velocity_offset>
+			<density_offset>0</density_offset>
+			<temperature_offset>0.005</temperature_offset>
+			<pressure_offset>0.005</pressure_offset>
+		</advanced_dissipation>
+		<smoke_buoyancy>
+			<sigma>0.05</sigma>
+			<weight>0.05</weight>
+			<ambient_temperature>0</ambient_temperature>
+			<gravity>0, 9.80665</gravity>
+		</smoke_buoyancy>
+		<maximum>
+			<clampForce>0.05</clampForce>
+			<density>2</density>
+			<velocity>4</velocity>
+			<temperature>2</temperature>
+			<pressure>2</pressure>
+		</maximum>
+		<density_from_pressure>0</density_from_pressure>
+		<density_from_vorticity>-0.1</density_from_vorticity>
+	</fluid_solver>
 </settings>

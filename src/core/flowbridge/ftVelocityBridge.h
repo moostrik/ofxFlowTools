@@ -2,8 +2,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftUtil.h"
-#include "ftSwapBuffer.h"
+#include "ofxFlowTools.h"
+
 #include "ftVelocityBridgeShader.h"
 #include "ftGaussianBlurShader.h"
 #include "ftMultiplyForceShader.h"
@@ -44,7 +44,7 @@ namespace flowTools {
 		
 		ofTexture*				velocityTexture;
 		bool					bSourceSet;
-		ftSwapBuffer			swapBuffer;
+		ftSwapFbo				swapBuffer;
 		ftVelocityBridgeShader	trailShader;
 		ftGaussianBlurShader	blurShader;
 		ftMultiplyForceShader	multiplyShader;

@@ -68,16 +68,16 @@ namespace flowTools {
 		}
 		else {
 			velocitySwapBuffer.swap();
-			velocityBridgeShader.update(*velocitySwapBuffer.getBuffer(), *velocityTexture, velocitySwapBuffer.getBackTexture(), trailWeight.get());
-			if (blurRadius.get() > 0) { blurShader.update(*velocitySwapBuffer.getBuffer(), 1, blurRadius.get()); }
+			velocityBridgeShader.update(velocitySwapBuffer, *velocityTexture, velocitySwapBuffer.getBackTexture(), trailWeight.get());
+			if (blurRadius.get() > 0) { blurShader.update(velocitySwapBuffer, 1, blurRadius.get()); }
 			
 			densitySwapBuffer.swap();
-			densityBridgeShader.update(*densitySwapBuffer.getBuffer(),
+			densityBridgeShader.update(densitySwapBuffer,
 									   *densityTexture,
 									   velocitySwapBuffer.getTexture(),
 									   speed.get() * _deltaTime);
 			densitySwapBuffer.swap();
-			HSLShader.update(*densitySwapBuffer.getBuffer(),
+			HSLShader.update(densitySwapBuffer,
 							 densitySwapBuffer.getBackTexture(),
 							 0, // hue.get();
 							 saturation.get(),

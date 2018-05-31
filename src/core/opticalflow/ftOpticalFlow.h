@@ -2,10 +2,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftUtil.h"
-#include "ftSwapBuffer.h"
-#include "ftOpticalFlowShader.h"
+#include "ofxFlowTools.h"
 
+#include "ftOpticalFlowShader.h"
 #include "ftLuminanceShader.h"
 
 namespace flowTools {
@@ -55,7 +54,7 @@ namespace flowTools {
 		
 		bool	bSourceSet;
 		
-		ftSwapBuffer		sourceSwapBuffer;
+		ftSwapFbo			sourceSwapBuffer;
 		ofFbo				velocityBuffer;
 		ftOpticalFlowShader opticalFlowShader;
 		ftLuminanceShader	luminanceShader;

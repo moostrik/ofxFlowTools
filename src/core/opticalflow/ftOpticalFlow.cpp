@@ -97,16 +97,16 @@ namespace flowTools {
 				luminanceBuffer.allocate(_tex.getWidth(), _tex.getHeight(), GL_RGB8) ;
 			}
 			luminanceShader.update(luminanceBuffer, _tex);
-			ftUtil::stretch(*sourceSwapBuffer.getBuffer(), luminanceBuffer.getTexture());
+			ftUtil::stretch(sourceSwapBuffer, luminanceBuffer.getTexture());
 		}
 		else {
-			ftUtil::stretch(*sourceSwapBuffer.getBuffer(), _tex);
+			ftUtil::stretch(sourceSwapBuffer, _tex);
 		}
 		
 		if (!bSourceSet) {
 			bSourceSet = true;
 			sourceSwapBuffer.swap();
-			ftUtil::stretch(*sourceSwapBuffer.getBuffer(), *sourceSwapBuffer.getBackBuffer());
+			ftUtil::stretch(sourceSwapBuffer, sourceSwapBuffer.getBackTexture());
 		}
 		
 		ofPopStyle();

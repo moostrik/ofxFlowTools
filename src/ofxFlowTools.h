@@ -33,6 +33,8 @@
 
 // CORE
 #include "ftUtil.h"
+#include "ftSwapFbo.h"
+
 #include "ftOpticalFlow.h"
 #include "ftVelocityBridge.h"
 #include "ftDensityBridge.h"

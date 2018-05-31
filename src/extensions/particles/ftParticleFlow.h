@@ -8,7 +8,7 @@
 #include "ftDrawParticleShader.h"
 #include "ftMoveParticleShader.h"
 #include "ftAgeLifespanMassSizeParticleShader.h"
-#include "ftAddForceShader.h"
+#include "ftAddMultipliedShader.h"
 
 namespace flowTools {
 	
@@ -99,7 +99,7 @@ namespace flowTools {
 		ftDrawParticleShader	drawParticleShader;
 		ftMoveParticleShader	moveParticleShader;
 		ftAgeLifespanMassSizeParticleShader	ALMSParticleShader;
-		ftAddForceShader		addShader;
+		ftAddMultipliedShader	addMultipliedShader;
 	};
 		
 }

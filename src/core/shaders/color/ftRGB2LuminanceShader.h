@@ -5,9 +5,9 @@
 
 namespace flowTools {
 	
-	class ftLuminanceShader : public ftShader {
+	class ftRGB2LuminanceShader : public ftShader {
 	public:
-		ftLuminanceShader(){
+		ftRGB2LuminanceShader(){
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())

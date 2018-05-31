@@ -96,7 +96,7 @@ namespace flowTools {
 			if (luminanceBuffer.getWidth() != _tex.getWidth() || luminanceBuffer.getHeight() != _tex.getHeight()) {
 				luminanceBuffer.allocate(_tex.getWidth(), _tex.getHeight(), GL_RGB8) ;
 			}
-			luminanceShader.update(luminanceBuffer, _tex);
+			RGB2LumShader.update(luminanceBuffer, _tex);
 			ftUtil::stretch(sourceSwapBuffer, luminanceBuffer.getTexture());
 		}
 		else {

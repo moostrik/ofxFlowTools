@@ -168,10 +168,11 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		flowVelocitySwapBuffer.swap();
-		addShader.update(flowVelocitySwapBuffer,
-						 flowVelocitySwapBuffer.getBackTexture(),
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(flowVelocitySwapBuffer,
+								   flowVelocitySwapBuffer.getBackTexture(),
+								   _tex,
+								   1.0,
+								   _strength);
 		ofPopStyle();
 	}
 	
@@ -179,10 +180,11 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		fluidVelocitySwapBuffer.swap();
-		addShader.update(fluidVelocitySwapBuffer,
-						 fluidVelocitySwapBuffer.getBackTexture(),
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(fluidVelocitySwapBuffer,
+								   fluidVelocitySwapBuffer.getBackTexture(),
+								   _tex,
+								   1.0,
+								   _strength);
 		ofPopStyle();
 	}
 	

@@ -5,7 +5,7 @@
 #include "ofxFlowTools.h"
 
 #include "ftOpticalFlowShader.h"
-#include "ftLuminanceShader.h"
+#include "ftRGB2LuminanceShader.h"
 
 namespace flowTools {
 	
@@ -57,7 +57,7 @@ namespace flowTools {
 		ftSwapFbo			sourceSwapBuffer;
 		ofFbo				velocityBuffer;
 		ftOpticalFlowShader opticalFlowShader;
-		ftLuminanceShader	luminanceShader;
+		ftRGB2LuminanceShader	RGB2LumShader;
 		ofFbo				luminanceBuffer;
 		
 	};

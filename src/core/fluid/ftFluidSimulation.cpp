@@ -309,10 +309,11 @@ namespace flowTools {
 		if(addPressureBufferDidChange == true) {
 			addPressureBufferDidChange = false;
 			pressureSwapBuffer.swap();
-			addShader.update(pressureSwapBuffer,
-							 pressureSwapBuffer.getTexture(),
-							 addPressureBuffer.getTexture(),
-							 1.0);
+			addMultipliedShader.update(pressureSwapBuffer,
+									   pressureSwapBuffer.getTexture(),
+									   addPressureBuffer.getTexture(),
+									   1.0,
+									   1.0);
 		}
 		
 		velocitySwapBuffer.swap();
@@ -330,10 +331,11 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		densitySwapBuffer.swap();
-		addShader.update(densitySwapBuffer,
-						 densitySwapBuffer.getBackTexture(),
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(densitySwapBuffer,
+								   densitySwapBuffer.getBackTexture(),
+								   _tex,
+								   1.0,
+								   _strength);
 		ofPopStyle();
 	};
 	
@@ -342,10 +344,11 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		velocitySwapBuffer.swap();
-		addShader.update(velocitySwapBuffer,
-						 velocitySwapBuffer.getBackTexture(),
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(velocitySwapBuffer,
+								   velocitySwapBuffer.getBackTexture(),
+								   _tex,
+								   1.0,
+								   _strength);
 		ofPopStyle();
 	}
 	
@@ -354,10 +357,11 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		temperatureSwapBuffer.swap();
-		addShader.update(temperatureSwapBuffer,
-						 temperatureSwapBuffer.getBackTexture(),
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(temperatureSwapBuffer,
+								   temperatureSwapBuffer.getBackTexture(),
+								   _tex,
+								   1.0,
+								   _strength);
 		ofPopStyle();
 	}
 	
@@ -367,10 +371,11 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(addPressureBuffer);
 		
-		addShader.update(addPressureBuffer,
-						 addPressureBuffer.getTexture(), // dubious
-						 _tex,
-						 _strength);
+		addMultipliedShader.update(addPressureBuffer,
+								   addPressureBuffer.getTexture(), // dubious
+								   _tex,
+								   1.0,
+								   _strength);
 		
 		addPressureBufferDidChange = true;
 		ofPopStyle();

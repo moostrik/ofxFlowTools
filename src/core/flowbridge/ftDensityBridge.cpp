@@ -83,7 +83,7 @@ namespace flowTools {
 							 saturation.get(),
 							 1.0);
 			
-			luminanceShader.update(luminanceMaskFbo, densitySwapBuffer.getTexture());
+			RGB2LuminanceShader.update(luminanceMaskFbo, densitySwapBuffer.getTexture());
 		}
 		
 		ofPopStyle();

@@ -7,7 +7,7 @@
 #include "ftDensityBridgeShader.h"
 #include "ftHSVShader.h"
 #include "ftGaussianBlurShader.h"
-#include "ftLuminanceShader.h"
+#include "ftRGB2LuminanceShader.h"
 #include "ftMultiplyForceShader.h"
 
 
@@ -58,7 +58,7 @@ namespace flowTools {
 		
 		ftHSVShader				HSVShader;
 		ftGaussianBlurShader 	blurShader;
-		ftLuminanceShader		luminanceShader;
+		ftRGB2LuminanceShader	RGB2LuminanceShader;
 	};
 }
 

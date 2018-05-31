@@ -163,18 +163,15 @@ namespace flowTools {
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
 				ftUtil::getInternalFormat(pingPong) != ftUtil::getInternalFormat(_buffer)) {
-				
-				allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
-				
+				allocate(_buffer.getWidth(),  _buffer.getHeight(), ftUtil::getInternalFormat(_buffer) );
 			}
-			
 			
 			ftUtil::zero(pingPong);
 			ftUtil::stretch(pingPong, _buffer);
-			pingPong.swap();
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {
+					pingPong.swap();
 					pingPong.begin();
 					blurShader[j].begin();
 					blurShader[j].setUniformTexture("backbuffer", pingPong.getBackTexture(), 0 );
@@ -183,13 +180,10 @@ namespace flowTools {
 					blurShader[j].end();
 					pingPong.end();
 					
-					pingPong.swap();
 				}
 			}
 	
-			_buffer.begin();
-			pingPong.getBackTexture().draw(0,0, pingPong.getWidth(), pingPong.getHeight());
-			_buffer.end();
+			ftUtil::stretch(_buffer, pingPong.getTexture());
 		}
 		
 		ofParameterGroup	parameters;

@@ -2,44 +2,41 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftFbo.h"
 
 namespace flowTools {
 	
-	class ftSwapFbo : public ftFbo {
+	class ftSwapFbo : public ofFbo {
 	public:
-		void allocate( int _width, int _height, int _internalformat = GL_RGBA, int _filter = GL_LINEAR){
-			
-			ofFbo::Settings mySettings;
-			mySettings.width = _width;
-			mySettings.height = _height;
-			mySettings.internalformat = _internalformat;
-			mySettings.maxFilter = _filter;
-			mySettings.minFilter = _filter;
-			mySettings.numColorbuffers = 2;
-			
-			ofFbo::allocate(mySettings);
-			clear();
-			swap();
-			
+		void allocate(int width, int height, int internalformat = GL_RGBA, int numSamples = 0) {
+			ofFboSettings settings;
+			settings.width			= width;
+			settings.height			= height;
+			settings.internalformat	= internalformat;
+			settings.numSamples		= numSamples;
+			settings.numColorbuffers = 2;
+			allocate(settings);
 		}
 		
-		ofTexture& getBackTexture() { if (flag) return getTextureReference(GL_COLOR_ATTACHMENT0); else getTextureReference(GL_COLOR_ATTACHMENT1); }
+		void allocate(ofFboSettings _settings){
+			if (_settings.numColorbuffers != 2) {
+				ofLogError("ftSwapFbo") << "needst to be allocated with 2 color buffers";
+				return;
+			}
+			ofFbo::allocate(_settings);
+			flag = 0;
+		}
 		
 		void swap(){
-			flag = (flag+1) %2;
-			
-			if (flag) {
-				glDrawBuffer(GL_COLOR_ATTACHMENT0);
-				glReadBuffer(GL_COLOR_ATTACHMENT1);
-			}
-			else {
-				glDrawBuffer(GL_COLOR_ATTACHMENT1);
-				glReadBuffer(GL_COLOR_ATTACHMENT0);
-			}
+			flag = 1-flag;
+			bind();
+			setActiveDrawBuffer(flag);
+			unbind();
 		}
 		
+		ofTexture& getTexture() { return ofFbo::getTexture(flag); }
+		ofTexture& getBackTexture() { return ofFbo::getTexture(1-flag); }
+		
 		private:
-		int     flag;       // Integer for making a quick swap
+		int flag;
 	};
 }

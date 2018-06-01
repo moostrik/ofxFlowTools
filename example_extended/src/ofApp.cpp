@@ -119,6 +119,7 @@ void ofApp::update(){
 	for (int i=0; i<flowMouse.getNumForces(); i++) {
 		if (flowMouse.didChange(i)) {
 			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+			flowParticles.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
 //			if (flowMouse.getType(i) == FT_VELOCITY) {
 //				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
 //			}

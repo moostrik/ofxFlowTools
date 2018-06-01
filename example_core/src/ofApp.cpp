@@ -9,7 +9,7 @@ void ofApp::setup(){
 	flowCore.setup();
 	
 	flowToolsLogo.load("flowtools.png");
-	flowCore.addObstacle(flowToolsLogo.getTexture());
+	flowCore.addObstacleTemp(flowToolsLogo.getTexture());
 	
 	// CAMERA
 	camWidth = 1280;
@@ -117,7 +117,7 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			flowCore.reset();
-			flowCore.addObstacle(flowToolsLogo.getTexture());
+			flowCore.addObstacleTemp(flowToolsLogo.getTexture());
 			break;
 			
 		default: break;
@@ -135,8 +135,7 @@ void ofApp::draw(){
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
 	}
 	
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	flowCore.draw(0, 0, windowWidth, windowHeight);
+	flowCore.draw(0, 0, windowWidth, windowHeight, OF_BLENDMODE_ALPHA);
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);

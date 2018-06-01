@@ -18,11 +18,14 @@ namespace flowTools {
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
+		void	addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
 		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
 		void	setObstacle (ofTexture& _tex) ;
 		
 		void	update(float _deltaTime = 0);
+		
+		void 	reset() {;}
 		
 //		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
@@ -54,8 +57,10 @@ namespace flowTools {
 		void	setSizeSpread(float value) { sizeSpread.set(value); }
 		void	setGravity(ofVec2f value) { gravity.set(value); }
 		
-		ofParameterGroup parameters;
+		ofParameterGroup& getParameters() { return parameters; }
+		
 	private:
+		ofParameterGroup 	parameters;
 		ofParameter<bool>	bIsActive;
 		ofParameter<float>	speed;
 		ofParameter<float>	cellSize;

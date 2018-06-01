@@ -49,4 +49,5 @@
 
 // EXTENTION
 #include "ftDrawMouseForces.h"
+#include "ftParticleFlow.h"
 

@@ -19,8 +19,8 @@ namespace flowTools {
 		void		update();
 		void		update(ofTexture& _tex) { setSource(_tex); update(); }
 		
-		ofTexture&	getTexture()		{ return getOpticalFlow(); }
-		ofTexture&	getOpticalFlow()	{ return velocityBuffer.getTexture(); }
+		ofTexture&	getVelocity()		{ return getTexture(); }
+		ofTexture&	getTexture()		{ return velocityBuffer.getTexture(); }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};

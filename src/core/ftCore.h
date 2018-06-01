@@ -32,7 +32,7 @@ public:
 	void	setInput(ofTexture &_texture) { setInput(_texture, _texture); }
 	void	setInput(ofTexture &_forVelocity, ofTexture &_forDensity);
 	void	update(float _deltaTime = -1);
-	void	draw(int _x, int _y, int _w, int _h);
+	void	draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode);
 	
 	void	reset() 	{ velocityBridge.reset(); densityBridge.reset(); fluidSimulation.reset(); }
 	void	keyPressed(ofKeyEventArgs & key);
@@ -44,14 +44,19 @@ public:
 	int		getFieldWidth() 	{ return fieldWidth; }
 	int		getFieldHeight() 	{ return fieldHeight; }
 	
-	void 	addForce(ftForceType _type, ofTexture& _tex, float _strength  = 1.0);
-	void    addDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
-	void    addVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
-	void    addTemperature(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addTemperature(_tex, _strength); }
-	void    addPressure(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addPressure(_tex, _strength); }
-	void    addObstacle(ofTexture& _tex)							{ fluidSimulation.addObstacle(_tex); }
-	void    addTempObstacle(ofTexture& _tex)						{ fluidSimulation.addTempObstacle(_tex); }
+	void 		addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
+	ofTexture&	getFlow(ftFlowType _type);
+	
+	void    addFluidDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
+	void    addFluidVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
+	void    addFluidTemperature(ofTexture& _tex, float _strength  = 1.0){ fluidSimulation.addTemperature(_tex, _strength); }
+	void    addFluidPressure(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addPressure(_tex, _strength); }
+	void    addObstacleConst(ofTexture& _tex)							{ fluidSimulation.addObstacle(_tex); }
+	void    addObstacleTemp(ofTexture& _tex)							{ fluidSimulation.addTempObstacle(_tex); }
 
+	ofTexture& 	getOpticalFlow()	{ return opticalFlow.getVelocity(); }
+	ofTexture& 	getFluidVelocity()	{ return fluidSimulation.getVelocity(); }
+	
 	ofParameterGroup& getParameters() 				{ return parameters; }
 	ofParameterGroup& getCoreParameters() 			{ return flowCoreParameters; }
 	ofParameterGroup& getOpticalFlowParameters() 	{ return opticalFlow.getParameters(); }
@@ -109,7 +114,7 @@ private:
 	ofParameter<string> drawName;
 	
 	void				drawComposite(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidFields(int _x, int _y, int _w, int _h);
+	void				drawFluidFields(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	
 	void				drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);

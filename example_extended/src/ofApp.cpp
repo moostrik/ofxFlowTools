@@ -6,12 +6,20 @@ void ofApp::setup(){
 //	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-	flowCore.setup();
+	densityWidth = 1280;
+	densityHeight = 720;
+	flowWidth = densityWidth / 4;
+	flowHeight = densityHeight / 4;
+	
+	flowCore.setup(densityWidth, densityHeight, flowWidth, flowHeight);
 	
 	flowToolsLogo.load("flowtools.png");
-	flowCore.addObstacle(flowToolsLogo.getTexture());
+	flowCore.addFlow(FT_CORE_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
 	
-	mouseForces.setup(flowCore.getFlowWidth(), flowCore.getFlowHeight(), flowCore.getDensityWidth(), flowCore.getDensityHeight());
+	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	
+	flowParticles.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	flowParticles.setObstacle(flowToolsLogo.getTexture());
 	
 	// CAMERA
 	camWidth = 1280;
@@ -55,7 +63,9 @@ void ofApp::setupGui() {
 	switchGuiColor(s = !s);
 	gui.add(flowCore.getFluidSimulationParameters());
 	switchGuiColor(s = !s);
-	gui.add(mouseForces.getParameters());
+	gui.add(flowMouse.getParameters());
+	switchGuiColor(s = !s);
+	gui.add(flowParticles.getParameters());
 
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -105,12 +115,24 @@ void ofApp::update(){
 		flowCore.setInput(cameraFbo.getTexture());
 	}
 	
-	mouseForces.update(dt);
-	for (int i=0; i<mouseForces.getNumForces(); i++) {
-		if (mouseForces.didChange(i)) { flowCore.addForce(mouseForces.getType(i), mouseForces.getTextureReference(i), mouseForces.getStrength(i)); }
+	flowMouse.update(dt);
+	for (int i=0; i<flowMouse.getNumForces(); i++) {
+		if (flowMouse.didChange(i)) {
+			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+//			if (flowMouse.getType(i) == FT_VELOCITY) {
+//				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+//			}
+		}
 	}
 	
 	flowCore.update(dt);
+	
+//	flowParticles.setSpeed(flowCore.getSpeed());
+//	flowParticles.setCellSize(flowCore.getCellSize());
+	flowParticles.addFlowVelocity(flowCore.getOpticalFlow());
+	flowParticles.addFluidVelocity(flowCore.getFluidVelocity());
+//	flowParticles.setObstacle(flowCore.getObstacle());
+	flowParticles.update(dt);
 }
 
 //--------------------------------------------------------------
@@ -126,8 +148,9 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			flowCore.reset();
-			mouseForces.reset();
-			flowCore.addObstacle(flowToolsLogo.getTexture());
+			flowMouse.reset();
+			flowCore.addFlow(FT_CORE_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
+			flowParticles.reset();
 			break;
 			
 		default: break;
@@ -138,18 +161,21 @@ void ofApp::keyPressed(int key){
 void ofApp::draw(){
 	ofClear(0,0);
 	
-	ofPushStyle();
 	if (doDrawCamera.get()) {
+		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
 		ofPopStyle();
 	}
 	
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	flowCore.draw(0, 0, windowWidth, windowHeight);
+	flowCore.draw(0, 0, windowWidth, windowHeight, OF_BLENDMODE_ALPHA);
 	
+	if (flowParticles.isActive()) { flowParticles.draw(0, 0, windowWidth, windowHeight, OF_BLENDMODE_ADD); }
+	
+	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	ofPopStyle();
 	
 	if (toggleGuiDraw) {
 		drawGui();

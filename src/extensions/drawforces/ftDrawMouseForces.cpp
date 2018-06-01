@@ -29,17 +29,17 @@ namespace flowTools {
 		
 		numDrawForces = 6;
 		drawForces = new ftDrawForce[numDrawForces];
-		drawForces[0].setup(densityWidth, densityHeight, FT_DENSITY, true);
+		drawForces[0].setup(densityWidth, densityHeight, FT_CORE_FLUID_DENSITY, true);
 		drawForces[0].setName("draw full res");
-		drawForces[1].setup(simulationWidth, simulationHeight, FT_VELOCITY, true);
+		drawForces[1].setup(simulationWidth, simulationHeight, FT_CORE_FLUID_VELOCITY, true);
 		drawForces[1].setName("draw flow res 1");
-		drawForces[2].setup(simulationWidth, simulationHeight, FT_TEMPERATURE, true);
+		drawForces[2].setup(simulationWidth, simulationHeight, FT_CORE_FLUID_TEMPERATURE, true);
 		drawForces[2].setName("draw flow res 2");
-		drawForces[3].setup(densityWidth, densityHeight, FT_DENSITY, false);
+		drawForces[3].setup(densityWidth, densityHeight, FT_CORE_FLUID_DENSITY, false);
 		drawForces[3].setName("draw full res");
-		drawForces[4].setup(simulationWidth, simulationHeight, FT_VELOCITY, false);
+		drawForces[4].setup(simulationWidth, simulationHeight, FT_CORE_FLUID_VELOCITY, false);
 		drawForces[4].setName("draw flow res 1");
-		drawForces[5].setup(simulationWidth, simulationHeight, FT_TEMPERATURE, false);
+		drawForces[5].setup(simulationWidth, simulationHeight, FT_CORE_FLUID_TEMPERATURE, false);
 		drawForces[5].setName("draw flow res 2");
 		
 		leftButtonParameters.setName("left");
@@ -71,8 +71,8 @@ namespace flowTools {
 		for(int i=0; i<getNumForces(); i++) {
 			ofEnableBlendMode(_blendmode);
 			if (didChange(i)) {
-				ftForceType dfType = getType(i);
-				if (dfType == FT_DENSITY)
+				ftFlowType dfType = getType(i);
+				if (dfType == FT_CORE_FLUID_DENSITY)
 					getTextureReference(i).draw(_x, _y, _w, _h);
 			}
 		}
@@ -92,7 +92,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	ftForceType ftDrawMouseForces::getType(int _index) {
+	ftFlowType ftDrawMouseForces::getType(int _index) {
 		if (_index < 0 || _index >= numDrawForces) {
 			ofLogWarning("ftDrawMouseForces::getDrawForceType: index out of range");
 			return FT_NONE;
@@ -138,7 +138,7 @@ namespace flowTools {
 		if (mouse.button == 0) {
 			
 			for (int i=0; i<3; i++) {
-				if (drawForces[i].getType() == FT_VELOCITY)
+				if (drawForces[i].getType() == FT_CORE_FLUID_VELOCITY)
 					drawForces[i].setForce(velocity);
 				drawForces[i].applyForce(normalizedMouse);
 			}
@@ -146,7 +146,7 @@ namespace flowTools {
 		else {
 			
 			for (int i=3; i<numDrawForces; i++) {
-				if (drawForces[i].getType() == FT_VELOCITY)
+				if (drawForces[i].getType() == FT_CORE_FLUID_VELOCITY)
 					drawForces[i].setForce(velocity);
 				drawForces[i].applyForce(normalizedMouse);
 			}

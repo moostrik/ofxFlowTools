@@ -22,7 +22,8 @@ public:
 	// FLOWTOOLS
 	ftCore				flowCore;
 	ofImage				flowToolsLogo;
-	ftDrawMouseForces	mouseForces;
+	ftDrawMouseForces	flowMouse;
+	ftParticleFlow		flowParticles;
 	
 	// GUI
 	ofxPanel			gui;
@@ -50,4 +51,10 @@ public:
 	// Time
 	float				lastTime;
 	float				deltaTime;
+	
+	
+	int					densityWidth;
+	int					densityHeight;
+	int					flowWidth;
+	int					flowHeight;
 };

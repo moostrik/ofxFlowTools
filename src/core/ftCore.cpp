@@ -86,24 +86,24 @@ void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
 
 
 //--------------------------------------------------------------
-void ftCore::addForce(flowTools::ftForceType _type, ofTexture &_tex, float _strength) {
+void ftCore::addFlow(flowTools::ftFlowType _type, ofTexture &_tex, float _strength) {
 	switch (_type) {
-		case FT_DENSITY:
-			addDensity(_tex, _strength);
+		case FT_CORE_FLUID_DENSITY:
+			addFluidDensity(_tex, _strength);
 			break;
-		case FT_VELOCITY:
-			addVelocity(_tex, _strength);
+		case FT_CORE_FLUID_VELOCITY:
+			addFluidVelocity(_tex, _strength);
 			break;
-		case FT_TEMPERATURE:
-			addTemperature(_tex, _strength);
+		case FT_CORE_FLUID_TEMPERATURE:
+			addFluidTemperature(_tex, _strength);
 			break;
-		case FT_PRESSURE:
-			addPressure(_tex, _strength);
+		case FT_CORE_FLUID_PRESSURE:
+			addFluidPressure(_tex, _strength);
 			break;
-		case FT_TEMP_OBSTACLE:
-			addTempObstacle(_tex);
-		case FT_OBSTACLE:
-			addObstacle(_tex);
+		case FT_CORE_OBSTACLE_TEMPORARY:
+			addObstacleTemp(_tex);
+		case FT_CORE_OBSTACLE_CONSTANT:
+			addObstacleConst(_tex);
 		default:
 			break;
 	}
@@ -166,20 +166,20 @@ void ftCore::drawModeSetName(int &_value) {
 }
 
 //--------------------------------------------------------------
-void ftCore::draw(int _x, int _y, int _w, int _h) {
+void ftCore::draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	switch(drawMode.get()) {
-		case FT_CORE_DRAW_FLUID_DENSITY:	drawFluidDensity(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_FIELDS:		drawFluidFields(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_VELOCITY:	drawFluidVelocity(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_PRESSURE:	drawFluidPressure(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_TEMPERATURE:drawFluidTemperature(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_DIVERGENCE: drawFluidDivergence(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_VORTICITY:	drawFluidVorticity(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_BUOYANCY:	drawFluidBuoyance(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_FLUID_OBSTACLE:	drawFluidObstacle(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:	drawMask(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL: 	drawTrail(_x,_y,_w,_h); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY:drawOpticalFlow(_x,_y,_w,_h); break;
+		case FT_CORE_DRAW_FLUID_DENSITY:		drawFluidDensity(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_FIELDS:			drawFluidFields(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_VELOCITY:		drawFluidVelocity(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_PRESSURE:		drawFluidPressure(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_TEMPERATURE:	drawFluidTemperature(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_DIVERGENCE: 	drawFluidDivergence(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_VORTICITY:		drawFluidVorticity(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_BUOYANCY:		drawFluidBuoyance(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_FLUID_OBSTACLE:		drawFluidObstacle(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:	drawMask(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL: 	drawTrail(_x,_y,_w,_h, _blendmode); break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY:drawOpticalFlow(_x,_y,_w,_h, _blendmode); break;
 	}
 }
 
@@ -189,7 +189,7 @@ void ftCore::drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blend
 }
 
 //--------------------------------------------------------------
-void ftCore::drawFluidFields(int _x, int _y, int _w, int _h) {
+void ftCore::drawFluidFields(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	pressureField.setPressure(fluidSimulation.getPressure());
 	velocityTemperatureField.setVelocity(fluidSimulation.getVelocity());
 	velocityTemperatureField.setTemperature(fluidSimulation.getTemperature());

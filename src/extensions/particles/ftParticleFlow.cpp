@@ -111,9 +111,9 @@ namespace flowTools {
 		else
 			deltaTime = time - lastTime;
 		lastTime = time;
-		timeStep = deltaTime * speed.get();
 		
 		if (bIsActive.get()) {
+			timeStep = deltaTime * speed.get();
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -153,39 +153,60 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode) {
-		ofPushStyle();
-		ofPushView();
-		ofEnableBlendMode(_blendmode);
-		ofTranslate(_x, _y);
-		ofScale(_width / numParticlesX, _height / numParticlesY);
-		drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.getTexture(), particleAgeLifespanMassSizeSwapBuffer.getTexture(), twinkleSpeed.get());
-		
-		ofPopView();
-		ofPopStyle();
+		if (isActive()) {
+			ofPushStyle();
+			ofPushView();
+			ofEnableBlendMode(_blendmode);
+			ofTranslate(_x, _y);
+			ofScale(_width / numParticlesX, _height / numParticlesY);
+			drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.getTexture(), particleAgeLifespanMassSizeSwapBuffer.getTexture(), twinkleSpeed.get());
+			
+			ofPopView();
+			ofPopStyle();
+		}
 	}
-
+	
+	//--------------------------------------------------------------
+	void ftParticleFlow::addFlow(flowTools::ftFlowType _type, ofTexture &_tex, float _strength) {
+		switch (_type) {
+			case FT_CORE_FLOW_VELOCITY:
+				addFlowVelocity(_tex, _strength);
+				break;
+			case FT_CORE_FLUID_VELOCITY:
+				addFluidVelocity(_tex, _strength);
+				break;
+			case FT_CORE_OBSTACLE_CONSTANT:
+				setObstacle(_tex);
+			default:
+				break;
+		}
+	}
 	void ftParticleFlow::addFlowVelocity(ofTexture & _tex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		flowVelocitySwapBuffer.swap();
-		addMultipliedShader.update(flowVelocitySwapBuffer,
-								   flowVelocitySwapBuffer.getBackTexture(),
-								   _tex,
-								   1.0,
-								   _strength);
-		ofPopStyle();
+		if (isActive()) {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			flowVelocitySwapBuffer.swap();
+			addMultipliedShader.update(flowVelocitySwapBuffer,
+									   flowVelocitySwapBuffer.getBackTexture(),
+									   _tex,
+									   1.0,
+									   _strength);
+			ofPopStyle();
+		}
 	}
 	
 	void ftParticleFlow::addFluidVelocity (ofTexture& _tex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		fluidVelocitySwapBuffer.swap();
-		addMultipliedShader.update(fluidVelocitySwapBuffer,
-								   fluidVelocitySwapBuffer.getBackTexture(),
-								   _tex,
-								   1.0,
-								   _strength);
-		ofPopStyle();
+		if (isActive()) {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			fluidVelocitySwapBuffer.swap();
+			addMultipliedShader.update(fluidVelocitySwapBuffer,
+									   fluidVelocitySwapBuffer.getBackTexture(),
+									   _tex,
+									   1.0,
+									   _strength);
+			ofPopStyle();
+		}
 	}
 	
 	void ftParticleFlow::setObstacle (ofTexture& _tex) {

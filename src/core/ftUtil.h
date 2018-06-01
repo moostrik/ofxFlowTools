@@ -16,7 +16,8 @@ namespace flowTools {
 		FT_VELOCITY		= 2,
 		FT_TEMPERATURE	= 3,
 		FT_PRESSURE		= 4,
-		FT_OBSTACLE		= 5,
+		FT_TEMP_OBSTACLE= 5,
+		FT_OBSTACLE		= 6,
 	};
 	
 	class ftUtil {

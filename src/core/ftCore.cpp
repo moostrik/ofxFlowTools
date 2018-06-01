@@ -1,5 +1,14 @@
 #include "ftCore.h"
 
+
+ftCore::ftCore() {
+	ofAddListener(ofEvents().keyPressed, this, &ftCore::keyPressed);
+}
+
+ftCore::~ftCore() {
+	ofRemoveListener(ofEvents().keyPressed, this, &ftCore::keyPressed);
+}
+
 //--------------------------------------------------------------
 void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _flowHeight){
 	
@@ -19,20 +28,13 @@ void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _f
 	
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);
-//	displayScalarNormalized.setup(flowWidth, flowHeight);
 	velocityField.setup(fieldWidth, fieldHeight);
-//	velocityFieldNormalized.setup(fieldWidth, fieldHeight);
-//	velocityFieldNormalized.setScale(1);
 	temperatureField.setup(fieldWidth, fieldHeight);
 	pressureField.setup(fieldWidth, fieldHeight);
 	velocityTemperatureField.setup(fieldWidth, fieldHeight);
 	
 	setupParameters();
 	lastTime = ofGetElapsedTimef();
-	
-	flowToolsLogoImage.load("flowtools.png");
-	fluidSimulation.addObstacle(flowToolsLogoImage.getTexture());
-	showLogo = true;
 	
 }
 
@@ -98,8 +100,10 @@ void ftCore::addForce(flowTools::ftForceType _type, ofTexture &_tex, float _stre
 		case FT_PRESSURE:
 			addPressure(_tex, _strength);
 			break;
-		case FT_OBSTACLE:
+		case FT_TEMP_OBSTACLE:
 			addTempObstacle(_tex);
+		case FT_OBSTACLE:
+			addObstacle(_tex);
 		default:
 			break;
 	}
@@ -128,8 +132,8 @@ void ftCore::update(float _deltaTime){
 }
 
 //--------------------------------------------------------------
-void ftCore::keyPressed(int key){
-	switch (key) {
+void ftCore::keyPressed(ofKeyEventArgs &_key){
+	switch (_key.key) {
 		case '1': drawMode.set(FT_CORE_DRAW_FLUID_DENSITY); break;
 		case '2': drawMode.set(FT_CORE_DRAW_FLUID_FIELDS); break;
 		case '3': drawMode.set(FT_CORE_DRAW_FLUID_VELOCITY); break;

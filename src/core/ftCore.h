@@ -25,6 +25,9 @@
 
 class ftCore {
 public:
+	ftCore();
+	~ftCore();
+	
 	void	setup(int _densityWidth = 1280, int _densityHeight = 720, int _flowWidth = 0, int _flowHeight = 0 );
 	void	setInput(ofTexture &_texture) { setInput(_texture, _texture); }
 	void	setInput(ofTexture &_forVelocity, ofTexture &_forDensity);
@@ -32,7 +35,7 @@ public:
 	void	draw(int _x, int _y, int _w, int _h);
 	
 	void	reset() 	{ velocityBridge.reset(); densityBridge.reset(); fluidSimulation.reset(); }
-	void	keyPressed(int key);
+	void	keyPressed(ofKeyEventArgs & key);
 	
 	int		getDensityWidth() 	{ return densityWidth; }
 	int		getDensityHeight() 	{ return densityHeight; }
@@ -74,9 +77,6 @@ private:
 	ftVelocityBridge	velocityBridge;
 	ftDensityBridge		densityBridge;
 	ftFluidSimulation	fluidSimulation;
-	
-	ofImage				flowToolsLogoImage;
-	bool				showLogo;
 	
 	// Visualisations
 	ofParameterGroup	flowCoreParameters;

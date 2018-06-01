@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>43.7563</minimum_FPS>
+	<minimum_FPS>46.3623</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
@@ -81,8 +81,8 @@
 		</flow_density>
 	</ofxFlowTools>
 	<flow_core>
-		<draw_mode>11</draw_mode>
-		<MODE>Optical Flow   (9)</MODE>
+		<draw_mode>0</draw_mode>
+		<MODE>Fluid Density  (1)</MODE>
 		<flow_visualisation>
 			<show_scalar>1</show_scalar>
 			<scalar_scale>0.3</scalar_scale>

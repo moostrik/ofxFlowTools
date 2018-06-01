@@ -87,7 +87,7 @@ namespace flowTools {
 			case FT_TEMPERATURE:
 				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
-			case FT_OBSTACLE:
+			case FT_TEMP_OBSTACLE:
 				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
 			default:
@@ -144,13 +144,13 @@ namespace flowTools {
 				setType(FT_PRESSURE);
 				break;
 			case 5:
-				if (type != FT_OBSTACLE) {
+				if (type != FT_TEMP_OBSTACLE) {
 					saveValue(type, force);
 					setForce(obstacle);
 					reset();
 				}
 				force.set(glm::vec4((int)abs(force.get().x + 0.5), 0, 0, 1));
-				setType(FT_OBSTACLE);
+				setType(FT_TEMP_OBSTACLE);
 				break;
 			default:
 				setType(FT_NONE);
@@ -186,7 +186,7 @@ namespace flowTools {
 			case FT_PRESSURE:
 				pressure.set(_force.x);
 				break;
-			case FT_OBSTACLE:
+			case FT_TEMP_OBSTACLE:
 				obstacle.set(_force.x);
 				break;
 			default:

@@ -6,13 +6,10 @@ void ofApp::setup(){
 //	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-//	velocityDots.setup(fieldWidth, fieldHeight);
+	flowCore.setup();
 	
-	// AREA
-//	area.setup(32, 32, "flow");
-	
-	flowTools.setup();
-	
+	flowToolsLogoImage.load("flowtools.png");
+	flowCore.addObstacle(flowToolsLogoImage.getTexture());
 	
 	// CAMERA
 	camWidth = 1280;
@@ -46,18 +43,15 @@ void ofApp::setupGui() {
 	
 	bool s = true;
 	switchGuiColor(s = !s);
-	gui.add(flowTools.getCoreParameters());
+	gui.add(flowCore.getCoreParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowTools.getOpticalFlowParameters());
+	gui.add(flowCore.getOpticalFlowParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowTools.getVelocityBridgeParameters());
+	gui.add(flowCore.getVelocityBridgeParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowTools.getDensityBridgeParameters());
+	gui.add(flowCore.getDensityBridgeParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowTools.getFluidSimulationParameters());
-	
-//	gui.add(area.parameters);
-//	gui.add(velocityDots.parameters);
+	gui.add(flowCore.getFluidSimulationParameters());
 
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -67,7 +61,6 @@ void ofApp::setupGui() {
 	
 	gui.minimizeAll();
 	toggleGuiDraw = true;
-	
 }
 
 
@@ -105,31 +98,14 @@ void ofApp::update(){
 		cameraFbo.end();
 		ofPopStyle();
 		
-		flowTools.setInput(cameraFbo.getTexture());
+		flowCore.setInput(cameraFbo.getTexture());
 	}
 	
-	flowTools.update(dt);
-	
-	
-	
-	
-	
-//	if (particleFlow.isActive()) {
-//		particleFlow.setSpeed(fluidSimulation.getSpeed());
-//		particleFlow.setCellSize(fluidSimulation.getCellSize());
-//		particleFlow.addFlowVelocity(opticalFlow.getOpticalFlow());
-//		particleFlow.addFluidVelocity(fluidSimulation.getVelocity());
-////		particleFlow.addDensity(fluidSimulation.getDensity());
-//		particleFlow.setObstacle(fluidSimulation.getObstacle());
-//	}
-//	particleFlow.update(dt);
-	
+	flowCore.update(dt);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	flowTools.keyPressed(key);
-	
 	switch (key) {
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
@@ -139,8 +115,8 @@ void ofApp::keyPressed(int key){
 		case 'C': doDrawCamera.set(!doDrawCamera.get()); break;
 		case 'r':
 		case 'R':
-			flowTools.reset();
-			
+			flowCore.reset();
+			flowCore.addObstacle(flowToolsLogoImage.getTexture());
 			break;
 			
 		default: break;
@@ -151,28 +127,24 @@ void ofApp::keyPressed(int key){
 void ofApp::draw(){
 	ofClear(0,0);
 	
+	ofPushStyle();
 	if (doDrawCamera.get()) {
-		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
-		ofPopStyle();
 	}
 	
-	flowTools.draw(0, 0, windowWidth, windowHeight);
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	flowCore.draw(0, 0, windowWidth, windowHeight);
 	
+	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+	flowToolsLogoImage.draw(0, 0, windowWidth, windowHeight);
+	
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {
 		drawGui();
 	}
+	ofPopStyle();
 }
-
-//--------------------------------------------------------------
-//void ofApp::drawVelocityDots(int _x, int _y, int _width, int _height) {
-//	ofPushStyle();
-//	ofEnableBlendMode(OF_BLENDMODE_ADD);
-//	velocityDots.setVelocity(fluidSimulation.getVelocity());
-//	velocityDots.draw(_x, _y, _width, _height);
-//	ofPopStyle();
-//}
 
 //--------------------------------------------------------------
 void ofApp::drawGui() {

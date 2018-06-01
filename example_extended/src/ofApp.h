@@ -9,7 +9,7 @@
 
 #include "ftArea.h"
 
-//#define USE_PROGRAMMABLE_GL
+#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 
@@ -20,9 +20,9 @@ public:
 	void	draw();
 	
 	// FLOWTOOLS
-	ftCore				flowTools;
+	ftCore				flowCore;
+	ofImage				flowToolsLogo;
 	ftDrawMouseForces	mouseForces;
-	
 	
 	// GUI
 	ofxPanel			gui;

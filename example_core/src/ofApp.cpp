@@ -8,8 +8,8 @@ void ofApp::setup(){
 	
 	flowCore.setup();
 	
-	flowToolsLogoImage.load("flowtools.png");
-	flowCore.addObstacle(flowToolsLogoImage.getTexture());
+	flowToolsLogo.load("flowtools.png");
+	flowCore.addObstacle(flowToolsLogo.getTexture());
 	
 	// CAMERA
 	camWidth = 1280;
@@ -106,6 +106,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	
 	switch (key) {
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
@@ -116,7 +117,7 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			flowCore.reset();
-			flowCore.addObstacle(flowToolsLogoImage.getTexture());
+			flowCore.addObstacle(flowToolsLogo.getTexture());
 			break;
 			
 		default: break;
@@ -125,6 +126,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	
 	ofClear(0,0);
 	
 	ofPushStyle();
@@ -137,7 +139,7 @@ void ofApp::draw(){
 	flowCore.draw(0, 0, windowWidth, windowHeight);
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	flowToolsLogoImage.draw(0, 0, windowWidth, windowHeight);
+	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {

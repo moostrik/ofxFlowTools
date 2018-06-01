@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>43.7563</minimum_FPS>
+	<minimum_FPS>44.8368</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
@@ -81,8 +81,8 @@
 		</flow_density>
 	</ofxFlowTools>
 	<flow_core>
-		<draw_mode>11</draw_mode>
-		<MODE>Optical Flow   (9)</MODE>
+		<draw_mode>0</draw_mode>
+		<MODE>Fluid Density  (1)</MODE>
 		<flow_visualisation>
 			<show_scalar>1</show_scalar>
 			<scalar_scale>0.3</scalar_scale>
@@ -135,4 +135,66 @@
 		<density_from_pressure>0</density_from_pressure>
 		<density_from_vorticity>-0.1</density_from_vorticity>
 	</fluid_solver>
+	<mouse_draw>
+		<left>
+			<reset>0</reset>
+			<draw_full_res>
+				<non_den_vel_tem_prs_ob>1</non_den_vel_tem_prs_ob>
+				<is_temporary>1</is_temporary>
+				<force>1, 1, 1, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_full_res>
+			<draw_flow_res_1>
+				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
+				<is_temporary>1</is_temporary>
+				<force>-0.00163573, 0.00124785, 0, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_flow_res_1>
+			<draw_flow_res_2>
+				<non_den_vel_tem_prs_ob>3</non_den_vel_tem_prs_ob>
+				<is_temporary>1</is_temporary>
+				<force>1, 0, 0, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_flow_res_2>
+		</left>
+		<right>
+			<reset>0</reset>
+			<draw_full_res>
+				<non_den_vel_tem_prs_ob>1</non_den_vel_tem_prs_ob>
+				<is_temporary>0</is_temporary>
+				<force>1, 1, 1, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_full_res>
+			<draw_flow_res_1>
+				<non_den_vel_tem_prs_ob>2</non_den_vel_tem_prs_ob>
+				<is_temporary>0</is_temporary>
+				<force>1, 1, 0, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_flow_res_1>
+			<draw_flow_res_2>
+				<non_den_vel_tem_prs_ob>3</non_den_vel_tem_prs_ob>
+				<is_temporary>0</is_temporary>
+				<force>1, 0, 0, 1</force>
+				<strength>1</strength>
+				<radius>0.035</radius>
+				<edge>1</edge>
+				<reset>0</reset>
+			</draw_flow_res_2>
+		</right>
+	</mouse_draw>
 </settings>

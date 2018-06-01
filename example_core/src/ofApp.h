@@ -17,7 +17,7 @@ public:
 	void	draw();
 	
 	ftCore				flowCore;
-	ofImage				flowToolsLogoImage;
+	ofImage				flowToolsLogo;
 
 	// GUI
 	ofxPanel			gui;

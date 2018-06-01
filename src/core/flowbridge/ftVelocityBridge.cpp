@@ -43,7 +43,7 @@ namespace flowTools {
 		parameters.add(speed.set("speed", 30, .1, 100));
 	};
 	
-	void	ftVelocityBridge::setup(int _width, int _height){
+	void ftVelocityBridge::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
@@ -75,5 +75,9 @@ namespace flowTools {
 		}
 	}
 	
+	void ftVelocityBridge::reset() {
+		ftUtil::zero(swapBuffer);
+		ftUtil::zero(multiplyFbo); 
+	}
 	
 }

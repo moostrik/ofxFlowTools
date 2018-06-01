@@ -39,14 +39,14 @@ namespace flowTools {
 		parameters.add(drawType.set("non/den/vel/tem/prs/ob", 0, 0, 5));
 		parameters.add(isTemporary.set("is temporary", true));
 		isTemporary.addListener(this, &ftDrawForce::resetonTempSwitch);
-		parameters.add(force.set("force", ofVec4f(1,1,1,1), ofVec4f(-1,-1,-1,-1), ofVec4f(1,1,1,1)));
+		parameters.add(force.set("force", glm::vec4(1,1,1,1), glm::vec4(-1,-1,-1,-1), glm::vec4(1,1,1,1)));
 		parameters.add(strength.set("strength", 1, 0, 5));
 		parameters.add(radius.set("radius", 0.035, 0, .1));
 		parameters.add(edge.set("edge", 1.0, 0, 1));
 		parameters.add(doReset.set("reset", false));
 	}
 		
-	void ftDrawForce::setup(int _width, int _height, ftDrawForceType _type, bool _isTemporary) {
+	void ftDrawForce::setup(int _width, int _height, ftForceType _type, bool _isTemporary) {
 		width = _width;
 		height = _height;
 		type = _type;
@@ -57,7 +57,7 @@ namespace flowTools {
 		ftUtil::zero(forceBuffer);
 			
 		density = ofFloatColor(1,1,1,1);
-		velocity = ofVec2f(0,0);
+		velocity = glm::vec2(0,0);
 		temperature = 1;
 		pressure = -1;
 		obstacle = true;
@@ -66,8 +66,8 @@ namespace flowTools {
 		forceApplied = false;
 	}
 		
-	void ftDrawForce::applyForce(ofVec2f _normalizedPosition) {
-		absolutePosition = _normalizedPosition * ofVec2f(width, height);
+	void ftDrawForce::applyForce(glm::vec2 _normalizedPosition) {
+		absolutePosition = _normalizedPosition * glm::vec2(width, height);
 		
 		absoluteRadius = radius * width;
 		
@@ -76,19 +76,19 @@ namespace flowTools {
 		
 //		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 		
-		ofVec4f typeForce = force;
+		glm::vec4 typeForce = force;
 		switch (type) {
 			case FT_VELOCITY:
-				typeForce *= ofVec4f(width, height, 0, 1);
+				typeForce *= glm::vec4(width, height, 0, 1);
 				break;
 			case FT_PRESSURE:
-				typeForce *= ofVec4f(100, 0, 0, 1);
+				typeForce *= glm::vec4(100, 0, 0, 1);
 				break;
 			case FT_TEMPERATURE:
-				typeForce = ofVec4f(force.get().x, force.get().x, force.get().x, 1);
+				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
 			case FT_OBSTACLE:
-				typeForce = ofVec4f(force.get().x, force.get().x, force.get().x, 1);
+				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
 			default:
 				break;
@@ -122,7 +122,7 @@ namespace flowTools {
 					setForce(velocity);
 					reset();
 				}
-				force.set(ofVec4f(force.get().x, force.get().y, 0, 1));
+				force.set(glm::vec4(force.get().x, force.get().y, 0, 1));
 				setType(FT_VELOCITY);
 				break;
 			case 3:
@@ -131,7 +131,7 @@ namespace flowTools {
 					setForce(temperature);
 					reset();
 				}
-				force.set(ofVec4f(force.get().x, 0, 0, 1));
+				force.set(glm::vec4(force.get().x, 0, 0, 1));
 				setType(FT_TEMPERATURE);
 				break;
 			case 4:
@@ -140,7 +140,7 @@ namespace flowTools {
 					setForce(pressure);
 					reset();
 				}
-				force.set(ofVec4f(force.get().x, 0, 0, 1));
+				force.set(glm::vec4(force.get().x, 0, 0, 1));
 				setType(FT_PRESSURE);
 				break;
 			case 5:
@@ -149,7 +149,7 @@ namespace flowTools {
 					setForce(obstacle);
 					reset();
 				}
-				force.set(ofVec4f((int)abs(force.get().x + 0.5), 0, 0, 1));
+				force.set(glm::vec4((int)abs(force.get().x + 0.5), 0, 0, 1));
 				setType(FT_OBSTACLE);
 				break;
 			default:
@@ -172,13 +172,13 @@ namespace flowTools {
 		forceApplied = true;
 	}
 	
-	void ftDrawForce::saveValue(ftDrawForceType _type, ofVec4f _force) {
+	void ftDrawForce::saveValue(ftForceType _type, glm::vec4 _force) {
 		switch (_type) {
 			case FT_DENSITY:
 				density.set(ofFloatColor(_force.x, _force.y, _force.z, _force.w));
 				break;
 			case FT_VELOCITY:
-				velocity.set(ofVec4f(_force.x, _force.y, 0, 1));
+				velocity.set(glm::vec4(_force.x, _force.y, 0, 1));
 				break;
 			case FT_TEMPERATURE:
 				temperature.set(_force.x);

@@ -19,6 +19,7 @@ namespace flowTools {
 		void	setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void	setDensity(ofTexture& tex);
 		void	setVelocity(ofTexture& tex);
+		void	reset();
 		void	update(float _deltaTime);
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		

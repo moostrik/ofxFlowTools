@@ -21,15 +21,16 @@ namespace flowTools {
 		int					getNumForces() { return numDrawForces; }
 		
 		bool				didChange(int _index);
-		ftDrawForceType		getType(int _index);
+		ftForceType			getType(int _index);
 		ofTexture&			getTextureReference(int _index);
 		float				getStrength(int _index);
 		
-//		ofParameterGroup	parameters;
-		ofParameterGroup	leftButtonParameters;
-		ofParameterGroup	rightButtonParameters;
+		ofParameterGroup&	getParameters() { return parameters; }
 		
 	private:
+		ofParameterGroup	parameters;
+		ofParameterGroup	leftButtonParameters;
+		ofParameterGroup	rightButtonParameters;
 		ofParameter<bool>	doResetDrawForces;
 		void				resetDrawForcesListner(bool& _value) { if (_value) { reset(); }; doResetDrawForces.set(false); }
 		
@@ -46,7 +47,7 @@ namespace flowTools {
 		void				mouseMoved(ofMouseEventArgs & mouse);
 		void				mouseDragged(ofMouseEventArgs & mouse);
 		
-		ofVec2f				lastNormalizedMouse;
+		glm::vec2				lastNormalizedMouse;
 		
 	};
 }

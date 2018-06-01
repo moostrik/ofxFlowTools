@@ -42,15 +42,19 @@ namespace flowTools {
 		drawForces[5].setup(simulationWidth, simulationHeight, FT_TEMPERATURE, false);
 		drawForces[5].setName("draw flow res 2");
 		
-		leftButtonParameters.setName("mouse left button");
+		leftButtonParameters.setName("left");
 		leftButtonParameters.add(doResetDrawForces.set("reset", false));
-		rightButtonParameters.setName("mouse right button");
+		rightButtonParameters.setName("right");
 		rightButtonParameters.add(doResetDrawForces.set("reset", false));
 		doResetDrawForces.addListener(this, &ftDrawMouseForces::resetDrawForcesListner);
 		for (int i=0; i<3; i++) {
 			leftButtonParameters.add(drawForces[i].parameters);
 			rightButtonParameters.add(drawForces[i+3].parameters);
 		}
+		
+		parameters.setName("mouse draw");
+		parameters.add(leftButtonParameters);
+		parameters.add(rightButtonParameters);
 	}
 	
 	void ftDrawMouseForces::update(float _deltaTime) {
@@ -67,7 +71,7 @@ namespace flowTools {
 		for(int i=0; i<getNumForces(); i++) {
 			ofEnableBlendMode(_blendmode);
 			if (didChange(i)) {
-				ftDrawForceType dfType = getType(i);
+				ftForceType dfType = getType(i);
 				if (dfType == FT_DENSITY)
 					getTextureReference(i).draw(_x, _y, _w, _h);
 			}
@@ -88,7 +92,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	ftDrawForceType ftDrawMouseForces::getType(int _index) {
+	ftForceType ftDrawMouseForces::getType(int _index) {
 		if (_index < 0 || _index >= numDrawForces) {
 			ofLogWarning("ftDrawMouseForces::getDrawForceType: index out of range");
 			return FT_NONE;
@@ -125,11 +129,11 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftDrawMouseForces::mouseDragged( ofMouseEventArgs& mouse ) {
-		ofVec2f normalizedMouse;
+		glm::vec2 normalizedMouse;
 		
-		normalizedMouse.set(mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
+		normalizedMouse = glm::vec2 (mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
 		
-		ofVec2f velocity = normalizedMouse - lastNormalizedMouse;
+		glm::vec2 velocity = normalizedMouse - lastNormalizedMouse;
 		
 		if (mouse.button == 0) {
 			
@@ -147,15 +151,15 @@ namespace flowTools {
 				drawForces[i].applyForce(normalizedMouse);
 			}
 		}
-		lastNormalizedMouse.set(normalizedMouse);
+		lastNormalizedMouse = normalizedMouse;
 		
 	}
 	
 	//--------------------------------------------------------------
 	void ftDrawMouseForces::mouseMoved( ofMouseEventArgs& mouse ){
-		ofVec2f normalizedMouse;
-		normalizedMouse.set(mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
-		lastNormalizedMouse.set(normalizedMouse);
+		glm::vec2 normalizedMouse;
+		normalizedMouse = glm::vec2(mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
+		lastNormalizedMouse = normalizedMouse;
 	}
 	
 }

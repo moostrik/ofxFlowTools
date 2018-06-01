@@ -106,4 +106,11 @@ namespace flowTools {
 		velocityTexture = &tex;
 		bVelocityTextureSet = true;
 	}
+	
+	void ftDensityBridge::reset() {
+		ftUtil::zero(velocitySwapBuffer);
+		ftUtil::zero(densitySwapBuffer);
+		ftUtil::zero(luminanceMaskFbo);
+		ftUtil::zero(drawFbo);
+	}
 }

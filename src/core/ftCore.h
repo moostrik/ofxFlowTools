@@ -30,7 +30,24 @@ public:
 	void	setInput(ofTexture &_forVelocity, ofTexture &_forDensity);
 	void	update(float _deltaTime = -1);
 	void	draw(int _x, int _y, int _w, int _h);
+	
+	void	reset() 	{ velocityBridge.reset(); densityBridge.reset(); fluidSimulation.reset(); }
 	void	keyPressed(int key);
+	
+	int		getDensityWidth() 	{ return densityWidth; }
+	int		getDensityHeight() 	{ return densityHeight; }
+	int		getFlowWidth() 		{ return flowWidth; }
+	int		getFlowHeight() 	{ return flowHeight; }
+	int		getFieldWidth() 	{ return fieldWidth; }
+	int		getFieldHeight() 	{ return fieldHeight; }
+	
+	void 	addForce(ftForceType _type, ofTexture& _tex, float _strength  = 1.0);
+	void    addDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
+	void    addVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
+	void    addTemperature(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addTemperature(_tex, _strength); }
+	void    addPressure(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addPressure(_tex, _strength); }
+	void    addObstacle(ofTexture& _tex)							{ fluidSimulation.addObstacle(_tex); }
+	void    addTempObstacle(ofTexture& _tex)						{ fluidSimulation.addTempObstacle(_tex); }
 
 	ofParameterGroup& getParameters() 				{ return parameters; }
 	ofParameterGroup& getCoreParameters() 			{ return flowCoreParameters; }

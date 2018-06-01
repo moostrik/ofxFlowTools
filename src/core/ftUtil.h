@@ -10,6 +10,15 @@
 
 namespace flowTools {
 	
+	enum ftForceType{
+		FT_NONE			= 0,
+		FT_DENSITY		= 1,
+		FT_VELOCITY		= 2,
+		FT_TEMPERATURE	= 3,
+		FT_PRESSURE		= 4,
+		FT_OBSTACLE		= 5,
+	};
+	
 	class ftUtil {
 	public:
 		static void zero(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }

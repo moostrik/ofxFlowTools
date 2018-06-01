@@ -82,6 +82,29 @@ void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
 	densityBridge.setDensity(_forDensity);
 }
 
+
+//--------------------------------------------------------------
+void ftCore::addForce(flowTools::ftForceType _type, ofTexture &_tex, float _strength) {
+	switch (_type) {
+		case FT_DENSITY:
+			addDensity(_tex, _strength);
+			break;
+		case FT_VELOCITY:
+			addVelocity(_tex, _strength);
+			break;
+		case FT_TEMPERATURE:
+			addTemperature(_tex, _strength);
+			break;
+		case FT_PRESSURE:
+			addPressure(_tex, _strength);
+			break;
+		case FT_OBSTACLE:
+			addTempObstacle(_tex);
+		default:
+			break;
+	}
+}
+
 //--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
 	if (_deltaTime < 0) {

@@ -139,6 +139,7 @@ void ofApp::keyPressed(int key){
 		case 'C': doDrawCamera.set(!doDrawCamera.get()); break;
 		case 'r':
 		case 'R':
+			flowTools.reset();
 			
 			break;
 			

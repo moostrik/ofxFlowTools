@@ -15,7 +15,7 @@ namespace flowTools {
 		
 		ftVelocityBridge();
 		void	setup(int _width, int _height);
-		void	reset() { ftUtil::zero(swapBuffer); }
+		void	reset();
 		void	update(float _deltaTime);
 		void	setSource(ofTexture& _tex);
 		

@@ -46,3 +46,7 @@
 #include "ftTemperatureField.h"
 #include "ftPressureField.h"
 #include "ftVTField.h"
+
+// EXTENTION
+#include "ftDrawMouseForces.h"
+

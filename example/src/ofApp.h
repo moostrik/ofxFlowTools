@@ -6,10 +6,9 @@
 #include "ftCore.h"
 #include "ftArea.h"
 
-#define USE_PROGRAMMABLE_GL
+//#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
-
 
 class ofApp : public ofBaseApp{
 public:

@@ -57,26 +57,15 @@ private:
 	ftVelocityBridge	velocityBridge;
 	ftDensityBridge		densityBridge;
 	ftFluidSimulation	fluidSimulation;
-//	ftParticleFlow		particleFlow;
-	
-//	ftVelocitySpheres	velocityDots;
 	
 	ofImage				flowToolsLogoImage;
 	bool				showLogo;
-	
-	// Area
-//	ftArea				area;
-	
-	// MouseDraw
-//	ftDrawMouseForces	mouseForces;
 	
 	// Visualisations
 	ofParameterGroup	flowCoreParameters;
 	ofParameterGroup	visualizeParameters;
 	ftDisplayScalar		displayScalar;
-//	ftDisplayScalar		displayScalarNormalized;
 	ftVelocityField		velocityField;
-//	ftVelocityField		velocityFieldNormalized;
 	ftTemperatureField	temperatureField;
 	ftPressureField		pressureField;
 	ftVTField			velocityTemperatureField;
@@ -105,7 +94,6 @@ private:
 	void				drawComposite(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawFluidFields(int _x, int _y, int _w, int _h);
 	
-	void				drawParticles(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
@@ -119,10 +107,5 @@ private:
 	
 	void				drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 	void				drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	
-//	void				drawMouseForces(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	
-	
-//	void				drawVelocityDots(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 };
 

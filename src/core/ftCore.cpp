@@ -244,13 +244,9 @@ void ftCore::drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 //--------------------------------------------------------------
 void ftCore::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
-//		displayScalarNormalized.setSource(velocityBridge.getTexture());
-//		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
 		displayScalar.setSource(velocityBridge.getTexture());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
 	if (showField.get()) {
-//		velocityFieldNormalized.setVelocity(velocityBridge.getTexture());
-//		velocityFieldNormalized.draw(_x, _y, _w, _h); }
 		velocityField.setVelocity(velocityBridge.getTexture());
 		velocityField.draw(_x, _y, _w, _h); }
 }
@@ -258,13 +254,9 @@ void ftCore::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 //--------------------------------------------------------------
 void ftCore::drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	if (showScalar.get()) {
-//		displayScalarNormalized.setSource(opticalFlow.getTexture());
-//		displayScalarNormalized.draw(_x, _y, _w, _h, _blendmode); }
 		displayScalar.setSource(opticalFlow.getTexture());
 		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
 	if (showField.get()) {
-//		velocityFieldNormalized.setVelocity(opticalFlow.getTexture());
-//		velocityFieldNormalized.draw(_x, _y, _w, _h); }
 		velocityField.setVelocity(opticalFlow.getTexture());
 		velocityField.draw(_x, _y, _w, _h); }
 	}

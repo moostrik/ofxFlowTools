@@ -24,50 +24,49 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("velocity field");
+			parameters.add(isActive.set("active", true));
 			parameters.add(velocityScale.set("velocity scale", 1, 0, 10));
 //			parameters.add(arrowSize.set("arrow size", 4, 1, 8));
 			arrowSize.set("arrow size", 4, 1, 8);
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
-			
-			ofPushMatrix();
-			ofPushStyle();
-			
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			if (_antiAlias) { ofEnableAntiAliasing; }
-			else { ofDisableAntiAliasing(); }
-			
-			if (lineSmooth.get()) {
-				glEnable(GL_LINE_SMOOTH);
+		void	draw(ofTexture& _velTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
+			if (isActive.get()) {
+				ofPushMatrix();
+				ofPushStyle();
+				
+				//			ofDisableAntiAliasing();
+				//			if (lineSmooth.get()) {
+				//				glEnable(GL_LINE_SMOOTH);
+				//			}
+				
+				ofTranslate(_x, _y);
+				ofScale(_width, _height);
+				
+				velocityFieldShader.update(fieldVbo, _velTex, (1.0 / width) * arrowSize.get() * velocityScale.get(), color.get());
+				
+				//			if (lineSmooth.get()) {
+				//				glDisable(GL_LINE_SMOOTH);
+				//			}
+				
+				ofPopStyle();
+				ofPopMatrix();
 			}
-			
-			ofTranslate(_x, _y);
-			ofScale(_width, _height);
-			
-			velocityFieldShader.update(fieldVbo, *velocityTexture, (1.0 / width) * arrowSize.get() * velocityScale.get(), color.get());
-			
-			if (lineSmooth.get()) {
-				glDisable(GL_LINE_SMOOTH);
-			}
-			
-//			ofEnableAntiAliasing();
-			ofPopStyle();
-			ofPopMatrix();
 		}
 		
-		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
+		void	setActive(bool _value)				{ isActive.set(_value); }
 		void	setScale(float _value)				{ setVelocityScale(_value); }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		void	setColor(ofFloatColor _value)		{ color.set(_value); }
 		void	setArrowSize(float _value)			{ arrowSize.set(_value); }
 		
-		float	getVelocityScale()					{ return velocityScale.get(); }
-		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
+		bool	getActive()							{ return isActive.get(); }
+		float	getVelocityScale()					{ return velocityScale.get(); }
+		bool	getLineSmooth()						{ return lineSmooth.get(); }
 		ofFloatColor	getColor()					{ return color.get(); }
 //		float	getMaxArrowLength()					{ return maxArrowLength.get(); }
 		
@@ -77,13 +76,12 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
+		ofParameter<bool> 	isActive;
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
 		ofParameter<bool>	lineSmooth;
 		ofParameter<float>	arrowSize;
 		ofParameter<ofFloatColor>	color;
 
-		
-		ofTexture*	velocityTexture;
 		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		

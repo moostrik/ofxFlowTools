@@ -44,9 +44,9 @@ public:
 	int		getFieldWidth() 	{ return fieldWidth; }
 	int		getFieldHeight() 	{ return fieldHeight; }
 	
-	void 		addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
+	void 	addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
 	
-	void 		setFlow(ftFlowType _type, ofTexture& _tex);
+	void 	setFlow(ftFlowType _type, ofTexture& _tex);
 	
 	void	addFluidDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
 	void	addFluidVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
@@ -111,14 +111,11 @@ private:
 	ftVTField			velocityTemperatureField;
 	
 	ofParameter<bool>	showScalar;
+	void showScalarListener(bool &_value);
 	ofParameter<bool>	showField;
+	void showFieldListener(bool &_value);
 	ofParameter<float>	visualizeScale;
-	void				setScale(float& _value)	{ 	displayScalar.setScale(_value);
-													velocityField.setVelocityScale(_value);
-													velocityTemperatureField.setVelocityScale(_value);
-													temperatureField.setScale(_value);
-													velocityTemperatureField.setTemperatureScale(_value);
-													pressureField.setScale(_value); }
+	void visualizeScaleListener(float& _value);
 	
 	// Parameters
 	void				setupParameters();
@@ -127,22 +124,5 @@ private:
 	ofParameter<int>	drawMode;
 	void				drawModeSetName(int& _value) ;
 	ofParameter<string> drawName;
-	
-	void				drawComposite(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidFields(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	
-	void				drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidVorticity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidBuoyance(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawFluidObstacle(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	
-	void				drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	
-	void				drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
-	void				drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 };
 

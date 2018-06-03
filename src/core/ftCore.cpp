@@ -57,7 +57,9 @@ void ftCore::setupParameters() {
 	parameters.add(visualizeParameters);
 	
 	drawMode.addListener(this, &ftCore::drawModeSetName);
-	visualizeScale.addListener(this, &ftCore::setScale);
+	showScalar.addListener(this, &ftCore::showScalarListener);
+	showField.addListener(this, &ftCore::showFieldListener);
+	visualizeScale.addListener(this, &ftCore::visualizeScaleListener);
 	
 	parameters.add(opticalFlow.getParameters());
 	parameters.add(velocityBridge.getParameters());
@@ -139,14 +141,6 @@ ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
 
 //--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
-	if (_deltaTime < 0) {
-		deltaTime = ofGetElapsedTimef() - lastTime;
-		lastTime = ofGetElapsedTimef();
-	} else {
-		deltaTime = _deltaTime;
-	}
-	
-//	float dt = min(deltaTime, 1.f / 30.f);
 	float dt = 1.0 / ofGetFrameRate();
 	
 	opticalFlow.update();
@@ -165,18 +159,53 @@ void ftCore::update(float _deltaTime){
 }
 
 //--------------------------------------------------------------
-void ftCore::keyPressed(ofKeyEventArgs &_key){
-	switch (_key.key) {
-		case '1': drawMode.set(FT_CORE_DRAW_FLUID_DENSITY); break;
-		case '2': drawMode.set(FT_CORE_DRAW_FLUID_FIELDS); break;
-		case '3': drawMode.set(FT_CORE_DRAW_FLUID_VELOCITY); break;
-		case '4': drawMode.set(FT_CORE_DRAW_FLUID_PRESSURE); break;
-		case '5': drawMode.set(FT_CORE_DRAW_FLUID_TEMPERATURE); break;
-		case '6': drawMode.set(FT_CORE_DRAW_FLUID_OBSTACLE); break;
-		case '7': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_MASK); break;
-		case '8': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_TRAIL); break;
-		case '9': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY); break;
-		default: break;
+void ftCore::draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+	switch(drawMode.get()) {
+		case FT_CORE_DRAW_FLUID_DENSITY:
+			fluidSimulation.draw(_x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_FIELDS:
+			pressureField.draw(fluidSimulation.getPressure(), _x, _y, _w, _h);
+			velocityTemperatureField.draw(fluidSimulation.getVelocity(), fluidSimulation.getTemperature(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_VELOCITY:
+			displayScalar.draw(fluidSimulation.getVelocity(), _x, _y, _w, _h, _blendmode);
+			velocityField.draw(fluidSimulation.getVelocity(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_PRESSURE:
+			displayScalar.draw(fluidSimulation.getPressure(), _x, _y, _w, _h, _blendmode);
+			pressureField.draw(fluidSimulation.getPressure(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_TEMPERATURE:
+			displayScalar.draw(fluidSimulation.getTemperature(), _x, _y, _w, _h, _blendmode);
+			temperatureField.draw(fluidSimulation.getTemperature(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_DIVERGENCE:
+			displayScalar.draw(fluidSimulation.getDivergence(), _x, _y, _w, _h, _blendmode);
+			temperatureField.draw(fluidSimulation.getDivergence(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_VORTICITY:
+			displayScalar.draw(fluidSimulation.getConfinement(), _x, _y, _w, _h, _blendmode);
+			velocityField.draw(fluidSimulation.getConfinement(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_FLUID_BUOYANCY:
+			displayScalar.draw(fluidSimulation.getSmokeBuoyancy(), _x, _y, _w, _h, _blendmode);
+			velocityField.draw(fluidSimulation.getSmokeBuoyancy(), _x, _y, _w, _h);
+			break;
+		case FT_CORE_DRAW_FLUID_OBSTACLE:
+			fluidSimulation.getObstacle().draw(_x, _y, _w, _h);
+			break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:
+			densityBridge.draw(_x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL:
+			displayScalar.draw(velocityBridge.getTexture(), _x, _y, _w, _h, _blendmode);
+			velocityField.draw(velocityBridge.getTexture(), _x, _y, _w, _h, _blendmode);
+			break;
+		case FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY:
+			displayScalar.draw(opticalFlow.getTexture(), _x, _y, _w, _h, _blendmode);
+			velocityField.draw(opticalFlow.getTexture(), _x, _y, _w, _h, _blendmode);
+			break;
 	}
 }
 
@@ -199,124 +228,41 @@ void ftCore::drawModeSetName(int &_value) {
 }
 
 //--------------------------------------------------------------
-void ftCore::draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	switch(drawMode.get()) {
-		case FT_CORE_DRAW_FLUID_DENSITY:		drawFluidDensity(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_FIELDS:			drawFluidFields(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_VELOCITY:		drawFluidVelocity(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_PRESSURE:		drawFluidPressure(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_TEMPERATURE:	drawFluidTemperature(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_DIVERGENCE: 	drawFluidDivergence(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_VORTICITY:		drawFluidVorticity(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_BUOYANCY:		drawFluidBuoyance(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_FLUID_OBSTACLE:		drawFluidObstacle(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_MASK:	drawMask(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_TRAIL: 	drawTrail(_x,_y,_w,_h, _blendmode); break;
-		case FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY:drawOpticalFlow(_x,_y,_w,_h, _blendmode); break;
+void ftCore::keyPressed(ofKeyEventArgs &_key){
+	switch (_key.key) {
+		case '1': drawMode.set(FT_CORE_DRAW_FLUID_DENSITY); break;
+		case '2': drawMode.set(FT_CORE_DRAW_FLUID_FIELDS); break;
+		case '3': drawMode.set(FT_CORE_DRAW_FLUID_VELOCITY); break;
+		case '4': drawMode.set(FT_CORE_DRAW_FLUID_PRESSURE); break;
+		case '5': drawMode.set(FT_CORE_DRAW_FLUID_TEMPERATURE); break;
+		case '6': drawMode.set(FT_CORE_DRAW_FLUID_OBSTACLE); break;
+		case '7': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_MASK); break;
+		case '8': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_TRAIL); break;
+		case '9': drawMode.set(FT_CORE_DRAW_OPTICAL_FLOW_VELOCITY); break;
+		default: break;
 	}
 }
 
 //--------------------------------------------------------------
-void ftCore::drawFluidDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	fluidSimulation.draw(_x, _y, _w, _h, _blendmode);
+void ftCore::showScalarListener(bool &_value) {
+	displayScalar.setActive(_value);
 }
 
 //--------------------------------------------------------------
-void ftCore::drawFluidFields(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	pressureField.setPressure(fluidSimulation.getPressure());
-	velocityTemperatureField.setVelocity(fluidSimulation.getVelocity());
-	velocityTemperatureField.setTemperature(fluidSimulation.getTemperature());
-	pressureField.draw(_x, _y, _w, _h);
-	velocityTemperatureField.draw(_x, _y, _w, _h);
+void ftCore::showFieldListener(bool &_value) {
+	velocityField.setActive(_value);
+	velocityTemperatureField.setActive(_value);
+	temperatureField.setActive(_value);
+	velocityTemperatureField.setActive(_value);
+	pressureField.setActive(_value);
 }
 
 //--------------------------------------------------------------
-void ftCore::drawFluidVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getVelocity());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
-	if (showField.get()) {
-		velocityField.setVelocity(fluidSimulation.getVelocity());
-		velocityField.draw(_x, _y, _w, _h);	}
+void ftCore::visualizeScaleListener(float& _value)	{
+	displayScalar.setScale(_value);
+	velocityField.setVelocityScale(_value);
+	velocityTemperatureField.setVelocityScale(_value);
+	temperatureField.setScale(_value);
+	velocityTemperatureField.setTemperatureScale(_value);
+	pressureField.setScale(_value);
 }
-
-//--------------------------------------------------------------
-void ftCore::drawFluidPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getPressure());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
-	if (showField.get()) {
-		pressureField.setPressure(fluidSimulation.getPressure());
-		pressureField.draw(_x, _y, _w, _h);	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawFluidTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getTemperature());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
-	if (showField.get()) {
-		temperatureField.setTemperature(fluidSimulation.getTemperature());
-		temperatureField.draw(_x, _y, _w, _h);	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawFluidDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getDivergence());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
-	if (showField.get()) {
-		temperatureField.setTemperature(fluidSimulation.getDivergence());
-		temperatureField.draw(_x, _y, _w, _h);	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawFluidVorticity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getConfinement());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
-	if (showField.get()) {
-		velocityField.setVelocity(fluidSimulation.getConfinement());
-		velocityField.draw(_x, _y, _w, _h);	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawFluidBuoyance(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(fluidSimulation.getSmokeBuoyancy());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode);	}
-	if (showField.get()) {
-		velocityField.setVelocity(fluidSimulation.getSmokeBuoyancy());
-		velocityField.draw(_x, _y, _w, _h);	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawFluidObstacle(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	fluidSimulation.getObstacle().draw(_x, _y, _w, _h);
-}
-
-//--------------------------------------------------------------
-void ftCore::drawMask(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	densityBridge.draw(_x, _y, _w, _h, _blendmode);
-	
-}
-
-//--------------------------------------------------------------
-void ftCore::drawTrail(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(velocityBridge.getTexture());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
-	if (showField.get()) {
-		velocityField.setVelocity(velocityBridge.getTexture());
-		velocityField.draw(_x, _y, _w, _h); }
-}
-
-//--------------------------------------------------------------
-void ftCore::drawOpticalFlow(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-	if (showScalar.get()) {
-		displayScalar.setSource(opticalFlow.getTexture());
-		displayScalar.draw(_x, _y, _w, _h, _blendmode); }
-	if (showField.get()) {
-		velocityField.setVelocity(opticalFlow.getTexture());
-		velocityField.draw(_x, _y, _w, _h); }
-	}

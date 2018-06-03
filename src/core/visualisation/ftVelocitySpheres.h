@@ -26,14 +26,15 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, true, true, false);
 			
 			parameters.setName("velocity dots");
+			parameters.add(isActive.set("active", true));
 			parameters.add(distanceScale.set("distance scale", .1, 0, 1));
 			parameters.add(sizeScale.set("size scale", 1.5, 0, 2));
 			parameters.add(minDotSize.set("min dot size", 2, 0, 20));
 			parameters.add(maxDotSize.set("max dot size", 10, 0, 20));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height) {
-			
+		void	draw(ofTexture& _velTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
+			if (isActive.get()) {
 			ofPushMatrix();
 			ofPushStyle();
 			
@@ -47,10 +48,13 @@ namespace flowTools {
 			ofEnableAntiAliasing();
 			ofPopStyle();
 			ofPopMatrix();
+			}
 		}
 		
+		void	setActive(bool _value)		{ isActive.set(_value); }
 		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
 		
+		bool	getActive()							{ return isActive.get(); }
 		int		getWidth()							{ return width; }
 		int		getHeight()							{ return height; }
 		
@@ -60,6 +64,7 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
+		ofParameter<bool> 	isActive;
 		ofParameter<float>	distanceScale;
 		ofParameter<float>	sizeScale;
 		ofParameter<float>	minDotSize;

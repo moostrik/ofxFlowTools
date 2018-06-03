@@ -24,35 +24,35 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("pressure field");
+			parameters.add(isActive.set("active", true));
 			parameters.add(pressureScale.set("pressure scale", .45, 0, 1));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
-			
-			ofPushMatrix();
-			ofPushStyle();
-			
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			if (_antiAlias) { ofEnableAntiAliasing; }
-			else { ofDisableAntiAliasing(); }
-			
-			ofTranslate(_x, _y);
-			ofScale(_width, _height);
-			float radius = 2.0 / (height) * 0.275;
-			pressureFieldShader.update(fieldVbo, *pressureTexture, pressureScale.get(), radius);
-			
-			
-			ofPopStyle();
-			ofPopMatrix();
+		void draw(ofTexture& _prsTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
+			if (isActive.get()) {
+				ofPushMatrix();
+				ofPushStyle();
+				
+				ofEnableBlendMode(_blendmode);
+				
+				ofTranslate(_x, _y);
+				ofScale(_width, _height);
+				float radius = 2.0 / (height) * 0.275;
+				pressureFieldShader.update(fieldVbo, _prsTex, pressureScale.get(), radius);
+				
+				ofPopStyle();
+				ofPopMatrix();
+			}
 		}
 		
-		void	setPressure(ofTexture& tex)		{ pressureTexture = &tex; }
+		void	setActive(bool _value)			{ isActive.set(_value); }
 		void	setScale(float _value)			{ pressureScale.set(_value); }
 		void	setPressureScale(float _value)	{ setScale(_value); }
 		
-		float	getPressureScale()				{ return pressureScale.get(); }
 		int		getWidth()						{ return width; }
 		int		getHeight()						{ return height; }
+		bool	getActive()						{ return isActive.get(); }
+		float	getPressureScale()				{ return pressureScale.get(); }
 		
 		ofParameterGroup	parameters;
 		
@@ -60,13 +60,11 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
-		ofParameter<float>	pressureScale;
-		
-		ofTexture*	pressureTexture;
-		ofMesh		fieldMesh;
-		ofVbo		fieldVbo;
-		
-		ftPressureFieldShader pressureFieldShader;
+		ofParameter<bool> 		isActive;
+		ofParameter<float>		pressureScale;
+		ofMesh					fieldMesh;
+		ofVbo					fieldVbo;
+		ftPressureFieldShader	pressureFieldShader;
 	};
 }
 

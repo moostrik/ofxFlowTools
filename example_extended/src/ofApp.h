@@ -52,7 +52,7 @@ public:
 	float				lastTime;
 	float				deltaTime;
 	
-	
+	// Size
 	int					densityWidth;
 	int					densityHeight;
 	int					flowWidth;

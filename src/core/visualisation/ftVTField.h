@@ -24,12 +24,13 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			parameters.setName("velocity field");
+			parameters.add(isActive.set("active", true));
 			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
 			parameters.add(temperatureScale.set("temperature scale", .1, 0, 2));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
-		void	draw(int _x, int _y, int _width, int _height, bool _antiAlias = true) {
+		void	draw(ofTexture &velTex, ofTexture &temTex, int _x, int _y, int _width, int _height, bool _antiAlias = true) {
 			
 			ofPushMatrix();
 			ofPushStyle();
@@ -45,7 +46,7 @@ namespace flowTools {
 			ofTranslate(_x, _y);
 			ofScale(_width, _height);
 			float maxArrowLength =  2.0 / (width + 1);
-			velocityTemperatureFieldShader.update(fieldVbo, *velocityTexture, *temperatureTexture, velocityScale.get(), temperatureScale.get(), maxArrowLength);
+			velocityTemperatureFieldShader.update(fieldVbo, velTex, temTex, velocityScale.get(), temperatureScale.get(), maxArrowLength);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -55,17 +56,17 @@ namespace flowTools {
 			ofPopMatrix();
 		}
 		
-		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
-		void	setTemperature(ofTexture& tex)		{ temperatureTexture = &tex; }
+		void	setActive(bool _value)				{ isActive.set(_value); }
 		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
 		void	setTemperatureScale(float _value)	{ temperatureScale.set(_value); }
 		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
+		bool	getActive()							{ return isActive.get(); }
+		int		getWidth()							{ return width; }
+		int		getHeight()							{ return height; }
 		float	getVelocityScale()					{ return velocityScale.get(); }
 		float	getTemperatureScale()				{ return temperatureScale.get(); }
 		bool	getLineSmooth()						{ return lineSmooth.get(); }
-		int		getWidth()							{ return width; }
-		int		getHeight()							{ return height; }
 		
 		ofParameterGroup	parameters;
 		
@@ -73,12 +74,11 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
+		ofParameter<bool> 	isActive;
 		ofParameter<float>	velocityScale;		// scale to normalize velocity
 		ofParameter<float>	temperatureScale;	// scale to normalize temperature
 		ofParameter<bool>	lineSmooth;
 		
-		ofTexture*	velocityTexture;
-		ofTexture*	temperatureTexture;
 		ofMesh		fieldMesh;
 		ofVbo		fieldVbo;
 		

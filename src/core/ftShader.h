@@ -30,11 +30,11 @@ namespace flowTools {
 			
 			vertexShader = GLSL120(
 								   void main() {
-									   gl_Position = gl_Vertex;
+									   gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;
+									   gl_TexCoord[0] = gl_MultiTexCoord0;
 									   gl_FrontColor = gl_Color;
 								   }
 								   );
-			
 			
 			fragmentShader = GLSL120(
 									 void main()
@@ -58,9 +58,9 @@ namespace flowTools {
 								   
 								   void main()
 								   {
-									   colorVarying = color;
-									   texCoordVarying = (textureMatrix*vec4(texcoord.x,texcoord.y,0,1)).xy;
 									   gl_Position = modelViewProjectionMatrix * position;
+									   texCoordVarying = (textureMatrix*vec4(texcoord.x,texcoord.y,0,1)).xy;
+									   colorVarying = color;
 								   }
 								   );
 			

@@ -53,62 +53,72 @@ namespace flowTools {
 //		parameters.add(doInverseY);
 	};
 	
-	void	ftOpticalFlow::setup(int _width, int _height){
+	//--------------------------------------------------------------
+	void ftOpticalFlow::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
-		sourceSwapBuffer.allocate(width, height, GL_R8);
-		ftUtil::zero(sourceSwapBuffer);
+		inputSwapFbo.allocate(width, height, GL_R8);
+		velocityFbo.allocate(width, height, GL_RG32F);
 		
-		velocityBuffer.allocate(width, height, GL_RG32F);
-		ftUtil::zero(velocityBuffer);
-		
-		luminanceBuffer.allocate(width, height, GL_R8);
-		ftUtil::zero(luminanceBuffer);
+		ftUtil::zero(inputSwapFbo);
+		ftUtil::zero(velocityFbo);
 			
+		bFirstFrame = true;
 		bSourceSet = false;
 	};
 	
+	//--------------------------------------------------------------
 	void ftOpticalFlow::update() {
-		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-		opticalFlowShader.update(velocityBuffer,
-								 sourceSwapBuffer.getTexture(),
-								 sourceSwapBuffer.getBackTexture(),
-								 offset.get(),
-								 threshold.get(),
-								 ofDefaultVec2(strength.get()),
-								 power.get(),
-								 doInverseX.get(),
-								 doInverseY.get());
+		if (bSourceSet) {
+			bSourceSet = false;
+			opticalFlowShader.update(velocityFbo,
+									 inputSwapFbo.getTexture(),
+									 inputSwapFbo.getBackTexture(),
+									 offset.get(),
+									 threshold.get(),
+									 ofDefaultVec2(strength.get()),
+									 power.get(),
+									 doInverseX.get(),
+									 doInverseY.get());
+		}
 		
 		ofPopStyle();
 	}
 	
-	void ftOpticalFlow::setSource(ofTexture& _tex){
+	//--------------------------------------------------------------
+	void ftOpticalFlow::setInput(ofTexture& _tex){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
-		sourceSwapBuffer.swap();
+		inputSwapFbo.swap();
+		
 		if (ofGetNumChannelsFromGLFormat(_tex.getTextureData().glInternalFormat) != 1) {
-			if (luminanceBuffer.getWidth() != _tex.getWidth() || luminanceBuffer.getHeight() != _tex.getHeight()) {
-				luminanceBuffer.allocate(_tex.getWidth(), _tex.getHeight(), GL_RGB8) ;
-			}
-			RGB2LumShader.update(luminanceBuffer, _tex);
-			ftUtil::stretch(sourceSwapBuffer, luminanceBuffer.getTexture());
+			RGB2LumShader.update(inputSwapFbo, _tex);
 		}
 		else {
-			ftUtil::stretch(sourceSwapBuffer, _tex);
+			ftUtil::stretch(inputSwapFbo, _tex);
 		}
 		
-		if (!bSourceSet) {
-			bSourceSet = true;
-			sourceSwapBuffer.swap();
-			ftUtil::stretch(sourceSwapBuffer, sourceSwapBuffer.getBackTexture());
+		if (bFirstFrame) {
+			bFirstFrame = false;
+			inputSwapFbo.swap();
+			ftUtil::stretch(inputSwapFbo, inputSwapFbo.getBackTexture());
 		}
 		
 		ofPopStyle();
+		
+		bSourceSet = true;
+	}
+	
+	//--------------------------------------------------------------
+	void ftOpticalFlow::reset() {
+		ftUtil::zero(inputSwapFbo);
+		ftUtil::zero(velocityFbo);
+		
+		bFirstFrame = true;
 	}
 }

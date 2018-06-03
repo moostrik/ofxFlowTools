@@ -14,17 +14,16 @@ namespace flowTools {
 		
 		ftOpticalFlow();
 		void		setup(int _width, int _height);
-		void		reset() { ftUtil::zero(sourceSwapBuffer); bSourceSet = false; }
-		void		setSource(ofTexture& _tex);
+		void		reset();
+		void		setInput(ofTexture& _tex);
 		void		update();
-		void		update(ofTexture& _tex) { setSource(_tex); update(); }
+		void		update(ofTexture& _tex) { setInput(_tex); update(); }
 		
 		ofTexture&	getVelocity()		{ return getTexture(); }
-		ofTexture&	getTexture()		{ return velocityBuffer.getTexture(); }
+		ofTexture&	getTexture()		{ return velocityFbo.getTexture(); }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};
-		
 		
 		float		getStrength()	{return strength.get();}
 		int			getOffset()		{return offset.get();}
@@ -53,12 +52,12 @@ namespace flowTools {
 		int		height;
 		
 		bool	bSourceSet;
+		bool	bFirstFrame;
 		
-		ftSwapFbo			sourceSwapBuffer;
-		ofFbo				velocityBuffer;
-		ftOpticalFlowShader opticalFlowShader;
+		ftSwapFbo				inputSwapFbo;
+		ofFbo					velocityFbo;
+		ftOpticalFlowShader 	opticalFlowShader;
 		ftRGB2LuminanceShader	RGB2LumShader;
-		ofFbo				luminanceBuffer;
 		
 	};
 }

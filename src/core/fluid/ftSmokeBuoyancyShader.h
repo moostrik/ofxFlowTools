@@ -95,7 +95,7 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _colorTexture, float _ambientTemperature, float _timeStep, float _smokeBuoyancy, float _smokeWeight, ofVec2f _gForce){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _colorTexture, float _ambientTemperature, float _timeStep, float _smokeBuoyancy, float _smokeWeight, glm::vec2 _gForce){
 			
 			_fbo.begin();
 			shader.begin();
@@ -104,7 +104,7 @@ namespace flowTools {
 			shader.setUniform1f("Sigma", _smokeBuoyancy);
 			shader.setUniform1f("Kappa", _smokeWeight);
 			
-			shader.setUniform2f("Gravity", _gForce.x, _gForce.y );
+			shader.setUniform2f("Gravity", _gForce);
 			
 			shader.setUniformTexture("Velocity", _velTex, 0);
 			shader.setUniformTexture("Temperature", _temTex, 1);

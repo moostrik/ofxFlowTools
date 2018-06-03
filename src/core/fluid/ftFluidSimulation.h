@@ -68,7 +68,7 @@ namespace flowTools {
 		float	getSmokeSigma() {return smokeSigma.get();}
 		float	getSmokeWeight() {return smokeWeight.get();}
 		float	getAmbientTemperature() {return ambientTemperature.get();}
-		ofVec2f getGravity() {return gravity.get();}
+		glm::vec2 getGravity() {return gravity.get();}
 		float	getClampForce() {return clampForce.get();}
 		float	getMaxVelocity() {return maxVelocity.get();}
 		float	getMaxDensity() {return maxDensity.get();}
@@ -88,7 +88,7 @@ namespace flowTools {
 		void	setSmokeSigma(float value) {smokeSigma.set(value);}
 		void	setSmokeWeight(float value) {smokeWeight.set(value);}
 		void	setAmbientTemperature(float value) {ambientTemperature.set(value);}
-		void	setGravity(ofVec2f value) {gravity.set(value);}
+		void	setGravity(glm::vec2 value) {gravity.set(value);}
 		void	setClampForce(float value) {clampForce.set(value);}
 		void	setMaxVelocity(float value) {maxVelocity.set(value);}
 		void	setMaxDensity(float value) {maxDensity.set(value);}
@@ -115,7 +115,7 @@ namespace flowTools {
 		ofParameter<float>	smokeSigma;
 		ofParameter<float>	smokeWeight;
 		ofParameter<float>	ambientTemperature;
-		ofParameter<ofDefaultVec2>gravity;
+		ofParameter<glm::vec2>gravity;
 		ofParameterGroup	maxValues;
 		ofParameter<float>	clampForce;
 		ofParameter<float>	maxVelocity;

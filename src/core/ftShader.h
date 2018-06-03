@@ -82,15 +82,15 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
-			quad.setVertex(0, ofVec3f(0,0,0));
-			quad.setVertex(1, ofVec3f(_width,0,0));
-			quad.setVertex(2, ofVec3f(_width,_height,0));
-			quad.setVertex(3, ofVec3f(0,_height,0));
+			quad.setVertex(0, glm::vec3(0,0,0));
+			quad.setVertex(1, glm::vec3(_width,0,0));
+			quad.setVertex(2, glm::vec3(_width,_height,0));
+			quad.setVertex(3, glm::vec3(0,_height,0));
 			
-			quad.setTexCoord(0, ofVec2f(0,0));
-			quad.setTexCoord(1, ofVec2f(_width,0));
-			quad.setTexCoord(2, ofVec2f(_width,_height));
-			quad.setTexCoord(3, ofVec2f(0,_height));
+			quad.setTexCoord(0, glm::vec2(0,0));
+			quad.setTexCoord(1, glm::vec2(_width,0));
+			quad.setTexCoord(2, glm::vec2(_width,_height));
+			quad.setTexCoord(3, glm::vec2(0,_height));
 			
 			quad.draw();
 			
@@ -101,15 +101,15 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
-			quad.setVertex(0, ofVec3f(0,0,0));
-			quad.setVertex(1, ofVec3f(_width,0,0));
-			quad.setVertex(2, ofVec3f(_width,_height,0));
-			quad.setVertex(3, ofVec3f(0,_height,0));
+			quad.setVertex(0, glm::vec3(0,0,0));
+			quad.setVertex(1, glm::vec3(_width,0,0));
+			quad.setVertex(2, glm::vec3(_width,_height,0));
+			quad.setVertex(3, glm::vec3(0,_height,0));
 			
-			quad.setTexCoord(0, ofVec2f(0,0));
-			quad.setTexCoord(1, ofVec2f(1,0));
-			quad.setTexCoord(2, ofVec2f(1,1));
-			quad.setTexCoord(3, ofVec2f(0,1));
+			quad.setTexCoord(0, glm::vec2(0,0));
+			quad.setTexCoord(1, glm::vec2(1,0));
+			quad.setTexCoord(2, glm::vec2(1,1));
+			quad.setTexCoord(3, glm::vec2(0,1));
 			
 			quad.draw();
 			

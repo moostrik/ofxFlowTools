@@ -61,8 +61,8 @@ namespace flowTools {
 		particleMesh.setMode(OF_PRIMITIVE_POINTS);
 		for(int x = 0; x < _numParticlesX; x++){
 			for(int y = 0; y < _numParticlesY; y++){
-				particleMesh.addVertex(ofVec3f(x,y));
-				particleMesh.addTexCoord(ofVec2f(x, y));
+				particleMesh.addVertex(glm::vec3(x,y,0));
+				particleMesh.addTexCoord(glm::vec2(x, y));
 			}
 		}
 		

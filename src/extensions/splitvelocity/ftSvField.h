@@ -18,7 +18,7 @@ namespace flowTools {
 			float yStep = 1. / height;
 			for (int x=0; x<width; x++) {
 				for (int y=0; y<height; y++) {
-					fieldMesh.addVertex(ofVec3f((x + 0.5) * xStep, (y + 0.5) * yStep, 0));
+					fieldMesh.addVertex(glm::vec3((x + 0.5) * xStep, (y + 0.5) * yStep, 0));
 				}
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);

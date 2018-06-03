@@ -43,7 +43,7 @@ namespace flowTools {
 		float	getMassSpread() { return massSpread.get(); }
 		float	getSize() { return size.get(); }
 		float	getSizeSpread() { return sizeSpread.get(); }
-		ofVec2f getGravity() {return gravity.get();}
+		glm::vec2 getGravity() {return gravity.get();}
 		
 		void	setSpeed(float value) { speed.set(value); }
 		void	setCellSize(float value) { cellSize.set(value); }
@@ -55,7 +55,7 @@ namespace flowTools {
 		void	setMassSpread(float value) { massSpread.set(value); }
 		void	setSize(float value) { size.set(value); }
 		void	setSizeSpread(float value) { sizeSpread.set(value); }
-		void	setGravity(ofVec2f value) { gravity.set(value); }
+		void	setGravity(glm::vec2 value) { gravity.set(value); }
 		
 		ofParameterGroup& getParameters() { return parameters; }
 		

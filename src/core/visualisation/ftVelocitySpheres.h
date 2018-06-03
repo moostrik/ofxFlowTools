@@ -18,8 +18,8 @@ namespace flowTools {
 			float yStep = 1. / height;
 			for (int x=0; x<width; x++) {
 				for (int y=0; y<height; y++) {
-					fieldMesh.addVertex(ofVec3f((x + 0.5) * xStep, (y + 0.5) * yStep, 0));
-					fieldMesh.addTexCoord(ofVec2f((x + 0.5) * xStep, (y + 0.5) * yStep));
+					fieldMesh.addVertex(glm::vec3((x + 0.5) * xStep, (y + 0.5) * yStep, 0));
+					fieldMesh.addTexCoord(glm::vec2((x + 0.5) * xStep, (y + 0.5) * yStep));
 					fieldMesh.addColor(ofFloatColor(1,1,1,1));
 				}
 			}

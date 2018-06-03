@@ -53,15 +53,15 @@ namespace flowTools {
 		ofMesh quad;
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		
-		quad.addVertex(ofVec3f(x0,y0,0));
-		quad.addVertex(ofVec3f(x1,y0,0));
-		quad.addVertex(ofVec3f(x1,y1,0));
-		quad.addVertex(ofVec3f(x0,y1,0));
+		quad.addVertex(glm::vec3(x0,y0,0));
+		quad.addVertex(glm::vec3(x1,y0,0));
+		quad.addVertex(glm::vec3(x1,y1,0));
+		quad.addVertex(glm::vec3(x0,y1,0));
 		
-		quad.addTexCoord(ofVec2f(0,0));
-		quad.addTexCoord(ofVec2f(_tex.getWidth(),0));
-		quad.addTexCoord(ofVec2f(_tex.getWidth(),_tex.getHeight()));
-		quad.addTexCoord(ofVec2f(0,_tex.getHeight()));
+		quad.addTexCoord(glm::vec2(0,0));
+		quad.addTexCoord(glm::vec2(_tex.getWidth(),0));
+		quad.addTexCoord(glm::vec2(_tex.getWidth(),_tex.getHeight()));
+		quad.addTexCoord(glm::vec2(0,_tex.getHeight()));
 		
 		_dst.begin();
 		ofClear(0,0);
@@ -95,15 +95,15 @@ namespace flowTools {
 		ofMesh quad;
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		
-		quad.addVertex(ofVec3f(x0,y0,0));
-		quad.addVertex(ofVec3f(x1,y0,0));
-		quad.addVertex(ofVec3f(x1,y1,0));
-		quad.addVertex(ofVec3f(x0,y1,0));
+		quad.addVertex(glm::vec3(x0,y0,0));
+		quad.addVertex(glm::vec3(x1,y0,0));
+		quad.addVertex(glm::vec3(x1,y1,0));
+		quad.addVertex(glm::vec3(x0,y1,0));
 		
-		quad.addTexCoord(ofVec2f(0,0));
-		quad.addTexCoord(ofVec2f(_tex.getWidth(),0));
-		quad.addTexCoord(ofVec2f(_tex.getWidth(),_tex.getHeight()));
-		quad.addTexCoord(ofVec2f(0,_tex.getHeight()));
+		quad.addTexCoord(glm::vec2(0,0));
+		quad.addTexCoord(glm::vec2(_tex.getWidth(),0));
+		quad.addTexCoord(glm::vec2(_tex.getWidth(),_tex.getHeight()));
+		quad.addTexCoord(glm::vec2(0,_tex.getHeight()));
 		
 		_dst.begin();
 		ofClear(0,0);
@@ -119,20 +119,20 @@ namespace flowTools {
 		ofMesh quad;
 		quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		
-		quad.addVertex(ofVec3f(0,0,0));
-		quad.addVertex(ofVec3f(_dst.getWidth(),0,0));
-		quad.addVertex(ofVec3f(_dst.getWidth(),_dst.getHeight(),0));
-		quad.addVertex(ofVec3f(0,_dst.getHeight(),0));
+		quad.addVertex(glm::vec3(0,0,0));
+		quad.addVertex(glm::vec3(_dst.getWidth(),0,0));
+		quad.addVertex(glm::vec3(_dst.getWidth(),_dst.getHeight(),0));
+		quad.addVertex(glm::vec3(0,_dst.getHeight(),0));
 		
 		float t0x = _roi.x * _tex.getWidth();
 		float t0y = _roi.y * _tex.getHeight();
 		float t1x = (_roi.x + _roi.width) * _tex.getWidth();
 		float t1y = (_roi.y + _roi.height) * _tex.getHeight();
 		
-		quad.addTexCoord(ofVec2f(t0x, t0y));
-		quad.addTexCoord(ofVec2f(t1x, t0y));
-		quad.addTexCoord(ofVec2f(t1x, t1y));
-		quad.addTexCoord(ofVec2f(t0x, t1y));
+		quad.addTexCoord(glm::vec2(t0x, t0y));
+		quad.addTexCoord(glm::vec2(t1x, t0y));
+		quad.addTexCoord(glm::vec2(t1x, t1y));
+		quad.addTexCoord(glm::vec2(t0x, t1y));
 		
 		_dst.begin();
 		ofClear(0,0);

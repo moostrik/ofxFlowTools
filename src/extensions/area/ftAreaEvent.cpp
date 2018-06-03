@@ -18,8 +18,8 @@ namespace flowTools {
 		pBase.addListener(this, &ftAreaEvent::pFloatListener);
 	}
 	
-	void ftAreaEvent::update(ofTexture& _texture) {
-		ftAreaNormalized::update(_texture);
+	void ftAreaEvent::update(ofTexture& _srcTex) {
+		ftAreaNormalized::update(_srcTex);
 		if (!bAllocated) { return; }
 		if (event.size() != numChannels + 1) {
 			event.clear();

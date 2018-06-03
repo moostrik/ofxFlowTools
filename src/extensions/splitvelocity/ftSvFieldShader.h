@@ -165,12 +165,12 @@ namespace flowTools {
 		}
 	
 	public:	
-		void update(ofVbo& _fieldVbo, ofTexture& _floatTexture, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
-			int width = _floatTexture.getWidth();
-			int height = _floatTexture.getHeight();
+		void update(ofVbo& _fieldVbo, ofTexture& _floatTex, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
+			int width = _floatTex.getWidth();
+			int height = _floatTex.getHeight();
 			
 			shader.begin();
-			shader.setUniformTexture("fieldTexture", _floatTexture,0);
+			shader.setUniformTexture("fieldTexture", _floatTex,0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
 			shader.setUniform1f("arrowSize", _arrowSize);

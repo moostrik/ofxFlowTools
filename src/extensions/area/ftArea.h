@@ -12,7 +12,7 @@ namespace flowTools {
 		virtual	~ftArea() { ; }
 		
 		void			setup(int _width = 32, int _height = 32, string _name = "");
-		void			update(ofTexture& _texture);
+		void			update(ofTexture& _srcTex);
 		
 		void			setWidth(int _value)	{ allocate(_value, height); }
 		void			setHeight(int _value)	{ allocate(width, _value); }

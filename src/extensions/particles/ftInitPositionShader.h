@@ -65,13 +65,13 @@ namespace flowTools {
 	public:
 		
 		
-		void update(ofFbo& _buffer){
-			_buffer.begin();
+		void update(ofFbo& _fbo){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniform2f("Dimensions", _buffer.getWidth(), _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("Dimensions", _fbo.getWidth(), _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 
 		}
 	};

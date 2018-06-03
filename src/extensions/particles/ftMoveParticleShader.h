@@ -118,21 +118,21 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _ALMSTexture, ofTexture& _velocityTexture, ofTexture& _homeTexture, float _timeStep, float _cellSize, ofVec2f _gravity){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _ALMSTex, ofTexture& _velTex, ofTexture& _homeTex, float _timeStep, float _cellSize, ofVec2f _gravity){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("Backbuffer", _backBufferTexture, 0);
-			shader.setUniformTexture("ALMSTexture", _ALMSTexture, 1);
-			shader.setUniformTexture("Velocity", _velocityTexture, 2);
-			shader.setUniformTexture("HomeTexture", _homeTexture, 3);
+			shader.setUniformTexture("Backbuffer", _backTex, 0);
+			shader.setUniformTexture("ALMSTexture", _ALMSTex, 1);
+			shader.setUniformTexture("Velocity", _velTex, 2);
+			shader.setUniformTexture("HomeTexture", _homeTex, 3);
 			shader.setUniform1f("TimeStep", _timeStep);
 			shader.setUniform1f("InverseCellSize", 1.0 / _cellSize);
 			shader.setUniform2f("Gravity", _gravity.x * _timeStep, _gravity.y * _timeStep);
-			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
-			shader.setUniform2f("Dimensions", _buffer.getWidth(), _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
+			shader.setUniform2f("Dimensions", _fbo.getWidth(), _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

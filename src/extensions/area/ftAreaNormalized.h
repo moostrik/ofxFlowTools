@@ -12,7 +12,7 @@ namespace flowTools {
 		virtual	~ftAreaNormalized() { ; }
 		
 		void	setup(int _width = 32, int _height = 32, string _name = "");
-		void	update(ofTexture& _texture);
+		void	update(ofTexture& _srcTex);
 		
 		float 	getMagnitude()	{ return normalizedMagnitude; }
 		float	getVelocity(int _index) { if (_index < numChannels) { return normalizedVelocity[_index];  } else { return 0; } }

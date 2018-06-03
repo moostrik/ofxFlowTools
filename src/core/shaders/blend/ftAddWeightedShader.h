@@ -9,17 +9,17 @@ namespace flowTools {
 	
 	class ftAddWeightedShader : public ftAddMultipliedShader {
 	public:
-		void update(ofFbo& _buffer, ofTexture& _baseTexture, ofTexture& _blendTexture, float _weight){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _baseTex, ofTexture& _blendTex, float _weight){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("_baseTexture", _baseTexture, 0);
-			shader.setUniformTexture("_blendTexture", _blendTexture, 1);
+			shader.setUniformTexture("_baseTex", _baseTex, 0);
+			shader.setUniformTexture("_blendTex", _blendTex, 1);
 			shader.setUniform1f("baseWeight", 1.0 - _weight);
 			shader.setUniform1f("blendWeight", _weight);
-			shader.setUniform2f("scale", _addTexture.getWidth() / _buffer.getWidth(), _addTexture.getHeight()/ _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("scale", _addTex.getWidth() / _fbo.getWidth(), _addTex.getHeight()/ _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

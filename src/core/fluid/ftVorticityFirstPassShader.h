@@ -126,14 +126,14 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _velocityTexture, ofTexture& _obstacleTexture){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obstacleTexture){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("Velocity", _velocityTexture, 0);
+			shader.setUniformTexture("Velocity", _velTex, 0);
 			shader.setUniformTexture("Obstacle", _obstacleTexture, 1);
-			renderFrame(_buffer.getWidth(),_buffer.getHeight());
+			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

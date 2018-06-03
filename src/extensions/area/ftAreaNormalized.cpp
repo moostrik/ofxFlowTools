@@ -12,8 +12,8 @@ namespace flowTools {
 		ftArea::setup(_width, _height, _name);
 	}
 	
-	void ftAreaNormalized::update(ofTexture& _texture) {
-		ftArea::update(_texture);
+	void ftAreaNormalized::update(ofTexture& _srcTex) {
+		ftArea::update(_srcTex);
 		if (!bAllocated) { return; }
 		if (normalizedVelocity.size() != numChannels) {
 			normalizedVelocity.clear();

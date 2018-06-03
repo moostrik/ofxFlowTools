@@ -139,16 +139,16 @@ namespace flowTools {
 		
 			
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _obstaclesTexture, float _viscosity){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsTex, float _viscosity){
+			_fbo.begin();
 			shader.begin();
 			shader.setUniform1f("Viscosity", _viscosity);
 			shader.setUniform1f("C", 1.0 + 4. * _viscosity);
-			shader.setUniformTexture("Velocity", _backBufferTexture, 0);
-			shader.setUniformTexture("Obstacle", _obstaclesTexture, 1);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniformTexture("Velocity", _backTex, 0);
+			shader.setUniformTexture("Obstacle", _obsTex, 1);
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 		
 	private:

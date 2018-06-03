@@ -69,15 +69,15 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture,  ofTexture& _texture, float _decay){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _srcTex, float _decay){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("tex0", _backBufferTexture, 0);
-			shader.setUniformTexture("tex1", _texture, 1);
+			shader.setUniformTexture("tex0", _backTex, 0);
+			shader.setUniformTexture("tex1", _srcTex, 1);
 			shader.setUniform1f("decay", max(_decay, 0.0f));
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

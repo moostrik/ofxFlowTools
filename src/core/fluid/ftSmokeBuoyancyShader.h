@@ -95,9 +95,9 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _velocityTexture, ofTexture& _temperatureTexture, ofTexture _colorTexture, float _ambientTemperature, float _timeStep, float _smokeBuoyancy, float _smokeWeight, ofVec2f _gForce){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _colorTexture, float _ambientTemperature, float _timeStep, float _smokeBuoyancy, float _smokeWeight, ofVec2f _gForce){
 			
-			_buffer.begin();
+			_fbo.begin();
 			shader.begin();
 			shader.setUniform1f("AmbientTemperature", _ambientTemperature);
 			shader.setUniform1f("TimeStep", _timeStep);
@@ -106,14 +106,14 @@ namespace flowTools {
 			
 			shader.setUniform2f("Gravity", _gForce.x, _gForce.y );
 			
-			shader.setUniformTexture("Velocity", _velocityTexture, 0);
-			shader.setUniformTexture("Temperature", _temperatureTexture, 1);
+			shader.setUniformTexture("Velocity", _velTex, 0);
+			shader.setUniformTexture("Temperature", _temTex, 1);
 			shader.setUniformTexture("Density", _colorTexture, 2);
 			
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 
 		

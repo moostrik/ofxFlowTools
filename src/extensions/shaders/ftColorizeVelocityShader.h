@@ -78,17 +78,17 @@ namespace flowTools {
 		}
 	
 	public:
-		void update(ofFbo& _buffer, ofTexture& _floatTexture, ofTexture& _gradientTexture, float _force){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _floatTex, ofTexture& _gradientTexture, float _force){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("FloatTexture", _floatTexture, 0);
+			shader.setUniformTexture("FloatTexture", _floatTex, 0);
 			shader.setUniformTexture("GradientTexture", _gradientTexture, 1);
-			shader.setUniform2f("Scale", _floatTexture.getWidth() / _buffer.getWidth(), _floatTexture.getHeight()/ _buffer.getHeight());
+			shader.setUniform2f("Scale", _floatTex.getWidth() / _fbo.getWidth(), _floatTex.getHeight()/ _fbo.getHeight());
 			shader.setUniform1f("Force", _force);
 			shader.setUniform2f("GradientDimensions", _gradientTexture.getWidth(), _gradientTexture.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

@@ -67,10 +67,10 @@ namespace flowTools {
 		
 	public:
 				
-		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture, float _exposure, float _offset, float _gamma){
+		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _exposure, float _offset, float _gamma){
 			_drawBuffer.begin();
 			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTexture, 0 );
+			shader.setUniformTexture( "tex0" , _srcTex, 0 );
 			shader.setUniform1f("exposure", _exposure );
 			shader.setUniform1f("offset", _offset);
 			shader.setUniform1f("gamma", _gamma);

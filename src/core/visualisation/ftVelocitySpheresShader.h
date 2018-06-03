@@ -114,12 +114,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofVbo& _fieldVbo, ofTexture& _velocityTexture, float _displacementScale, float _sizeScale, float _minDotSize, float _maxDotSize){
-			int width = _velocityTexture.getWidth();
-			int height = _velocityTexture.getHeight();
+		void update(ofVbo& _fieldVbo, ofTexture& _velTex, float _displacementScale, float _sizeScale, float _minDotSize, float _maxDotSize){
+			int width = _velTex.getWidth();
+			int height = _velTex.getHeight();
 			
 			shader.begin();
-			shader.setUniformTexture("velocityTexture", _velocityTexture,0);
+			shader.setUniformTexture("velocityTexture", _velTex,0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform1f("displacementScale", (_displacementScale == 0)? 10: _displacementScale );
 			shader.setUniform1f("sizeScale", _sizeScale);

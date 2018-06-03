@@ -129,10 +129,10 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofVboMesh &particleVbo, int _numParticles, ofTexture& _positionTexture, ofTexture& _ALMSTexture, float _twinkleSpeed){
+		void update(ofVboMesh &particleVbo, int _numParticles, ofTexture& _posTex, ofTexture& _ALMSTex, float _twinkleSpeed){
 			shader.begin();
-			shader.setUniformTexture("PositionTexture", _positionTexture, 0);
-			shader.setUniformTexture("ALMSTexture", _ALMSTexture, 1);
+			shader.setUniformTexture("PositionTexture", _posTex, 0);
+			shader.setUniformTexture("ALMSTexture", _ALMSTex, 1);
 			shader.setUniform1f("TwinkleSpeed", _twinkleSpeed);
 			
 			bool dinges = true;

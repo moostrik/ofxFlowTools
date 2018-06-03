@@ -64,14 +64,14 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _texture, float _force){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _srcTex, float _force){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("tex0", _texture, 0);
+			shader.setUniformTexture("tex0", _srcTex, 0);
 			shader.setUniform1f("force", _force);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

@@ -12,7 +12,7 @@ namespace flowTools {
 		virtual	~ftAreaEvent() { ; }
 		
 		void	setup(int _width = 32, int _height = 32, string _name = "");
-		void	update(ofTexture& _texture);
+		void	update(ofTexture& _srcTex);
 		
 		float	getMagnitudeEvent()			{ return (bAllocated)? event[0] : 0; }
 		float 	getMagnitudeEventStart()	{ return (bAllocated)? (event[0] == 1) : 0; }

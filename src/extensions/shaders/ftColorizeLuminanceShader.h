@@ -67,16 +67,16 @@ protected:
 	
 public:
 	
-	void update(ofFbo& _buffer, ofTexture _srcTexture, ofTexture _rampTexture){
+	void update(ofFbo& _fbo, ofTexture _srcTex, ofTexture _rampTexture){
 		
-		_buffer.begin();
+		_fbo.begin();
 		shader.begin();
-		shader.setUniformTexture("SourceTexture", _srcTexture, 0);
+		shader.setUniformTexture("SourceTexture", _srcTex, 0);
 		shader.setUniformTexture("RampTexture", _rampTexture, 1);
-		shader.setUniform2f("TextureScale", _srcTexture.getWidth() / _buffer.getWidth(), _srcTexture.getHeight()/ _buffer.getHeight());
+		shader.setUniform2f("TextureScale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
 		shader.setUniform1f("RampSize", _rampTexture.getWidth());
-		renderFrame(_buffer.getWidth(), _buffer.getHeight());
+		renderFrame(_fbo.getWidth(), _fbo.getHeight());
 		shader.end();
-		_buffer.end();
+		_fbo.end();
 	}
 };

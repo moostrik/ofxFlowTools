@@ -92,18 +92,18 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _texture, ofPoint _ul, ofPoint _ur, ofPoint _ll, ofPoint _lr){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _srcTex, ofPoint _ul, ofPoint _ur, ofPoint _ll, ofPoint _lr){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("tex0", _texture, 0);
-			shader.setUniform2f("Scale", _texture.getWidth() / _buffer.getWidth(), _texture.getHeight()/ _buffer.getHeight());
+			shader.setUniformTexture("tex0", _srcTex, 0);
+			shader.setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
 			shader.setUniform2f("Upper_left",  _ul.x, _ul.y);
 			shader.setUniform2f("Upper_right", _ur.x, _ur.y);
 			shader.setUniform2f("Lower_left",  _ll.x, _ll.y);
 			shader.setUniform2f("Lower_right", _lr.x, _lr.y);
-			renderNormalizedFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderNormalizedFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

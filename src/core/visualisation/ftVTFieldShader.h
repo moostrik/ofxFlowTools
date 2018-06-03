@@ -231,13 +231,13 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofVbo& _fieldVbo, ofTexture& _velocityTexture, ofTexture& _temperatureTexture, float _velocityScale, float _temperatureScale, float _maxArrowSize){
-			int width = _velocityTexture.getWidth();
-			int height = _velocityTexture.getHeight();
+		void update(ofVbo& _fieldVbo, ofTexture& _velTex, ofTexture& _temTex, float _velocityScale, float _temperatureScale, float _maxArrowSize){
+			int width = _velTex.getWidth();
+			int height = _velTex.getHeight();
 			
 			shader.begin();
-			shader.setUniformTexture("velocityTexture", _velocityTexture,0);
-			shader.setUniformTexture("temperatureTexture", _temperatureTexture,1);
+			shader.setUniformTexture("velocityTexture", _velTex,0);
+			shader.setUniformTexture("temperatureTexture", _temTex,1);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform1f("velocityScale", _velocityScale);
 			shader.setUniform1f("temperatureScale", _temperatureScale);

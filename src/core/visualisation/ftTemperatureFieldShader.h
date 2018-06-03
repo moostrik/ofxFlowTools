@@ -184,12 +184,12 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofVbo& _fieldVbo, ofTexture& _temperatureTexture, float _temperatureScale, float _barHeight, float _barWidth){
-			int width = _temperatureTexture.getWidth();
-			int height = _temperatureTexture.getHeight();
+		void update(ofVbo& _fieldVbo, ofTexture& _temTex, float _temperatureScale, float _barHeight, float _barWidth){
+			int width = _temTex.getWidth();
+			int height = _temTex.getHeight();
 			
 			shader.begin();
-			shader.setUniformTexture("temperatureTexture", _temperatureTexture,0);
+			shader.setUniformTexture("temperatureTexture", _temTex,0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform1f("temperatureScale", _temperatureScale);
 			shader.setUniform1f("maxHeight", _barHeight);

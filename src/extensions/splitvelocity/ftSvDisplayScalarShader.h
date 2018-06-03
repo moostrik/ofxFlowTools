@@ -80,14 +80,14 @@ namespace flowTools {
 		}
 	
 	public:
-		void update(ofFbo& _buffer, ofTexture& _floatTexture, float _scale){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _floatTex, float _scale){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("FloatTexture", _floatTexture, 0);
+			shader.setUniformTexture("FloatTexture", _floatTex, 0);
 			shader.setUniform1f("Scale", _scale);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

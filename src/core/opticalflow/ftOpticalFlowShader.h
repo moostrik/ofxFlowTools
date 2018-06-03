@@ -26,8 +26,8 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect	CurrTexture;
-									 uniform sampler2DRect	LastTexture;
+									 uniform sampler2DRect	tex0;
+									 uniform sampler2DRect	tex1;
 									 uniform float			offset;
 									 uniform float			threshold;
 									 uniform vec2			force;
@@ -39,14 +39,14 @@ namespace flowTools {
 										 vec2 off_y = vec2(0.0, offset);
 										 
 										 //get the difference
-										 float scr_dif = texture2DRect(CurrTexture, st).x - texture2DRect(LastTexture, st).x;
+										 float scr_dif = texture2DRect(tex0, st).x - texture2DRect(tex1, st).x;
 										 
 										 //calculate the gradient
 										 float gradx; float grady; float gradmag; float lambda = 0.01;
-										 gradx =  texture2DRect(LastTexture, st + off_x).x - texture2DRect(LastTexture, st - off_x).x;
-										 gradx += texture2DRect(CurrTexture, st + off_x).x - texture2DRect(CurrTexture, st - off_x).x;
-										 grady =  texture2DRect(LastTexture, st + off_y).x - texture2DRect(LastTexture, st - off_y).x;
-										 grady += texture2DRect(CurrTexture, st + off_y).x - texture2DRect(CurrTexture, st - off_y).x;
+										 gradx =  texture2DRect(tex1, st + off_x).x - texture2DRect(tex1, st - off_x).x;
+										 gradx += texture2DRect(tex0, st + off_x).x - texture2DRect(tex0, st - off_x).x;
+										 grady =  texture2DRect(tex1, st + off_y).x - texture2DRect(tex1, st - off_y).x;
+										 grady += texture2DRect(tex0, st + off_y).x - texture2DRect(tex0, st - off_y).x;
 										 gradmag = sqrt((gradx*gradx)+(grady*grady)+lambda);
 										 
 										 vec2 flow;
@@ -76,8 +76,8 @@ namespace flowTools {
 		void glThree() {
 			
 			fragmentShader = GLSL150(
-									 uniform sampler2DRect	CurrTexture;
-									 uniform sampler2DRect	LastTexture;
+									 uniform sampler2DRect	tex0;
+									 uniform sampler2DRect	tex1;
 									 uniform float			offset;
 									 uniform float			threshold;
 									 uniform vec2			force;
@@ -93,14 +93,14 @@ namespace flowTools {
 										 vec2 off_y = vec2(0.0, offset);
 										 
 										 //get the difference
-										 float scr_dif = texture(CurrTexture, st).x - texture(LastTexture, st).x;
+										 float scr_dif = texture(tex0, st).x - texture(tex1, st).x;
 										 
 										 //calculate the gradient
 										 float gradx; float grady; float gradmag; float lambda = 0.01;
-										 gradx =  texture(LastTexture, st + off_x).x - texture(LastTexture, st - off_x).x;
-										 gradx += texture(CurrTexture, st + off_x).x - texture(CurrTexture, st - off_x).x;
-										 grady =  texture(LastTexture, st + off_y).x - texture(LastTexture, st - off_y).x;
-										 grady += texture(CurrTexture, st + off_y).x - texture(CurrTexture, st - off_y).x;
+										 gradx =  texture(tex1, st + off_x).x - texture(tex1, st - off_x).x;
+										 gradx += texture(tex0, st + off_x).x - texture(tex0, st - off_x).x;
+										 grady =  texture(tex1, st + off_y).x - texture(tex1, st - off_y).x;
+										 grady += texture(tex0, st + off_y).x - texture(tex0, st - off_y).x;
 										 gradmag = sqrt((gradx*gradx)+(grady*grady)+lambda);
 										 
 										 vec2 flow;
@@ -131,19 +131,19 @@ namespace flowTools {
 		}
 		
 	public:	
-		void update(ofFbo& _buffer, ofTexture& _currentTexture, ofTexture& _lastTexture, float _offset = 3.0, float _threshold = 0.04, ofDefaultVec2 _force = ofDefaultVec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
+		void update(ofFbo& _fbo, ofTexture& _currTex, ofTexture& _prevTex, float _offset = 3.0, float _threshold = 0.04, ofDefaultVec2 _force = ofDefaultVec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
 			
-			_buffer.begin();
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("CurrTexture", _currentTexture, 0);
-			shader.setUniformTexture("LastTexture", _lastTexture, 1);
+			shader.setUniformTexture("tex0", _currTex, 0);
+			shader.setUniformTexture("tex1", _prevTex, 1);
 			shader.setUniform1f("offset", _offset);
 			shader.setUniform1f("threshold", _threshold);
 			shader.setUniform2f("force", _force * ofDefaultVec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
 			shader.setUniform1f("power", _power);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

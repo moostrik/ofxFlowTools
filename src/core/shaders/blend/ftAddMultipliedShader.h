@@ -76,18 +76,18 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _baseTexture, ofTexture& _blendTexture, float _baseMultiplier, float _blendMultiplier){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _baseTex, ofTexture& _blendTex, float _baseMultiplier, float _blendMultiplier){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("baseTex", _baseTexture, 0);
-			shader.setUniformTexture("blendTex", _blendTexture, 1);
+			shader.setUniformTexture("baseTex", _baseTex, 0);
+			shader.setUniformTexture("blendTex", _blendTex, 1);
 			shader.setUniform1f("baseWeight", _baseMultiplier);
 			shader.setUniform1f("blendWeight", _blendMultiplier);
-			shader.setUniform2f("baseScale", _baseTexture.getWidth() / _buffer.getWidth(), _baseTexture.getHeight() / _buffer.getHeight());
-			shader.setUniform2f("blendScale", _blendTexture.getWidth() / _buffer.getWidth(), _blendTexture.getHeight() / _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("baseScale", _baseTex.getWidth() / _fbo.getWidth(), _baseTex.getHeight() / _fbo.getHeight());
+			shader.setUniform2f("blendScale", _blendTex.getWidth() / _fbo.getWidth(), _blendTex.getHeight() / _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

@@ -205,14 +205,14 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofVbo& _fieldVbo, ofTexture& _pressureTexture, float _pressureScale, float _radius){
-			int width = _pressureTexture.getWidth();
-			int height = _pressureTexture.getHeight();
+		void update(ofVbo& _fieldVbo, ofTexture& _prsTexture, float _pressureScale, float _radius){
+			int width = _prsTexture.getWidth();
+			int height = _prsTexture.getHeight();
 			
 //			glEnable(GL_CULL_FACE);
 			
 			shader.begin();
-			shader.setUniformTexture("pressureTexture", _pressureTexture, 0);
+			shader.setUniformTexture("pressureTexture", _prsTexture, 0);
 			shader.setUniform2f("texResolution", width, height);
 			shader.setUniform1f("pressureScale", _pressureScale);
 			shader.setUniform1f("maxRadius", _radius);

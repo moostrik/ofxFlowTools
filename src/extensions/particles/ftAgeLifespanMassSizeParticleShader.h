@@ -177,18 +177,18 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _positionTexture, ofTexture& _velocityTexture, ofTexture& _densityTexture, ofTexture& _obstacleTexture,
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _posTex, ofTexture& _velTex, ofTexture& _denTex, ofTexture& _obstacleTexture,
 					float _deltaTime, float _birthChance, float _birthVelocityChance, float _lifeSpan, float _lifeSpanSpread, float _mass, float _massSpread, float _size, float _sizeSpread){
 			
-			_buffer.begin();
+			_fbo.begin();
 			ofClear(0,0);
 			shader.begin();
-			shader.setUniformTexture("Backbuffer", _backBufferTexture, 0);
-			shader.setUniformTexture("Position", _positionTexture, 1);
-			shader.setUniformTexture("Velocity", _velocityTexture, 2);
-			shader.setUniformTexture("Density", _densityTexture, 3);
+			shader.setUniformTexture("Backbuffer", _backTex, 0);
+			shader.setUniformTexture("Position", _posTex, 1);
+			shader.setUniformTexture("Velocity", _velTex, 2);
+			shader.setUniformTexture("Density", _denTex, 3);
 			shader.setUniformTexture("Obstacle", _obstacleTexture, 4);
-			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
+			shader.setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
 			float modTime = 64.f; // little hack to prevent particle lines ( the random function in the shader does not behave as expected)
 			shader.setUniform1f("GlobalTime", modf(ofGetElapsedTimef(), &modTime));
 			shader.setUniform1f("DeltaTime", _deltaTime);
@@ -200,9 +200,9 @@ namespace flowTools {
 			shader.setUniform1f("MassSpread", _massSpread);
 			shader.setUniform1f("Size", _size);
 			shader.setUniform1f("SizeSpread", _sizeSpread);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

@@ -78,19 +78,19 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, glm::vec4 _value, ofPoint _point, float _radius, float _edge){
+		void update(ofFbo& _fbo, glm::vec4 _value, ofPoint _point, float _radius, float _edge){
 			
-			_buffer.begin();
+			_fbo.begin();
 			shader.begin();
 			
 			shader.setUniform2f("Point", _point.x, _point.y );
 			shader.setUniform1f("Radius", _radius );
 			shader.setUniform1f("EdgeSmooth", _edge );
 			shader.setUniform4f("Value", _value);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 			
 		}
 		

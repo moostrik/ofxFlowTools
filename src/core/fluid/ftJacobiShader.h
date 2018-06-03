@@ -142,17 +142,17 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, ofTexture& _divergenceTexture, ofTexture& _obstaclesTexture, float _cellSize){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divergenceTexture, ofTexture& _obsTex, float _cellSize){
+			_fbo.begin();
 			shader.begin();
 			shader.setUniform1f("Alpha", -_cellSize * _cellSize);
 //			shader.setUniform1f("InverseBeta", _inverseBeta);
-			shader.setUniformTexture("Pressure", _backBufferTexture, 0);
+			shader.setUniformTexture("Pressure", _backTex, 0);
 			shader.setUniformTexture("Divergence", _divergenceTexture, 1);
-			shader.setUniformTexture("Obstacle", _obstaclesTexture, 2);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniformTexture("Obstacle", _obsTex, 2);
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

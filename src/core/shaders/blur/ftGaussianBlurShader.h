@@ -159,15 +159,15 @@ namespace flowTools {
 		
 	public:
 	
-		void update(ofFbo& _buffer, int _passes, int _radius){
-			if (pingPong.getWidth() != _buffer.getWidth() ||
-				pingPong.getHeight() != _buffer.getHeight() ||
-				ftUtil::getInternalFormat(pingPong) != ftUtil::getInternalFormat(_buffer)) {
-				allocate(_buffer.getWidth(),  _buffer.getHeight(), ftUtil::getInternalFormat(_buffer) );
+		void update(ofFbo& _fbo, int _passes, int _radius){
+			if (pingPong.getWidth() != _fbo.getWidth() ||
+				pingPong.getHeight() != _fbo.getHeight() ||
+				ftUtil::getInternalFormat(pingPong) != ftUtil::getInternalFormat(_fbo)) {
+				allocate(_fbo.getWidth(),  _fbo.getHeight(), ftUtil::getInternalFormat(_fbo) );
 			}
 			
 			ftUtil::zero(pingPong);
-			ftUtil::stretch(pingPong, _buffer);
+			ftUtil::stretch(pingPong, _fbo);
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {
@@ -183,7 +183,7 @@ namespace flowTools {
 				}
 			}
 	
-			ftUtil::stretch(_buffer, pingPong.getTexture());
+			ftUtil::stretch(_fbo, pingPong.getTexture());
 		}
 		
 		ofParameterGroup	parameters;

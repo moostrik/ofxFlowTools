@@ -131,9 +131,9 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _vorticityTexture, float _timeStep, float _scale, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _timeStep, float _scale, float _cellSize){
 			
-			_buffer.begin();
+			_fbo.begin();
 			
 			ofClear(0);
 			shader.begin();
@@ -143,11 +143,11 @@ namespace flowTools {
 			shader.setUniform1f("TimeStep", _timeStep);
 			shader.setUniform1f("ConfinementScale", _scale);
 			
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			
 			shader.end();
 			
-			_buffer.end();
+			_fbo.end();
 		};
 	};
 }

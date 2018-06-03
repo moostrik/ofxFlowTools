@@ -75,15 +75,15 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _velocityTexture, float _force){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _velTex, float _force){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("VelocityTexture", _velocityTexture, 0);
+			shader.setUniformTexture("VelocityTexture", _velTex, 0);
 			shader.setUniform1f("Force", _force);
-			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

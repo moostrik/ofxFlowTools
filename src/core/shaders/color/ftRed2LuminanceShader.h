@@ -68,14 +68,14 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _redTexture){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _redTex){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("RedTexture", _redTexture, 0);
-			shader.setUniform2f("Scale", _redTexture.getWidth() / _buffer.getWidth(), _redTexture.getHeight()/ _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniformTexture("RedTexture", _redTex, 0);
+			shader.setUniform2f("Scale", _redTex.getWidth() / _fbo.getWidth(), _redTex.getHeight()/ _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

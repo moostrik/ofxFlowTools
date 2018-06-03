@@ -163,11 +163,11 @@ namespace flowTools {
 	public:
 		
 		
-		void update(ofFbo& _buffer, ofTexture _texture, float _decay, int _radius = 5, int _passes = 1){
-			if (pingPong.getWidth() != _buffer.getWidth() ||
-				pingPong.getHeight() != _buffer.getHeight() ||
-				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
-				pingPong.allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
+		void update(ofFbo& _fbo, ofTexture _srcTex, float _decay, int _radius = 5, int _passes = 1){
+			if (pingPong.getWidth() != _fbo.getWidth() ||
+				pingPong.getHeight() != _fbo.getHeight() ||
+				pingPong.getInternalFormat() != _fbo.getTexture().getTextureData().glInternalFormat) {
+				pingPong.allocate(_fbo.getWidth(),  _fbo.getHeight(), _fbo.getTexture().getTextureData().glInternalFormat );
 				
 			}
 			
@@ -176,12 +176,12 @@ namespace flowTools {
 			
 			if (_decay > 0) {
 				pingPong.swap();
-				decayShader.update(*pingPong.getBuffer(), pingPong.getBackTexture(), _texture, _decay);
+				decayShader.update(*pingPong.getBuffer(), pingPong.getBackTexture(), _srcTex, _decay);
 			}
 			else {
 				pingPong.getBuffer()->black();
 				pingPong.getBuffer()->begin();
-				_texture.draw(0, 0, pingPong.getWidth(), pingPong.getHeight());
+				_srcTex.draw(0, 0, pingPong.getWidth(), pingPong.getHeight());
 				pingPong.getBuffer()->end();
 			}
 			
@@ -200,9 +200,9 @@ namespace flowTools {
 				}
 			}
 			
-			_buffer.begin();
+			_fbo.begin();
 			pingPong.getTexture().draw(0,0, pingPong.getWidth(), pingPong.getHeight());
-			_buffer.end();
+			_fbo.end();
 			
 			ofPopStyle();
 		}

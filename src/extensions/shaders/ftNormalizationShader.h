@@ -90,16 +90,16 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _texture, float _min, float _range){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _srcTex, float _min, float _range){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("Texture", _texture, 0);
+			shader.setUniformTexture("Texture", _srcTex, 0);
 			shader.setUniform1f("Min", _min);
 			shader.setUniform1f("Range", _range);
-			shader.setUniform2f("Scale", _texture.getWidth() / _buffer.getWidth(), _texture.getHeight()/ _buffer.getHeight());
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

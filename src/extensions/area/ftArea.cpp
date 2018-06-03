@@ -38,8 +38,8 @@ namespace flowTools {
 		parameters.add(roiParameters);
 	}
 	
-	void ftArea::update(ofTexture& _texture) {
-		int texFormat = ftUtil::getInternalFormat(_texture);
+	void ftArea::update(ofTexture& _srcTex) {
+		int texFormat = ftUtil::getInternalFormat(_srcTex);
 		if (!bAllocated || texFormat != ftUtil::getInternalFormat(scaleFbo)) {
 			allocate(width, height, ftUtil::getNumChannelsFromInternalFormat(texFormat));
 		}
@@ -52,7 +52,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(scaleFbo);
-		ftUtil::roi(scaleFbo, _texture, roi);
+		ftUtil::roi(scaleFbo, _srcTex, roi);
 		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 		ofPopStyle();
 		

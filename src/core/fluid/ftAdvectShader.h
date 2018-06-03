@@ -93,21 +93,21 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture,  ofTexture& _velocityTexture, ofTexture& _obstaclesTexture, float _timeStep, float _dissipation, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, ofTexture& _obsTex, float _timeStep, float _dissipation, float _cellSize){
 			
 			
-			_buffer.begin();
+			_fbo.begin();
 			shader.begin();
 			shader.setUniform1f("TimeStep", _timeStep);
 			shader.setUniform1f("Dissipation", _dissipation);
 			shader.setUniform1f("InverseCellSize", 1.0 / _cellSize);
-			shader.setUniform2f("Scale", _velocityTexture.getWidth() / _buffer.getWidth(), _velocityTexture.getHeight()/ _buffer.getHeight());
-			shader.setUniformTexture("Backbuffer", _backBufferTexture, 0);
-			shader.setUniformTexture("Velocity", _velocityTexture, 1);
-			shader.setUniformTexture("Obstacle", _obstaclesTexture, 2);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			shader.setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
+			shader.setUniformTexture("Backbuffer", _backTex, 0);
+			shader.setUniformTexture("Velocity", _velTex, 1);
+			shader.setUniformTexture("Obstacle", _obsTex, 2);
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

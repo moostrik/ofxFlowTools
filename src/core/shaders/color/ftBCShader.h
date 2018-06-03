@@ -75,10 +75,10 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture, float _contrast, float _brightness){
+		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _contrast, float _brightness){
 			_drawBuffer.begin();
 			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTexture, 0 );
+			shader.setUniformTexture( "tex0" , _srcTex, 0 );
 			shader.setUniform1f("contrast", _contrast);
 			shader.setUniform1f("brightness", _brightness);
 			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());

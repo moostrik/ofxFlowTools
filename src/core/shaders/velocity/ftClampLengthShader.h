@@ -79,15 +79,15 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _backBufferTexture, float _max, float _ClampForce){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _backTex, float _max, float _ClampForce){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("Backbuffer", _backBufferTexture, 0);
+			shader.setUniformTexture("Backbuffer", _backTex, 0);
 			shader.setUniform1f("MaxLength", _max);
 			shader.setUniform1f("ClampForce", _ClampForce);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

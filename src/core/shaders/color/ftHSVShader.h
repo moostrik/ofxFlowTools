@@ -107,10 +107,10 @@ namespace flowTools {
 	public:
 		
 		
-		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture, float _hue, float _saturation, float _value){
+		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _hue, float _saturation, float _value){
 			_drawBuffer.begin();
 			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTexture, 0 );
+			shader.setUniformTexture( "tex0" , _srcTex, 0 );
 			shader.setUniform1f("hue", _hue );
 			shader.setUniform1f("saturation", _saturation);
 			shader.setUniform1f("value", _value);

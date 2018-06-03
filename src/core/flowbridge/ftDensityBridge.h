@@ -23,6 +23,7 @@ namespace flowTools {
 		void	update(float _deltaTime);
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		
+		ofTexture& getDensity() 				{ return getTexture(); };
 		ofTexture& getTexture() 				{ return densitySwapBuffer.getTexture(); };
 		ofTexture& getLuminanceMask()			{ return luminanceMaskFbo.getTexture(); };
 		

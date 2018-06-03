@@ -130,7 +130,7 @@ void ofApp::update(){
 	
 //	flowParticles.setSpeed(flowCore.getSpeed());
 //	flowParticles.setCellSize(flowCore.getCellSize());
-	flowParticles.addFlowVelocity(flowCore.getOpticalFlow());
+	flowParticles.addFlowVelocity(flowCore.getOpticalFlowVelocity());
 	flowParticles.addFluidVelocity(flowCore.getFluidVelocity());
 //	flowParticles.setObstacle(flowCore.getObstacle());
 	flowParticles.update(dt);

@@ -45,17 +45,35 @@ public:
 	int		getFieldHeight() 	{ return fieldHeight; }
 	
 	void 		addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
-	ofTexture&	getFlow(ftFlowType _type);
 	
-	void    addFluidDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
-	void    addFluidVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
-	void    addFluidTemperature(ofTexture& _tex, float _strength  = 1.0){ fluidSimulation.addTemperature(_tex, _strength); }
-	void    addFluidPressure(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addPressure(_tex, _strength); }
-	void    addObstacleConst(ofTexture& _tex)							{ fluidSimulation.addObstacle(_tex); }
-	void    addObstacleTemp(ofTexture& _tex)							{ fluidSimulation.addTempObstacle(_tex); }
+	void 		setFlow(ftFlowType _type, ofTexture& _tex);
+	
+	void	addFluidDensity(ofTexture& _tex, float _strength  = 1.0) 	{ fluidSimulation.addDensity(_tex, _strength); }
+	void	addFluidVelocity(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addVelocity(_tex, _strength); }
+	void	addFluidTemperature(ofTexture& _tex, float _strength  = 1.0){ fluidSimulation.addTemperature(_tex, _strength); }
+	void	addFluidPressure(ofTexture& _tex, float _strength  = 1.0)	{ fluidSimulation.addPressure(_tex, _strength); }
+	void	addObstacleConst(ofTexture& _tex)							{ fluidSimulation.addObstacle(_tex); }
+	void	addObstacleTemp(ofTexture& _tex)							{ fluidSimulation.addTempObstacle(_tex); }
 
-	ofTexture& 	getOpticalFlow()	{ return opticalFlow.getVelocity(); }
-	ofTexture& 	getFluidVelocity()	{ return fluidSimulation.getVelocity(); }
+	ofTexture&	getFlow(ftFlowType _type);
+	ofTexture&	getOpticalFlowVelocity(){ return opticalFlow.getVelocity(); }
+	ofTexture&	getBridgeDensity()		{ return densityBridge.getDensity(); }
+	ofTexture&	getBridgeVelocity()		{ return velocityBridge.getVelocity(); }
+//	ofTexture&	getBridgePressure()		{ return ftPressureBridge.getVelocity(); }
+//	ofTexture&	getBridgeTemperature()	{ return ftTemperatureBridge.getVelocity(); }
+	
+	ofTexture&	getFluidDensity()		{ return fluidSimulation.getDensity(); }
+	ofTexture&	getFluidVelocity()		{ return fluidSimulation.getVelocity(); }
+	ofTexture&	getFluidPressure()		{ return fluidSimulation.getPressure(); }
+	ofTexture&	getFluidTemperature()	{ return fluidSimulation.getTemperature(); }
+	ofTexture&	getFluidDivergence()	{ return fluidSimulation.getDivergence(); }
+	ofTexture&	getFluidCurlMagnitude()	{ return fluidSimulation.getCurlMagnitude(); }
+	ofTexture&	getFluidConfinement()	{ return fluidSimulation.getConfinement(); }
+	ofTexture&	getFluidSmokeBuoyancy()	{ return fluidSimulation.getSmokeBuoyancy(); }
+	
+//	ofTexture&	getObstacleTemporary()	{ return fluidSimulation.getObstacleTemporary(); }
+//	ofTexture&	getObstacleConstant()	{ return fluidSimulation.getObstacleConstgant(); }
+	
 	
 	ofParameterGroup& getParameters() 				{ return parameters; }
 	ofParameterGroup& getCoreParameters() 			{ return flowCoreParameters; }
@@ -94,16 +112,13 @@ private:
 	
 	ofParameter<bool>	showScalar;
 	ofParameter<bool>	showField;
-	ofParameter<float>	displayScalarScale;
-	void				setDisplayScalarScale(float& _value) { displayScalar.setScale(_value); }
-	ofParameter<float>	velocityFieldScale;
-	void				setVelocityFieldScale(float& _value) { velocityField.setVelocityScale(_value); velocityTemperatureField.setVelocityScale(_value); }
-	ofParameter<float>	temperatureFieldScale;
-	void				setTemperatureFieldScale(float& _value) { temperatureField.setScale(_value); velocityTemperatureField.setTemperatureScale(_value); }
-	ofParameter<float>	pressureFieldScale;
-	void				setPressureFieldScale(float& _value) { pressureField.setScale(_value); }
-	ofParameter<bool>	velocityLineSmooth;
-	void				setVelocityLineSmooth(bool& _value) { velocityField.setLineSmooth(_value); velocityTemperatureField.setLineSmooth(_value);  }
+	ofParameter<float>	visualizeScale;
+	void				setScale(float& _value)	{ 	displayScalar.setScale(_value);
+													velocityField.setVelocityScale(_value);
+													velocityTemperatureField.setVelocityScale(_value);
+													temperatureField.setScale(_value);
+													velocityTemperatureField.setTemperatureScale(_value);
+													pressureField.setScale(_value); }
 	
 	// Parameters
 	void				setupParameters();

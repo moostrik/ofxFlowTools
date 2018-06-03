@@ -51,21 +51,13 @@ void ftCore::setupParameters() {
 	
 	visualizeParameters.setName("flow visualisation");
 	visualizeParameters.add(showScalar.set("show scalar", true));
-	visualizeParameters.add(displayScalarScale.set("scalar scale", 0.3, 0.1, 1.0));
 	visualizeParameters.add(showField.set("show field", true));
-	visualizeParameters.add(velocityFieldScale.set("field scale", 0.3, 0.1, 1.0));
-//	visualizeParameters.add(temperatureFieldScale.set("temperature scale", 0.1, 0.0, 0.5));
-//	visualizeParameters.add(pressureFieldScale.set("pressure scale", 0.02, 0.0, 0.5));
-	visualizeParameters.add(velocityLineSmooth.set("line smooth", false));
+	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 1.0));
 	flowCoreParameters.add(visualizeParameters);
 	parameters.add(visualizeParameters);
 	
 	drawMode.addListener(this, &ftCore::drawModeSetName);
-	displayScalarScale.addListener(this, &ftCore::setDisplayScalarScale);
-	velocityFieldScale.addListener(this, &ftCore::setVelocityFieldScale);
-	temperatureFieldScale.addListener(this, &ftCore::setTemperatureFieldScale);
-	pressureFieldScale.addListener(this, &ftCore::setPressureFieldScale);
-	velocityLineSmooth.addListener(this, &ftCore::setVelocityLineSmooth);
+	visualizeScale.addListener(this, &ftCore::setScale);
 	
 	parameters.add(opticalFlow.getParameters());
 	parameters.add(velocityBridge.getParameters());
@@ -75,15 +67,9 @@ void ftCore::setupParameters() {
 
 //--------------------------------------------------------------
 void ftCore::setInput(ofTexture &_forVelocity, ofTexture &_forDensity) {
-	opticalFlow.setSource(_forVelocity);
-	opticalFlow.update();
-	
-	velocityBridge.setSource(opticalFlow.getTexture());
-	
-	densityBridge.setVelocity(opticalFlow.getTexture());
+	opticalFlow.setInput(_forVelocity);
 	densityBridge.setDensity(_forDensity);
 }
-
 
 //--------------------------------------------------------------
 void ftCore::addFlow(flowTools::ftFlowType _type, ofTexture &_tex, float _strength) {
@@ -110,6 +96,48 @@ void ftCore::addFlow(flowTools::ftFlowType _type, ofTexture &_tex, float _streng
 }
 
 //--------------------------------------------------------------
+ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
+	
+//	FT_CORE_INPUT,
+//	FT_CORE_INPUT_DENSITY,
+//	FT_CORE_INPUT_VELOCITY,
+//	
+//	FT_CORE_FLOW_VELOCITY,
+//	FT_CORE_BRIDGE_DENSITY,
+//	FT_CORE_BRIDGE_VELOCITY,
+//	FT_CORE_BRIDGE_TEMPERATURE,
+//	FT_CORE_BRIDGE_PRESSURE,
+//	FT_CORE_FLUID_DENSITY,
+//	FT_CORE_FLUID_VELOCITY,
+//	FT_CORE_FLUID_TEMPERATURE,
+//	FT_CORE_FLUID_PRESSURE,
+//	FT_CORE_OBSTACLE_TEMPORARY,
+//	FT_CORE_OBSTACLE_CONSTANT,
+//	
+//	switch (_type) {
+////		case FT_CORE_INPUT
+////			break;
+////		case FT_CORE_INPUT_DENSITY:
+////			break;
+////		case FT_CORE_FLUID_VELOCITY:
+////			break;
+//		case FT_CORE_FLUID_TEMPERATURE:
+//			
+//			break;
+//		case FT_CORE_FLUID_PRESSURE:
+//			
+//			break;
+//		case FT_CORE_OBSTACLE_TEMPORARY:
+//			
+//		case FT_CORE_OBSTACLE_CONSTANT:
+//			
+//		default:
+//			return ofTexture();
+//			break;
+//	}
+}
+
+//--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
 	if (_deltaTime < 0) {
 		deltaTime = ofGetElapsedTimef() - lastTime;
@@ -120,6 +148,11 @@ void ftCore::update(float _deltaTime){
 	
 //	float dt = min(deltaTime, 1.f / 30.f);
 	float dt = 1.0 / ofGetFrameRate();
+	
+	opticalFlow.update();
+	
+	velocityBridge.setSource(opticalFlow.getTexture());
+	densityBridge.setVelocity(opticalFlow.getTexture());
 	
 	velocityBridge.update(dt);
 	densityBridge.update(dt);

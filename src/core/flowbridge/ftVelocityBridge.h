@@ -19,6 +19,7 @@ namespace flowTools {
 		void	update(float _deltaTime);
 		void	setSource(ofTexture& _tex);
 		
+		ofTexture&	getVelocity()				{ return getTexture(); }
 		ofTexture&	getTexture()				{ return multiplyFbo.getTexture(); }
 		
 		int		getWidth() 						{ return width; }

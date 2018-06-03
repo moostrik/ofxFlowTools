@@ -68,7 +68,7 @@ namespace flowTools {
 		}
 		else {
 			velocitySwapBuffer.swap();
-			velocityBridgeShader.update(velocitySwapBuffer, *velocityTexture, velocitySwapBuffer.getBackTexture(), trailWeight.get());
+			velocityBridgeShader.update(velocitySwapBuffer, velocitySwapBuffer.getBackTexture(), *velocityTexture, trailWeight.get());
 			if (blurRadius.get() > 0) { blurShader.update(velocitySwapBuffer, 1, blurRadius.get()); }
 			
 			densitySwapBuffer.swap();

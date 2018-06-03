@@ -65,7 +65,7 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		swapBuffer.swap();
-		trailShader.update(swapBuffer, *velocityTexture, swapBuffer.getBackTexture(), trailWeight.get());
+		bridgeShader.update(swapBuffer, swapBuffer.getBackTexture(), *velocityTexture, trailWeight.get());
 		
 		if (blurRadius.get() > 0) { blurShader.update(swapBuffer, 1, blurRadius.get()); }
 		

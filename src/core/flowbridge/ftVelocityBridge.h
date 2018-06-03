@@ -46,7 +46,7 @@ namespace flowTools {
 		ofTexture*				velocityTexture;
 		bool					bSourceSet;
 		ftSwapFbo				swapBuffer;
-		ftVelocityBridgeShader	trailShader;
+		ftVelocityBridgeShader	bridgeShader;
 		ftGaussianBlurShader	blurShader;
 		ftMultiplyForceShader	multiplyShader;
 		ofFbo					multiplyFbo;

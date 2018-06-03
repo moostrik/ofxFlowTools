@@ -27,24 +27,24 @@ namespace flowTools {
 		void glTwo() {
 			
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect	colorTex;
-									 uniform sampler2DRect	velocityTex;
-									 uniform vec2 colorScale;
-									 uniform vec2 velocityScale;
+									 uniform sampler2DRect	tex0;
+									 uniform sampler2DRect	tex1;
+									 uniform vec2 scale0;
+									 uniform vec2 scale1;
 									 uniform float speed;
 									 
 									 void main(){
-										 vec2 stc = gl_TexCoord[0].xy * colorScale;
-										 vec2 stv = gl_TexCoord[0].xy * velocityScale;
+										 vec2 st0 = gl_TexCoord[0].xy * scale0;
+										 vec2 st1 = gl_TexCoord[0].xy * scale1;
 										 
-										 vec4 color = texture2DRect(colorTex, stc);
-										 vec4 vel = texture2DRect(velocityTex, stv);
+										 vec4 den = texture2DRect(tex0, st0);
+										 vec4 vel = texture2DRect(tex1, st1);
 										 
 										 float alpha = length(vel.xy); // magnitude of the velocity
-										 color.w = alpha * speed;
-										 color.xyz *= color.w;
+										 den.w = alpha * speed;
+										 den.xyz *= den.w;
 										 
-										 gl_FragColor = color;
+										 gl_FragColor = den;
 									 }
 									 );
 			
@@ -56,27 +56,27 @@ namespace flowTools {
 		void glThree() {
 			
 			fragmentShader = GLSL150(
-									 uniform sampler2DRect colorTex;
-									 uniform sampler2DRect velocityTex;
-									 uniform vec2 colorScale;
-									 uniform vec2 velocityScale;
+									 uniform sampler2DRect tex0;
+									 uniform sampler2DRect tex1;
+									 uniform vec2 scale0;
+									 uniform vec2 scale1;
 									 uniform float speed;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
 									 void main(){
-										 vec2 stc = texCoordVarying * colorScale;
-										 vec2 stv = texCoordVarying * velocityScale;
+										 vec2 st0 = texCoordVarying * scale0;
+										 vec2 st1 = texCoordVarying * scale1;
 										 
-										 vec4 color = texture(colorTex, stc);
-										 vec4 vel = texture(velocityTex, stv);
+										 vec4 den = texture(tex0, st0);
+										 vec4 vel = texture(tex1, st1);
 										 
 										 float alpha = length(vel.xy); // magnitude of the velocity
-										 color.w = alpha * speed;
-										 color.xyz *= color.w;
+										 den.w = alpha * speed;
+										 den.xyz *= den.w;
 										 
-										 fragColor = color;
+										 fragColor = den;
 									 }
 									 );
 			
@@ -88,17 +88,17 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _buffer, ofTexture& _densityTexture, ofTexture& _velocityTexture, float _speed){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _denTex, ofTexture& _velTex, float _speed){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("colorTex", _densityTexture, 0);
-			shader.setUniformTexture("velocityTex", _velocityTexture, 1);
-			shader.setUniform2f("colorScale", _densityTexture.getWidth() / _buffer.getWidth() , _densityTexture.getHeight() / _buffer.getHeight() );
-			shader.setUniform2f("velocityScale", _velocityTexture.getWidth() / _buffer.getWidth() , _velocityTexture.getHeight() / _buffer.getHeight());
+			shader.setUniformTexture("tex0", _denTex, 0);
+			shader.setUniformTexture("tex1", _velTex, 1);
+			shader.setUniform2f("scale0", _denTex.getWidth() / _fbo.getWidth() , _denTex.getHeight() / _fbo.getHeight() );
+			shader.setUniform2f("scale1", _velTex.getWidth() / _fbo.getWidth() , _velTex.getHeight() / _fbo.getHeight());
 			shader.setUniform1f("speed", _speed);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

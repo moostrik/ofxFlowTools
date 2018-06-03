@@ -29,9 +29,9 @@ namespace flowTools {
 									 uniform float weight;
 									 
 									 void main(){
-										 vec2 vel0 = texture2DRect(tex0, gl_TexCoord[0].st).xy;
-										 vec2 vel1 = texture2DRect(tex1, gl_TexCoord[0].st).yx;
-										 vec2 vel = vel0 + vel1 * weight;
+										 vec2 baseVel = texture2DRect(tex0, gl_TexCoord[0].st).xy;
+										 vec2 blendVel = texture2DRect(tex1, gl_TexCoord[0].st).xy;
+										 vec2 vel = (baseVel * weight) + blendVel;
 										 float magnitude = min(length(vel), 1);
 										 vel = normalize(vel) * magnitude;
 										 gl_FragColor = vec4(vel, 0.0, 1.0);
@@ -54,9 +54,9 @@ namespace flowTools {
 									 out vec4 fragColor;
 									 
 									 void main(){
-										 vec2 vel0 = texture(tex0, texCoordVarying).xy;
-										 vec2 vel1 = texture(tex1, texCoordVarying).xy;
-										 vec2 vel = vel0 + vel1 * weight;
+										 vec2 baseVel = texture(tex0, texCoordVarying).xy;
+										 vec2 blendVel = texture(tex1, texCoordVarying).xy;
+										 vec2 vel = (baseVel * weight) + blendVel;
 										 float magnitude = min(length(vel), 1);
 										 vel = normalize(vel) * magnitude;
 										 fragColor = vec4(vel, 0.0, 1.0);
@@ -71,15 +71,15 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _buffer, ofTexture& _texture0,  ofTexture& _texture1, float _weight){
-			_buffer.begin();
+		void update(ofFbo& _fbo, ofTexture& _baseTex,  ofTexture& _blendTex, float _weight){
+			_fbo.begin();
 			shader.begin();
-			shader.setUniformTexture("tex0", _texture0, 0);
-			shader.setUniformTexture("tex1", _texture1, 1);
+			shader.setUniformTexture("tex0", _baseTex, 0);
+			shader.setUniformTexture("tex1", _blendTex, 1);
 			shader.setUniform1f("weight", _weight);
-			renderFrame(_buffer.getWidth(), _buffer.getHeight());
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();
-			_buffer.end();
+			_fbo.end();
 		}
 	};
 }

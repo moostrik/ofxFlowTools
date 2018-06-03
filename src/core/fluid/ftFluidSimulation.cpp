@@ -123,7 +123,7 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftFluidSimulation::update(float _deltaTime){
 		float time = ofGetElapsedTimef();
-		if (_deltaTime != 0)
+		if (_deltaTime != -1)
 			deltaTime = _deltaTime;
 		else
 			deltaTime = time - lastTime;

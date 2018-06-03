@@ -25,7 +25,7 @@ namespace flowTools {
 		ftFluidSimulation();
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0);
-		void    update(float _deltaTime = 0);
+		void    update(float _deltaTime = -1);
 		void    draw() { draw(0, 0, densityWidth, densityHeight); }
 		void    draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
 		void    draw(int _x, int _y, float _width, float _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);

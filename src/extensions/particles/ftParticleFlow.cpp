@@ -48,7 +48,7 @@ namespace flowTools {
 		parameters.add(size.set("size", 2, 0, 10));
 		parameters.add(sizeSpread.set("size spread", .75, 0, 1));
 		parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
-		parameters.add(gravity.set("gravity", ofVec2f(0, 0), ofVec2f(-10,-10), ofVec2f(10,10)));
+		parameters.add(gravity.set("gravity", glm::vec2(0, 0), glm::vec2(-10,-10), glm::vec2(10,10)));
 	}
 	
 	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {

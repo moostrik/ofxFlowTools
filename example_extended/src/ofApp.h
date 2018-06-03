@@ -19,6 +19,12 @@ public:
 	void	update();
 	void	draw();
 	
+	// Size
+	int					densityWidth;
+	int					densityHeight;
+	int					flowWidth;
+	int					flowHeight;
+	
 	// FLOWTOOLS
 	ftCore				flowCore;
 	ofImage				flowToolsLogo;
@@ -39,22 +45,11 @@ public:
 	void				setFullScreen(bool& _value) { ofSetFullscreen(_value);}
 	int					windowWidth, windowHeight;
 	void windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
+	float				lastTime, deltaTime;
 	
 	// Camera
-	int 				camWidth, camHeight;
 	ofVideoGrabber		simpleCam;
-	bool				didCamUpdate;
 	ofFbo				cameraFbo;
 	ofParameter<bool>	doFlipCamera;
 	ofParameter<bool>	doDrawCamera;
-	
-	// Time
-	float				lastTime;
-	float				deltaTime;
-	
-	// Size
-	int					densityWidth;
-	int					densityHeight;
-	int					flowWidth;
-	int					flowHeight;
 };

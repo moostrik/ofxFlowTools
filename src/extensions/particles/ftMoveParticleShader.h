@@ -118,7 +118,7 @@ namespace flowTools {
 		
 	public:
 		
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _ALMSTex, ofTexture& _velTex, ofTexture& _homeTex, float _timeStep, float _cellSize, ofVec2f _gravity){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _ALMSTex, ofTexture& _velTex, ofTexture& _homeTex, float _timeStep, float _cellSize, glm::vec2 _gravity){
 			_fbo.begin();
 			shader.begin();
 			shader.setUniformTexture("Backbuffer", _backTex, 0);

@@ -22,19 +22,16 @@ void ofApp::setup(){
 	flowParticles.setObstacle(flowToolsLogo.getTexture());
 	
 	// CAMERA
-	camWidth = 1280;
-	camWidth = 720;
-	simpleCam.setup(camWidth, camWidth, true);
-	didCamUpdate = false;
-	cameraFbo.allocate(camWidth, camWidth);
+	simpleCam.setup(densityWidth, densityHeight, true);
+	cameraFbo.allocate(densityWidth, densityHeight);
 	ftUtil::zero(cameraFbo);
 	
 	// GUI
 	setupGui();
+	
+	// DRAW
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
-	
-	lastTime = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
@@ -75,6 +72,8 @@ void ofApp::setupGui() {
 	
 	gui.minimizeAll();
 	toggleGuiDraw = true;
+	
+	lastTime = ofGetElapsedTimef();
 }
 
 
@@ -92,11 +91,7 @@ void ofApp::switchGuiColor(bool _switch) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
-	deltaTime = ofGetElapsedTimef() - lastTime;
-	lastTime = ofGetElapsedTimef();
-	
-	float dt = min(deltaTime, 1.f / 30.f);
+	float dt = 1.0 / max(ofGetFrameRate(), 1.f); // more smooth as 'real' deltaTime.
 	
 	simpleCam.update();
 	
@@ -104,7 +99,6 @@ void ofApp::update(){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.begin();
-		
 		if (doFlipCamera)
 			simpleCam.draw(cameraFbo.getWidth(), 0, -cameraFbo.getWidth(), cameraFbo.getHeight());  // Flip Horizontal
 		else
@@ -119,10 +113,9 @@ void ofApp::update(){
 	for (int i=0; i<flowMouse.getNumForces(); i++) {
 		if (flowMouse.didChange(i)) {
 			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-			flowParticles.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-//			if (flowMouse.getType(i) == FT_VELOCITY) {
-//				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-//			}
+			if (flowMouse.getType(i) == FT_CORE_FLUID_VELOCITY) {
+				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+			}
 		}
 	}
 	
@@ -188,19 +181,16 @@ void ofApp::drawGui() {
 	guiFPS = (int)(ofGetFrameRate() + 0.5);
 	
 	// calculate minimum fps
+	deltaTime = ofGetElapsedTimef() - lastTime;
+	lastTime = ofGetElapsedTimef();
 	deltaTimeDeque.push_back(deltaTime);
-	
-	while (deltaTimeDeque.size() > guiFPS.get())
-		deltaTimeDeque.pop_front();
+	while (deltaTimeDeque.size() > guiFPS.get()) { deltaTimeDeque.pop_front(); }
 	
 	float longestTime = 0;
 	for (int i=0; i<deltaTimeDeque.size(); i++){
-		if (deltaTimeDeque[i] > longestTime)
-			longestTime = deltaTimeDeque[i];
+		if (deltaTimeDeque[i] > longestTime) { longestTime = deltaTimeDeque[i]; }
 	}
-	
 	guiMinFPS.set(1.0 / longestTime);
-	
 	
 	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);

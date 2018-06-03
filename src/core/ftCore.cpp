@@ -141,7 +141,7 @@ ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
 
 //--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
-	float dt = 1.0 / ofGetFrameRate();
+	float dt = (_deltaTime != -1)? _deltaTime : 1.0 / max(ofGetFrameRate(), 1.f);
 	
 	opticalFlow.update();
 	

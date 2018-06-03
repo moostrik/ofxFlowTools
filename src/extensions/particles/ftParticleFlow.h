@@ -73,7 +73,7 @@ namespace flowTools {
 		ofParameter<float>	size;
 		ofParameter<float>	sizeSpread;
 		ofParameter<float>	twinkleSpeed;
-		ofParameter<ofVec2f>gravity;
+		ofParameter<glm::vec2>gravity;
 		
 		float	simulationWidth;
 		float	simulationHeight;

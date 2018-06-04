@@ -9,7 +9,7 @@ void ofApp::setup(){
 	flowCore.setup();
 	
 	flowToolsLogo.load("flowtools.png");
-	flowCore.addObstacleTemp(flowToolsLogo.getTexture());
+	flowCore.addObstacleConstant(flowToolsLogo.getTexture());
 	
 	// CAMERA
 	camWidth = 1280;
@@ -117,7 +117,7 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			flowCore.reset();
-			flowCore.addObstacleTemp(flowToolsLogo.getTexture());
+			flowCore.addObstacleConstant(flowToolsLogo.getTexture());
 			break;
 			
 		default: break;

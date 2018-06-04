@@ -39,9 +39,21 @@ namespace flowTools {
 			bInputSet = true;
 		}
 
-		void addInput(ofTexture &_inputTex, float _strength) {
+		void addInput(ofTexture &_inputTex, float _strength = 1.0) {
 			inputFbo.swap();
 			AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _inputTex, 1.0, _strength);
+			bInputSet = true;
+		}
+		
+		void setOutput(ofTexture &_inputTex) {
+			ftUtil::zero(outputFbo);
+			ftUtil::stretch(outputFbo, _inputTex);
+			bInputSet = true;
+		}
+		
+		void addOutput(ofTexture &_inputTex, float _strength = 1.0) {
+			outputFbo.swap();
+			AddMultipliedShader.update(outputFbo, outputFbo.getBackTexture(), _inputTex, 1.0, _strength);
 			bInputSet = true;
 		}
 

@@ -96,10 +96,10 @@ void ftCore::setFlow(flowTools::ftFlowType _type, ofTexture &_tex) {
 		case FT_FLOW_VELOCITY:  	setFlowVelocity(_tex); break;
 		case FT_BRIDGE_VELOCITY:  	setBridgeVelocity(_tex); break;
 		case FT_BRIDGE_DENSITY:  	setBridgeDensity(_tex); break;
-		case FT_BRIDGE_TEMPERATURE: setBridgeTemperature(_tex); break;
-		case FT_BRIDGE_PRESSURE:  	setBridgePressure(_tex); break;
-		case FT_OBSTACLE_TEMPORARY: setObstacleTemporary(_tex); break;
-		case FT_OBSTACLE_CONSTANT:  setObstacleConstant(_tex); break;
+//		case FT_BRIDGE_TEMPERATURE: setBridgeTemperature(_tex); break;
+//		case FT_BRIDGE_PRESSURE:  	setBridgePressure(_tex); break;
+//		case FT_OBSTACLE_TEMPORARY: setObstacleTemporary(_tex); break;
+//		case FT_OBSTACLE_CONSTANT:  setObstacleConstant(_tex); break;
 //		case FT_FLUID_BUOYANCY: 	setFluidBuoyancy(_tex); break;
 //		case FT_FLUID_VORTICITY: 	setFluidVorticity(_tex); break;
 //		case FT_FLUID_DIVERGENCE: 	setFluidDivergence(_tex); break;

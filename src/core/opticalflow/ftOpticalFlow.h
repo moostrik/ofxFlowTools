@@ -61,7 +61,7 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void addInput(ofTexture& _tex) { ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set"; }
+		void addInput(ofTexture& _tex , float _strength = 0) { ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set"; }
 		
 		void reset() { ftFlow::reset(); bFirstFrame = true; }
 		

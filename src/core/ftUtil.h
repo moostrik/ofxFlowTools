@@ -5,76 +5,30 @@
 #include "ofFbo.h"
 #include "ftSwapFbo.h"
 
-
-
-
 namespace flowTools {
-	
-//	enum ftFlowType{
-//		FT_NONE			= 0,
-//		FT_DENSITY		= 1,
-//		FT_VELOCITY		= 2,
-//		FT_TEMPERATURE	= 3,
-//		FT_PRESSURE		= 4,
-//		FT_TEMP_OBSTACLE= 5,
-//		FT_OBSTACLE		= 6,
-//	};
-	
-//	enum ftFlowType{
-//		FT_NONE	= 0,
-//		FT_CORE_INPUT_DENSITY,
-//		FT_CORE_INPUT_VELOCITY,
-//		FT_CORE_INPUT_BOTH,
-//		FT_CORE_FLOW_VELOCITY,
-//		FT_CORE_BRIDGE_DENSITY,
-//		FT_CORE_BRIDGE_VELOCITY,
-//		FT_CORE_BRIDGE_TEMPERATURE,
-//		FT_CORE_BRIDGE_PRESSURE,
-//		FT_CORE_FLUID_DENSITY,
-//		FT_CORE_FLUID_VELOCITY,
-//		FT_CORE_FLUID_TEMPERATURE,
-//		FT_CORE_FLUID_PRESSURE,
-//		FT_CORE_OBSTACLE_TEMPORARY,
-//		FT_CORE_OBSTACLE_CONSTANT,
-//	};
 	
 	enum ftFlowType{
 		FT_NONE	= 0,
-		FT_CORE_INPUT_DENSITY,
-		FT_CORE_INPUT_VELOCITY,
-		FT_CORE_INPUT_BOTH,
-		FT_CORE_FLOW_VELOCITY,
-		FT_CORE_BRIDGE_DENSITY,
-		FT_CORE_BRIDGE_VELOCITY,
-		FT_CORE_BRIDGE_TEMPERATURE,
-		FT_CORE_BRIDGE_PRESSURE,
-		FT_CORE_FLUID_DENSITY,
-		FT_CORE_FLUID_VELOCITY,
-		FT_CORE_FLUID_TEMPERATURE,
-		FT_CORE_FLUID_PRESSURE,
-		FT_CORE_OBSTACLE_TEMPORARY,
-		FT_CORE_OBSTACLE_CONSTANT,
+		FT_INPUT,
+		FT_INPUT_FOR_VELOCITY,
+		FT_INPUT_FOR_DENSITY,
+		FT_FLOW_VELOCITY,
+		FT_BRIDGE_VELOCITY,
+		FT_BRIDGE_DENSITY,
+		FT_BRIDGE_TEMPERATURE,
+		FT_BRIDGE_PRESSURE,
+		FT_OBSTACLE_TEMPORARY,
+		FT_OBSTACLE_CONSTANT,
+		FT_FLUID_BUOYANCY,
+		FT_FLUID_VORTICITY,
+		FT_FLUID_DIVERGENCE,
+		FT_FLUID_TEMPERATURE,
+		FT_FLUID_PRESSURE,
+		FT_FLUID_VELOCITY,
+		FT_FLUID_DENSITY,
 	};
-	
-//	enum ftFlowType{
-//		FT_TYPE_NONE	= 0,
-//		FT_INPUT,
-//		FT_FLOW,
-//		FT_BRIDGE,
-//		FT_FLUID,
-//		FT_OBSTACLE
-//	};
-//
-//	enum ftFlowForce{
-//		FT_FORCE_NONE	= 0,
-//		FT_DENSITY,
-//		FT_VELOCITY,
-//		FT_TEMPERATURE,
-//		FT_PRESSURE,
-//		FT_TEMPORARY,
-//		FT_CONSTANT,
-//		FT_DEN_VEL,
-//	};
+	const vector<string> ftFlowNames({"none", "input", "input for velocity", "input for density", "optical flow", "bridge velocity", "bridge density", "bridge temperature", "bridge pressure", "obstacle temporary", "obstacle continuous", "fluid buoyancy", "fluid vorticity", "fluid divergence", "fluid temperature", "fluid pressure", "fluid velocity", "fluid density"});
+		
 	
 	class ftUtil {
 	public:

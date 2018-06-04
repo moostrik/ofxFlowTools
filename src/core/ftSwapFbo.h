@@ -19,7 +19,7 @@ namespace flowTools {
 		
 		void allocate(ofFboSettings _settings){
 			if (_settings.numColorbuffers != 2) {
-				ofLogError("ftSwapFbo") << "needst to be allocated with 2 color buffers";
+				ofLogError("ftSwapFbo") << "needs to be allocated with 2 color buffers";
 				return;
 			}
 			ofFbo::allocate(_settings);

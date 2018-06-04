@@ -46,9 +46,9 @@ namespace flowTools {
 		ofTexture&	getTemperature() {return temperatureSwapBuffer.getTexture();}
 		ofTexture&	getDivergence() {return divergenceBuffer.getTexture();}
 		ofTexture&	getObstacle() {return combinedObstacleBuffer.getTexture();}
-		ofTexture&	getCurlMagnitude() {return vorticityFirstPassBuffer.getTexture();}
+		ofTexture&	getVorticityVelocity() {return vorticityFirstPassBuffer.getTexture();}
 		ofTexture&	getConfinement() {return vorticitySecondPassBuffer.getTexture();}
-		ofTexture&	getSmokeBuoyancy() {return smokeBuoyancyBuffer.getTexture();}
+		ofTexture&	getBuoyancy() {return smokeBuoyancyBuffer.getTexture();}
 			
 		int		getSimulationWidth() {return simulationWidth;}
 		int		getSimulationHeight() {return simulationHeight;}

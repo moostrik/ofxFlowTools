@@ -75,6 +75,10 @@ namespace flowTools {
 		}
 		
 	public:
+//		void update(ftSwapFbo& _fbo, ofTexture& _blendTex, float _baseMultiplier, float _blendMultiplier) {
+//			update(_fbo, _fbo.getBackTexture(), _blendTex, _baseMultiplier, _blendMultiplier);
+//		}
+		
 		
 		void update(ofFbo& _fbo, ofTexture& _baseTex, ofTexture& _blendTex, float _baseMultiplier, float _blendMultiplier){
 			_fbo.begin();

@@ -14,7 +14,7 @@ void ofApp::setup(){
 	flowCore.setup(densityWidth, densityHeight, flowWidth, flowHeight);
 	
 	flowToolsLogo.load("flowtools.png");
-	flowCore.addFlow(FT_CORE_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
+	flowCore.addFlow(FT_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
 	
 	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
@@ -113,7 +113,7 @@ void ofApp::update(){
 	for (int i=0; i<flowMouse.getNumForces(); i++) {
 		if (flowMouse.didChange(i)) {
 			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-			if (flowMouse.getType(i) == FT_CORE_FLUID_VELOCITY) {
+			if (flowMouse.getType(i) == FT_FLUID_VELOCITY) {
 				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
 			}
 		}
@@ -143,7 +143,7 @@ void ofApp::keyPressed(int key){
 		case 'R':
 			flowCore.reset();
 			flowMouse.reset();
-			flowCore.addFlow(FT_CORE_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
+			flowCore.addFlow(FT_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
 			flowParticles.reset();
 			break;
 			

@@ -19,8 +19,9 @@ namespace flowTools {
 		void		update();
 		void		update(ofTexture& _tex) { setInput(_tex); update(); }
 		
-		ofTexture&	getVelocity()		{ return getTexture(); }
-		ofTexture&	getTexture()		{ return velocityFbo.getTexture(); }
+		ofTexture&	getVelocity()	{ return getTexture(); }
+		ofTexture&	getTexture()	{ return velocityFbo.getTexture(); }
+		ofTexture&	getInput()		{ return inputSwapFbo.getTexture(); }
 		
 		int			getWidth() {return width;};
 		int			getHeight(){return height;};

@@ -71,20 +71,32 @@ void ftCore::setupParameters() {
 //--------------------------------------------------------------
 void ftCore::update(float _deltaTime){
 	float dt = (_deltaTime != -1)? _deltaTime : 1.0 / max(ofGetFrameRate(), 1.f);
-	
+	updateOpticalFlow();
+	updateBridgeVelocity(dt);
+	updateBridgeDensity(dt);
+	updateFluid(dt);
+}
+
+void ftCore::updateOpticalFlow(){
 	opticalFlow.update();
-	
+}
+
+void ftCore::updateBridgeVelocity(float _deltaTime){
 	velocityBridge.setInput(opticalFlow.getVelocity());
+	velocityBridge.update(_deltaTime);
+}
+
+void ftCore::updateBridgeDensity(float _deltaTime){
 	densityBridge.setVelocity(opticalFlow.getVelocity());
-	
-	velocityBridge.update(dt);
-	densityBridge.update(dt);
-	
+	densityBridge.update(_deltaTime);
+}
+
+void ftCore::updateFluid(float _deltaTime){
 	fluidSimulation.addVelocity(velocityBridge.getVelocity());
 	fluidSimulation.addDensity(densityBridge.getDensity());
 	fluidSimulation.addTemperature(densityBridge.getLuminance());
 	
-	fluidSimulation.update(dt);
+	fluidSimulation.update(_deltaTime);
 }
 
 //--------------------------------------------------------------

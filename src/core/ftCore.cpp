@@ -74,8 +74,8 @@ void ftCore::update(float _deltaTime){
 	
 	opticalFlow.update();
 	
-	velocityBridge.setInput(opticalFlow.getTexture());
-	densityBridge.setVelocity(opticalFlow.getTexture());
+	velocityBridge.setInput(opticalFlow.getVelocity());
+	densityBridge.setVelocity(opticalFlow.getVelocity());
 	
 	velocityBridge.update(dt);
 	densityBridge.update(dt);
@@ -169,8 +169,8 @@ void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode 
 		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h, _blendmode); break;
 		case FT_INPUT_FOR_VELOCITY: drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
 		case FT_INPUT_FOR_DENSITY: 	drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLOW_VELOCITY: 		displayScalar.draw(opticalFlow.getTexture(), _x, _y, _w, _h, _blendmode);
-									velocityField.draw(opticalFlow.getTexture(), _x, _y, _w, _h, _blendmode); break;
+		case FT_FLOW_VELOCITY: 		displayScalar.draw(opticalFlow.getVelocity(), _x, _y, _w, _h, _blendmode);
+									velocityField.draw(opticalFlow.getVelocity(), _x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_VELOCITY: 	displayScalar.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode);
 									velocityField.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h, _blendmode); break;

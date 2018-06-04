@@ -1,9 +1,3 @@
-//
-//  ftFlow.hpp
-//  example_extended
-//
-//  Created by Ties East on 04/06/2018.
-//
 
 #pragma once
 
@@ -53,6 +47,8 @@ namespace flowTools {
 
 		ofTexture&	getOutput()		{ return outputFbo.getTexture(); }
 		bool		getInputSet() 	{ return bInputSet; }
+		
+		ofTexture&	getInput()		{ return inputFbo.getTexture(); }
 
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		

@@ -49,17 +49,9 @@ namespace flowTools {
 				velocityBridge.update(_deltaTime);
 				
 				outputFbo.swap();
-				densityBridgeShader.update(outputFbo,
-										   inputFbo.getTexture(),
-										   velocityBridge.getOutput(),
-										   speed.get() * _deltaTime);
+				densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityBridge.getOutput(),  speed.get() * _deltaTime);
 				outputFbo.swap();
-				HSVShader.update(outputFbo,
-								 outputFbo.getBackTexture(),
-								 0, // hue.get(),
-								 saturation.get(),
-								 1.0);
-				
+				HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
 				RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
 //				resetInput();
 			}
@@ -74,12 +66,10 @@ namespace flowTools {
 			ftUtil::zero(visibleFbo);
 		}
 		
-		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA){
-			ofPushStyle();
-			ofEnableBlendMode(_blendmode);
+		ofTexture&	getVisible() {
+			ftUtil::zero(visibleFbo);
 			multiplyShader.update(visibleFbo, outputFbo.getTexture(), ofGetFrameRate());
-			visibleFbo.getTexture().draw(_x, _y, _width, _height);
-			ofPopStyle();
+			return visibleFbo.getTexture();
 		}
 		
 		void	setDensity(ofTexture& _inputTex) 					{ setInput(_inputTex); }
@@ -87,19 +77,19 @@ namespace flowTools {
 		void	setVelocity(ofTexture& _inputTex) 					{ velocityBridge.setInput(_inputTex); }
 		void	addVelocity(ofTexture& _inputTex, float _strength) 	{ velocityBridge.addInput(_inputTex, _strength); }
 		
+		void	setTrailWeight(float value)	{ trailWeight.set(value); }
+		void	setBlurRadius(float value)	{ blurRadius.set(value); }
+		void	setSaturation(float value)	{ saturation.set(value); }
+		void	setSpeed(float value)		{ speed.set(value); }
 		
-		ofTexture& getDensity() 				{ return getOutput(); };
-		ofTexture& getLuminance()				{ return luminanceFbo.getTexture(); };
 		
-		float	getTrailWeight()				{ return trailWeight.get(); }
-		float	getBlurRadius()					{ return blurRadius.get(); }
-		float	getSaturation()					{ return saturation.get(); }
-		float	getSpeed()						{ return speed.get(); }
+		ofTexture& getDensity() 			{ return getOutput(); };
+		ofTexture& getLuminance()			{ return luminanceFbo.getTexture(); };
 		
-		void	setTrailWeight(float value)		{ trailWeight.set(value); }
-		void	setBlurRadius(float value)		{ blurRadius.set(value); }
-		void	setSaturation(float value)		{ saturation.set(value); }
-		void	setSpeed(float value)			{ speed.set(value); }
+		float	getTrailWeight()			{ return trailWeight.get(); }
+		float	getBlurRadius()				{ return blurRadius.get(); }
+		float	getSaturation()				{ return saturation.get(); }
+		float	getSpeed()					{ return speed.get(); }
 		
 	protected:
 		ofParameter<float>		blurRadius;

@@ -55,23 +55,23 @@ namespace flowTools {
 			inputFbo.swap();
 			if (ofGetNumChannelsFromGLFormat(_tex.getTextureData().glInternalFormat) != 1) { RGB2LumShader.update(inputFbo, _tex); }
 			else { ftUtil::stretch(inputFbo, _tex); }
-			
 			if (bFirstFrame) { bFirstFrame = false; inputFbo.swap(); ftUtil::stretch(inputFbo, inputFbo.getBackTexture()); }
+			bInputSet = true;
 			
 			ofPopStyle();
-			
-			bInputSet = true;
-		}
-		void addInput(ofTexture& _tex) {
-			ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set";
 		}
 		
-		void		reset()		{ ftFlow::reset(); bFirstFrame = true; }
+		void addInput(ofTexture& _tex) { ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set"; }
+		
+		void reset() { ftFlow::reset(); bFirstFrame = true; }
+		
+		void		setStrength(float value)	{strength.set(value);}
+		void		setOffset(int value)		{offset.set(value);}
+		void		setThreshold(float value)	{threshold.set(value);}
+		void		setInverseX(bool value)		{doInverseX.set(value);}
+		void		setInverseY(bool value)		{doInverseY.set(value);}
 	
-		
-		
 		ofTexture&	getVelocity()	{ return getOutput(); }
-		
 		
 		float		getStrength()	{return strength.get();}
 		int			getOffset()		{return offset.get();}
@@ -79,24 +79,18 @@ namespace flowTools {
 		bool		getInverseX()	{return doInverseX.get();}
 		bool		getInverseY()	{return doInverseY.get();}
 		
-		void		setStrength(float value)	{strength.set(value);}
-		void		setOffset(int value)		{offset.set(value);}
-		void		setThreshold(float value)	{threshold.set(value);}
-		void		setInverseX(bool value)		{doInverseX.set(value);}
-		void		setInverseY(bool value)		{doInverseY.set(value);}
-		
 	protected:
 		
-		ofParameter<float>	threshold;
-		ofParameter<int>	offset;
-		ofParameter<float>	strength;
-		ofParameter<float>	power;
-		ofParameter<bool>	doInverseX;
-		ofParameter<bool>	doInverseY;
+		ofParameter<float>			threshold;
+		ofParameter<int>			offset;
+		ofParameter<float>			strength;
+		ofParameter<float>			power;
+		ofParameter<bool>			doInverseX;
+		ofParameter<bool>			doInverseY;
 		
-		bool					bFirstFrame;
-		ftOpticalFlowShader 	opticalFlowShader;
-		ftRGB2LuminanceShader	RGB2LumShader;
+		bool						bFirstFrame;
+		ftOpticalFlowShader 		opticalFlowShader;
+		ftRGB2LuminanceShader		RGB2LumShader;
 		
 	};
 }

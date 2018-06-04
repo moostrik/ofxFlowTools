@@ -173,7 +173,7 @@ void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode 
 									velocityField.draw(opticalFlow.getVelocity(), _x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_VELOCITY: 	displayScalar.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode);
 									velocityField.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode); break;
-		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h, _blendmode); break;
+		case FT_BRIDGE_DENSITY: 	drawTex(densityBridge.getVisible(), _x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_TEMPERATURE: break;
 		case FT_BRIDGE_PRESSURE: 	break;
 		case FT_OBSTACLE_TEMPORARY:

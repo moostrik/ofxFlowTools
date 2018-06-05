@@ -33,7 +33,7 @@ namespace flowTools {
 			parameters.add(maxDotSize.set("max dot size", 10, 0, 20));
 		};
 		
-		void	draw(ofTexture& _velTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
+		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
 			if (isActive.get()) {
 			ofPushMatrix();
 			ofPushStyle();

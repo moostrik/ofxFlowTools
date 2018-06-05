@@ -11,7 +11,9 @@ public:
 	ftCore();
 	~ftCore();
 	
-	void	setup(int _densityWidth = 1280, int _densityHeight = 720, int _flowWidth = 0, int _flowHeight = 0 );
+	void	setup(int _densityW = 1280, int _densityH = 720) { setup(_densityW, _densityH, _densityW / 4, _densityH / 4); }
+	void	setup(int _densityW, int _densityH, int _flowW, int _flowH)  { setup(_densityW, _densityH, _flowW, _flowH, _flowW / 2, _flowH / 2); }
+	void	setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fieldW, int _fieldH);
 	
 	void	update(float _deltaTime = -1);
 	void	updateOpticalFlow();

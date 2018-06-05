@@ -131,7 +131,7 @@ namespace flowTools {
 		}
 		
 	public:	
-		void update(ofFbo& _fbo, ofTexture& _currTex, ofTexture& _prevTex, float _offset = 3.0, float _threshold = 0.04, ofDefaultVec2 _force = ofDefaultVec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
+		void update(ofFbo& _fbo, ofTexture& _currTex, ofTexture& _prevTex, float _offset = 3.0, float _threshold = 0.04, glm::vec2 _force = glm::vec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
 			
 			_fbo.begin();
 			shader.begin();
@@ -139,7 +139,7 @@ namespace flowTools {
 			shader.setUniformTexture("tex1", _prevTex, 1);
 			shader.setUniform1f("offset", _offset);
 			shader.setUniform1f("threshold", _threshold);
-			shader.setUniform2f("force", _force * ofDefaultVec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
+			shader.setUniform2f("force", _force * glm::vec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
 			shader.setUniform1f("power", _power);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			shader.end();

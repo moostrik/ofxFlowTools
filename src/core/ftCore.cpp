@@ -10,16 +10,16 @@ ftCore::~ftCore() {
 }
 
 //--------------------------------------------------------------
-void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _flowHeight){
+void ftCore::setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fieldW, int _fieldH){
 	
-	densityWidth = _densityWidth;
-	densityHeight = _densityHeight;
+	densityWidth = _densityW;
+	densityHeight = _densityH;
 	// process all but the density on 16th resolution
-	flowWidth = (_flowWidth == 0)? densityWidth / 4: _flowWidth;
-	flowHeight = (_flowHeight == 0)? densityHeight / 4: _flowHeight;
+	flowWidth = _flowW;
+	flowHeight = _flowH;
 	// draw fields all on 256th resolution
-	fieldWidth = flowWidth / 4;
-	fieldHeight = flowWidth / 4;
+	fieldWidth = _fieldW;// / 4;
+	fieldHeight = _fieldH;// / 4;
 		
 	// CORE FLOW
 	opticalFlow.setup(flowWidth, flowHeight);

@@ -105,7 +105,7 @@ void ftCore::setFlow(flowTools::ftFlowType _type, ofTexture &_tex) {
 		case FT_INPUT:  			setFlow(FT_INPUT_FOR_VELOCITY, _tex); setFlow(FT_INPUT_FOR_DENSITY, _tex); break;
 		case FT_INPUT_FOR_VELOCITY: setInputForVelocity(_tex); break;
 		case FT_INPUT_FOR_DENSITY:  setInputForDensity(_tex); break;
-		case FT_FLOW_VELOCITY:  	setFlowVelocity(_tex); break;
+		case FT_FLOW_VELOCITY:  	setOpticalFlowVelocity(_tex); break;
 		case FT_BRIDGE_VELOCITY:  	setBridgeVelocity(_tex); break;
 		case FT_BRIDGE_DENSITY:  	setBridgeDensity(_tex); break;
 //		case FT_BRIDGE_TEMPERATURE: setBridgeTemperature(_tex); break;

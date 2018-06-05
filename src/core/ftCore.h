@@ -36,7 +36,7 @@ public:
 	void	setInput(ofTexture &_texture) 					{ setInputForVelocity(_texture), setInputForDensity(_texture); }
 	void	setInputForVelocity(ofTexture &_forVelocity)	{ opticalFlow.setInput(_forVelocity); }
 	void	setInputForDensity(ofTexture &_forDensity)		{ densityBridge.setDensity(_forDensity); }
-	void 	setFlowVelocity(ofTexture &_tex)				{ opticalFlow.setOutput(_tex); }
+	void 	setOpticalFlowVelocity(ofTexture &_tex)			{ opticalFlow.setOutput(_tex); }
 	void 	setBridgeVelocity(ofTexture &_tex)				{ velocityBridge.setOutput(_tex); }
 	void 	setBridgeDensity(ofTexture &_tex)				{ densityBridge.setOutput(_tex);  }
 //	void 	setBridgeTemperature(ofTexture &_tex)			{ ; }

@@ -12,7 +12,13 @@ public:
 	~ftCore();
 	
 	void	setup(int _densityWidth = 1280, int _densityHeight = 720, int _flowWidth = 0, int _flowHeight = 0 );
+	
 	void	update(float _deltaTime = -1);
+	void	updateOpticalFlow();
+	void	updateBridgeVelocity(float _deltaTime);
+	void	updateBridgeDensity(float _deltaTime);
+	void	updateFluid(float _deltaTime);
+	
 	void	draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) { draw(ftFlowType(drawMode.get()), _x, _y, _w, _h, _blendmode); }
 	void	draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode _blendmode);
 	

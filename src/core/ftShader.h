@@ -10,7 +10,7 @@
 
 namespace flowTools {
 	
-	class ftShader{
+	class ftShader : public ofShader{
 	public:
 		ftShader() {
 			bInitialized = false;
@@ -96,6 +96,8 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
+		ofMesh		quad;
+		ofShader	shader;
 		string		fragmentShader;
 		string		vertexShader;
 		bool		bInitialized;

@@ -72,6 +72,13 @@ namespace flowTools {
 			return visibleFbo.getTexture();
 		}
 		
+		void draw(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
+			ofPushStyle();
+			ofEnableBlendMode(_blendMode);
+			getVisible().draw(_x, _y, _w, _h);
+			ofPopStyle();
+		}
+		
 		void	setDensity(ofTexture& _inputTex) 					{ setInput(_inputTex); }
 		void	addDensity(ofTexture& _inputTex, float _strength) 	{ addInput(_inputTex, _strength); }
 		void	setVelocity(ofTexture& _inputTex) 					{ velocityBridge.setInput(_inputTex); }

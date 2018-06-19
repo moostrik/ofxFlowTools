@@ -62,20 +62,15 @@ namespace flowTools {
 		}
 	
 	public:
-		void update(ofTexture& _floatTex, int _w, int _h, float _scale){
-			begin();
-			setUniformTexture("FloatTexture", _floatTex, 0);
-			setUniform1f("Scale", _scale);
-			renderFrame(_w, _h);
-			end();
-		}
 			
 		void update(ofFbo& _fbo, ofTexture& _floatTex, float _scale){
+			_fbo.begin();
 			begin();
 			setUniformTexture("FloatTexture", _floatTex, 0);
 			setUniform1f("Scale", _scale);
-			_fbo.draw(0,0);
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
+			_fbo.end();
 		}
 	};
 }

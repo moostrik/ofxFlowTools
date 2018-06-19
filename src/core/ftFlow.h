@@ -5,8 +5,8 @@
 #include "ftUtil.h"
 #include "ftSwapFbo.h"
 #include "ftAddMultipliedShader.h"
-#include "ftDisplayScalarShader.h"
-//#include "ftVelocityField.h"
+#include "ftDisplayScalar.h"
+#include "ftVelocityField.h"
 
 namespace flowTools {
 	
@@ -26,11 +26,14 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			internalFormat = _internalFormat;
-//			numChannels = ofGetNumChannelsFromGLFormat(internalFormat);
 			inputFbo.allocate(width, height, internalFormat);
 			outputFbo.allocate(width, height, internalFormat);
-			numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
-			isFloat = ftUtil::isFloat(internalFormat);
+			displayScalar.setup(width, height);
+			displayField.setup(width / 4, height / 4);
+			doScalar = true;
+			doField = true;
+//			numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
+//			isFloat = ftUtil::isFloat(internalFormat);
 			bInputSet = false;
 		}
 		
@@ -70,23 +73,31 @@ namespace flowTools {
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
 		void draw(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			drawScalar(_x, _y, _w, _h, _blendMode);
+			if (doScalar) { drawScalar(_x, _y, _w, _h, _blendMode); }
+			if (doField)  { drawField(_x, _y, _w, _h, _blendMode); }
 		}
+		
+	protected:
+		
 		void drawScalar(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
 			ofPushStyle();
 			ofEnableBlendMode(_blendMode);
 			if (ftUtil::isFloat(internalFormat)) {
-				displayScalar.update(outputFbo.getTexture(), _w, _h, 1.0);
+				displayScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h);
 			} else {
 				outputFbo.draw(_x, _y, _w, _h);
 			}
 			ofPopStyle();
 		}
 		void drawField(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA){
-			
+			if (ftUtil::isFloat(internalFormat)) {
+				ofPushStyle();
+				ofEnableBlendMode(_blendMode);
+				displayField.draw(outputFbo.getTexture(), _x, _y, _w, _h);
+				ofPopStyle();
+			}
 		}
 		
-	protected:
 		ofParameterGroup	parameters;
 		int			width;
 		int			height;
@@ -101,8 +112,10 @@ namespace flowTools {
 		ftAddMultipliedShader	AddMultipliedShader;
 		
 		
-		ftDisplayScalarShader		displayScalar;
-//		ftVelocityField		displayField;
+		ftDisplayScalar		displayScalar;
+		bool				doScalar;
+		ftVelocityField		displayField;
+		bool				doField;
 	};
 	
 }

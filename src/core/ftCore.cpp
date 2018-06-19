@@ -18,8 +18,8 @@ void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _f
 	flowWidth = (_flowWidth == 0)? densityWidth / 4: _flowWidth;
 	flowHeight = (_flowHeight == 0)? densityHeight / 4: _flowHeight;
 	// draw fields all on 256th resolution
-	fieldWidth = flowWidth / 4;
-	fieldHeight = flowWidth / 4;
+	fieldWidth = flowWidth / 2;
+	fieldHeight = flowHeight / 2;
 		
 	// CORE FLOW
 	opticalFlow.setup(flowWidth, flowHeight);
@@ -53,7 +53,7 @@ void ftCore::setupParameters() {
 	visualizeParameters.setName("flow visualisation");
 	visualizeParameters.add(showScalar.set("show scalar", true));
 	visualizeParameters.add(showField.set("show field", true));
-	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 1.0));
+	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 3.0));
 	flowCoreParameters.add(visualizeParameters);
 	parameters.add(visualizeParameters);
 	
@@ -181,11 +181,9 @@ void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode 
 		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h, _blendmode); break;
 		case FT_INPUT_FOR_VELOCITY: drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
 		case FT_INPUT_FOR_DENSITY: 	drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLOW_VELOCITY: 		opticalFlow.drawScalar(_x, _y, _w, _h, _blendmode);
-									velocityField.draw(opticalFlow.getVelocity(), _x, _y, _w, _h, _blendmode); break;
-		case FT_BRIDGE_VELOCITY: 	displayScalar.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode);
-									velocityField.draw(velocityBridge.getOutput(), _x, _y, _w, _h, _blendmode); break;
-		case FT_BRIDGE_DENSITY: 	drawTex(densityBridge.getVisible(), _x, _y, _w, _h, _blendmode); break;
+		case FT_FLOW_VELOCITY: 		opticalFlow.draw(_x, _y, _w, _h, _blendmode); break;
+		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(_x, _y, _w, _h, _blendmode); break;
+		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_TEMPERATURE: break;
 		case FT_BRIDGE_PRESSURE: 	break;
 		case FT_OBSTACLE_TEMPORARY:

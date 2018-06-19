@@ -10,16 +10,16 @@ ftCore::~ftCore() {
 }
 
 //--------------------------------------------------------------
-void ftCore::setup(int _densityWidth, int _densityHeight, int _flowWidth, int _flowHeight){
+void ftCore::setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fieldW, int _fieldH){
 	
-	densityWidth = _densityWidth;
-	densityHeight = _densityHeight;
+	densityWidth = _densityW;
+	densityHeight = _densityH;
 	// process all but the density on 16th resolution
-	flowWidth = (_flowWidth == 0)? densityWidth / 4: _flowWidth;
-	flowHeight = (_flowHeight == 0)? densityHeight / 4: _flowHeight;
+	flowWidth = _flowW;
+	flowHeight = _flowH;
 	// draw fields all on 256th resolution
-	fieldWidth = flowWidth / 2;
-	fieldHeight = flowHeight / 2;
+	fieldWidth = _fieldW;
+	fieldHeight = _fieldH;
 		
 	// CORE FLOW
 	opticalFlow.setup(flowWidth, flowHeight);
@@ -105,7 +105,7 @@ void ftCore::setFlow(flowTools::ftFlowType _type, ofTexture &_tex) {
 		case FT_INPUT:  			setFlow(FT_INPUT_FOR_VELOCITY, _tex); setFlow(FT_INPUT_FOR_DENSITY, _tex); break;
 		case FT_INPUT_FOR_VELOCITY: setInputForVelocity(_tex); break;
 		case FT_INPUT_FOR_DENSITY:  setInputForDensity(_tex); break;
-		case FT_FLOW_VELOCITY:  	setFlowVelocity(_tex); break;
+		case FT_FLOW_VELOCITY:  	setOpticalFlowVelocity(_tex); break;
 		case FT_BRIDGE_VELOCITY:  	setBridgeVelocity(_tex); break;
 		case FT_BRIDGE_DENSITY:  	setBridgeDensity(_tex); break;
 //		case FT_BRIDGE_TEMPERATURE: setBridgeTemperature(_tex); break;

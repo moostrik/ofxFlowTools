@@ -80,9 +80,9 @@ namespace flowTools {
 		}
 		
 		void	setDensity(ofTexture& _inputTex) 					{ setInput(_inputTex); }
-		void	addDensity(ofTexture& _inputTex, float _strength) 	{ addInput(_inputTex, _strength); }
+		void	addDensity(ofTexture& _inputTex, float _strength) 	{ addInput(_inputTex, _strength = 1.0); }
 		void	setVelocity(ofTexture& _inputTex) 					{ velocityBridge.setInput(_inputTex); }
-		void	addVelocity(ofTexture& _inputTex, float _strength) 	{ velocityBridge.addInput(_inputTex, _strength); }
+		void	addVelocity(ofTexture& _inputTex, float _strength) 	{ velocityBridge.addInput(_inputTex, _strength = 1.0); }
 		
 		void	setTrailWeight(float value)	{ trailWeight.set(value); }
 		void	setBlurRadius(float value)	{ blurRadius.set(value); }

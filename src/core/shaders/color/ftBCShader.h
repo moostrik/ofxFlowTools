@@ -8,15 +8,11 @@ namespace flowTools {
 	class ftContrastShader : public ftShader {
 	public:
 		ftContrastShader(){
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftContrastShader initialized");
+				ofLogVerbose("ftContrastShader initialized");
 			else
 				ofLogWarning("ftContrastShader failed to initialize");
 		}

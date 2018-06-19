@@ -9,15 +9,11 @@ namespace flowTools {
 	class ftHSVShader : public ftShader {
 	public:
 		ftHSVShader(){
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftHSLShader initialized");
+				ofLogVerbose("ftHSLShader initialized");
 			else
 				ofLogWarning("ftHSLShader failed to initialize");
 		}

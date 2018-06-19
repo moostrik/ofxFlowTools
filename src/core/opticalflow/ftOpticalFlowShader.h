@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftOpticalFlowShader : public ftShader {
 	public:
 		ftOpticalFlowShader() {
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftOpticalFlowShader initialized");
+				ofLogVerbose("ftOpticalFlowShader initialized");
 			else
 				ofLogWarning("ftOpticalFlowShader failed to initialize");
 		}

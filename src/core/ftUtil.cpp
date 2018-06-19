@@ -221,8 +221,8 @@ namespace flowTools {
 	}
 	
 	// get number of channels in texture format
-	int ftUtil::getNumChannelsFromFormat(GLint _internalFormat) {
-		switch(_internalFormat){
+	int ftUtil::getNumChannelsFromFormat(GLint _format) {
+		switch(_format){
 			case GL_RED:
 				return 1;
 			case GL_RG:
@@ -232,7 +232,7 @@ namespace flowTools {
 			case GL_RGBA:
 				return 4;
 			default:
-				ofLogWarning("ftUtil") << "getNumChannelsFromFormat: " << "flowtools does not use format " << ofToHex(_internalFormat);
+				ofLogWarning("ftUtil") << "getNumChannelsFromFormat: " << "flowtools does not use format " << ofToHex(_format);
 				break;
 				return 0;
 		}

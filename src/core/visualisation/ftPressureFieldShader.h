@@ -11,14 +11,10 @@ namespace flowTools {
 	public:
 		ftPressureFieldShader() {
 			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftPressureFieldShader initialized");
+				ofLogVerbose("ftPressureFieldShader initialized");
 			else
 				ofLogWarning("ftPressureFieldShader failed to initialize");
 		}

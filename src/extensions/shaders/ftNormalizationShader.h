@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftNormalizationShader : public ftShader {
 	public:
 		ftNormalizationShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftNormalizationShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftNormalizationShader initialized");
 			else
 				ofLogWarning("ftNormalizationShader failed to initialize");
 		}

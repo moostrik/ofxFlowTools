@@ -9,15 +9,11 @@ namespace flowTools {
 	class ftJacobiShader : public ftShader {
 	public:
 		ftJacobiShader() {
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftJacobiShader initialized");
+				ofLogVerbose("ftJacobiShader initialized");
 			else
 				ofLogWarning("ftJacobiShader failed to initialize");
 		}

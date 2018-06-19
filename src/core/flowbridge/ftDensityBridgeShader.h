@@ -10,17 +10,12 @@ namespace flowTools {
 	class ftDensityBridgeShader : public ftShader {
 	public:
 		ftDensityBridgeShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftDensityBridgeShader initialized");
-			else
-				ofLogWarning("ftDensityBridgeShader failed to initialize");
+			string shaderName = "ftDensityBridgeShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -48,8 +43,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 			
 		}
 		
@@ -80,24 +75,24 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
 		
 		void update(ofFbo& _fbo, ofTexture& _denTex, ofTexture& _velTex, float _speed){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("tex0", _denTex, 0);
-			shader.setUniformTexture("tex1", _velTex, 1);
-			shader.setUniform2f("scale0", _denTex.getWidth() / _fbo.getWidth() , _denTex.getHeight() / _fbo.getHeight() );
-			shader.setUniform2f("scale1", _velTex.getWidth() / _fbo.getWidth() , _velTex.getHeight() / _fbo.getHeight());
-			shader.setUniform1f("speed", _speed);
+			begin();
+			setUniformTexture("tex0", _denTex, 0);
+			setUniformTexture("tex1", _velTex, 1);
+			setUniform2f("scale0", _denTex.getWidth() / _fbo.getWidth() , _denTex.getHeight() / _fbo.getHeight() );
+			setUniform2f("scale1", _velTex.getWidth() / _fbo.getWidth() , _velTex.getHeight() / _fbo.getHeight());
+			setUniform1f("speed", _speed);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};

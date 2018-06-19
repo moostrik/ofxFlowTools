@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftTemperatureFieldShader : public ftShader {
 	public:
 		ftTemperatureFieldShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftTemperatureFieldShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftTemperatureFieldShader initialized");
 			else
 				ofLogWarning("ftTemperatureFieldShader failed to initialize");
 		}

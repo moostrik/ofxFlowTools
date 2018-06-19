@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftClampLengthShader : public ftShader {
 	public:
 		ftClampLengthShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftClampLengthShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftClampLengthShader initialized");
 			else
 				ofLogWarning("ftClampLengthShader failed to initialize");
 		}

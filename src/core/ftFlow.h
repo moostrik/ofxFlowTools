@@ -5,6 +5,8 @@
 #include "ftUtil.h"
 #include "ftSwapFbo.h"
 #include "ftAddMultipliedShader.h"
+#include "ftDisplayScalarShader.h"
+//#include "ftVelocityField.h"
 
 namespace flowTools {
 	
@@ -24,8 +26,11 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			internalFormat = _internalFormat;
-			inputFbo.allocate(width, height, _internalFormat);
-			outputFbo.allocate(width, height, _internalFormat);
+//			numChannels = ofGetNumChannelsFromGLFormat(internalFormat);
+			inputFbo.allocate(width, height, internalFormat);
+			outputFbo.allocate(width, height, internalFormat);
+			numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
+			isFloat = ftUtil::isFloat(internalFormat);
 			bInputSet = false;
 		}
 		
@@ -64,17 +69,40 @@ namespace flowTools {
 
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
+		void draw(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
+			drawScalar(_x, _y, _w, _h, _blendMode);
+		}
+		void drawScalar(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
+			ofPushStyle();
+			ofEnableBlendMode(_blendMode);
+			if (ftUtil::isFloat(internalFormat)) {
+				displayScalar.update(outputFbo.getTexture(), _w, _h, 1.0);
+			} else {
+				outputFbo.draw(_x, _y, _w, _h);
+			}
+			ofPopStyle();
+		}
+		void drawField(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA){
+			
+		}
+		
 	protected:
 		ofParameterGroup	parameters;
 		int			width;
 		int			height;
 		int 		internalFormat;
+		int			numChannels;
+		bool		isFloat;
 		
 		ftSwapFbo 	inputFbo;
 		bool		bInputSet;
 		
 		ftSwapFbo	outputFbo;
 		ftAddMultipliedShader	AddMultipliedShader;
+		
+		
+		ftDisplayScalarShader		displayScalar;
+//		ftVelocityField		displayField;
 	};
 	
 }

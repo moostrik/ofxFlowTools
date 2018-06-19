@@ -15,15 +15,14 @@ namespace flowTools {
 		ftShader() {
 			bInitialized = false;
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			quad.getVertices().resize(4);
 			quad.getTexCoords().resize(4);
 			quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		}
+		
+//		ofShader& getShader()	{ return shader; }
 		
 	protected:
 		void glTwo()  {
@@ -97,27 +96,6 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void renderNormalizedFrame(float _width, float _height){
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			
-			quad.setVertex(0, glm::vec3(0,0,0));
-			quad.setVertex(1, glm::vec3(_width,0,0));
-			quad.setVertex(2, glm::vec3(_width,_height,0));
-			quad.setVertex(3, glm::vec3(0,_height,0));
-			
-			quad.setTexCoord(0, glm::vec2(0,0));
-			quad.setTexCoord(1, glm::vec2(1,0));
-			quad.setTexCoord(2, glm::vec2(1,1));
-			quad.setTexCoord(3, glm::vec2(0,1));
-			
-			quad.draw();
-			
-			ofPopStyle();
-		}
-		
-		ofMesh		quad;
-		ofShader	shader;
 		string		fragmentShader;
 		string		vertexShader;
 		bool		bInitialized;

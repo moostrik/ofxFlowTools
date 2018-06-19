@@ -8,15 +8,11 @@ namespace flowTools {
 	class ftVelocityBridgeShader : public ftShader {
 	public:
 		ftVelocityBridgeShader(){
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftVelocityBridgeShader initialized");
+				ofLogVerbose("ftVelocityBridgeShader initialized");
 			else
 				ofLogWarning("ftVelocityBridgeShader failed to initialize");
 		}
@@ -38,8 +34,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 			
 		}
 		
@@ -63,22 +59,22 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 			
 		}
 		
 	public:
 		void update(ofFbo& _fbo, ofTexture& _baseTex,  ofTexture& _blendTex, float _weight){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("tex0", _baseTex, 0);
-			shader.setUniformTexture("tex1", _blendTex, 1);
-			shader.setUniform1f("weight", _weight);
+			begin();
+			setUniformTexture("tex0", _baseTex, 0);
+			setUniformTexture("tex1", _blendTex, 1);
+			setUniform1f("weight", _weight);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};

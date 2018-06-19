@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftAddMultipliedShader : public ftShader {
 	public:
 		ftAddMultipliedShader() {
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftAddMultipiedShader initialized");
+				ofLogVerbose("ftAddMultipiedShader initialized");
 			else
 				ofLogWarning("ftAddMultipiedShader failed to initialize");
 		}

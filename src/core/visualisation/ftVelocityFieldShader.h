@@ -9,15 +9,11 @@ namespace flowTools {
 	class ftVelocityFieldShader : public ftShader {
 	public:
 		ftVelocityFieldShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftVelocityFieldShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftVelocityFieldShader initialized");
 			else
 				ofLogWarning("ftVelocityFieldShader failed to initialize");
 		}

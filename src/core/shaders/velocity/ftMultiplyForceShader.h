@@ -10,15 +10,11 @@ namespace flowTools {
 	class ftMultiplyForceShader : public ftShader {
 	public:
 		ftMultiplyForceShader() {
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftMultilpyForceShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftMultilpyForceShader initialized");
 			else
 				ofLogWarning("ftMultilpyForceShader failed to initialize");
 		}

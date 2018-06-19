@@ -30,8 +30,8 @@ protected:
 								 
 								 );
 		
-		shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-		shader.linkProgram();
+	    setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+	    linkProgram();
 		
 	}
 	

@@ -9,15 +9,11 @@ namespace flowTools {
 	class ftSmokeBuoyancyShader : public ftShader {
 	public:
 		ftSmokeBuoyancyShader() {
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftSmokeBuoyancyShader initialized");
+				ofLogVerbose("ftSmokeBuoyancyShader initialized");
 			else
 				ofLogWarning("ftSmokeBuoyancyShader failed to initialize");
 		}

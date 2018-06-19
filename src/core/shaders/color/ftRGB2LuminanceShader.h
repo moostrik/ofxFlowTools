@@ -8,15 +8,11 @@ namespace flowTools {
 	class ftRGB2LuminanceShader : public ftShader {
 	public:
 		ftRGB2LuminanceShader(){
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftLuminanceShader initialized");
+				ofLogVerbose("ftLuminanceShader initialized");
 			else
 				ofLogWarning("ftLuminanceShader failed to initialize");
 		}

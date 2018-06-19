@@ -16,15 +16,11 @@ namespace flowTools {
 		ftTimeBlurShader(){
 			internalFormat = GL_RGBA;
 			
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftTimeBlurShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftTimeBlurShader initialized");
 			else
 				ofLogWarning("ftTimeBlurShader failed to initialize");
 		}

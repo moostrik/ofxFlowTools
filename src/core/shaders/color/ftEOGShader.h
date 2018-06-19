@@ -8,15 +8,11 @@ namespace flowTools {
 	class ftEOGShader : public ftShader {
 	public:
 		ftEOGShader(){
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
 			if (bInitialized)
-				ofLogNotice("ftEOGShader initialized");
+				ofLogVerbose("ftEOGShader initialized");
 			else
 				ofLogWarning("ftEOGShader failed to initialize");
 		}

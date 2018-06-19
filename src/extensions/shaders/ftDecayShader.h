@@ -8,15 +8,11 @@ namespace flowTools {
 	class ftDecayShader : public ftShader {
 	public:
 		ftDecayShader(){
-			bInitialized = 1;
+            bInitialized = 1;
+            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogNotice("ftDecayShader initialized");
+            if (bInitialized)
+                ofLogVerbose("ftDecayShader initialized");
 			else
 				ofLogWarning("ftDecayShader failed to initialize");
 		}

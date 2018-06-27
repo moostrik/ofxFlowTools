@@ -143,5 +143,7 @@ private:
 	ofParameter<string> drawName;
 	void				drawTex(ofTexture& _tex, int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
 	void				drawVis(ofTexture& _tex, int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+	
+	vector< ftFlow* >	flows;
 };
 

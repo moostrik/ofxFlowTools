@@ -6,7 +6,7 @@
 #include "ftSwapFbo.h"
 #include "ftAddMultipliedShader.h"
 #include "ftDisplayScalar.h"
-#include "ftVelocityField.h"
+#include "ftDisplayField.h"
 
 namespace flowTools {
 	
@@ -15,38 +15,41 @@ namespace flowTools {
 		ftFlow() {
 			ofAddListener(ofEvents().update, this, &ftFlow::internalUpdate);
 		}
-
+		
 		virtual ~ftFlow() {;}
-
+		
 		void internalUpdate(ofEventArgs &_args) {
 			;
 		}
-
+		
 		void allocate(int _width, int _height, int _internalFormat) {
+			internalFormat = _internalFormat;
 			width = _width;
 			height = _height;
-			internalFormat = _internalFormat;
 			inputFbo.allocate(width, height, internalFormat);
 			outputFbo.allocate(width, height, internalFormat);
-			displayScalar.setup(width, height);
-			displayField.setup(width / 4, height / 4);
-			doScalar = true;
-			doField = true;
-//			numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
-//			isFloat = ftUtil::isFloat(internalFormat);
+			if (internalFormat == GL_R32F) {
+				displayScalar.setup(width, height);
+				displayField.setup(width / 4, height / 4, 1);
+			}
+			if (internalFormat == GL_RG32F) {
+				displayScalar.setup(width, height);
+				displayField.setup(width / 4, height / 4, 2);
+			}
+			drawField = false;
 			bInputSet = false;
 		}
 		
 		void reset() { resetInput(); resetOutput(); }
 		void resetInput() { ftUtil::zero(inputFbo); bInputSet = false; }
 		void resetOutput() { ftUtil::zero(outputFbo); }
-
+		
 		void setInput(ofTexture &_inputTex) {
 			ftUtil::zero(inputFbo);
 			ftUtil::stretch(inputFbo, _inputTex);
 			bInputSet = true;
 		}
-
+		
 		void addInput(ofTexture &_inputTex, float _strength = 1.0) {
 			inputFbo.swap();
 			AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _inputTex, 1.0, _strength);
@@ -64,39 +67,33 @@ namespace flowTools {
 			AddMultipliedShader.update(outputFbo, outputFbo.getBackTexture(), _inputTex, 1.0, _strength);
 			bInputSet = true;
 		}
-
+		
 		ofTexture&	getOutput()		{ return outputFbo.getTexture(); }
-		bool		getInputSet() 	{ return bInputSet; }
 		
 		ofTexture&	getInput()		{ return inputFbo.getTexture(); }
-
+		bool		getInputSet() 	{ return bInputSet; }
+		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
 		void draw(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			if (doScalar) { drawScalar(_x, _y, _w, _h, _blendMode); }
-			if (doField)  { drawField(_x, _y, _w, _h, _blendMode); }
+			ofPushStyle();
+			ofEnableBlendMode(_blendMode);
+			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
+				if (drawField) { displayField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
+				else { displayScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
+			} else { outputFbo.getTexture().draw(_x, _y, _w, _h); }
+			ofPopStyle();
+		}
+		
+		bool	setDrawField(bool _value) { drawField = _value; }
+		void	setDrawScale(float _scale) {
+			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
+				displayScalar.setScale(_scale);
+				displayField.setScale(_scale);
+			}
 		}
 		
 	protected:
-		
-		void drawScalar(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			ofPushStyle();
-			ofEnableBlendMode(_blendMode);
-			if (ftUtil::isFloat(internalFormat)) {
-				displayScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h);
-			} else {
-				outputFbo.draw(_x, _y, _w, _h);
-			}
-			ofPopStyle();
-		}
-		void drawField(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA){
-			if (ftUtil::isFloat(internalFormat)) {
-				ofPushStyle();
-				ofEnableBlendMode(_blendMode);
-				displayField.draw(outputFbo.getTexture(), _x, _y, _w, _h);
-				ofPopStyle();
-			}
-		}
 		
 		ofParameterGroup	parameters;
 		int			width;
@@ -104,7 +101,7 @@ namespace flowTools {
 		int 		internalFormat;
 		int			numChannels;
 		bool		isFloat;
-		
+		bool		drawField;
 		ftSwapFbo 	inputFbo;
 		bool		bInputSet;
 		
@@ -113,10 +110,10 @@ namespace flowTools {
 		
 		
 		ftDisplayScalar		displayScalar;
-		bool				doScalar;
-		ftVelocityField		displayField;
-		bool				doField;
+		ftDisplayField		displayField;
 	};
 	
 }
+
+
 

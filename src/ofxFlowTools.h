@@ -40,13 +40,6 @@
 #include "ftDensityBridge.h"
 #include "ftFluidSimulation.h"
 
-// CORE VISUALISATION
-#include "ftDisplayScalar.h"
-#include "ftVelocityField.h"
-#include "ftTemperatureField.h"
-#include "ftPressureField.h"
-#include "ftVTField.h"
-
 // EXTENTION
 #include "ftDrawMouseForces.h"
 #include "ftParticleFlow.h"

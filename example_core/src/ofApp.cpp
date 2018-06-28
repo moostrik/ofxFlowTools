@@ -195,7 +195,7 @@ void ofApp::drawGui() {
 	guiFPS = (int)(ofGetFrameRate() + 0.5);
 	
 	// calculate minimum fps
-	deltaTime = ofGetElapsedTimef() - lastTime;
+	float deltaTime = ofGetElapsedTimef() - lastTime;
 	lastTime = ofGetElapsedTimef();
 	deltaTimeDeque.push_back(deltaTime);
 	

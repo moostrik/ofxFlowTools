@@ -20,8 +20,7 @@ void ftCore::setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fi
 	// draw fields all on 256th resolution
 	fieldWidth = _fieldW;
 	fieldHeight = _fieldH;
-		
-	// CORE FLOW
+	
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridge.setup(flowWidth, flowHeight);
 	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
@@ -31,16 +30,9 @@ void ftCore::setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fi
 	flows.push_back(&velocityBridge);
 	flows.push_back(&densityBridge);
 	flows.push_back(&fluidSimulation);
-	// VISUALIZATION
-	displayScalar.setup(flowWidth, flowHeight);
-	velocityField.setup(fieldWidth, fieldHeight);
-	temperatureField.setup(fieldWidth, fieldHeight);
-	pressureField.setup(fieldWidth, fieldHeight);
-	velocityTemperatureField.setup(fieldWidth, fieldHeight);
 	
 	setupParameters();
 	lastTime = ofGetElapsedTimef();
-	
 }
 
 //--------------------------------------------------------------
@@ -253,11 +245,6 @@ void ftCore::showFieldListener(bool &_value) {
 	for (auto flow : flows) {
 		flow->setDrawField(_value);
 	}
-	velocityField.setActive(_value);
-	velocityTemperatureField.setActive(_value);
-	temperatureField.setActive(_value);
-	velocityTemperatureField.setActive(_value);
-	pressureField.setActive(_value);
 }
 
 //--------------------------------------------------------------
@@ -265,10 +252,4 @@ void ftCore::visualizeScaleListener(float& _value)	{
 	for (auto flow : flows) {
 		flow->setDrawScale(_value);
 	}
-	displayScalar.setScale(_value);
-	velocityField.setVelocityScale(_value);
-	velocityTemperatureField.setVelocityScale(_value);
-	temperatureField.setScale(_value);
-	velocityTemperatureField.setTemperatureScale(_value);
-	pressureField.setScale(_value);
 }

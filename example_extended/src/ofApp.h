@@ -7,8 +7,6 @@
 #include "ftCore.h"
 #include "ftDrawForce.h"
 
-#include "ftArea.h"
-
 #define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;

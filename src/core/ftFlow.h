@@ -12,116 +12,54 @@ namespace flowTools {
 	
 	class ftFlow {
 	public:
-		ftFlow() {
-			ofAddListener(ofEvents().update, this, &ftFlow::internalUpdate);
-		}
 		
-		virtual ~ftFlow() {;}
+		void allocate(int _width, int _height, int _internalFormat);
 		
-		void internalUpdate(ofEventArgs &_args) {
-			;
-		}
+		void setInput(ofTexture &_inputTex);
+		void addInput(ofTexture &_inputTex, float _strength = 1.0);
+		bool getInputSet()		{ return bInputSet; }
 		
-		void allocate(int _width, int _height, int _internalFormat) {
-			internalFormat = _internalFormat;
-			width = _width;
-			height = _height;
-			inputFbo.allocate(width, height, internalFormat);
-			ftUtil::zero(inputFbo);
-			outputFbo.allocate(width, height, internalFormat);
-			ftUtil::zero(outputFbo);
-			displayScalar.setup(width, height);
-			displayField.setup(width / 2, height / 2);
-			drawField = false;
-			bInputSet = false;
-		}
+		void setOutput(ofTexture &_inputTex);
+		void addOutput(ofTexture &_inputTex, float _strength = 1.0);
 		
-		void reset() { resetInput(); resetOutput(); }
-		void resetInput() { ftUtil::zero(inputFbo); bInputSet = false; }
-		void resetOutput() { ftUtil::zero(outputFbo); }
+		ofTexture& getOutput()	{ return outputFbo.getTexture(); }
+		ofTexture& getInput()	{ return inputFbo.getTexture(); }
 		
-		void setInput(ofTexture &_inputTex) {
-			ftUtil::zero(inputFbo);
-			ftUtil::stretch(inputFbo, _inputTex);
-			bInputSet = true;
-		}
+		void reset() 			{ resetInput(); resetOutput(); }
+		void resetInput()		{ ftUtil::zero(inputFbo); bInputSet = false; }
+		void resetOutput()		{ ftUtil::zero(outputFbo); }
 		
-		void addInput(ofTexture &_inputTex, float _strength = 1.0) {
-			inputFbo.swap();
-			AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _inputTex, 1.0, _strength);
-			bInputSet = true;
-		}
+		void draw(int _x, int _y, int _w, int _h)	{ drawOutput(_x, _y, _w, _h); }
+		void drawInput(int _x, int _y, int _w, int _h);
+		void drawOutput(int _x, int _y, int _w, int _h);
 		
-		void setOutput(ofTexture &_inputTex) {
-			ftUtil::zero(outputFbo);
-			ftUtil::stretch(outputFbo, _inputTex);
-			bInputSet = true;
-		}
-		
-		void addOutput(ofTexture &_inputTex, float _strength = 1.0) {
-			outputFbo.swap();
-			AddMultipliedShader.update(outputFbo, outputFbo.getBackTexture(), _inputTex, 1.0, _strength);
-			bInputSet = true;
-		}
-		
-		ofTexture&	getOutput()		{ return outputFbo.getTexture(); }
-		
-		ofTexture&	getInput()		{ return inputFbo.getTexture(); }
-		bool		getInputSet() 	{ return bInputSet; }
+		void setFieldSize(int _w, int _h) { visualizeField.setup(_w, _h); }
+		bool setDrawField(bool _value) { toggleVisualisationField = _value; }
+		void setDrawScale(float _scale);
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
-		
-		void drawOutput(int _x, int _y, int _w, int _h) {
-			draw(_x, _y, _w, _h);
-		}
-		
-		void draw(int _x, int _y, int _w, int _h) {
-			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-				if (drawField) { displayField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
-				else { displayScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
-			} else { outputFbo.getTexture().draw(_x, _y, _w, _h); }
-		}
-		
-		void drawInput(int _x, int _y, int _w, int _h) {
-			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-				if (drawField) { displayField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-				else { displayScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-			} else { inputFbo.getTexture().draw(_x, _y, _w, _h); }
-		}
-		
-		void setFieldSize(int _w, int _h) {
-			displayField.setup(_w, _h); 
-		}
-		
-		bool setDrawField(bool _value) { drawField = _value; }
-		void setDrawScale(float _scale) {
-			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-				displayScalar.setScale(_scale);
-				displayField.setScale(_scale);
-			}
-		}
 		
 	protected:
 		
 		ofParameterGroup	parameters;
-		int			width;
-		int			height;
-		int 		internalFormat;
-		int			numChannels;
-		bool		isFloat;
-		bool		drawField;
-		ftSwapFbo 	inputFbo;
-		bool		bInputSet;
 		
-		ftSwapFbo	outputFbo;
+		ftSwapFbo 			inputFbo;
+		bool				bInputSet;
+		ftSwapFbo			outputFbo;
+		int					width;
+		int					height;
+		int					internalFormat;
+		
+		ftDisplayScalar		visualizeScalar;
+		ftDisplayField		visualizeField;
+		bool				toggleVisualisationField;
+		
 		ftAddMultipliedShader	AddMultipliedShader;
-		
-		
-		ftDisplayScalar		displayScalar;
-		ftDisplayField		displayField;
+
 	};
 	
 }
+
 
 
 

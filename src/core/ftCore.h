@@ -120,8 +120,8 @@ private:
 	ftDisplayScalar		displayScalar;
 	ftVelocityField		velocityField;
 	ftTemperatureField	temperatureField;
-	ftPressureField		pressureField;
-	ftVTField			velocityTemperatureField;
+//	ftPressureField		pressureField;
+//	ftVTField			velocityTemperatureField;
 	
 	ofParameter<bool>	showScalar;
 	void showScalarListener(bool &_value);

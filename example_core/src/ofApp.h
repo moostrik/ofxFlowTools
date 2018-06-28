@@ -3,10 +3,8 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
-#include "ftCore.h"
-#include "ftArea.h"
 
-#define USE_PROGRAMMABLE_GL
+//#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 
@@ -17,10 +15,7 @@ public:
 	void	draw();
 	void	keyPressed(int key);
 	
-	int		densityWidth, densityHeight;
-	int		flowWidth, flowHeight;
-	int		fieldWidth, fieldHeight;
-	int		windowWidth, windowHeight;
+	int		densityWidth, densityHeight, flowWidth, flowHeight, fieldWidth, fieldHeight, windowWidth, windowHeight;
 	
 	vector< ftFlow* >	flows;
 	ftOpticalFlow		opticalFlow;
@@ -28,25 +23,6 @@ public:
 	ftDensityBridge		densityBridge;
 	ftFluidSimulation	fluidSimulation;
 	ofImage				flowToolsLogo;
-	
-	ofVideoGrabber		simpleCam;
-	ofFbo				cameraFbo;
-	ofParameter<bool>	toggleCameraDraw;
-
-	ofxPanel			gui;
-	void				setupGui();
-	void				switchGuiColor(bool _switch);
-	
-	ofParameter<float>	guiFPS;
-	ofParameter<float>	guiMinFPS;
-	deque<float>		deltaTimeDeque;
-	
-	ofParameter<bool>	toggleGuiDraw;
-	void				drawGui();
-	
-	ofParameter<bool>	toggleFullScreen;
-	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
-	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 	
 	ofParameterGroup	visualizationParameters;
 	ofParameter<int>	visualizationMode;
@@ -57,7 +33,21 @@ public:
 	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setDrawScale(_value); } }
 	void visualizationModeListener(int& _value) 		{ visualizationName.set(ftFlowNames[_value]); }
 	
-	// Time
+	ofVideoGrabber		simpleCam;
+	ofFbo				cameraFbo;
+	ofParameter<bool>	toggleCameraDraw;
+	
+	ofxPanel			gui;
+	void				setupGui();
+	void				switchGuiColor(bool _switch);
+	ofParameter<float>	guiFPS;
+	ofParameter<float>	guiMinFPS;
+	ofParameter<bool>	toggleGuiDraw;
+	void				drawGui();
+	deque<float>		deltaTimeDeque;
 	float				lastTime;
-	float				deltaTime;
+	
+	ofParameter<bool>	toggleFullScreen;
+	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
+	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 };

@@ -30,7 +30,7 @@ void ftCore::setup(int _densityW, int _densityH, int _flowW, int _flowH, int _fi
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridge);
 	flows.push_back(&densityBridge);
-//	flows.push_back(&fluidSimulation);
+	flows.push_back(&fluidSimulation);
 	// VISUALIZATION
 	displayScalar.setup(flowWidth, flowHeight);
 	velocityField.setup(fieldWidth, fieldHeight);
@@ -183,27 +183,21 @@ ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
 void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 	switch(_type) {
 		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h, _blendmode); break;
-		case FT_INPUT_FOR_VELOCITY: drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
-		case FT_INPUT_FOR_DENSITY: 	drawTex(opticalFlow.getInput(), _x, _y, _w, _h, _blendmode); break;
+		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(_x, _y, _w, _h, _blendmode); break;
+		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(_x, _y, _w, _h, _blendmode); break;
 		case FT_FLOW_VELOCITY: 		opticalFlow.draw(_x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(_x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h, _blendmode); break;
 		case FT_BRIDGE_TEMPERATURE: break;
 		case FT_BRIDGE_PRESSURE: 	break;
-		case FT_OBSTACLE_TEMPORARY:
-		case FT_OBSTACLE_CONSTANT: 	drawTex(fluidSimulation.getObstacle(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_BUOYANCY: 	displayScalar.draw(fluidSimulation.getBuoyancy(), _x, _y, _w, _h, _blendmode);
-									velocityField.draw(fluidSimulation.getBuoyancy(), _x, _y, _w, _h); break;
-		case FT_FLUID_VORTICITY: 	displayScalar.draw(fluidSimulation.getConfinement(), _x, _y, _w, _h, _blendmode);
-									velocityField.draw(fluidSimulation.getConfinement(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_DIVERGENCE: 	displayScalar.draw(fluidSimulation.getDivergence(), _x, _y, _w, _h, _blendmode);
-									temperatureField.draw(fluidSimulation.getDivergence(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_TEMPERATURE: 	displayScalar.draw(fluidSimulation.getTemperature(), _x, _y, _w, _h, _blendmode);
-									temperatureField.draw(fluidSimulation.getTemperature(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_PRESSURE: 	displayScalar.draw(fluidSimulation.getPressure(), _x, _y, _w, _h, _blendmode);
-									pressureField.draw(fluidSimulation.getPressure(), _x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_VELOCITY: 	displayScalar.draw(fluidSimulation.getVelocity(), _x, _y, _w, _h, _blendmode);
-									velocityField.draw(fluidSimulation.getVelocity(), _x, _y, _w, _h, _blendmode); break;
+		case FT_OBSTACLE_TEMPORARY: break;
+		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(_x, _y, _w, _h, _blendmode); break;
+		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(_x, _y, _w, _h, _blendmode); break;
 		case FT_FLUID_DENSITY: 		fluidSimulation.draw(_x, _y, _w, _h, _blendmode); break;
 		case FT_NONE:
 		default: break;

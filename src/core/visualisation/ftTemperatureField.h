@@ -8,11 +8,18 @@ namespace flowTools {
 	
 	class ftTemperatureField {
 	public:
+		ftTemperatureField() {
+			parameters.setName("temperature field");
+			parameters.add(isActive.set("active", true));
+			parameters.add(temperatureScale.set("temperature scale", .25, 0, 1));
+			parameters.add(lineSmooth.set("line smooth", false));
+		}
 		
 		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
+			fieldMesh.clear();
 			fieldMesh.setMode(OF_PRIMITIVE_POINTS);
 			float xStep = 1. / width;
 			float yStep = 1. / height;
@@ -22,12 +29,6 @@ namespace flowTools {
 				}
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
-			
-			
-			parameters.setName("temperature field");
-			parameters.add(isActive.set("active", true));
-			parameters.add(temperatureScale.set("temperature scale", .25, 0, 1));
-			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
 		void	draw(ofTexture& _temTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {

@@ -11,22 +11,20 @@ namespace flowTools {
 	class ftDisplayField {
 	public:
 		
-		void setup(int _width, int _height, int _numChannels){
+		void setup(int _width, int _height){
 			width = _width;
 			height = _height;
-			numChannels = _numChannels;
-			if (_numChannels == 1) {
-				c1Field.setup( _width, _height);
-			} else {
-				c2Field.setup( _width, _height);
-			}
+			
+			c1Field.setup( _width, _height);
+			c2Field.setup( _width, _height);
+			
 			parameters.setName("display scalar");
 			parameters.add(isActive.set("active", true));
 			parameters.add(scale.set("scale", 1, 0, 10));
 		};
 		
 		void	setActive(bool _value)		{ isActive.set(_value); }
-		void	setScale(float _value)		{ if (numChannels == 1) { c1Field.setScale( _value); } else { c2Field.setScale( _value); } }
+		void	setScale(float _value)		{ c1Field.setScale( _value); c2Field.setScale( _value); }
 		
 		int		getWidth()	{ return width; }
 		int		getHeight()	{ return height; }
@@ -36,6 +34,7 @@ namespace flowTools {
 		void	draw(ofTexture _srcTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {
 			if (isActive.get()) {
 				ofPushStyle();
+				int numChannels = ftUtil::getNumChannelsFromInternalFormat(_srcTex.getTextureData().glInternalFormat);
 				ofEnableBlendMode(_blendmode);
 				if (numChannels == 1) {
 					c1Field.draw(_srcTex, _x, _y, _width, _height, _blendmode);
@@ -50,9 +49,8 @@ namespace flowTools {
 	protected:
 		ofParameter<bool> 	isActive;
 		ofParameter<float>	scale;
-		int		width;
-		int		height;
-		int		numChannels;
+		int					width;
+		int					height;
 		ftVelocityField		c2Field;
 		ftTemperatureField	c1Field;
 		

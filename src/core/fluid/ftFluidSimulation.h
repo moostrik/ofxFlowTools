@@ -20,15 +20,12 @@
 #include "ftDensityFloatMultiplier.h"
 
 namespace flowTools {
-	class ftFluidSimulation {
+	class ftFluidSimulation : public ftFlow{
 	public:
 		ftFluidSimulation();
 		
-		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth = 0, int _densityHeight = 0);
+		void	setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void    update(float _deltaTime = -1);
-		void    draw() { draw(0, 0, densityWidth, densityHeight); }
-		void    draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
-		void    draw(int _x, int _y, float _width, float _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
 		
 		void	reset();
 		void	resetBackground();
@@ -40,15 +37,28 @@ namespace flowTools {
 		void    addObstacle(ofTexture& _tex);
 		void    addTempObstacle(ofTexture& _tex);
 		
-		ofTexture&	getDensity() {return densitySwapBuffer.getTexture();};
-		ofTexture&	getVelocity() {return velocitySwapBuffer.getTexture();};
-		ofTexture&	getPressure() {return pressureSwapBuffer.getTexture();}
-		ofTexture&	getTemperature() {return temperatureSwapBuffer.getTexture();}
-		ofTexture&	getDivergence() {return divergenceBuffer.getTexture();}
-		ofTexture&	getObstacle() {return combinedObstacleBuffer.getTexture();}
-		ofTexture&	getVorticityVelocity() {return vorticityFirstPassBuffer.getTexture();}
-		ofTexture&	getConfinement() {return vorticitySecondPassBuffer.getTexture();}
-		ofTexture&	getBuoyancy() {return smokeBuoyancyBuffer.getTexture();}
+		ofTexture&	getDensity() 			{ return getOutput(); }
+		ofTexture&	getVelocity()			{ return velocitySwapBuffer.getTexture(); }
+		ofTexture&	getPressure() 			{ return pressureSwapBuffer.getTexture(); }
+		ofTexture&	getTemperature() 		{ return temperatureSwapBuffer.getTexture(); }
+		ofTexture&	getDivergence() 		{ return divergenceBuffer.getTexture(); }
+		ofTexture&	getObstacle() 			{ return combinedObstacleBuffer.getTexture(); }
+		ofTexture&	getVorticityVelocity()	{ return vorticityFirstPassBuffer.getTexture(); }
+		ofTexture&	getConfinement() 		{ return vorticitySecondPassBuffer.getTexture(); }
+		ofTexture&	getBuoyancy() 			{ return smokeBuoyancyBuffer.getTexture(); }
+		
+		void    draw() { draw(0, 0, densityWidth, densityHeight); }
+		void    draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
+		void    draw(int _x, int _y, float _w, float _h, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) { drawDensity (_x, _y, _w, _h, _blendmode) ;}
+		void    drawDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawObstacles(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawVorticityVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawConfinement(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void    drawBuoyancy(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
 			
 		int		getSimulationWidth() {return simulationWidth;}
 		int		getSimulationHeight() {return simulationHeight;}
@@ -140,7 +150,7 @@ namespace flowTools {
 		ftDensityFloatMultiplier	densityFloatMultiplierShader;
 		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 				
-		ftSwapFbo	densitySwapBuffer;
+//		ftSwapFbo	densitySwapBuffer;
 		ftSwapFbo	velocitySwapBuffer;
 		ftSwapFbo	temperatureSwapBuffer;
 		ftSwapFbo	pressureSwapBuffer;

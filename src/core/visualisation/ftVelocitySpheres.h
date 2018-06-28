@@ -8,11 +8,20 @@ namespace flowTools {
 	
 	class ftVelocitySpheres {
 	public:
+		ftVelocitySpheres() {
+			parameters.setName("velocity dots");
+			parameters.add(isActive.set("active", true));
+			parameters.add(distanceScale.set("distance scale", .1, 0, 1));
+			parameters.add(sizeScale.set("size scale", 1.5, 0, 2));
+			parameters.add(minDotSize.set("min dot size", 2, 0, 20));
+			parameters.add(maxDotSize.set("max dot size", 10, 0, 20));
+		}
 		
 		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
+			fieldMesh.clear();
 			fieldMesh.setMode(OF_PRIMITIVE_POINTS);
 			float xStep = 1. / width;
 			float yStep = 1. / height;
@@ -25,12 +34,6 @@ namespace flowTools {
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, true, true, false);
 			
-			parameters.setName("velocity dots");
-			parameters.add(isActive.set("active", true));
-			parameters.add(distanceScale.set("distance scale", .1, 0, 1));
-			parameters.add(sizeScale.set("size scale", 1.5, 0, 2));
-			parameters.add(minDotSize.set("min dot size", 2, 0, 20));
-			parameters.add(maxDotSize.set("max dot size", 10, 0, 20));
 		};
 		
 		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {

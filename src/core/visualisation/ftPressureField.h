@@ -8,11 +8,17 @@ namespace flowTools {
 	
 	class ftPressureField {
 	public:
+		ftPressureField() {
+			parameters.setName("pressure field");
+			parameters.add(isActive.set("active", true));
+			parameters.add(pressureScale.set("pressure scale", .45, 0, 1));
+		}
 		
 		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
+			fieldMesh.clear();
 			fieldMesh.setMode(OF_PRIMITIVE_POINTS);
 			float xStep = 1. / width;
 			float yStep = 1. / height;
@@ -22,10 +28,6 @@ namespace flowTools {
 				}
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
-			
-			parameters.setName("pressure field");
-			parameters.add(isActive.set("active", true));
-			parameters.add(pressureScale.set("pressure scale", .45, 0, 1));
 		};
 		
 		void draw(ofTexture& _prsTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {

@@ -72,19 +72,24 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
-		simulationWidth = _simulationWidth;
-		simulationHeight = _simulationHeight;
-		densityWidth = (!_densityWidth)? simulationWidth : _densityWidth;
-		densityHeight = (!_densityHeight)? simulationHeight: _densityHeight;
+	void ftFluidSimulation::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {
+		if (_densityWidth == 0 ) _densityWidth = _flowWidth;
+		if (_densityHeight == 0 ) _densityHeight = _flowHeight;
+		
+		simulationWidth = _flowWidth;
+		simulationHeight = _flowHeight;
+		densityWidth = _densityWidth;
+		densityHeight = _densityHeight;
 		
 		int	internalFormatDensity = GL_RGBA32F;
 		int	internalFormatVelocity = GL_RG32F;
 		int	interformatPressure = GL_R32F;
 		int	internalFormatObstacle = GL_R8;
+		
+		ftFlow::allocate(_densityWidth, _densityHeight, GL_RGBA32F);
 			
-		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
-		ftUtil::zero(densitySwapBuffer);
+//		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
+//		ftUtil::zero(densitySwapBuffer);
 		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
 		ftUtil::zero(velocitySwapBuffer);
 		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
@@ -210,9 +215,9 @@ namespace flowTools {
 							1.0 - (dissipation.get() + velocityOffset.get()),
 							cellSize.get());
 		
-		densitySwapBuffer.swap();
-		advectShader.update(densitySwapBuffer,
-							densitySwapBuffer.getBackTexture(),
+		outputFbo.swap();
+		advectShader.update(outputFbo,
+							outputFbo.getBackTexture(),
 							velocitySwapBuffer.getTexture(),
 							combinedObstacleBuffer.getTexture(),
 							timeStep,
@@ -289,17 +294,17 @@ namespace flowTools {
 		
 		// Multiply density by pressure and or vorticity
 		if(densityFromPressure != 0) {
-			densitySwapBuffer.swap();
-			densityFloatMultiplierShader.update(densitySwapBuffer,
-												densitySwapBuffer.getBackTexture(),
+			outputFbo.swap();
+			densityFloatMultiplierShader.update(outputFbo,
+												outputFbo.getBackTexture(),
 												pressureSwapBuffer.getTexture(),
 												densityFromPressure.get());
 		}
 		
 		if(densityFromVorticity != 0) {
-			densitySwapBuffer.swap();
-			densityVec2MultiplierShader.update(densitySwapBuffer,
-											   densitySwapBuffer.getBackTexture(),
+			outputFbo.swap();
+			densityVec2MultiplierShader.update(outputFbo,
+											   outputFbo.getBackTexture(),
 											   vorticitySecondPassBuffer.getTexture(),
 											   -densityFromVorticity.get());
 		}
@@ -330,9 +335,9 @@ namespace flowTools {
 	void ftFluidSimulation::addDensity(ofTexture & _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		densitySwapBuffer.swap();
-		addMultipliedShader.update(densitySwapBuffer,
-								   densitySwapBuffer.getBackTexture(),
+		outputFbo.swap();
+		addMultipliedShader.update(outputFbo,
+								   outputFbo.getBackTexture(),
 								   _tex,
 								   1.0,
 								   _strength);
@@ -399,17 +404,88 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::draw(int x, int y, float _width, float _height, ofBlendMode _blendmode){
+	void ftFluidSimulation::drawDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		densitySwapBuffer.getTexture().draw(x,y,_width,_height);
+		outputFbo.getTexture().draw(_x, _y, _w, _h);
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(velocitySwapBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(velocitySwapBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(pressureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(pressureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(temperatureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(temperatureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(divergenceBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(divergenceBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawObstacles(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		combinedObstacleBuffer.draw(_x, _y, _w, _h);
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawVorticityVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(vorticityFirstPassBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(vorticityFirstPassBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawConfinement(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(vorticitySecondPassBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(vorticitySecondPassBuffer.getTexture(), _x, _y, _w, _h); }
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::drawBuoyancy(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
+		ofPushStyle();
+		ofEnableBlendMode(_blendmode);
+		if (drawField) { displayField.draw(smokeBuoyancyBuffer.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(smokeBuoyancyBuffer.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::reset() {
 		
-		ftUtil::zero(densitySwapBuffer);
+		ftUtil::zero(outputFbo);
 		ftUtil::zero(velocitySwapBuffer);
 		ftUtil::zero(pressureSwapBuffer);
 		ftUtil::zero(temperatureSwapBuffer);

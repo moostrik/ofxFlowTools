@@ -9,15 +9,17 @@ namespace flowTools {
 	
 	class ftDisplayScalar {
 	public:
+		ftDisplayScalar() {
+			parameters.setName("display scalar");
+			parameters.add(isActive.set("active", true));
+			parameters.add(scale.set("scale", 1, 0, 10));
+		}
 		
 		void setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			displayScalarFbo.allocate(width, height);
 			ftUtil::zero(displayScalarFbo);
-			parameters.setName("display scalar");
-			parameters.add(isActive.set("active", true));
-			parameters.add(scale.set("scale", 1, 0, 10));
 		};
 		
 		void	setActive(bool _value)		{ isActive.set(_value); }

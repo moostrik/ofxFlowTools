@@ -8,11 +8,20 @@ namespace flowTools {
 	
 	class ftVelocityField {
 	public:
+		ftVelocityField() {
+			parameters.setName("velocity field");
+			parameters.add(isActive.set("active", true));
+			parameters.add(velocityScale.set("velocity scale", 1, 0, 10));
+			//			parameters.add(arrowSize.set("arrow size", 4, 1, 8));
+			arrowSize.set("arrow size", 4, 1, 8);
+			parameters.add(lineSmooth.set("line smooth", false));
+		}
 		
 		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
+			fieldMesh.clear();
 			fieldMesh.setMode(OF_PRIMITIVE_POINTS);
 			float xStep = 1. / width;
 			float yStep = 1. / height;
@@ -23,12 +32,6 @@ namespace flowTools {
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
-			parameters.setName("velocity field");
-			parameters.add(isActive.set("active", true));
-			parameters.add(velocityScale.set("velocity scale", 1, 0, 10));
-//			parameters.add(arrowSize.set("arrow size", 4, 1, 8));
-			arrowSize.set("arrow size", 4, 1, 8);
-			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
 		void	draw(ofTexture& _velTex, int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA) {

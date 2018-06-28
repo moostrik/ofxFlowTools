@@ -27,7 +27,9 @@ namespace flowTools {
 			width = _width;
 			height = _height;
 			inputFbo.allocate(width, height, internalFormat);
+			ftUtil::zero(inputFbo);
 			outputFbo.allocate(width, height, internalFormat);
+			ftUtil::zero(outputFbo);
 			displayScalar.setup(width, height);
 			displayField.setup(width / 2, height / 2);
 			drawField = false;

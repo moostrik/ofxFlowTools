@@ -38,7 +38,7 @@ namespace flowTools {
 		void    addTempObstacle(ofTexture& _tex);
 		
 		ofTexture&	getDensity() 			{ return getOutput(); }
-		ofTexture&	getVelocity()			{ return velocitySwapBuffer.getTexture(); }
+		ofTexture&	getVelocity()			{ return getInput(); }
 		ofTexture&	getPressure() 			{ return pressureSwapBuffer.getTexture(); }
 		ofTexture&	getTemperature() 		{ return temperatureSwapBuffer.getTexture(); }
 		ofTexture&	getDivergence() 		{ return divergenceBuffer.getTexture(); }
@@ -151,7 +151,7 @@ namespace flowTools {
 		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 				
 //		ftSwapFbo	densitySwapBuffer;
-		ftSwapFbo	velocitySwapBuffer;
+//		ftSwapFbo	velocitySwapBuffer;
 		ftSwapFbo	temperatureSwapBuffer;
 		ftSwapFbo	pressureSwapBuffer;
 		ofFbo		divergenceBuffer;

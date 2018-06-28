@@ -6,8 +6,6 @@ void ofApp::setup(){
 //	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-	windowWidth = ofGetWindowWidth();
-	windowHeight = ofGetWindowHeight();
 	densityWidth = 1280;
 	densityHeight = 720;
 	// process all but the density on 16th resolution
@@ -15,6 +13,8 @@ void ofApp::setup(){
 	flowHeight = densityHeight / 4;
 	fieldWidth = flowWidth / 2;
 	fieldHeight = flowWidth / 2;
+	windowWidth = ofGetWindowWidth();
+	windowHeight = ofGetWindowHeight();
 	
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridge.setup(flowWidth, flowHeight);
@@ -44,24 +44,23 @@ void ofApp::setupGui() {
 	gui.setDefaultFillColor(ofColor(160, 160, 160, 160));
 	gui.add(guiFPS.set("average FPS", 0, 0, 60));
 	gui.add(guiMinFPS.set("minimum FPS", 0, 0, 60));
-	gui.add(doFullScreen.set("fullscreen (F)", false));
-	doFullScreen.addListener(this, &ofApp::setFullScreen);
+	gui.add(toggleFullScreen.set("fullscreen (F)", false));
+	toggleFullScreen.addListener(this, &ofApp::toggleFullScreenListener);
 	gui.add(toggleGuiDraw.set("show gui (G)", false));
-	gui.add(doFlipCamera.set("flip camera", true));
-	gui.add(doDrawCamera.set("draw camera (C)", true));
+	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	
-	visualizeParameters.setName("flow visualisation");
-	visualizeParameters.add(drawMode.set("draw mode", FT_FLUID_DENSITY, FT_NONE, FT_FLUID_DENSITY));
-	visualizeParameters.add(drawName.set("MODE", "Fluid Density"));
-	visualizeParameters.add(showField.set("show field", false));
-	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 3.0));
-	drawMode.addListener(this, &ofApp::drawModeListener);
-	showField.addListener(this, &ofApp::showFieldListener);
-	visualizeScale.addListener(this, &ofApp::visualizeScaleListener);
+	visualizationParameters.setName("visualization");
+	visualizationParameters.add(visualizationMode.set("mode", FT_FLUID_DENSITY, FT_NONE, FT_FLUID_DENSITY));
+	visualizationParameters.add(visualizationName.set("MODE", "Fluid Density"));
+	visualizationParameters.add(toggleVisualizationField.set("show field", false));
+	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
+	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
+	toggleVisualizationField.addListener(this, &ofApp::toggleVisualizationFieldListener);
+	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
 	
 	bool s = true;
 	switchGuiColor(s = !s);
-	gui.add(visualizeParameters);
+	gui.add(visualizationParameters);
 	switchGuiColor(s = !s);
 	gui.add(opticalFlow.getParameters());
 	switchGuiColor(s = !s);
@@ -96,25 +95,13 @@ void ofApp::switchGuiColor(bool _switch) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
-	deltaTime = ofGetElapsedTimef() - lastTime;
-	lastTime = ofGetElapsedTimef();
-	
-	float dt = min(deltaTime, 1.f / 30.f);
+	float dt = 1.0 / max(ofGetFrameRate(), 1.f); // more smooth as 'real' deltaTime.
 	
 	simpleCam.update();
-	
 	if (simpleCam.isFrameNew()) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.begin();
-		
-		if (doFlipCamera)
-			simpleCam.draw(cameraFbo.getWidth(), 0, -cameraFbo.getWidth(), cameraFbo.getHeight());  // Flip Horizontal
-		else
-			simpleCam.draw(0, 0, cameraFbo.getWidth(), cameraFbo.getHeight());
+		simpleCam.draw(cameraFbo.getWidth(), 0, -cameraFbo.getWidth(), cameraFbo.getHeight());  // draw flipped
 		cameraFbo.end();
-		ofPopStyle();
 		
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
@@ -136,22 +123,22 @@ void ofApp::keyPressed(int key){
 	
 	switch (key) {
 		default: break;
-		case '1': drawMode.set(FT_INPUT_FOR_DENSITY); break;
-		case '2': drawMode.set(FT_INPUT_FOR_VELOCITY); break;
-		case '3': drawMode.set(FT_FLOW_VELOCITY); break;
-		case '4': drawMode.set(FT_BRIDGE_VELOCITY); break;
-		case '5': drawMode.set(FT_BRIDGE_DENSITY); break;
-		case '6': drawMode.set(FT_FLUID_VORTICITY); break;
-		case '7': drawMode.set(FT_FLUID_TEMPERATURE); break;
-		case '8': drawMode.set(FT_FLUID_PRESSURE); break;
-		case '9': drawMode.set(FT_FLUID_VELOCITY); break;
-		case '0': drawMode.set(FT_FLUID_DENSITY); break;
+		case '1': visualizationMode.set(FT_INPUT_FOR_DENSITY); break;
+		case '2': visualizationMode.set(FT_INPUT_FOR_VELOCITY); break;
+		case '3': visualizationMode.set(FT_FLOW_VELOCITY); break;
+		case '4': visualizationMode.set(FT_BRIDGE_VELOCITY); break;
+		case '5': visualizationMode.set(FT_BRIDGE_DENSITY); break;
+		case '6': visualizationMode.set(FT_FLUID_VORTICITY); break;
+		case '7': visualizationMode.set(FT_FLUID_TEMPERATURE); break;
+		case '8': visualizationMode.set(FT_FLUID_PRESSURE); break;
+		case '9': visualizationMode.set(FT_FLUID_VELOCITY); break;
+		case '0': visualizationMode.set(FT_FLUID_DENSITY); break;
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
 		case 'f':
-		case 'F': doFullScreen.set(!doFullScreen.get()); break;
+		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
 		case 'c':
-		case 'C': doDrawCamera.set(!doDrawCamera.get()); break;
+		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
 		case 'r':
 		case 'R':
 			for (auto flow : flows) { flow->reset(); }
@@ -166,13 +153,13 @@ void ofApp::draw(){
 	ofClear(0,0);
 	
 	ofPushStyle();
-	if (doDrawCamera.get()) {
+	if (toggleCameraDraw.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	switch(drawMode.get()) {
+	switch(visualizationMode.get()) {
 		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
 		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
 		case FT_FLOW_VELOCITY: 		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
@@ -208,6 +195,8 @@ void ofApp::drawGui() {
 	guiFPS = (int)(ofGetFrameRate() + 0.5);
 	
 	// calculate minimum fps
+	deltaTime = ofGetElapsedTimef() - lastTime;
+	lastTime = ofGetElapsedTimef();
 	deltaTimeDeque.push_back(deltaTime);
 	
 	while (deltaTimeDeque.size() > guiFPS.get())

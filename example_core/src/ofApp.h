@@ -15,51 +15,47 @@ public:
 	void	setup();
 	void	update();
 	void	draw();
+	void	keyPressed(int key);
 	
-	int		densityWidth;
-	int		densityHeight;
-	int		flowWidth;
-	int		flowHeight;
-	int		fieldWidth;
-	int		fieldHeight;
+	int		densityWidth, densityHeight;
+	int		flowWidth, flowHeight;
+	int		fieldWidth, fieldHeight;
+	int		windowWidth, windowHeight;
 	
-	// FLOWTOOLS
 	vector< ftFlow* >	flows;
 	ftOpticalFlow		opticalFlow;
 	ftVelocityBridge	velocityBridge;
 	ftDensityBridge		densityBridge;
 	ftFluidSimulation	fluidSimulation;
 	ofImage				flowToolsLogo;
+	
+	ofVideoGrabber		simpleCam;
+	ofFbo				cameraFbo;
+	ofParameter<bool>	toggleCameraDraw;
 
-	// GUI
 	ofxPanel			gui;
 	void				setupGui();
 	void				switchGuiColor(bool _switch);
-	void				keyPressed(int key);
-	void				drawGui();
-	ofParameter<bool>	toggleGuiDraw;
+	
 	ofParameter<float>	guiFPS;
 	ofParameter<float>	guiMinFPS;
 	deque<float>		deltaTimeDeque;
-	ofParameter<bool>	doFullScreen;
-	void				setFullScreen(bool& _value) { ofSetFullscreen(_value);}
-	int					windowWidth, windowHeight;
-	void windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 	
-	ofParameterGroup	visualizeParameters;
-	ofParameter<int>	drawMode;
-	ofParameter<string> drawName;
-	ofParameter<bool>	showField;
-	ofParameter<float>	visualizeScale;
-	void showFieldListener(bool &_value)		{ for (auto flow : flows) { flow->setDrawField(_value); } }
-	void visualizeScaleListener(float& _value)	{ for (auto flow : flows) { flow->setDrawScale(_value); } }
-	void drawModeListener(int& _value) 			{ drawName.set(ftFlowNames[_value]); }
+	ofParameter<bool>	toggleGuiDraw;
+	void				drawGui();
 	
-	// Camera
-	ofVideoGrabber		simpleCam;
-	ofFbo				cameraFbo;
-	ofParameter<bool>	doFlipCamera;
-	ofParameter<bool>	doDrawCamera;
+	ofParameter<bool>	toggleFullScreen;
+	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
+	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
+	
+	ofParameterGroup	visualizationParameters;
+	ofParameter<int>	visualizationMode;
+	ofParameter<string> visualizationName;
+	ofParameter<float>	visualizationScale;
+	ofParameter<bool>	toggleVisualizationField;
+	void toggleVisualizationFieldListener(bool &_value)	{ for (auto flow : flows) { flow->setDrawField(_value); } }
+	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setDrawScale(_value); } }
+	void visualizationModeListener(int& _value) 		{ visualizationName.set(ftFlowNames[_value]); }
 	
 	// Time
 	float				lastTime;

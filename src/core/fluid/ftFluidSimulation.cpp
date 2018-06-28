@@ -89,40 +89,40 @@ namespace flowTools {
 		ftFlow::allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		outputFbo.allocate(densityWidth, densityHeight, internalFormatDensity);
 			
-//		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
-//		ftUtil::zero(densitySwapBuffer);
-//		velocitySwapBuffer.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
-//		ftUtil::zero(velocitySwapBuffer);
-		temperatureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
-		ftUtil::zero(temperatureSwapBuffer);
-		pressureSwapBuffer.allocate(simulationWidth,simulationHeight,interformatPressure);
-		ftUtil::zero(pressureSwapBuffer);
+//		densityFbo.allocate(densityWidth,densityHeight,internalFormatDensity);
+//		ftUtil::zero(densityFbo);
+//		velocityFbo.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
+//		ftUtil::zero(velocityFbo);
+		temperatureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);
+		ftUtil::zero(temperatureFbo);
+		pressureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);
+		ftUtil::zero(pressureFbo);
 		
-		obstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		ftUtil::zero(obstacleBuffer);
-		createEdgeImage(obstacleBuffer);
+		obstacleFbo.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
+		ftUtil::zero(obstacleFbo);
+		createEdgeImage(obstacleFbo);
 		
-		divergenceBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
-		ftUtil::zero(divergenceBuffer);
-		smokeBuoyancyBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(smokeBuoyancyBuffer);
-		vorticityFirstPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(pressureSwapBuffer);
-		vorticitySecondPassBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(pressureSwapBuffer);
-		addPressureBuffer.allocate(simulationWidth, simulationHeight, interformatPressure);
-		ftUtil::zero(pressureSwapBuffer);
-		addPressureBufferDidChange = false;
-		addTempObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		ftUtil::zero(addTempObstacleBuffer);
-		addTempObstacleBufferDidChange = false;
-		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
-		ftUtil::zero(combinedObstacleBuffer);
-		ftUtil::stretch(combinedObstacleBuffer, obstacleBuffer);
+		divergenceFbo.allocate(simulationWidth, simulationHeight, interformatPressure);
+		ftUtil::zero(divergenceFbo);
+		smokeBuoyancyFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(smokeBuoyancyFbo);
+		vorticityFirstPassFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(pressureFbo);
+		vorticitySecondPassFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(pressureFbo);
+		addPressureFbo.allocate(simulationWidth, simulationHeight, interformatPressure);
+		ftUtil::zero(pressureFbo);
+		addPressureFboDidChange = false;
+		addTempObstacleFbo.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
+		ftUtil::zero(addTempObstacleFbo);
+		addTempObstacleFboDidChange = false;
+		combinedObstacleFbo.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
+		ftUtil::zero(combinedObstacleFbo);
+		ftUtil::stretch(combinedObstacleFbo, obstacleFbo);
 		
 		deltaTime = 0;
 		lastTime = 0;
-		addTempObstacleBufferDidChange = true;
+		addTempObstacleFboDidChange = true;
 		
 	}
 	
@@ -144,77 +144,77 @@ namespace flowTools {
 		ofPushStyle();
 		
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		// OBSTACLE BUFFER;
+		// OBSTACLE Fbo;
 		
 		if (combinedObstacleNeedsToBeCleaned) {
-			ftUtil::zero(combinedObstacleBuffer);
-			ftUtil::stretch(combinedObstacleBuffer, obstacleBuffer);
+			ftUtil::zero(combinedObstacleFbo);
+			ftUtil::stretch(combinedObstacleFbo, obstacleFbo);
 			combinedObstacleNeedsToBeCleaned = false;
 		}
 		
-		if (addTempObstacleBufferDidChange) {
+		if (addTempObstacleFboDidChange) {
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
-			ftUtil::stretch(combinedObstacleBuffer, addTempObstacleBuffer);
-			addTempObstacleBufferDidChange = false;
-			ftUtil::zero(addTempObstacleBuffer);
+			ftUtil::stretch(combinedObstacleFbo, addTempObstacleFbo);
+			addTempObstacleFboDidChange = false;
+			ftUtil::zero(addTempObstacleFbo);
 			combinedObstacleNeedsToBeCleaned = true;
 		}
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 
-		ftSwapFbo& velocitySwapBuffer = inputFbo;
+		ftSwapFbo& velocityFbo = inputFbo;
 		ftSwapFbo& densityFbo = outputFbo;
 		
 		// CLAMP LENGTH
 //		if (maxDensity.get() > 0.0) {
-//			densitySwapBuffer.swap();
-//			clampLengthShader.update(*densitySwapBuffer.getBuffer(),
-//									 densitySwapBuffer.getBackTexture(),
+//			densityFbo.swap();
+//			clampLengthShader.update(*densityFbo.getFbo(),
+//									 densityFbo.getBackTexture(),
 //									 maxDensity.get(),
 //									 clampForce.get());
 //		}
 //		if (maxVelocity.get() > 0.0) {
-//			velocitySwapBuffer.swap();
-//			clampLengthShader.update(*velocitySwapBuffer.getBuffer(),
-//									 velocitySwapBuffer.getBackTexture(),
+//			velocityFbo.swap();
+//			clampLengthShader.update(*velocityFbo.getFbo(),
+//									 velocityFbo.getBackTexture(),
 //									 maxVelocity.get(),
 //									 clampForce.get());
 //		}
 //		if (maxTemperature.get() > 0.0) {
-//			temperatureSwapBuffer.swap();
-//			clampLengthShader.update(*temperatureSwapBuffer.getBuffer(),
-//									 temperatureSwapBuffer.getBackTexture(),
+//			temperatureFbo.swap();
+//			clampLengthShader.update(*temperatureFbo.getFbo(),
+//									 temperatureFbo.getBackTexture(),
 //									 maxTemperature.get(),
 //									 clampForce.get());
 //		}
 //		if (maxPressure.get() > 0.0) {
-//			pressureSwapBuffer.swap();
-//			clampLengthShader.update(*pressureSwapBuffer.getBuffer(),
-//									 pressureSwapBuffer.getBackTexture(),
+//			pressureFbo.swap();
+//			clampLengthShader.update(*pressureFbo.getFbo(),
+//									 pressureFbo.getBackTexture(),
 //									 maxPressure.get(),
 //									 clampForce.get());		}
 		
 		
 		// VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
-			vorticityFirstPassShader.update(vorticityFirstPassBuffer,
-											velocitySwapBuffer.getTexture(),
-											combinedObstacleBuffer.getTexture());
+			vorticityFirstPassShader.update(vorticityFirstPassFbo,
+											velocityFbo.getTexture(),
+											combinedObstacleFbo.getTexture());
 			
-			vorticitySecondPassShader.update(vorticitySecondPassBuffer,
-											 vorticityFirstPassBuffer.getTexture(),
+			vorticitySecondPassShader.update(vorticitySecondPassFbo,
+											 vorticityFirstPassFbo.getTexture(),
 											 timeStep,
 											 vorticity.get(),
 											 cellSize.get());
 			
-			addVelocity(vorticitySecondPassBuffer.getTexture());
+			addVelocity(vorticitySecondPassFbo.getTexture());
 		}
 		
 		// ADVECT
-		velocitySwapBuffer.swap();
-		advectShader.update(velocitySwapBuffer,
-							velocitySwapBuffer.getBackTexture(),
-							velocitySwapBuffer.getBackTexture(),
-							combinedObstacleBuffer.getTexture(),
+		velocityFbo.swap();
+		advectShader.update(velocityFbo,
+							velocityFbo.getBackTexture(),
+							velocityFbo.getBackTexture(),
+							combinedObstacleFbo.getTexture(),
 							timeStep,
 							1.0 - (dissipation.get() + velocityOffset.get()),
 							cellSize.get());
@@ -222,16 +222,16 @@ namespace flowTools {
 		densityFbo.swap();
 		advectShader.update(densityFbo,
 							densityFbo.getBackTexture(),
-							velocitySwapBuffer.getTexture(),
-							combinedObstacleBuffer.getTexture(),
+							velocityFbo.getTexture(),
+							combinedObstacleFbo.getTexture(),
 							timeStep,
 							1.0 - (dissipation.get() + densityOffset.get()),
 							cellSize.get());
 		
-//		advectShader.update(*pressureSwapBuffer.getBuffer(),
-//							pressureSwapBuffer.getBackTexture(),
-//							velocitySwapBuffer.getBackTexture(),
-//							combinedObstacleBuffer.getTexture(),
+//		advectShader.update(*pressureFbo.getFbo(),
+//							pressureFbo.getBackTexture(),
+//							velocityFbo.getBackTexture(),
+//							combinedObstacleFbo.getTexture(),
 //							timeStep,
 //							1.0 - (dissipation.get() + pressureOffset.get()),
 //							cellSize.get());
@@ -240,10 +240,10 @@ namespace flowTools {
 		// DIFFUSE
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
-				velocitySwapBuffer.swap();
-				diffuseShader.update(velocitySwapBuffer,
-									 velocitySwapBuffer.getBackTexture(),
-									 combinedObstacleBuffer.getTexture(),
+				velocityFbo.swap();
+				diffuseShader.update(velocityFbo,
+									 velocityFbo.getBackTexture(),
+									 combinedObstacleFbo.getTexture(),
 //									 viscosity.get() * deltaTime); // works better than timeStep
 									 viscosity.get() * timeStep);
 			}
@@ -254,45 +254,45 @@ namespace flowTools {
 		// SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
 //		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
 //
-//			temperatureSwapBuffer.swap();
-//			advectShader.update(*temperatureSwapBuffer.getBuffer(),
-//								temperatureSwapBuffer.getBackTexture(),
-//								velocitySwapBuffer.getTexture(),
-//								combinedObstacleBuffer.getTexture(),
+//			temperatureFbo.swap();
+//			advectShader.update(*temperatureFbo.getFbo(),
+//								temperatureFbo.getBackTexture(),
+//								velocityFbo.getTexture(),
+//								combinedObstacleFbo.getTexture(),
 //								timeStep,
 //								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
 //								cellSize.get());
 //			
-//			smokeBuoyancyShader.update(smokeBuoyancyBuffer,
-//									   velocitySwapBuffer.getTexture(),
-//									   temperatureSwapBuffer.getTexture(),
-//									   densitySwapBuffer.getTexture(),
+//			smokeBuoyancyShader.update(smokeBuoyancyFbo,
+//									   velocityFbo.getTexture(),
+//									   temperatureFbo.getTexture(),
+//									   densityFbo.getTexture(),
 //									   ambientTemperature.get(),
 //									   timeStep,
 //									   smokeSigma.get(),
 //									   smokeWeight.get(),
 //									   gravity.get() * timeStep);
-//			addVelocity(smokeBuoyancyBuffer.getTexture());
+//			addVelocity(smokeBuoyancyFbo.getTexture());
 //	
 //		}
 //		else
-			ftUtil::zero(temperatureSwapBuffer);
+			ftUtil::zero(temperatureFbo);
 		
 		
 		// DIVERGENCE AND JACOBI
-		ftUtil::zero(divergenceBuffer);
-		divergenceShader.update(divergenceBuffer,
-								velocitySwapBuffer.getTexture(),
-								combinedObstacleBuffer.getTexture(),
+		ftUtil::zero(divergenceFbo);
+		divergenceShader.update(divergenceFbo,
+								velocityFbo.getTexture(),
+								combinedObstacleFbo.getTexture(),
 								cellSize.get());
 		
-		ftUtil::zero(pressureSwapBuffer);
+		ftUtil::zero(pressureFbo);
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
-			pressureSwapBuffer.swap();
-			jacobiShader.update(pressureSwapBuffer,
-								pressureSwapBuffer.getBackTexture(),
-								divergenceBuffer.getTexture(),
-								combinedObstacleBuffer.getTexture(),
+			pressureFbo.swap();
+			jacobiShader.update(pressureFbo,
+								pressureFbo.getBackTexture(),
+								divergenceFbo.getTexture(),
+								combinedObstacleFbo.getTexture(),
 								cellSize.get());
 		}
 		
@@ -301,7 +301,7 @@ namespace flowTools {
 			densityFbo.swap();
 			densityFloatMultiplierShader.update(densityFbo,
 												densityFbo.getBackTexture(),
-												pressureSwapBuffer.getTexture(),
+												pressureFbo.getTexture(),
 												densityFromPressure.get());
 		}
 		
@@ -309,27 +309,27 @@ namespace flowTools {
 			densityFbo.swap();
 			densityVec2MultiplierShader.update(densityFbo,
 											   densityFbo.getBackTexture(),
-											   vorticitySecondPassBuffer.getTexture(),
+											   vorticitySecondPassFbo.getTexture(),
 											   -densityFromVorticity.get());
 		}
 		
 		
 		// Drain some fluid
-		if(addPressureBufferDidChange == true) {
-			addPressureBufferDidChange = false;
-			pressureSwapBuffer.swap();
-			addMultipliedShader.update(pressureSwapBuffer,
-									   pressureSwapBuffer.getTexture(),
-									   addPressureBuffer.getTexture(),
+		if(addPressureFboDidChange == true) {
+			addPressureFboDidChange = false;
+			pressureFbo.swap();
+			addMultipliedShader.update(pressureFbo,
+									   pressureFbo.getTexture(),
+									   addPressureFbo.getTexture(),
 									   1.0,
 									   1.0);
 		}
 		
-		velocitySwapBuffer.swap();
-		substractGradientShader.update(velocitySwapBuffer,
-									   velocitySwapBuffer.getBackTexture(),
-									   pressureSwapBuffer.getTexture(),
-									   combinedObstacleBuffer.getTexture(),
+		velocityFbo.swap();
+		substractGradientShader.update(velocityFbo,
+									   velocityFbo.getBackTexture(),
+									   pressureFbo.getTexture(),
+									   combinedObstacleFbo.getTexture(),
 									   cellSize.get());
 		
 		ofPopStyle();
@@ -365,9 +365,9 @@ namespace flowTools {
 	void ftFluidSimulation::addTemperature(ofTexture & _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		temperatureSwapBuffer.swap();
-		addMultipliedShader.update(temperatureSwapBuffer,
-								   temperatureSwapBuffer.getBackTexture(),
+		temperatureFbo.swap();
+		addMultipliedShader.update(temperatureFbo,
+								   temperatureFbo.getBackTexture(),
 								   _tex,
 								   1.0,
 								   _strength);
@@ -378,15 +378,15 @@ namespace flowTools {
 	void ftFluidSimulation::addPressure(ofTexture& _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(addPressureBuffer);
+		ftUtil::zero(addPressureFbo);
 		
-		addMultipliedShader.update(addPressureBuffer,
-								   addPressureBuffer.getTexture(), // dubious
+		addMultipliedShader.update(addPressureFbo,
+								   addPressureFbo.getTexture(), // dubious
 								   _tex,
 								   1.0,
 								   _strength);
 		
-		addPressureBufferDidChange = true;
+		addPressureFboDidChange = true;
 		ofPopStyle();
 	}
 	
@@ -394,7 +394,7 @@ namespace flowTools {
 	void ftFluidSimulation::addObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		ftUtil::stretch(obstacleBuffer, _obstacleTexture);
+		ftUtil::stretch(obstacleFbo, _obstacleTexture);
 		ofPopStyle();
 	}
 	
@@ -402,8 +402,8 @@ namespace flowTools {
 	void ftFluidSimulation::addTempObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		ftUtil::stretch(addTempObstacleBuffer, _obstacleTexture);
-		addTempObstacleBufferDidChange = true;
+		ftUtil::stretch(addTempObstacleFbo, _obstacleTexture);
+		addTempObstacleFboDidChange = true;
 		ofPopStyle();
 	}
 	
@@ -428,8 +428,8 @@ namespace flowTools {
 	void ftFluidSimulation::drawPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(pressureSwapBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(pressureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
@@ -437,8 +437,8 @@ namespace flowTools {
 	void ftFluidSimulation::drawTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(temperatureSwapBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(temperatureSwapBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
@@ -446,8 +446,8 @@ namespace flowTools {
 	void ftFluidSimulation::drawDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(divergenceBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(divergenceBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
@@ -455,7 +455,7 @@ namespace flowTools {
 	void ftFluidSimulation::drawObstacles(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		combinedObstacleBuffer.draw(_x, _y, _w, _h);
+		combinedObstacleFbo.draw(_x, _y, _w, _h);
 		ofPopStyle();
 	}
 	
@@ -463,8 +463,8 @@ namespace flowTools {
 	void ftFluidSimulation::drawVorticityVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(vorticityFirstPassBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(vorticityFirstPassBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
@@ -472,8 +472,8 @@ namespace flowTools {
 	void ftFluidSimulation::drawConfinement(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(vorticitySecondPassBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(vorticitySecondPassBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
@@ -481,35 +481,35 @@ namespace flowTools {
 	void ftFluidSimulation::drawBuoyancy(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
 		ofPushStyle();
 		ofEnableBlendMode(_blendmode);
-		if (drawField) { displayField.draw(smokeBuoyancyBuffer.getTexture(), _x, _y, _w, _h); }
-		else { displayScalar.draw(smokeBuoyancyBuffer.getTexture(), _x, _y, _w, _h); }
+		if (drawField) { displayField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
+		else { displayScalar.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
 		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::reset() {
 		ftFlow::reset();
-		ftUtil::zero(pressureSwapBuffer);
-		ftUtil::zero(temperatureSwapBuffer);
-		createEdgeImage(obstacleBuffer);
+		ftUtil::zero(pressureFbo);
+		ftUtil::zero(temperatureFbo);
+		createEdgeImage(obstacleFbo);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidSimulation::resetBackground() {
-		ftUtil::zero(obstacleBuffer);
-		createEdgeImage(obstacleBuffer);
+		ftUtil::zero(obstacleFbo);
+		createEdgeImage(obstacleFbo);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
-	void ftFluidSimulation::createEdgeImage(ofFbo &buffer, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
+	void ftFluidSimulation::createEdgeImage(ofFbo &_Fbo, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		buffer.begin();
+		_Fbo.begin();
 		ofClear(_backgroundColor);
 		ofSetColor(_edgeColor);
-		ofDrawRectangle(_edgeWidth, _edgeWidth, buffer.getWidth() - _edgeWidth * 2, buffer.getHeight() - _edgeWidth * 2);
-		buffer.end();
+		ofDrawRectangle(_edgeWidth, _edgeWidth, _Fbo.getWidth() - _edgeWidth * 2, _Fbo.getHeight() - _edgeWidth * 2);
+		_Fbo.end();
 		ofPopStyle();
 	}
 }

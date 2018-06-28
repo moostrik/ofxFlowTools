@@ -11,8 +11,6 @@ void ofApp::setup(){
 	// process all but the density on 16th resolution
 	flowWidth = densityWidth / 4;
 	flowHeight = densityHeight / 4;
-	fieldWidth = flowWidth / 2;
-	fieldHeight = flowWidth / 2;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -54,9 +52,11 @@ void ofApp::setupGui() {
 	visualizationParameters.add(visualizationName.set("MODE", "Fluid Density"));
 	visualizationParameters.add(toggleVisualizationField.set("show field", false));
 	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
+	visualizationParameters.add(visualizationSize.set("size", flowWidth / 2, flowWidth / 4, flowWidth));
 	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
 	toggleVisualizationField.addListener(this, &ofApp::toggleVisualizationFieldListener);
 	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
+	visualizationSize.addListener(this, &ofApp::visualizationSizeListener);
 	
 	bool s = true;
 	switchGuiColor(s = !s);

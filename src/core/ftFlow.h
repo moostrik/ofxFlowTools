@@ -33,8 +33,9 @@ namespace flowTools {
 		void drawInput(int _x, int _y, int _w, int _h);
 		void drawOutput(int _x, int _y, int _w, int _h);
 		
-		void setFieldSize(int _w, int _h) { visualizeField.setup(_w, _h); }
-		bool setDrawField(bool _value) { toggleVisualisationField = _value; }
+		void setFieldSize(int _w, int _h)	{ visualizeField.setup(_w, _h); }
+		void setFieldSize(int _size) 		{ setFieldSize(_size, (float)_size / (float)width * height); }
+		bool setDrawField(bool _value)		{ toggleVisualisationField = _value; }
 		void setDrawScale(float _scale);
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }

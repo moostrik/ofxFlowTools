@@ -15,7 +15,7 @@ public:
 	void	draw();
 	void	keyPressed(int key);
 	
-	int		densityWidth, densityHeight, flowWidth, flowHeight, fieldWidth, fieldHeight, windowWidth, windowHeight;
+	int		densityWidth, densityHeight, flowWidth, flowHeight, windowWidth, windowHeight;
 	
 	vector< ftFlow* >	flows;
 	ftOpticalFlow		opticalFlow;
@@ -28,9 +28,11 @@ public:
 	ofParameter<int>	visualizationMode;
 	ofParameter<string> visualizationName;
 	ofParameter<float>	visualizationScale;
+	ofParameter<int>	visualizationSize;
 	ofParameter<bool>	toggleVisualizationField;
 	void toggleVisualizationFieldListener(bool &_value)	{ for (auto flow : flows) { flow->setDrawField(_value); } }
 	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setDrawScale(_value); } }
+	void visualizationSizeListener(int& _value)			{ for (auto flow : flows) { flow->setFieldSize(_value); } }
 	void visualizationModeListener(int& _value) 		{ visualizationName.set(ftFlowNames[_value]); }
 	
 	ofVideoGrabber		simpleCam;

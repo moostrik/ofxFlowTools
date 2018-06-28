@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>46.0953</minimum_FPS>
+	<minimum_FPS>43.8974</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
@@ -136,4 +136,11 @@
 		<density_from_pressure>0</density_from_pressure>
 		<density_from_vorticity>-0.1</density_from_vorticity>
 	</fluid_solver>
+	<visualization>
+		<mode>15</mode>
+		<MODE>fluid velocity</MODE>
+		<show_field>1</show_field>
+		<scale>0.3</scale>
+		<size>160</size>
+	</visualization>
 </settings>

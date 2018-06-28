@@ -10,6 +10,11 @@ namespace flowTools {
 	
 	class ftDisplayField {
 	public:
+		ftDisplayField() {
+			parameters.setName("display scalar");
+			parameters.add(isActive.set("active", true));
+			parameters.add(scale.set("scale", 1, 0, 10));
+		}
 		
 		void setup(int _width, int _height){
 			width = _width;
@@ -17,10 +22,6 @@ namespace flowTools {
 			
 			c1Field.setup( _width, _height);
 			c2Field.setup( _width, _height);
-			
-			parameters.setName("display scalar");
-			parameters.add(isActive.set("active", true));
-			parameters.add(scale.set("scale", 1, 0, 10));
 		};
 		
 		void	setActive(bool _value)		{ isActive.set(_value); }

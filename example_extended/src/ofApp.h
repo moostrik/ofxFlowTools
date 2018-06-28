@@ -24,9 +24,16 @@ public:
 	int					densityHeight;
 	int					flowWidth;
 	int					flowHeight;
+	int					fieldWidth;
+	int					fieldHeight;
 	
 	// FLOWTOOLS
-	ftCore				flowCore;
+	vector< ftFlow* >	flows;
+	ftOpticalFlow		opticalFlow;
+	ftVelocityBridge	velocityBridge;
+	ftDensityBridge		densityBridge;
+	ftFluidSimulation	fluidSimulation;
+	
 	ofImage				flowToolsLogo;
 	ftDrawMouseForces	flowMouse;
 	ftParticleFlow		flowParticles;
@@ -46,6 +53,15 @@ public:
 	int					windowWidth, windowHeight;
 	void windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 	float				lastTime, deltaTime;
+	
+	ofParameterGroup	visualizeParameters;
+	ofParameter<int>	drawMode;
+	ofParameter<string> drawName;
+	ofParameter<bool>	showField;
+	ofParameter<float>	visualizeScale;
+	void showFieldListener(bool &_value)		{ for (auto flow : flows) { flow->setDrawField(_value); } }
+	void visualizeScaleListener(float& _value)	{ for (auto flow : flows) { flow->setDrawScale(_value); } }
+	void drawModeListener(int& _value) 			{ drawName.set(ftFlowNames[_value]); }
 	
 	// Camera
 	ofVideoGrabber		simpleCam;

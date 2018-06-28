@@ -106,7 +106,6 @@ void ftCore::updateFluid(float _deltaTime){
 //--------------------------------------------------------------
 void ftCore::setFlow(flowTools::ftFlowType _type, ofTexture &_tex) {
 	switch (_type) {
-		case FT_INPUT:  			setFlow(FT_INPUT_FOR_VELOCITY, _tex); setFlow(FT_INPUT_FOR_DENSITY, _tex); break;
 		case FT_INPUT_FOR_VELOCITY: setInputForVelocity(_tex); break;
 		case FT_INPUT_FOR_DENSITY:  setInputForDensity(_tex); break;
 		case FT_FLOW_VELOCITY:  	setOpticalFlowVelocity(_tex); break;
@@ -182,7 +181,6 @@ ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
 //--------------------------------------------------------------
 void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h) {
 	switch(_type) {
-		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h); break;
 		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(_x, _y, _w, _h); break;
 		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(_x, _y, _w, _h); break;
 		case FT_FLOW_VELOCITY: 		opticalFlow.draw(_x, _y, _w, _h); break;
@@ -231,11 +229,11 @@ void ftCore::drawModeListener(int &_value) {
 //--------------------------------------------------------------
 void ftCore::keyPressed(ofKeyEventArgs &_key){
 	switch (_key.key) {
-		case '1': drawMode.set(FT_INPUT); break;
-		case '2': drawMode.set(FT_FLOW_VELOCITY); break;
-		case '3': drawMode.set(FT_BRIDGE_VELOCITY); break;
-		case '4': drawMode.set(FT_BRIDGE_DENSITY); break;
-		case '5': drawMode.set(FT_OBSTACLE_CONSTANT); break;
+		case '1': drawMode.set(FT_INPUT_FOR_DENSITY); break;
+		case '2': drawMode.set(FT_INPUT_FOR_VELOCITY); break;
+		case '3': drawMode.set(FT_FLOW_VELOCITY); break;
+		case '4': drawMode.set(FT_BRIDGE_VELOCITY); break;
+		case '5': drawMode.set(FT_BRIDGE_DENSITY); break;
 		case '6': drawMode.set(FT_FLUID_DIVERGENCE); break;
 		case '7': drawMode.set(FT_FLUID_TEMPERATURE); break;
 		case '8': drawMode.set(FT_FLUID_PRESSURE); break;

@@ -9,7 +9,6 @@ namespace flowTools {
 	
 	enum ftFlowType{
 		FT_NONE	= 0,
-		FT_INPUT,
 		FT_INPUT_FOR_VELOCITY,
 		FT_INPUT_FOR_DENSITY,
 		FT_FLOW_VELOCITY,
@@ -27,7 +26,7 @@ namespace flowTools {
 		FT_FLUID_VELOCITY,
 		FT_FLUID_DENSITY,
 	};
-	const vector<string> ftFlowNames({"none", "input", "input for velocity", "input for density", "optical flow", "bridge velocity", "bridge density", "bridge temperature", "bridge pressure", "obstacle temporary", "obstacle continuous", "fluid buoyancy", "fluid vorticity", "fluid divergence", "fluid temperature", "fluid pressure", "fluid velocity", "fluid density"});
+	const vector<string> ftFlowNames({"none", "input for velocity", "input for density", "optical flow", "bridge velocity", "bridge density", "bridge temperature", "bridge pressure", "obstacle temporary", "obstacle continuous", "fluid buoyancy", "fluid vorticity", "fluid divergence", "fluid temperature", "fluid pressure", "fluid velocity", "fluid density"});
 		
 	
 	class ftUtil {

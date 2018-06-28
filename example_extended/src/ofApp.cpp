@@ -8,13 +8,24 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
+	// process all but the density on 16th resolution
 	flowWidth = densityWidth / 4;
 	flowHeight = densityHeight / 4;
+	fieldWidth = flowWidth / 2;
+	fieldHeight = flowWidth / 2;
 	
-	flowCore.setup(densityWidth, densityHeight, flowWidth, flowHeight);
+	opticalFlow.setup(flowWidth, flowHeight);
+	velocityBridge.setup(flowWidth, flowHeight);
+	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	fluidSimulation.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	
+	flows.push_back(&opticalFlow);
+	flows.push_back(&velocityBridge);
+	flows.push_back(&densityBridge);
+	flows.push_back(&fluidSimulation);
 	
 	flowToolsLogo.load("flowtools.png");
-	flowCore.addFlow(FT_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
+	fluidSimulation.addObstacle(flowToolsLogo.getTexture());
 	
 	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
@@ -48,17 +59,26 @@ void ofApp::setupGui() {
 	gui.add(doFlipCamera.set("flip camera", true));
 	gui.add(doDrawCamera.set("draw camera (C)", true));
 	
+	visualizeParameters.setName("flow visualisation");
+	visualizeParameters.add(drawMode.set("draw mode", FT_FLUID_DENSITY, FT_NONE, FT_FLUID_DENSITY));
+	visualizeParameters.add(drawName.set("MODE", "Fluid Density"));
+	visualizeParameters.add(showField.set("show field", false));
+	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 3.0));
+	drawMode.addListener(this, &ofApp::drawModeListener);
+	showField.addListener(this, &ofApp::showFieldListener);
+	visualizeScale.addListener(this, &ofApp::visualizeScaleListener);
+	
 	bool s = true;
 	switchGuiColor(s = !s);
-	gui.add(flowCore.getCoreParameters());
+	gui.add(visualizeParameters);
 	switchGuiColor(s = !s);
-	gui.add(flowCore.getOpticalFlowParameters());
+	gui.add(opticalFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowCore.getVelocityBridgeParameters());
+	gui.add(velocityBridge.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowCore.getDensityBridgeParameters());
+	gui.add(densityBridge.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowCore.getFluidSimulationParameters());
+	gui.add(fluidSimulation.getParameters());
 	switchGuiColor(s = !s);
 	gui.add(flowMouse.getParameters());
 	switchGuiColor(s = !s);
@@ -106,26 +126,35 @@ void ofApp::update(){
 		cameraFbo.end();
 		ofPopStyle();
 		
-		flowCore.setInput(cameraFbo.getTexture());
+		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-	flowMouse.update(dt);
-	for (int i=0; i<flowMouse.getNumForces(); i++) {
-		if (flowMouse.didChange(i)) {
-			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-			if (flowMouse.getType(i) == FT_FLUID_VELOCITY) {
-				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-			}
-		}
-	}
+//	flowMouse.update(dt);
+//	for (int i=0; i<flowMouse.getNumForces(); i++) {
+//		if (flowMouse.didChange(i)) {
+//			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+//			if (flowMouse.getType(i) == FT_FLUID_VELOCITY) {
+//				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+//			}
+//		}
+//	}
 	
-	flowCore.update(dt);
+	opticalFlow.update();
+	velocityBridge.setInput(opticalFlow.getVelocity());
+	velocityBridge.update(dt);
+	densityBridge.setDensity(cameraFbo.getTexture());
+	densityBridge.setVelocity(opticalFlow.getVelocity());
+	densityBridge.update(dt);
+	fluidSimulation.addVelocity(velocityBridge.getVelocity());
+	fluidSimulation.addDensity(densityBridge.getDensity());
+	fluidSimulation.addTemperature(densityBridge.getLuminance());
+	fluidSimulation.update(dt);
 	
-//	flowParticles.setSpeed(flowCore.getSpeed());
-//	flowParticles.setCellSize(flowCore.getCellSize());
-	flowParticles.addFlowVelocity(flowCore.getOpticalFlowVelocity());
-	flowParticles.addFluidVelocity(flowCore.getFluidVelocity());
-//	flowParticles.setObstacle(flowCore.getObstacle());
+	flowParticles.setSpeed(fluidSimulation.getSpeed());
+	flowParticles.setCellSize(fluidSimulation.getCellSize());
+	flowParticles.addFlowVelocity(opticalFlow.getVelocity());
+	flowParticles.addFluidVelocity(fluidSimulation.getVelocity());
+	flowParticles.setObstacle(fluidSimulation.getObstacle());
 	flowParticles.update(dt);
 }
 
@@ -133,6 +162,17 @@ void ofApp::update(){
 void ofApp::keyPressed(int key){
 	
 	switch (key) {
+		default: break;
+		case '1': drawMode.set(FT_INPUT_FOR_DENSITY); break;
+		case '2': drawMode.set(FT_INPUT_FOR_VELOCITY); break;
+		case '3': drawMode.set(FT_FLOW_VELOCITY); break;
+		case '4': drawMode.set(FT_BRIDGE_VELOCITY); break;
+		case '5': drawMode.set(FT_BRIDGE_DENSITY); break;
+		case '6': drawMode.set(FT_FLUID_VORTICITY); break;
+		case '7': drawMode.set(FT_FLUID_TEMPERATURE); break;
+		case '8': drawMode.set(FT_FLUID_PRESSURE); break;
+		case '9': drawMode.set(FT_FLUID_VELOCITY); break;
+		case '0': drawMode.set(FT_FLUID_DENSITY); break;
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
 		case 'f':
@@ -141,13 +181,11 @@ void ofApp::keyPressed(int key){
 		case 'C': doDrawCamera.set(!doDrawCamera.get()); break;
 		case 'r':
 		case 'R':
-			flowCore.reset();
+			for (auto flow : flows) { flow->reset(); }
+			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
 			flowMouse.reset();
-			flowCore.addFlow(FT_OBSTACLE_CONSTANT, flowToolsLogo.getTexture());
 			flowParticles.reset();
 			break;
-			
-		default: break;
 	}
 }
 
@@ -162,7 +200,26 @@ void ofApp::draw(){
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	flowCore.draw(0, 0, windowWidth, windowHeight);
+	switch(drawMode.get()) {
+		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
+		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
+		case FT_FLOW_VELOCITY: 		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
+		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case FT_BRIDGE_DENSITY: 	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case FT_BRIDGE_TEMPERATURE: break;
+		case FT_BRIDGE_PRESSURE: 	break;
+		case FT_OBSTACLE_TEMPORARY: break;
+		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
+		case FT_FLUID_DENSITY: 		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
+		case FT_NONE:
+		default: break;
+	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	if (flowParticles.isActive()) { flowParticles.draw(0, 0, windowWidth, windowHeight); }

@@ -88,11 +88,7 @@ namespace flowTools {
 		
 		ftFlow::allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		outputFbo.allocate(densityWidth, densityHeight, internalFormatDensity);
-			
-//		densityFbo.allocate(densityWidth,densityHeight,internalFormatDensity);
-//		ftUtil::zero(densityFbo);
-//		velocityFbo.allocate(simulationWidth,simulationHeight,internalFormatVelocity);
-//		ftUtil::zero(velocityFbo);
+		
 		temperatureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);
 		ftUtil::zero(temperatureFbo);
 		pressureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);

@@ -408,82 +408,55 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawDensity(int _x, int _y, int _w, int _h){
 		outputFbo.getTexture().draw(_x, _y, _w, _h);
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawVelocity(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawPressure(int _x, int _y, int _w, int _h) {
 		if (drawField) { displayField.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawTemperature(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawDivergence(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawObstacles(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawObstacles(int _x, int _y, int _w, int _h){
 		combinedObstacleFbo.draw(_x, _y, _w, _h);
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawVorticityVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawVorticityVelocity(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawConfinement(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawConfinement(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawBuoyancy(int _x, int _y, int _w, int _h, ofBlendMode _blendmode){
-		ofPushStyle();
-		ofEnableBlendMode(_blendmode);
+	void ftFluidSimulation::drawBuoyancy(int _x, int _y, int _w, int _h){
 		if (drawField) { displayField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
 		else { displayScalar.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
-		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------

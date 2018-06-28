@@ -21,8 +21,8 @@ public:
 	void	updateBridgeDensity(float _deltaTime);
 	void	updateFluid(float _deltaTime);
 	
-	void	draw(int _x, int _y, int _w, int _h, ofBlendMode _blendmode) { draw(ftFlowType(drawMode.get()), _x, _y, _w, _h, _blendmode); }
-	void	draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode _blendmode);
+	void	draw(int _x, int _y, int _w, int _h) { draw(ftFlowType(drawMode.get()), _x, _y, _w, _h); }
+	void	draw(ftFlowType _type, int _x, int _y, int _w, int _h);
 	
 	void	reset() 	{ velocityBridge.reset(); densityBridge.reset(); fluidSimulation.reset(); }
 	void	keyPressed(ofKeyEventArgs & key);
@@ -141,8 +141,6 @@ private:
 	ofParameter<int>	drawMode;
 	void drawModeListener(int& _value) ;
 	ofParameter<string> drawName;
-	void				drawTex(ofTexture& _tex, int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-	void				drawVis(ofTexture& _tex, int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
 	
 	vector< ftFlow* >	flows;
 };

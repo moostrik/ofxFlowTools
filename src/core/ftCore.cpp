@@ -180,36 +180,28 @@ ofTexture& ftCore::getFlow(flowTools::ftFlowType _type) {
 }
 
 //--------------------------------------------------------------
-void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h, ofBlendMode _blendmode) {
+void ftCore::draw(ftFlowType _type, int _x, int _y, int _w, int _h) {
 	switch(_type) {
-		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h, _blendmode); break;
-		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(_x, _y, _w, _h, _blendmode); break;
-		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLOW_VELOCITY: 		opticalFlow.draw(_x, _y, _w, _h, _blendmode); break;
-		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(_x, _y, _w, _h, _blendmode); break;
-		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h, _blendmode); break;
+		case FT_INPUT: 				draw(FT_INPUT_FOR_VELOCITY, _x, _y, _w, _h); break;
+		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(_x, _y, _w, _h); break;
+		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(_x, _y, _w, _h); break;
+		case FT_FLOW_VELOCITY: 		opticalFlow.draw(_x, _y, _w, _h); break;
+		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(_x, _y, _w, _h); break;
+		case FT_BRIDGE_DENSITY: 	densityBridge.draw(_x, _y, _w, _h); break;
 		case FT_BRIDGE_TEMPERATURE: break;
 		case FT_BRIDGE_PRESSURE: 	break;
 		case FT_OBSTACLE_TEMPORARY: break;
-		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(_x, _y, _w, _h, _blendmode); break;
-		case FT_FLUID_DENSITY: 		fluidSimulation.draw(_x, _y, _w, _h, _blendmode); break;
+		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(_x, _y, _w, _h); break;
+		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(_x, _y, _w, _h); break;
+		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(_x, _y, _w, _h); break;
+		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(_x, _y, _w, _h); break;
+		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(_x, _y, _w, _h); break;
+		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(_x, _y, _w, _h); break;
+		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(_x, _y, _w, _h); break;
+		case FT_FLUID_DENSITY: 		fluidSimulation.draw(_x, _y, _w, _h); break;
 		case FT_NONE:
 		default: break;
 	}
-}
-
-//--------------------------------------------------------------
-void ftCore::drawTex(ofTexture &_tex, int _x, int _y, int _w, int _h, ofBlendMode _blendMode) {
-	ofPushStyle();
-	ofEnableBlendMode(_blendMode);
-	_tex.draw(_x, _y, _w, _h);
-	ofPopStyle();
 }
 
 //--------------------------------------------------------------

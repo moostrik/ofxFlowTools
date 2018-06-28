@@ -155,22 +155,23 @@ void ofApp::keyPressed(int key){
 void ofApp::draw(){
 	ofClear(0,0);
 	
+	ofPushStyle();
 	if (doDrawCamera.get()) {
-		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
-		ofPopStyle();
 	}
 	
-	flowCore.draw(0, 0, windowWidth, windowHeight, OF_BLENDMODE_ALPHA);
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	flowCore.draw(0, 0, windowWidth, windowHeight);
 	
-	if (flowParticles.isActive()) { flowParticles.draw(0, 0, windowWidth, windowHeight, OF_BLENDMODE_ADD); }
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	if (flowParticles.isActive()) { flowParticles.draw(0, 0, windowWidth, windowHeight); }
 	
-	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	ofPopStyle();
 	
+	ofPopStyle();
 	if (toggleGuiDraw) {
 		drawGui();
 	}

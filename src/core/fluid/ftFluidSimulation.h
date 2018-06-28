@@ -49,16 +49,16 @@ namespace flowTools {
 		
 		void	draw() { draw(0, 0, densityWidth, densityHeight); }
 		void	draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
-		void	draw(int _x, int _y, float _w, float _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) { drawDensity (_x, _y, _w, _h, _blendMode) ;}
-		void	drawDensity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawPressure(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawTemperature(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawDivergence(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawObstacles(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawVorticityVelocity(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawConfinement(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
-		void	drawBuoyancy(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA);
+		void	draw(int _x, int _y, float _w, float _h) { drawDensity (_x, _y, _w, _h) ;}
+		void	drawDensity(int _x, int _y, int _w, int _h);
+		void	drawVelocity(int _x, int _y, int _w, int _h);
+		void	drawPressure(int _x, int _y, int _w, int _h);
+		void	drawTemperature(int _x, int _y, int _w, int _h);
+		void	drawDivergence(int _x, int _y, int _w, int _h);
+		void	drawObstacles(int _x, int _y, int _w, int _h);
+		void	drawVorticityVelocity(int _x, int _y, int _w, int _h);
+		void	drawConfinement(int _x, int _y, int _w, int _h);
+		void	drawBuoyancy(int _x, int _y, int _w, int _h);
 			
 		int		getSimulationWidth()				{ return simulationWidth; }
 		int		getSimulationHeight()				{ return simulationHeight; }

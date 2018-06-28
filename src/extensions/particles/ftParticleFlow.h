@@ -28,7 +28,7 @@ namespace flowTools {
 		void 	reset() {;}
 		
 //		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
-		void	draw(int _x, int _y, int _width, int _height, ofBlendMode _blendmode = OF_BLENDMODE_ALPHA);
+		void	draw(int _x, int _y, int _width, int _height);
 		
 		bool	isActive() {return bIsActive; }
 		void	activate(bool _state) {bIsActive.set(_state);}

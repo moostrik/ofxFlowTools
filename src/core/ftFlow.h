@@ -71,28 +71,22 @@ namespace flowTools {
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
-		void drawOutput(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			draw(_x, _y, _w, _h, _blendMode);
+		void drawOutput(int _x, int _y, int _w, int _h) {
+			draw(_x, _y, _w, _h);
 		}
 		
-		void draw(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			ofPushStyle();
-			ofEnableBlendMode(_blendMode);
+		void draw(int _x, int _y, int _w, int _h) {
 			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
 				if (drawField) { displayField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
 				else { displayScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
 			} else { outputFbo.getTexture().draw(_x, _y, _w, _h); }
-			ofPopStyle();
 		}
 		
-		void drawInput(int _x, int _y, int _w, int _h, ofBlendMode _blendMode = OF_BLENDMODE_ALPHA) {
-			ofPushStyle();
-			ofEnableBlendMode(_blendMode);
+		void drawInput(int _x, int _y, int _w, int _h) {
 			if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
 				if (drawField) { displayField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 				else { displayScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 			} else { inputFbo.getTexture().draw(_x, _y, _w, _h); }
-			ofPopStyle();
 		}
 		
 		void setFieldSize(int _w, int _h) {

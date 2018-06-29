@@ -15,13 +15,13 @@ namespace flowTools {
 		
 		~ftDrawForce(){;}
 		
-		void setup(int _width, int _height, ftFlowType _type, bool _isTemporary) ;
+		void setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary) ;
 		void applyForce(glm::vec2 _normalizedPosition);
 		void update();
 		void reset();
 		
 		void setName(string _name) {parameters.setName(_name);}
-		void setType(ftFlowType _type) { type = _type ;}
+		void setType(ftFlowForceType _type) { type = _type ;}
 		void setIsTemporary(bool _isTemporary) { reset(); isTemporary.set(_isTemporary); }
 		void setRadius(float _radius) { radius.set(_radius); }
 		void setEdge(float _edge) { edge.set(_edge) ;}
@@ -36,7 +36,7 @@ namespace flowTools {
 		int		getWidth() {return width;};
 		int		getHeight() {return height;};
 		
-		ftFlowType getType() { return type ;}
+		ftFlowForceType getType() { return type ;}
 		bool	getIsTemporary() { return isTemporary.get(); }
 		float	getRadius() { return radius.get(); }
 		float	getEdge() { return edge.get(); }
@@ -48,7 +48,7 @@ namespace flowTools {
 		ofParameterGroup	parameters;
 		
 	protected:
-		ftFlowType  type;
+		ftFlowForceType  type;
 		ofParameter<int>	drawType;
 		ofParameter<bool>	isTemporary;
 		ofParameter<glm::vec4> force;
@@ -77,7 +77,7 @@ namespace flowTools {
 		bool forceChanged;
 		bool forceApplied;
 		
-		void saveValue(ftFlowType _type, glm::vec4 _force);
+		void saveValue(ftFlowForceType _type, glm::vec4 _force);
 		
 		void resetonTempSwitch(bool &_value) {if(_value) reset(); }
 	};

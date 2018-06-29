@@ -119,35 +119,6 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-	
-	switch (key) {
-		default: break;
-		case '1': visualizationMode.set(INPUT_FOR_DEN); break;
-		case '2': visualizationMode.set(INPUT_FOR_VEL); break;
-		case '3': visualizationMode.set(FLOW_VEL); break;
-		case '4': visualizationMode.set(BRIDGE_VEL); break;
-		case '5': visualizationMode.set(BRIDGE_DEN); break;
-		case '6': visualizationMode.set(FLUID_VORT); break;
-		case '7': visualizationMode.set(FLUID_TMP); break;
-		case '8': visualizationMode.set(FLUID_PRS); break;
-		case '9': visualizationMode.set(FLUID_VEL); break;
-		case '0': visualizationMode.set(FLUID_DEN); break;
-		case 'G':
-		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
-		case 'f':
-		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
-		case 'c':
-		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
-		case 'r':
-		case 'R':
-			for (auto flow : flows) { flow->reset(); }
-			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
-			break;
-	}
-}
-
-//--------------------------------------------------------------
 void ofApp::draw(){
 	
 	ofClear(0,0);
@@ -213,5 +184,34 @@ void ofApp::drawGui() {
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	gui.draw();
 	ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+	
+	switch (key) {
+		default: break;
+		case '1': visualizationMode.set(INPUT_FOR_DEN); break;
+		case '2': visualizationMode.set(INPUT_FOR_VEL); break;
+		case '3': visualizationMode.set(FLOW_VEL); break;
+		case '4': visualizationMode.set(BRIDGE_VEL); break;
+		case '5': visualizationMode.set(BRIDGE_DEN); break;
+		case '6': visualizationMode.set(FLUID_VORT); break;
+		case '7': visualizationMode.set(FLUID_TMP); break;
+		case '8': visualizationMode.set(FLUID_PRS); break;
+		case '9': visualizationMode.set(FLUID_VEL); break;
+		case '0': visualizationMode.set(FLUID_DEN); break;
+		case 'G':
+		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
+		case 'f':
+		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
+		case 'c':
+		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
+		case 'r':
+		case 'R':
+			for (auto flow : flows) { flow->reset(); }
+			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
+			break;
+	}
 }
 

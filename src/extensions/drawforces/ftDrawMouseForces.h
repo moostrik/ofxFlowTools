@@ -21,7 +21,7 @@ namespace flowTools {
 		int					getNumForces() { return numDrawForces; }
 		
 		bool				didChange(int _index);
-		ftFlowType			getType(int _index);
+		ftFlowForceType			getType(int _index);
 		ofTexture&			getTextureReference(int _index);
 		float				getStrength(int _index);
 		

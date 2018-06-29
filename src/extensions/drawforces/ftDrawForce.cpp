@@ -46,7 +46,7 @@ namespace flowTools {
 		parameters.add(doReset.set("reset", false));
 	}
 		
-	void ftDrawForce::setup(int _width, int _height, ftFlowType _type, bool _isTemporary) {
+	void ftDrawForce::setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary) {
 		width = _width;
 		height = _height;
 		type = _type;
@@ -172,7 +172,7 @@ namespace flowTools {
 		forceApplied = true;
 	}
 	
-	void ftDrawForce::saveValue(ftFlowType _type, glm::vec4 _force) {
+	void ftDrawForce::saveValue(ftFlowForceType _type, glm::vec4 _force) {
 		switch (_type) {
 			case FT_DENSITY:
 				density.set(ofFloatColor(_force.x, _force.y, _force.z, _force.w));

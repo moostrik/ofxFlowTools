@@ -293,7 +293,7 @@ namespace flowTools {
 		}
 	}
 	
-	GLint ftUtil::getInternalFormatFromType(flowTools::ftFlowType _type) {
+	GLint ftUtil::getInternalFormatFromType(flowTools::ftFlowForceType _type) {
 		switch(_type) {
 			case FT_DENSITY:
 				return GL_RGBA32F;

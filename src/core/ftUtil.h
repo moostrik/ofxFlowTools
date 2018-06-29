@@ -6,7 +6,7 @@
 
 namespace flowTools {
 	
-	enum ftFlowType{
+	enum ftFlowForceType{
 		FT_NONE = 0,
 		FT_INPUT,			// 3 channel, char
 		FT_DENSITY,			// 4 channel, float
@@ -79,8 +79,8 @@ namespace flowTools {
 		// get if internalFormat is a float;
 		static bool isFloat(GLint _format);
 		
-		// get internatFormat from ftFlowType;
-		static GLint getInternalFormatFromType(ftFlowType _type);
+		// get internatFormat from ftFlowForceType;
+		static GLint getInternalFormatFromType(ftFlowForceType _type);
 		
 	protected:
 	};

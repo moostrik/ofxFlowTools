@@ -71,7 +71,7 @@ namespace flowTools {
 		for(int i=0; i<getNumForces(); i++) {
 			ofEnableBlendMode(_blendmode);
 			if (didChange(i)) {
-				ftFlowType dfType = getType(i);
+				ftFlowForceType dfType = getType(i);
 				if (dfType == FT_DENSITY)
 					getTextureReference(i).draw(_x, _y, _w, _h);
 			}
@@ -92,7 +92,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	ftFlowType ftDrawMouseForces::getType(int _index) {
+	ftFlowForceType ftDrawMouseForces::getType(int _index) {
 		if (_index < 0 || _index >= numDrawForces) {
 			ofLogWarning("ftDrawMouseForces::getDrawForceType: index out of range");
 			return FT_NONE;

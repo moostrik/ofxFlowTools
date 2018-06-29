@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-//	ofSetVerticalSync(false);
+	//	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	densityWidth = 1280;
@@ -11,13 +11,16 @@ void ofApp::setup(){
 	// process all but the density on 16th resolution
 	flowWidth = densityWidth / 4;
 	flowHeight = densityHeight / 4;
-	fieldWidth = flowWidth / 2;
-	fieldHeight = flowWidth / 2;
+	windowWidth = ofGetWindowWidth();
+	windowHeight = ofGetWindowHeight();
 	
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridge.setup(flowWidth, flowHeight);
 	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidSimulation.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	
+	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	flowParticles.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridge);
@@ -26,23 +29,13 @@ void ofApp::setup(){
 	
 	flowToolsLogo.load("flowtools.png");
 	fluidSimulation.addObstacle(flowToolsLogo.getTexture());
-	
-	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	
-	flowParticles.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	flowParticles.setObstacle(flowToolsLogo.getTexture());
 	
-	// CAMERA
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
 	ftUtil::zero(cameraFbo);
 	
-	// GUI
 	setupGui();
-	
-	// DRAW
-	windowWidth = ofGetWindowWidth();
-	windowHeight = ofGetWindowHeight();
 }
 
 //--------------------------------------------------------------
@@ -53,24 +46,25 @@ void ofApp::setupGui() {
 	gui.setDefaultFillColor(ofColor(160, 160, 160, 160));
 	gui.add(guiFPS.set("average FPS", 0, 0, 60));
 	gui.add(guiMinFPS.set("minimum FPS", 0, 0, 60));
-	gui.add(doFullScreen.set("fullscreen (F)", false));
-	doFullScreen.addListener(this, &ofApp::setFullScreen);
+	gui.add(toggleFullScreen.set("fullscreen (F)", false));
+	toggleFullScreen.addListener(this, &ofApp::toggleFullScreenListener);
 	gui.add(toggleGuiDraw.set("show gui (G)", false));
-	gui.add(doFlipCamera.set("flip camera", true));
-	gui.add(doDrawCamera.set("draw camera (C)", true));
+	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	
-	visualizeParameters.setName("flow visualisation");
-	visualizeParameters.add(drawMode.set("draw mode", FT_FLUID_DENSITY, FT_NONE, FT_FLUID_DENSITY));
-	visualizeParameters.add(drawName.set("MODE", "Fluid Density"));
-	visualizeParameters.add(showField.set("show field", false));
-	visualizeParameters.add(visualizeScale.set("scale", 0.3, 0.1, 3.0));
-	drawMode.addListener(this, &ofApp::drawModeListener);
-	showField.addListener(this, &ofApp::showFieldListener);
-	visualizeScale.addListener(this, &ofApp::visualizeScaleListener);
+	visualizationParameters.setName("visualization");
+	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
+	visualizationParameters.add(visualizationName.set("name", "Fluid Density"));
+	visualizationParameters.add(toggleVisualizationField.set("show field", false));
+	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
+	visualizationParameters.add(visualizationSize.set("size", flowWidth / 2, flowWidth / 4, flowWidth));
+	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
+	toggleVisualizationField.addListener(this, &ofApp::toggleVisualizationFieldListener);
+	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
+	visualizationSize.addListener(this, &ofApp::visualizationSizeListener);
 	
 	bool s = true;
 	switchGuiColor(s = !s);
-	gui.add(visualizeParameters);
+	gui.add(visualizationParameters);
 	switchGuiColor(s = !s);
 	gui.add(opticalFlow.getParameters());
 	switchGuiColor(s = !s);
@@ -83,7 +77,7 @@ void ofApp::setupGui() {
 	gui.add(flowMouse.getParameters());
 	switchGuiColor(s = !s);
 	gui.add(flowParticles.getParameters());
-
+	
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
 		gui.saveToFile("settings.xml");
@@ -92,8 +86,6 @@ void ofApp::setupGui() {
 	
 	gui.minimizeAll();
 	toggleGuiDraw = true;
-	
-	lastTime = ofGetElapsedTimef();
 }
 
 
@@ -114,30 +106,23 @@ void ofApp::update(){
 	float dt = 1.0 / max(ofGetFrameRate(), 1.f); // more smooth as 'real' deltaTime.
 	
 	simpleCam.update();
-	
 	if (simpleCam.isFrameNew()) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.begin();
-		if (doFlipCamera)
-			simpleCam.draw(cameraFbo.getWidth(), 0, -cameraFbo.getWidth(), cameraFbo.getHeight());  // Flip Horizontal
-		else
-			simpleCam.draw(0, 0, cameraFbo.getWidth(), cameraFbo.getHeight());
+		simpleCam.draw(cameraFbo.getWidth(), 0, -cameraFbo.getWidth(), cameraFbo.getHeight());  // draw flipped
 		cameraFbo.end();
-		ofPopStyle();
 		
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-//	flowMouse.update(dt);
-//	for (int i=0; i<flowMouse.getNumForces(); i++) {
-//		if (flowMouse.didChange(i)) {
-//			flowCore.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-//			if (flowMouse.getType(i) == FT_FLUID_VELOCITY) {
-//				flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-//			}
-//		}
-//	}
+		flowMouse.update(dt);
+		for (int i=0; i<flowMouse.getNumForces(); i++) {
+			if (flowMouse.didChange(i)) {
+				fluidSimulation.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+				if (flowMouse.getType(i) == FT_VELOCITY) {
+					flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
+				}
+			}
+		}
 	
 	opticalFlow.update();
 	velocityBridge.setInput(opticalFlow.getVelocity());
@@ -159,65 +144,33 @@ void ofApp::update(){
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-	
-	switch (key) {
-		default: break;
-		case '1': drawMode.set(FT_INPUT_FOR_DENSITY); break;
-		case '2': drawMode.set(FT_INPUT_FOR_VELOCITY); break;
-		case '3': drawMode.set(FT_FLOW_VELOCITY); break;
-		case '4': drawMode.set(FT_BRIDGE_VELOCITY); break;
-		case '5': drawMode.set(FT_BRIDGE_DENSITY); break;
-		case '6': drawMode.set(FT_FLUID_VORTICITY); break;
-		case '7': drawMode.set(FT_FLUID_TEMPERATURE); break;
-		case '8': drawMode.set(FT_FLUID_PRESSURE); break;
-		case '9': drawMode.set(FT_FLUID_VELOCITY); break;
-		case '0': drawMode.set(FT_FLUID_DENSITY); break;
-		case 'G':
-		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
-		case 'f':
-		case 'F': doFullScreen.set(!doFullScreen.get()); break;
-		case 'c':
-		case 'C': doDrawCamera.set(!doDrawCamera.get()); break;
-		case 'r':
-		case 'R':
-			for (auto flow : flows) { flow->reset(); }
-			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
-			flowMouse.reset();
-			flowParticles.reset();
-			break;
-	}
-}
-
-//--------------------------------------------------------------
 void ofApp::draw(){
+	
 	ofClear(0,0);
 	
 	ofPushStyle();
-	if (doDrawCamera.get()) {
+	if (toggleCameraDraw.get()) {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		cameraFbo.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	switch(drawMode.get()) {
-		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
-		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
-		case FT_FLOW_VELOCITY: 		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_DENSITY: 	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_TEMPERATURE: break;
-		case FT_BRIDGE_PRESSURE: 	break;
-		case FT_OBSTACLE_TEMPORARY: break;
-		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_DENSITY: 		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_NONE:
+	switch(visualizationMode.get()) {
+		case INPUT_FOR_DEN:	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
+		case INPUT_FOR_VEL: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
+		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_VEL:	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_DEN:	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_TMP:	break;
+		case BRIDGE_PRS:	break;
+		case OBSTACLE:		fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DIVE:	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
+		case FLUID_TMP:		fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
+		case FLUID_PRS:		fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VEL:		fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DEN:		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
 		default: break;
 	}
 	
@@ -226,12 +179,12 @@ void ofApp::draw(){
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
-	ofPopStyle();
 	
-	ofPopStyle();
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {
 		drawGui();
 	}
+	ofPopStyle();
 }
 
 //--------------------------------------------------------------
@@ -239,16 +192,21 @@ void ofApp::drawGui() {
 	guiFPS = (int)(ofGetFrameRate() + 0.5);
 	
 	// calculate minimum fps
-	deltaTime = ofGetElapsedTimef() - lastTime;
+	float deltaTime = ofGetElapsedTimef() - lastTime;
 	lastTime = ofGetElapsedTimef();
 	deltaTimeDeque.push_back(deltaTime);
-	while (deltaTimeDeque.size() > guiFPS.get()) { deltaTimeDeque.pop_front(); }
+	
+	while (deltaTimeDeque.size() > guiFPS.get())
+		deltaTimeDeque.pop_front();
 	
 	float longestTime = 0;
 	for (int i=0; i<deltaTimeDeque.size(); i++){
-		if (deltaTimeDeque[i] > longestTime) { longestTime = deltaTimeDeque[i]; }
+		if (deltaTimeDeque[i] > longestTime)
+			longestTime = deltaTimeDeque[i];
 	}
+	
 	guiMinFPS.set(1.0 / longestTime);
+	
 	
 	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -256,3 +214,30 @@ void ofApp::drawGui() {
 	ofPopStyle();
 }
 
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+	switch (key) {
+		default: break;
+		case '1': visualizationMode.set(INPUT_FOR_DEN); break;
+		case '2': visualizationMode.set(INPUT_FOR_VEL); break;
+		case '3': visualizationMode.set(FLOW_VEL); break;
+		case '4': visualizationMode.set(BRIDGE_VEL); break;
+		case '5': visualizationMode.set(BRIDGE_DEN); break;
+		case '6': visualizationMode.set(FLUID_VORT); break;
+		case '7': visualizationMode.set(FLUID_TMP); break;
+		case '8': visualizationMode.set(FLUID_PRS); break;
+		case '9': visualizationMode.set(FLUID_VEL); break;
+		case '0': visualizationMode.set(FLUID_DEN); break;
+		case 'G':
+		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
+		case 'f':
+		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
+		case 'c':
+		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
+		case 'r':
+		case 'R':
+			for (auto flow : flows) { flow->reset(); }
+			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
+			break;
+	}
+}

@@ -18,7 +18,7 @@ namespace flowTools {
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
-		void	addFlow(ftFlowType _type, ofTexture& _tex, float _strength  = 1.0);
+		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
 		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
 		void	setObstacle (ofTexture& _tex) ;

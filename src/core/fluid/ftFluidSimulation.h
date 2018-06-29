@@ -30,6 +30,7 @@ namespace flowTools {
 		void	reset();
 		void	resetBackground();
 		
+		void 	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addDensity(ofTexture& _tex, float _strength  = 1.0);
 		void	addVelocity(ofTexture& _tex, float _strength  = 1.0);
 		void	addTemperature(ofTexture& _tex, float _strength  = 1.0);

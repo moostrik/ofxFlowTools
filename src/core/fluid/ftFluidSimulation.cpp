@@ -332,6 +332,20 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+	void ftFluidSimulation::addFlow(flowTools::ftFlowForceType _type, ofTexture &_tex, float _strength) {
+		switch (_type) {
+			case FT_VELOCITY:		addVelocity(_tex); break;
+			case FT_DENSITY:		addDensity(_tex); break;
+			case FT_TEMPERATURE:	addTemperature(_tex); break;
+			case FT_PRESSURE:		addPressure(_tex); break;
+			case FT_OBSTACLE:		addTempObstacle(_tex); break;
+			default:
+				ofLogWarning("ftCore: addFlow") << "no method to add flow of type " << _type;
+				break;
+		}
+	}
+	
+	//--------------------------------------------------------------
 	void ftFluidSimulation::addDensity(ofTexture & _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

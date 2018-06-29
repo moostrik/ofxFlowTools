@@ -2,32 +2,20 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofFbo.h"
 #include "ftSwapFbo.h"
 
 namespace flowTools {
 	
 	enum ftFlowType{
-		FT_NONE	= 0,
-		FT_INPUT_FOR_VELOCITY,
-		FT_INPUT_FOR_DENSITY,
-		FT_FLOW_VELOCITY,
-		FT_BRIDGE_VELOCITY,
-		FT_BRIDGE_DENSITY,
-		FT_BRIDGE_TEMPERATURE,
-		FT_BRIDGE_PRESSURE,
-		FT_OBSTACLE_TEMPORARY,
-		FT_OBSTACLE_CONSTANT,
-		FT_FLUID_BUOYANCY,
-		FT_FLUID_VORTICITY,
-		FT_FLUID_DIVERGENCE,
-		FT_FLUID_TEMPERATURE,
-		FT_FLUID_PRESSURE,
-		FT_FLUID_VELOCITY,
-		FT_FLUID_DENSITY,
+		FT_NONE = 0,
+		FT_INPUT,			// 3 channel, char
+		FT_DENSITY,			// 4 channel, float
+		FT_VELOCITY,		// 2 channel, float
+		FT_VELOCITY_NORM,	// 2 channel, float, normalized to range 0...1
+		FT_TEMPERATURE,		// 1 channel, float
+		FT_PRESSURE,		// 1 channel, float
+		FT_OBSTACLE			// 1 channel, char
 	};
-	const vector<string> ftFlowNames({"none", "input for velocity", "input for density", "optical flow", "bridge velocity", "bridge density", "bridge temperature", "bridge pressure", "obstacle temporary", "obstacle continuous", "fluid buoyancy", "fluid vorticity", "fluid divergence", "fluid temperature", "fluid pressure", "fluid velocity", "fluid density"});
-		
 	
 	class ftUtil {
 	public:
@@ -90,6 +78,9 @@ namespace flowTools {
 		
 		// get if internalFormat is a float;
 		static bool isFloat(GLint _format);
+		
+		// get internatFormat from ftFlowType;
+		static GLint getInternalFormatFromType(ftFlowType _type);
 		
 	protected:
 	};

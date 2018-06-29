@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>60</average_FPS>
-	<minimum_FPS>43.8974</minimum_FPS>
+	<average_FPS>39</average_FPS>
+	<minimum_FPS>15.4013</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
-	<draw_camera__C_>1</draw_camera__C_>
+	<draw_camera__C_>0</draw_camera__C_>
 	<ofxFlowTools>
-		<draw_mode>11</draw_mode>
-		<MODE>Optical Flow   (9)</MODE>
 		<optical_flow>
 			<threshold>0.05</threshold>
 			<force>2.99042</force>
@@ -93,7 +91,7 @@
 		</flow_visualisation>
 	</flow_core>
 	<optical_flow>
-		<threshold>0.02</threshold>
+		<threshold>0</threshold>
 	</optical_flow>
 	<flow_velocity>
 		<trail>0.25</trail>
@@ -137,10 +135,10 @@
 		<density_from_vorticity>-0.1</density_from_vorticity>
 	</fluid_solver>
 	<visualization>
-		<mode>15</mode>
-		<MODE>fluid velocity</MODE>
 		<show_field>1</show_field>
-		<scale>0.3</scale>
+		<scale>3</scale>
 		<size>160</size>
+		<mode>14</mode>
+		<name>Fluid Density</name>
 	</visualization>
 </settings>

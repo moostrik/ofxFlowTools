@@ -165,13 +165,13 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftParticleFlow::addFlow(flowTools::ftFlowType _type, ofTexture &_tex, float _strength) {
 		switch (_type) {
-			case FT_FLOW_VELOCITY:
+			case FT_VELOCITY_NORM:
 				addFlowVelocity(_tex, _strength);
 				break;
-			case FT_FLUID_VELOCITY:
+			case FT_VELOCITY:
 				addFluidVelocity(_tex, _strength);
 				break;
-			case FT_OBSTACLE_CONSTANT:
+			case FT_OBSTACLE:
 				setObstacle(_tex);
 			default:
 				break;

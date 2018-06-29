@@ -48,8 +48,8 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	
 	visualizationParameters.setName("visualization");
-	visualizationParameters.add(visualizationMode.set("mode", FT_FLUID_DENSITY, FT_NONE, FT_FLUID_DENSITY));
-	visualizationParameters.add(visualizationName.set("MODE", "Fluid Density"));
+	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
+	visualizationParameters.add(visualizationName.set("name", "Fluid Density"));
 	visualizationParameters.add(toggleVisualizationField.set("show field", false));
 	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
 	visualizationParameters.add(visualizationSize.set("size", flowWidth / 2, flowWidth / 4, flowWidth));
@@ -123,16 +123,16 @@ void ofApp::keyPressed(int key){
 	
 	switch (key) {
 		default: break;
-		case '1': visualizationMode.set(FT_INPUT_FOR_DENSITY); break;
-		case '2': visualizationMode.set(FT_INPUT_FOR_VELOCITY); break;
-		case '3': visualizationMode.set(FT_FLOW_VELOCITY); break;
-		case '4': visualizationMode.set(FT_BRIDGE_VELOCITY); break;
-		case '5': visualizationMode.set(FT_BRIDGE_DENSITY); break;
-		case '6': visualizationMode.set(FT_FLUID_VORTICITY); break;
-		case '7': visualizationMode.set(FT_FLUID_TEMPERATURE); break;
-		case '8': visualizationMode.set(FT_FLUID_PRESSURE); break;
-		case '9': visualizationMode.set(FT_FLUID_VELOCITY); break;
-		case '0': visualizationMode.set(FT_FLUID_DENSITY); break;
+		case '1': visualizationMode.set(INPUT_FOR_DEN); break;
+		case '2': visualizationMode.set(INPUT_FOR_VEL); break;
+		case '3': visualizationMode.set(FLOW_VEL); break;
+		case '4': visualizationMode.set(BRIDGE_VEL); break;
+		case '5': visualizationMode.set(BRIDGE_DEN); break;
+		case '6': visualizationMode.set(FLUID_VORT); break;
+		case '7': visualizationMode.set(FLUID_TMP); break;
+		case '8': visualizationMode.set(FLUID_PRS); break;
+		case '9': visualizationMode.set(FLUID_VEL); break;
+		case '0': visualizationMode.set(FLUID_DEN); break;
 		case 'G':
 		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
 		case 'f':
@@ -160,23 +160,21 @@ void ofApp::draw(){
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	switch(visualizationMode.get()) {
-		case FT_INPUT_FOR_VELOCITY: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
-		case FT_INPUT_FOR_DENSITY: 	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
-		case FT_FLOW_VELOCITY: 		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_VELOCITY: 	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_DENSITY: 	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_BRIDGE_TEMPERATURE: break;
-		case FT_BRIDGE_PRESSURE: 	break;
-		case FT_OBSTACLE_TEMPORARY: break;
-		case FT_OBSTACLE_CONSTANT: 	fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_BUOYANCY: 	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_VORTICITY: 	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_DIVERGENCE: 	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_TEMPERATURE: 	fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_PRESSURE: 	fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_VELOCITY: 	fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
-		case FT_FLUID_DENSITY: 		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
-		case FT_NONE:
+		case INPUT_FOR_DEN:	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
+		case INPUT_FOR_VEL: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
+		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_VEL:	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_DEN:	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_TMP:	break;
+		case BRIDGE_PRS:	break;
+		case OBSTACLE:		fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DIVE:	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
+		case FLUID_TMP:		fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
+		case FLUID_PRS:		fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VEL:		fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DEN:		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
 		default: break;
 	}
 	

@@ -292,5 +292,30 @@ namespace flowTools {
 				break;
 		}
 	}
+	
+	GLint ftUtil::getInternalFormatFromType(flowTools::ftFlowType _type) {
+		switch(_type) {
+			case FT_DENSITY:
+				return GL_RGBA32F;
+				break;
+			case FT_VELOCITY:
+			case FT_VELOCITY_NORM:
+				return GL_RG32F;
+				break;
+			case FT_TEMPERATURE:
+			case FT_PRESSURE:
+				return GL_R32F;
+				break;
+			case FT_OBSTACLE:
+				return GL_R8;
+				break;
+			case FT_INPUT:
+				return GL_RGB8;
+				break;
+			case FT_NONE:
+			default:
+				return GL_NONE;
+				break;
+		}
+	}
 }
-

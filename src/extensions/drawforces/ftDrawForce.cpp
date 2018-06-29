@@ -78,16 +78,16 @@ namespace flowTools {
 		
 		glm::vec4 typeForce = force;
 		switch (type) {
-			case FT_FLUID_VELOCITY:
+			case FT_VELOCITY:
 				typeForce *= glm::vec4(width, height, 0, 1);
 				break;
-			case FT_FLUID_PRESSURE:
+			case FT_PRESSURE:
 				typeForce *= glm::vec4(100, 0, 0, 1);
 				break;
-			case FT_FLUID_TEMPERATURE:
+			case FT_TEMPERATURE:
 				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
-			case FT_OBSTACLE_TEMPORARY:
+			case FT_OBSTACLE:
 				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
 				break;
 			default:
@@ -109,48 +109,48 @@ namespace flowTools {
 	void ftDrawForce::update() {
 		switch (drawType.get()) {
 			case 1:
-				if (type != FT_FLUID_DENSITY) {
+				if (type != FT_DENSITY) {
 					saveValue(type, force);
 					setForce(density);
 					reset();
 				}
-				setType(FT_FLUID_DENSITY);
+				setType(FT_DENSITY);
 				break;
 			case 2:
-				if (type != FT_FLUID_VELOCITY) {
+				if (type != FT_VELOCITY) {
 					saveValue(type, force);
 					setForce(velocity);
 					reset();
 				}
 				force.set(glm::vec4(force.get().x, force.get().y, 0, 1));
-				setType(FT_FLUID_VELOCITY);
+				setType(FT_VELOCITY);
 				break;
 			case 3:
-				if (type != FT_FLUID_TEMPERATURE) {
+				if (type != FT_TEMPERATURE) {
 					saveValue(type, force);
 					setForce(temperature);
 					reset();
 				}
 				force.set(glm::vec4(force.get().x, 0, 0, 1));
-				setType(FT_FLUID_TEMPERATURE);
+				setType(FT_TEMPERATURE);
 				break;
 			case 4:
-				if (type != FT_FLUID_PRESSURE) {
+				if (type != FT_PRESSURE) {
 					saveValue(type, force);
 					setForce(pressure);
 					reset();
 				}
 				force.set(glm::vec4(force.get().x, 0, 0, 1));
-				setType(FT_FLUID_PRESSURE);
+				setType(FT_PRESSURE);
 				break;
 			case 5:
-				if (type != FT_OBSTACLE_TEMPORARY) {
+				if (type != FT_OBSTACLE) {
 					saveValue(type, force);
 					setForce(obstacle);
 					reset();
 				}
 				force.set(glm::vec4((int)abs(force.get().x + 0.5), 0, 0, 1));
-				setType(FT_OBSTACLE_CONSTANT);
+				setType(FT_OBSTACLE);
 				break;
 			default:
 				setType(FT_NONE);
@@ -174,19 +174,19 @@ namespace flowTools {
 	
 	void ftDrawForce::saveValue(ftFlowType _type, glm::vec4 _force) {
 		switch (_type) {
-			case FT_FLUID_DENSITY:
+			case FT_DENSITY:
 				density.set(ofFloatColor(_force.x, _force.y, _force.z, _force.w));
 				break;
-			case FT_FLUID_VELOCITY:
+			case FT_VELOCITY:
 				velocity.set(glm::vec4(_force.x, _force.y, 0, 1));
 				break;
-			case FT_FLUID_TEMPERATURE:
+			case FT_TEMPERATURE:
 				temperature.set(_force.x);
 				break;
-			case FT_FLUID_PRESSURE:
+			case FT_PRESSURE:
 				pressure.set(_force.x);
 				break;
-			case FT_OBSTACLE_TEMPORARY:
+			case FT_OBSTACLE:
 				obstacle.set(_force.x);
 				break;
 			default:

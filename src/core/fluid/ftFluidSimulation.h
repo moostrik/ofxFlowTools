@@ -151,8 +151,8 @@ namespace flowTools {
 		ftDensityFloatMultiplier	densityFloatMultiplierShader;
 		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 		
-		ftSwapFbo	temperatureFbo;
-		ftSwapFbo	pressureFbo;
+		ftPingPongFbo	temperatureFbo;
+		ftPingPongFbo	pressureFbo;
 		ofFbo		divergenceFbo;
 		ofFbo		smokeBuoyancyFbo;
 		ofFbo		vorticityFirstPassFbo;

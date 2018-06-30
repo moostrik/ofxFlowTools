@@ -191,7 +191,7 @@ namespace flowTools {
 		}
 		
 		ofShader	blurShader[2];
-		ftSwapFbo	pingPong;
+		ftPingPongFbo	pingPong;
 		
 		int		internalFormat;
 		int		width;

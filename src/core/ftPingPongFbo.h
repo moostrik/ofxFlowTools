@@ -5,7 +5,7 @@
 
 namespace flowTools {
 	
-	class ftSwapFbo : public ofFbo {
+	class ftPingPongFbo : public ofFbo {
 	public:
 		void allocate(int width, int height, int internalformat = GL_RGBA, int numSamples = 0) {
 			ofFboSettings settings;
@@ -19,7 +19,7 @@ namespace flowTools {
 		
 		void allocate(ofFboSettings _settings){
 			if (_settings.numColorbuffers != 2) {
-				ofLogError("ftSwapFbo") << "needs to be allocated with 2 color buffers";
+				ofLogError("ftPingPongFbo") << "needs to be allocated with 2 color buffers";
 				return;
 			}
 			ofFbo::allocate(_settings);

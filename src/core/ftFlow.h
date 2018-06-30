@@ -3,7 +3,7 @@
 
 #include "ofMain.h"
 #include "ftUtil.h"
-#include "ftSwapFbo.h"
+#include "ftPingPongFbo.h"
 #include "ftAddMultipliedShader.h"
 #include "ftDisplayScalar.h"
 #include "ftDisplayField.h"
@@ -44,9 +44,9 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		
-		ftSwapFbo 			inputFbo;
+		ftPingPongFbo 			inputFbo;
 		bool				bInputSet;
-		ftSwapFbo			outputFbo;
+		ftPingPongFbo			outputFbo;
 		int					width;
 		int					height;
 		int					internalFormat;

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftSwapFbo.h"
+#include "ftPingPongFbo.h"
 
 namespace flowTools {
 	
@@ -20,9 +20,9 @@ namespace flowTools {
 	class ftUtil {
 	public:
 		static void zero(ofFbo& _fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); }
-		static void zero(ftSwapFbo &_fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(0,0,0,0); _fbo.end();  }
+		static void zero(ftPingPongFbo &_fbo) { _fbo.begin(); ofClear(0,0,0,0); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(0,0,0,0); _fbo.end();  }
 		static void one(ofFbo& _fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); }
-		static void one(ftSwapFbo &_fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(255,255,255,255); _fbo.end();  }
+		static void one(ftPingPongFbo &_fbo) { _fbo.begin(); ofClear(255,255,255,255); _fbo.end(); _fbo.swap(); _fbo.begin(); ofClear(255,255,255,255); _fbo.end();  }
 		
 //		// draw texture in fbo using dimensions of texture
 //		static void draw(ofFbo& _dst, ofFbo& _src) { draw(_dst, _src.getTexture()); };

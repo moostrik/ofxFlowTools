@@ -157,8 +157,8 @@ namespace flowTools {
 		}
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 
-		ftSwapFbo& velocityFbo = inputFbo;
-		ftSwapFbo& densityFbo = outputFbo;
+		ftPingPongFbo& velocityFbo = inputFbo;
+		ftPingPongFbo& densityFbo = outputFbo;
 		
 		// CLAMP LENGTH
 //		if (maxDensity.get() > 0.0) {

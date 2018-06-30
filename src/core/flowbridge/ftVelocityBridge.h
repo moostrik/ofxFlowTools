@@ -57,7 +57,7 @@ namespace flowTools {
 		ofParameter<float>			trailWeight;
 		ofParameter<float>			blurRadius;
 		ofParameter<float>			speed;
-		ftSwapFbo					velocitySwapFbo;
+		ftPingPongFbo					velocitySwapFbo;
 		ftVelocityBridgeShader		bridgeShader;
 		ftGaussianBlurShader		blurShader;
 		ftMultiplyForceShader		multiplyShader;

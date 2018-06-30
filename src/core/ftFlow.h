@@ -44,9 +44,9 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		
-		ftPingPongFbo 			inputFbo;
+		ftPingPongFbo		inputFbo;
 		bool				bInputSet;
-		ftPingPongFbo			outputFbo;
+		ftPingPongFbo		outputFbo;
 		int					width;
 		int					height;
 		int					internalFormat;

@@ -90,14 +90,14 @@ namespace flowTools {
 		
 		ofVboMesh	particleMesh;
 		
-		ftPingPongFbo				particleAgeLifespanMassSizeSwapBuffer;
-		ftPingPongFbo				particlePositionSwapBuffer;
-		ftPingPongFbo				particleColorSwapBuffer;
+		ftPingPongFbo			particleAgeLifespanMassSizeSwapBuffer;
+		ftPingPongFbo			particlePositionSwapBuffer;
+		ftPingPongFbo			particleColorSwapBuffer;
 		
 		ofFbo					particleHomeBuffer;
-		ftPingPongFbo				flowVelocitySwapBuffer;
-		ftPingPongFbo				fluidVelocitySwapBuffer;
-		ftPingPongFbo				densitySwapBuffer;
+		ftPingPongFbo			flowVelocitySwapBuffer;
+		ftPingPongFbo			fluidVelocitySwapBuffer;
+		ftPingPongFbo			densitySwapBuffer;
 		ofFbo					obstacleBuffer;
 		
 		ftInitPositionShader	initPositionShader;

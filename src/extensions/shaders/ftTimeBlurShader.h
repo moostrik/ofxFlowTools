@@ -16,11 +16,11 @@ namespace flowTools {
 		ftTimeBlurShader(){
 			internalFormat = GL_RGBA;
 			
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			bInitialized = 1;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
-            if (bInitialized)
-                ofLogVerbose("ftTimeBlurShader initialized");
+			if (bInitialized)
+				ofLogVerbose("ftTimeBlurShader initialized");
 			else
 				ofLogWarning("ftTimeBlurShader failed to initialize");
 		}
@@ -28,59 +28,59 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			string fragmentHorizontalBlurShader = GLSL120(
-													   uniform sampler2DRect backbuffer;
-													   uniform float radius;
-													   
-													   const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
-													   
-													   void main(void) {
-														   vec2 st = gl_TexCoord[0].st;
-														   
-														   vec4 color = vec4(0.0,0.0,0.0,0.0);
-														   color += (1. / total) * texture2DRect(backbuffer, st - radius * vec2(4. / 4., 0.));
-														   color += (8. / total)  * texture2DRect(backbuffer, st - radius * vec2(3. / 4., 0.));
-														   color += (28. / total)  * texture2DRect(backbuffer, st - radius * vec2(2. / 4., 0.));
-														   color += (56. / total)  * texture2DRect(backbuffer, st - radius * vec2(1. / 4., 0.));
-														   
-														   color +=  (70. / total) * texture2DRect(backbuffer, st);
-														   
-														   color += (1. / total) * texture2DRect(backbuffer, st + radius * vec2(4. / 4., 0.));
-														   color += (8. / total)  * texture2DRect(backbuffer, st + radius * vec2(3. / 4., 0.));
-														   color += (28. / total)  * texture2DRect(backbuffer, st + radius * vec2(2. / 4., 0.));
-														   color += (56. / total)  * texture2DRect(backbuffer, st + radius * vec2(1. / 4., 0.));
-														   
-														   gl_FragColor = color;
-													   }
-													   );
+														  uniform sampler2DRect backbuffer;
+														  uniform float radius;
+														  
+														  const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
+														  
+														  void main(void) {
+															  vec2 st = gl_TexCoord[0].st;
+															  
+															  vec4 color = vec4(0.0,0.0,0.0,0.0);
+															  color += (1. / total) * texture2DRect(backbuffer, st - radius * vec2(4. / 4., 0.));
+															  color += (8. / total)  * texture2DRect(backbuffer, st - radius * vec2(3. / 4., 0.));
+															  color += (28. / total)  * texture2DRect(backbuffer, st - radius * vec2(2. / 4., 0.));
+															  color += (56. / total)  * texture2DRect(backbuffer, st - radius * vec2(1. / 4., 0.));
+															  
+															  color +=  (70. / total) * texture2DRect(backbuffer, st);
+															  
+															  color += (1. / total) * texture2DRect(backbuffer, st + radius * vec2(4. / 4., 0.));
+															  color += (8. / total)  * texture2DRect(backbuffer, st + radius * vec2(3. / 4., 0.));
+															  color += (28. / total)  * texture2DRect(backbuffer, st + radius * vec2(2. / 4., 0.));
+															  color += (56. / total)  * texture2DRect(backbuffer, st + radius * vec2(1. / 4., 0.));
+															  
+															  gl_FragColor = color;
+														  }
+														  );
 			blurShader[0].unload();
 			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
 			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL120(
-													 uniform sampler2DRect backbuffer;
-													 uniform float radius;
-													 
-													 const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
-													 
-													 void main(void) {
-														 vec2 st = gl_TexCoord[0].st;
-														 
-														 vec4 color = vec4(0.0,0.0,0.0,0.0);
-														 color += (1. / total) * texture2DRect(backbuffer, st - radius * vec2(0., 4. / 4.));
-														 color += (8. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 3. / 4.));
-														 color += (28. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 2. / 4.));
-														 color += (56. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 1. / 4.));
-														 
-														 color +=  (70. / total) * texture2DRect(backbuffer, st);
-														 
-														 color += (1. / total) * texture2DRect(backbuffer, st + radius * vec2(0., 4. / 4.));
-														 color += (8. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 3. / 4.));
-														 color += (28. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 2. / 4.));
-														 color += (56. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 1. / 4.));
-														 
-														 gl_FragColor = color;
-													 }
-													 );
+														uniform sampler2DRect backbuffer;
+														uniform float radius;
+														
+														const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
+														
+														void main(void) {
+															vec2 st = gl_TexCoord[0].st;
+															
+															vec4 color = vec4(0.0,0.0,0.0,0.0);
+															color += (1. / total) * texture2DRect(backbuffer, st - radius * vec2(0., 4. / 4.));
+															color += (8. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 3. / 4.));
+															color += (28. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 2. / 4.));
+															color += (56. / total)  * texture2DRect(backbuffer, st - radius * vec2(0., 1. / 4.));
+															
+															color +=  (70. / total) * texture2DRect(backbuffer, st);
+															
+															color += (1. / total) * texture2DRect(backbuffer, st + radius * vec2(0., 4. / 4.));
+															color += (8. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 3. / 4.));
+															color += (28. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 2. / 4.));
+															color += (56. / total)  * texture2DRect(backbuffer, st + radius * vec2(0., 1. / 4.));
+															
+															gl_FragColor = color;
+														}
+														);
 			blurShader[1].unload();
 			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
 			bInitialized *= blurShader[1].linkProgram();
@@ -89,73 +89,73 @@ namespace flowTools {
 		void glThree() {
 			
 			string fragmentHorizontalBlurShader = GLSL150(
-													   uniform sampler2DRect backbuffer;
-													   uniform float radius;
-																
-													   const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
-													   
-													   in vec2 texCoordVarying;
-													   out vec4 fragColor;
-													   
-													   void main(void) {
-														   vec2 st = texCoordVarying;
-														
-														   vec4 color = vec4(0.0,0.0,0.0,0.0);
-														   color += (1. / total) * texture(backbuffer, st - radius * vec2(4. / 4., 0.));
-														   color += (8. / total)  * texture(backbuffer, st - radius * vec2(3. / 4., 0.));
-														   color += (28. / total)  * texture(backbuffer, st - radius * vec2(2. / 4., 0.));
-														   color += (56. / total)  * texture(backbuffer, st - radius * vec2(1. / 4., 0.));
-														
-														   color +=  (70. / total) * texture(backbuffer, st);
-														
-														   color += (1. / total) * texture(backbuffer, st + radius * vec2(4. / 4., 0.));
-														   color += (8. / total)  * texture(backbuffer, st + radius * vec2(3. / 4., 0.));
-														   color += (28. / total)  * texture(backbuffer, st + radius * vec2(2. / 4., 0.));
-														   color += (56. / total)  * texture(backbuffer, st + radius * vec2(1. / 4., 0.));
-														
-														   fragColor = color;
-													   }
-													   );
+														  uniform sampler2DRect backbuffer;
+														  uniform float radius;
+														  
+														  const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
+														  
+														  in vec2 texCoordVarying;
+														  out vec4 fragColor;
+														  
+														  void main(void) {
+															  vec2 st = texCoordVarying;
+															  
+															  vec4 color = vec4(0.0,0.0,0.0,0.0);
+															  color += (1. / total) * texture(backbuffer, st - radius * vec2(4. / 4., 0.));
+															  color += (8. / total)  * texture(backbuffer, st - radius * vec2(3. / 4., 0.));
+															  color += (28. / total)  * texture(backbuffer, st - radius * vec2(2. / 4., 0.));
+															  color += (56. / total)  * texture(backbuffer, st - radius * vec2(1. / 4., 0.));
+															  
+															  color +=  (70. / total) * texture(backbuffer, st);
+															  
+															  color += (1. / total) * texture(backbuffer, st + radius * vec2(4. / 4., 0.));
+															  color += (8. / total)  * texture(backbuffer, st + radius * vec2(3. / 4., 0.));
+															  color += (28. / total)  * texture(backbuffer, st + radius * vec2(2. / 4., 0.));
+															  color += (56. / total)  * texture(backbuffer, st + radius * vec2(1. / 4., 0.));
+															  
+															  fragColor = color;
+														  }
+														  );
 			blurShader[0].unload();
 			bInitialized *= blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
 			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL150(
-													 uniform sampler2DRect backbuffer;
-													 uniform float radius;
-														  
-													 const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
-													 
-													 in vec2 texCoordVarying;
-													 out vec4 fragColor;
-													 
-													 void main(void) {
-														  vec2 st = texCoordVarying;
-														  
-														  vec4 color = vec4(0.0,0.0,0.0,0.0);
-														  color += (1. / total) * texture(backbuffer, st - radius * vec2(0., 4. / 4.));
-														  color += (8. / total)  * texture(backbuffer, st - radius * vec2(0., 3. / 4.));
-														  color += (28. / total)  * texture(backbuffer, st - radius * vec2(0., 2. / 4.));
-														  color += (56. / total)  * texture(backbuffer, st - radius * vec2(0., 1. / 4.));
-														  
-														  color +=  (70. / total) * texture(backbuffer, st);
-														  
-														  color += (1. / total) * texture(backbuffer, st + radius * vec2(0., 4. / 4.));
-														  color += (8. / total)  * texture(backbuffer, st + radius * vec2(0., 3. / 4.));
-														  color += (28. / total)  * texture(backbuffer, st + radius * vec2(0., 2. / 4.));
-														  color += (56. / total)  * texture(backbuffer, st + radius * vec2(0., 1. / 4.));
-														  
-														 fragColor = color;
-													 }
-													 );
+														uniform sampler2DRect backbuffer;
+														uniform float radius;
+														
+														const float total = (1. + 8. + 28. + 56.) * 2. + 70.;
+														
+														in vec2 texCoordVarying;
+														out vec4 fragColor;
+														
+														void main(void) {
+															vec2 st = texCoordVarying;
+															
+															vec4 color = vec4(0.0,0.0,0.0,0.0);
+															color += (1. / total) * texture(backbuffer, st - radius * vec2(0., 4. / 4.));
+															color += (8. / total)  * texture(backbuffer, st - radius * vec2(0., 3. / 4.));
+															color += (28. / total)  * texture(backbuffer, st - radius * vec2(0., 2. / 4.));
+															color += (56. / total)  * texture(backbuffer, st - radius * vec2(0., 1. / 4.));
+															
+															color +=  (70. / total) * texture(backbuffer, st);
+															
+															color += (1. / total) * texture(backbuffer, st + radius * vec2(0., 4. / 4.));
+															color += (8. / total)  * texture(backbuffer, st + radius * vec2(0., 3. / 4.));
+															color += (28. / total)  * texture(backbuffer, st + radius * vec2(0., 2. / 4.));
+															color += (56. / total)  * texture(backbuffer, st + radius * vec2(0., 1. / 4.));
+															
+															fragColor = color;
+														}
+														);
 			blurShader[1].unload();
 			bInitialized *= blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
 			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
 			bInitialized *= blurShader[1].linkProgram();
 			
 		}
-
+		
 	public:
 		
 		
@@ -214,7 +214,7 @@ namespace flowTools {
 		
 		
 		ofShader		blurShader[2];
-		ftPingPongFbo		pingPong;
+		ftPingPongFbo	pingPong;
 		ftDecayShader	decayShader;
 		
 		int		internalFormat;
@@ -223,3 +223,4 @@ namespace flowTools {
 		
 	};
 }
+

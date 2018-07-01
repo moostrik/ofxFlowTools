@@ -13,7 +13,7 @@
 
 namespace flowTools {
 	
-	class ftDensityBridge : public ftFlow {
+	class ftDensityBridgeFlow : public ftFlow {
 	public:
 		
 		void setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0){
@@ -27,12 +27,12 @@ namespace flowTools {
 			visibleFbo.allocate(_densityWidth, _densityHeight, GL_RGBA);
 			ftUtil::zero(visibleFbo);
 			
-			parameters.setName("flow density");
+			parameters.setName("density bridge");
 			parameters.add(trailWeight.set("trail", .5, 0, .99));
 			parameters.add(blurRadius.set("blur", 5, 0, 10)); // blur works funky above 5
 			parameters.add(saturation.set("saturation", 1, 0, 3));
 			//		parameters.add(hue.set("hue", 0, -.5, .5));
-			parameters.add(speed.set("speed", 8, 0, 20));
+			parameters.add(speed.set("speed", 10, 0, 20));
 		};
 		
 		void update(float _deltaTime) {
@@ -41,7 +41,7 @@ namespace flowTools {
 			resetOutput();
 			
 			if (!bInputSet || !velocityBridge.getInputSet()) {
-				ofLogVerbose("ftDensityBridge: velocity or density texture not set, can't update");
+				ofLogVerbose("ftDensityBridgeFlow: velocity or density texture not set, can't update");
 			}
 			else {
 				velocityBridge.setTrailWeight(trailWeight.get());
@@ -89,7 +89,6 @@ namespace flowTools {
 		void	setSaturation(float value)	{ saturation.set(value); }
 		void	setSpeed(float value)		{ speed.set(value); }
 		
-		
 		ofTexture& getDensity() 			{ return getOutput(); };
 		ofTexture& getLuminance()			{ return luminanceFbo.getTexture(); };
 		
@@ -105,7 +104,7 @@ namespace flowTools {
 		ofParameter<float>		saturation;
 		ofParameter<float>		speed;
 		
-		ftVelocityBridge		velocityBridge;
+		ftVelocityBridgeFlow	velocityBridge;
 		ftDensityBridgeShader 	densityBridgeShader;
 		ofFbo					luminanceFbo;
 		ftMultiplyForceShader	multiplyShader;

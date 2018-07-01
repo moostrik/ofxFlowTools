@@ -20,9 +20,9 @@
 #include "ftDensityFloatMultiplier.h"
 
 namespace flowTools {
-	class ftFluidSimulation : public ftFlow{
+	class ftFluidFlow : public ftFlow{
 	public:
-		ftFluidSimulation();
+		ftFluidFlow();
 		
 		void	setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0);
 		void	update(float _deltaTime = -1);

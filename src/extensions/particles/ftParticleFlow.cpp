@@ -156,7 +156,7 @@ namespace flowTools {
 		if (isActive()) {
 			ofPushView();
 			ofTranslate(_x, _y);
-			ofScale(_width / numParticlesX, _height / numParticlesY);
+			ofScale(_width / (float)numParticlesX, _height / (float)numParticlesY);
 			drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.getTexture(), particleAgeLifespanMassSizeSwapBuffer.getTexture(), twinkleSpeed.get());
 			ofPopView();
 		}

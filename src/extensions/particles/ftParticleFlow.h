@@ -60,35 +60,26 @@ namespace flowTools {
 		ofParameterGroup& getParameters() { return parameters; }
 		
 	private:
-		ofParameterGroup 	parameters;
-		ofParameter<bool>	bIsActive;
-		ofParameter<float>	speed;
-		ofParameter<float>	cellSize;
-		ofParameter<float>	birthChance;
-		ofParameter<float>	birthVelocityChance;
-		ofParameter<float>	lifeSpan;
-		ofParameter<float>	lifeSpanSpread;
-		ofParameter<float>	mass;
-		ofParameter<float>	massSpread;
-		ofParameter<float>	size;
-		ofParameter<float>	sizeSpread;
-		ofParameter<float>	twinkleSpeed;
-		ofParameter<glm::vec2>gravity;
+		ofParameterGroup 		parameters;
+		ofParameter<bool>		bIsActive;
+		ofParameter<float>		speed;
+		ofParameter<float>		cellSize;
+		ofParameter<float>		birthChance;
+		ofParameter<float>		birthVelocityChance;
+		ofParameter<float>		lifeSpan;
+		ofParameter<float>		lifeSpanSpread;
+		ofParameter<float>		mass;
+		ofParameter<float>		massSpread;
+		ofParameter<float>		size;
+		ofParameter<float>		sizeSpread;
+		ofParameter<float>		twinkleSpeed;
+		ofParameter<glm::vec2>	gravity;
 		
-		float	simulationWidth;
-		float	simulationHeight;
-		float	numParticlesX;
-		float	numParticlesY;
-		int		numParticles;
-		float	deltaTime;
-		float	lastTime;
-		float	timeStep;
+		float	simulationWidth,simulationHeight;
+		int		numParticlesX, numParticlesY, numParticles;
+		float	deltaTime, lastTime, timeStep;
 		
-		ofTexture *flowVelocityTexture;
-		ofTexture *fluidVelocityTexture;
-		ofTexture *colorTexture;
-		
-		ofVboMesh	particleMesh;
+		ofVboMesh				particleMesh;
 		
 		ftPingPongFbo			particleAgeLifespanMassSizeSwapBuffer;
 		ftPingPongFbo			particlePositionSwapBuffer;

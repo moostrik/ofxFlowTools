@@ -36,9 +36,9 @@
 #include "ftPingPongFbo.h"
 
 #include "ftOpticalFlow.h"
-#include "ftVelocityBridge.h"
-#include "ftDensityBridge.h"
-#include "ftFluidSimulation.h"
+#include "ftVelocityBridgeFlow.h"
+#include "ftDensityBridgeFlow.h"
+#include "ftFluidFlow.h"
 
 // EXTENTION
 #include "ftDrawMouseForces.h"

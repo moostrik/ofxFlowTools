@@ -11,7 +11,7 @@
 
 namespace flowTools {
 	
-	class ftVelocityBridge : public ftFlow {
+	class ftVelocityBridgeFlow : public ftFlow {
 	public:
 		void setup(int _width, int _height){
 			ftFlow::allocate(_width, _height, GL_RG32F);
@@ -19,10 +19,10 @@ namespace flowTools {
 			velocitySwapFbo.allocate(width, height, internalFormat);
 			ftUtil::zero(velocitySwapFbo);
 			
-			parameters.setName("flow velocity");
+			parameters.setName("velocity bridge");
 			parameters.add(trailWeight.set("trail", .25, 0, .99));
 			parameters.add(blurRadius.set("blur", 2.5, 0, 10));
-			parameters.add(speed.set("speed", 30, .1, 100));
+			parameters.add(speed.set("speed", 50, .1, 100));
 		};
 		
 		void update(float _deltaTime)  {

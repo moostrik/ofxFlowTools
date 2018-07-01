@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftFluidSimulation
+ *  ftFluidFlow
  *
  *  Created by Matthias Oostrik on 03/16.14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -34,11 +34,11 @@
  * 
  *  ************************************************************************************ */
 
-#include "ftFluidSimulation.h"
+#include "ftFluidFlow.h"
 
 namespace flowTools {
 	
-	ftFluidSimulation::ftFluidSimulation(){
+	ftFluidFlow::ftFluidFlow(){
 		
 		parameters.setName("fluid solver");
 		parameters.add(doReset.set("reset", false));
@@ -72,7 +72,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {
+	void ftFluidFlow::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {
 		if (_densityWidth == 0 ) _densityWidth = _flowWidth;
 		if (_densityHeight == 0 ) _densityHeight = _flowHeight;
 		
@@ -123,7 +123,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::update(float _deltaTime){
+	void ftFluidFlow::update(float _deltaTime){
 		float time = ofGetElapsedTimef();
 		if (_deltaTime != -1)
 			deltaTime = _deltaTime;
@@ -332,7 +332,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addFlow(flowTools::ftFlowForceType _type, ofTexture &_tex, float _strength) {
+	void ftFluidFlow::addFlow(flowTools::ftFlowForceType _type, ofTexture &_tex, float _strength) {
 		switch (_type) {
 			case FT_VELOCITY:		addVelocity(_tex); break;
 			case FT_DENSITY:		addDensity(_tex); break;
@@ -346,7 +346,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addDensity(ofTexture & _tex, float _strength){
+	void ftFluidFlow::addDensity(ofTexture & _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		outputFbo.swap();
@@ -359,7 +359,7 @@ namespace flowTools {
 	};
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addVelocity(ofTexture & _tex, float _strength) {
+	void ftFluidFlow::addVelocity(ofTexture & _tex, float _strength) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		inputFbo.swap();
@@ -372,7 +372,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addTemperature(ofTexture & _tex, float _strength){
+	void ftFluidFlow::addTemperature(ofTexture & _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		temperatureFbo.swap();
@@ -385,7 +385,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addPressure(ofTexture& _tex, float _strength){
+	void ftFluidFlow::addPressure(ofTexture& _tex, float _strength){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(addPressureFbo);
@@ -401,7 +401,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addObstacle(ofTexture & _obstacleTexture){
+	void ftFluidFlow::addObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		ftUtil::stretch(obstacleFbo, _obstacleTexture);
@@ -409,7 +409,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::addTempObstacle(ofTexture & _obstacleTexture){
+	void ftFluidFlow::addTempObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		ftUtil::stretch(addTempObstacleFbo, _obstacleTexture);
@@ -418,59 +418,59 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawDensity(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawDensity(int _x, int _y, int _w, int _h){
 		outputFbo.getTexture().draw(_x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawVelocity(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawVelocity(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawPressure(int _x, int _y, int _w, int _h) {
+	void ftFluidFlow::drawPressure(int _x, int _y, int _w, int _h) {
 		if (toggleVisualisationField) { visualizeField.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawTemperature(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawTemperature(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawDivergence(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawDivergence(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawObstacles(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawObstacles(int _x, int _y, int _w, int _h){
 		combinedObstacleFbo.draw(_x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawVorticityVelocity(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawVorticityVelocity(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawConfinement(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawConfinement(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::drawBuoyancy(int _x, int _y, int _w, int _h){
+	void ftFluidFlow::drawBuoyancy(int _x, int _y, int _w, int _h){
 		if (toggleVisualisationField) { visualizeField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
 		else { visualizeScalar.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::reset() {
+	void ftFluidFlow::reset() {
 		ftFlow::reset();
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
@@ -479,13 +479,13 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::resetBackground() {
+	void ftFluidFlow::resetBackground() {
 		ftUtil::zero(obstacleFbo);
 		createEdgeImage(obstacleFbo);
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
-	void ftFluidSimulation::createEdgeImage(ofFbo &_Fbo, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
+	void ftFluidFlow::createEdgeImage(ofFbo &_Fbo, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		_Fbo.begin();

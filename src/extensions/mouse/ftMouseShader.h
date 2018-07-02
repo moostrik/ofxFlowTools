@@ -6,16 +6,16 @@
 
 namespace flowTools {
 
-	class ftDrawForceShader : public ftShader {
+	class ftMouseShader : public ftShader {
 	public:
-		ftDrawForceShader() {
+		ftMouseShader() {
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
             if (bInitialized)
-                ofLogVerbose("ftDrawForceShader initialized");
+                ofLogVerbose("ftMouseShader initialized");
 			else
-				ofLogWarning("ftDrawForceShader failed to initialize");
+				ofLogWarning("ftMouseShader failed to initialize");
 		}
 		
 	protected:

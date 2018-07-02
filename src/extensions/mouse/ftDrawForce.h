@@ -2,84 +2,86 @@
 
 #include "ofMain.h"
 #include "ftUtil.h"
-#include "ftDrawForceShader.h"
+#include "ftFlow.h"
+#include "ftMouseShader.h"
 
 
 namespace flowTools {
 	
 	
-	class ftDrawForce {
+	class ftMouseFlow : public ftFlow{
 	public:
 		
-		ftDrawForce();
+		ftMouseFlow();
+		~ftMouseFlow(){;}
 		
-		~ftDrawForce(){;}
-		
-		void setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary) ;
-		void applyForce(glm::vec2 _normalizedPosition);
+		void setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary = true) ;
 		void update();
 		void reset();
 		
-		void setName(string _name) {parameters.setName(_name);}
-		void setType(ftFlowForceType _type) { type = _type ;}
-		void setIsTemporary(bool _isTemporary) { reset(); isTemporary.set(_isTemporary); }
-		void setRadius(float _radius) { radius.set(_radius); }
-		void setEdge(float _edge) { edge.set(_edge) ;}
-		void setStrength(float _strength) { strength = _strength; if (!isTemporary) forceChanged = true;}
-		void setForce(float _force) {force = glm::vec4(_force, 0.0, 0.0, 1.0);}
-		void setForce(glm::vec2 _force) {force = glm::vec4(_force.x, _force.y, 0.0, 1.0);}
-		void setForce(glm::vec3 _force) {force = glm::vec4(_force.x, _force.y, _force.z, 1.0);}
-		void setForce(glm::vec4 _force) {force = glm::vec4(_force.x, _force.y, _force.z, _force.w);}
-		void setForce(ofFloatColor _force) {force = glm::vec4(_force.r, _force.g, _force.b, _force.a);}
-		void setForce(ofColor _force) {force = glm::vec4(_force.r / 255.0, _force.g / 255.0, _force.b / 255.0, _force.a / 255.0);}
+		void setName(string _name) 				{parameters.setName(_name);}
 		
-		int		getWidth() {return width;};
-		int		getHeight() {return height;};
+		void setType(ftFlowForceType _type) 	{ pType.set(_type) ;}
+		void setIsTemporary(bool _isTemporary) 	{ reset(); pIsTemporary.set(_isTemporary); }
+		void setRadius(float _radius) 			{ radius.set(_radius); }
+		void setEdge(float _edge) 				{ edge.set(_edge) ;}
+		void setStrength(float _strength)		{ strength = _strength; if (!pIsTemporary) bHasChanged = true; }
 		
-		ftFlowForceType getType() { return type ;}
-		bool	getIsTemporary() { return isTemporary.get(); }
-		float	getRadius() { return radius.get(); }
-		float	getEdge() { return edge.get(); }
-		float	getStrength() { return strength.get(); }
-		glm::vec4	getForce() { return force.get(); }
-		ofTexture&	getTexture() {return forceBuffer.getTexture();}
-		bool	didChange() {return forceChanged;}
 		
-		ofParameterGroup	parameters;
+		ftFlowForceType 	getType() 			{ return type; }
+		bool				getIsTemporary() 	{ return pIsTemporary.get(); }
+		float				getRadius() 		{ return radius.get(); }
+		float				getEdge() 			{ return edge.get(); }
+		float				getStrength()		{ return strength.get(); }
+		
+		bool				didChange() 		{ return bHasChanged;}
+//		glm::vec4			getForce() 			{ return force.get(); }
+		ofTexture&			getTexture() 		{ return outputFbo.getTexture();}
+		
+		ofParameterGroup&	getParameters() 	{ return parameters; }
+		
+		
+		void applyForce(glm::vec2 _normalizedPosition);
 		
 	protected:
-		ftFlowForceType  type;
-		ofParameter<int>	drawType;
-		ofParameter<bool>	isTemporary;
-		ofParameter<glm::vec4> force;
-		ofParameter<float>	strength;
-		ofParameter<float>	radius;
-		ofParameter<float>	edge;
-		ofParameter<bool>	doReset;
+		ofParameterGroup		parameters;
+		ofParameter<int>		pType;
+		ofParameter<string>		pTypeName;
+		ofParameter<bool>		pIsTemporary;
+		ofParameter<glm::vec4> 	pForce;
+		ofParameter<float>		strength;
+		ofParameter<float>		radius;
+		ofParameter<float>		edge;
+		ofParameter<bool>		doReset;
 		
-		ftDrawForceShader	drawForceShader;
+		void pTypeListener(int &_value);
+		void pIsTemporaryListener(bool &_value) { reset(); }
+		void pForceListener(glm::vec4 &_value);
 		
-		ofFbo				forceBuffer;
 		
+		ftFlowForceType  	type;
+		ftMouseShader		mouseShader;
 		
-		ofParameter<ofFloatColor>	density;
-		ofParameter<glm::vec2>		velocity;
-		ofParameter<float>			temperature;
-		ofParameter<float>			pressure;
-		ofParameter<bool>			obstacle;
+		glm::vec4	density;
+		glm::vec4	input;
+		glm::vec4	velocity;
+		glm::vec4	temperature;
+		glm::vec4	pressure;
+		glm::vec4	obstacle;
 		
-		int width;
-		int height;
+		void		mouseMoved(ofMouseEventArgs & mouse);
+		void		mouseDragged(ofMouseEventArgs & mouse);
 		
-		glm::vec2	absolutePosition;
-		float	absoluteRadius;
+		glm::vec2	lastNormalizedMouse;
+		bool		lastNormalizedMouseSet;
 		
-		bool forceChanged;
-		bool forceApplied;
+		bool		bHasChanged;
+		bool		bForceSet;
+		bool		bForceApplied;
 		
-		void saveValue(ftFlowForceType _type, glm::vec4 _force);
+		void 		saveValue(ftFlowForceType _type, glm::vec4 _force);
+		glm::vec4	loadValue(ftFlowForceType _type);
 		
-		void resetonTempSwitch(bool &_value) {if(_value) reset(); }
 	};
 }
 

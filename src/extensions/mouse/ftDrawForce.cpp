@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftDrawForce
+ *  ftMouseFlow
  *
  *  Created by Matthias Oostrik on 03/16/14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -30,65 +30,110 @@
  *
  *  ************************************************************************************ */
 
-#include "ftDrawForce.h"
+#include "ftMouseFlow.h"
 
 namespace flowTools {
 	
-	ftDrawForce::ftDrawForce() {
+	ftMouseFlow::ftMouseFlow() {
+		ofAddListener(ofEvents().mouseMoved, this, &ftMouseFlow::mouseMoved);
+		ofAddListener(ofEvents().mouseDragged, this, &ftMouseFlow::mouseDragged);
+		
 		parameters.setName("draw force");
-		parameters.add(drawType.set("non/den/vel/tem/prs/ob", 0, 0, 5));
-		parameters.add(isTemporary.set("is temporary", true));
-		isTemporary.addListener(this, &ftDrawForce::resetonTempSwitch);
-		parameters.add(force.set("force", glm::vec4(1,1,1,1), glm::vec4(-1,-1,-1,-1), glm::vec4(1,1,1,1)));
+		parameters.add(pType.set("type", FT_NONE, FT_NONE, FT_OBSTACLE));
+		pType.addListener(this, &ftMouseFlow::pTypeListener);
+		parameters.add(pTypeName.set("type name","none"));
+		parameters.add(pIsTemporary.set("is temporary", true));
+		pIsTemporary.addListener(this, &ftMouseFlow::pIsTemporaryListener);
+		parameters.add(pForce.set("force", glm::vec4(1,1,1,1), glm::vec4(-1,-1,-1,-1), glm::vec4(1,1,1,1)));
+		pForce.addListener(this, &ftMouseFlow::pForceListener);
 		parameters.add(strength.set("strength", 1, 0, 5));
 		parameters.add(radius.set("radius", 0.035, 0, .1));
 		parameters.add(edge.set("edge", 1.0, 0, 1));
 		parameters.add(doReset.set("reset", false));
 	}
-		
-	void ftDrawForce::setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary) {
-		width = _width;
-		height = _height;
-		type = _type;
-		drawType.set(type);
-		isTemporary.set(_isTemporary);
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::setup(int _width, int _height, ftFlowForceType _type, bool _isTemporary) {
+		ftFlow::allocate(_width, _height, GL_RGBA32F);
+		pType.set(_type);
+		pIsTemporary.set(_isTemporary);
 			
-		forceBuffer.allocate(width, height, GL_RGBA32F);
-		ftUtil::zero(forceBuffer);
-			
-		density = ofFloatColor(1,1,1,1);
-		velocity = glm::vec2(0,0);
-		temperature = 1;
-		pressure = -1;
-		obstacle = true;
+		density		= glm::vec4(1,1,1,1);
+		input 		= glm::vec4(1,1,1,1);
+		velocity 	= glm::vec4(0,0,0,0);
+		temperature	= glm::vec4(1,0,0,0);
+		pressure 	= glm::vec4(1,0,0,0);
+		obstacle 	= glm::vec4(1,0,0,0);
 		
-		forceChanged = false;
-		forceApplied = false;
+		bHasChanged = false;
+		bForceSet = false;
+		bForceApplied = false;
 	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::update() {
+		if (bForceApplied || (bForceSet && !pIsTemporary)) {
+			bHasChanged = true; }
+		else {
+			bHasChanged = false;
+			if (pIsTemporary) { reset(); }
+		}
+		bForceApplied = false;
+		bForceSet = false;
+	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::mouseDragged( ofMouseEventArgs& mouse ) {
+		glm::vec2 normalizedMouse;
 		
-	void ftDrawForce::applyForce(glm::vec2 _normalizedPosition) {
-		absolutePosition = _normalizedPosition * glm::vec2(width, height);
+		normalizedMouse = glm::vec2 (mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
+		if (!lastNormalizedMouseSet) {
+			lastNormalizedMouseSet = true;
+			lastNormalizedMouse = normalizedMouse;
+			return;
+		}
 		
-		absoluteRadius = radius * width;
+		if (type == FT_VELOCITY) {
+			pForce = glm::vec4(glm::vec2(normalizedMouse - lastNormalizedMouse), 0.0, 0.0);
+		}
+		applyForce(normalizedMouse);
 		
-		if (isTemporary && !forceApplied) // && allow for multiple temporal forces
-			ftUtil::zero(forceBuffer);
+		lastNormalizedMouse = normalizedMouse;
 		
-//		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::mouseMoved( ofMouseEventArgs& mouse ){
+		glm::vec2 normalizedMouse;
+		normalizedMouse = glm::vec2(mouse.x / (float)ofGetWindowWidth(), mouse.y / (float)ofGetWindowHeight());
+		lastNormalizedMouse = normalizedMouse;
+	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::applyForce(glm::vec2 _normalizedPosition) {
 		
-		glm::vec4 typeForce = force;
+		glm::vec2 absolutePosition = _normalizedPosition * glm::vec2(width, height);
+		float absoluteRadius = radius * width;
+		
+		glm::vec4 typeForce = glm::vec4(0,0,0,0);
 		switch (type) {
+			case FT_DENSITY:
+				typeForce = pForce.get();
+				break;
+			case FT_INPUT:
+				typeForce = pForce.get();
+				break;
 			case FT_VELOCITY:
-				typeForce *= glm::vec4(width, height, 0, 1);
+				typeForce = pForce.get() * glm::vec4(width, height, 0, 0);
 				break;
 			case FT_PRESSURE:
-				typeForce *= glm::vec4(100, 0, 0, 1);
+				typeForce = pForce.get() * glm::vec4(100, 0, 0, 0);
 				break;
 			case FT_TEMPERATURE:
-				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
+				typeForce = pForce.get();
 				break;
 			case FT_OBSTACLE:
-				typeForce = glm::vec4(force.get().x, force.get().x, force.get().x, 1);
+				typeForce = pForce.get();
 				break;
 			default:
 				break;
@@ -96,102 +141,85 @@ namespace flowTools {
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		drawForceShader.update(forceBuffer,
-								typeForce,
-								absolutePosition,
-								absoluteRadius,
-								edge);
+		mouseShader.update(outputFbo,
+						   typeForce,
+						   absolutePosition,
+						   absoluteRadius,
+						   edge);
 	
 		ofPopStyle();
-		forceApplied = true;
+		bForceApplied = true;
 	}
 	
-	void ftDrawForce::update() {
-		switch (drawType.get()) {
-			case 1:
-				if (type != FT_DENSITY) {
-					saveValue(type, force);
-					setForce(density);
-					reset();
-				}
-				setType(FT_DENSITY);
-				break;
-			case 2:
-				if (type != FT_VELOCITY) {
-					saveValue(type, force);
-					setForce(velocity);
-					reset();
-				}
-				force.set(glm::vec4(force.get().x, force.get().y, 0, 1));
-				setType(FT_VELOCITY);
-				break;
-			case 3:
-				if (type != FT_TEMPERATURE) {
-					saveValue(type, force);
-					setForce(temperature);
-					reset();
-				}
-				force.set(glm::vec4(force.get().x, 0, 0, 1));
-				setType(FT_TEMPERATURE);
-				break;
-			case 4:
-				if (type != FT_PRESSURE) {
-					saveValue(type, force);
-					setForce(pressure);
-					reset();
-				}
-				force.set(glm::vec4(force.get().x, 0, 0, 1));
-				setType(FT_PRESSURE);
-				break;
-			case 5:
-				if (type != FT_OBSTACLE) {
-					saveValue(type, force);
-					setForce(obstacle);
-					reset();
-				}
-				force.set(glm::vec4((int)abs(force.get().x + 0.5), 0, 0, 1));
-				setType(FT_OBSTACLE);
-				break;
-			default:
-				setType(FT_NONE);
-				break;
-		}
-		
-		if(doReset) {
-			reset();
-			doReset.set(false);
-		}
-		if (forceApplied) forceChanged = true;
-		else if (isTemporary) forceChanged = false;
-		forceApplied = false;
-	}
-	
-	void ftDrawForce::reset() {
-		ftUtil::zero(forceBuffer);
-		forceChanged = false;
-		forceApplied = true;
-	}
-	
-	void ftDrawForce::saveValue(ftFlowForceType _type, glm::vec4 _force) {
-		switch (_type) {
-			case FT_DENSITY:
-				density.set(ofFloatColor(_force.x, _force.y, _force.z, _force.w));
+	void ftMouseFlow::pForceListener(glm::vec4 &_value) {
+		switch (type) {
+			case FT_INPUT:
+				_value = glm::vec4(_value.x, _value.y, _value.z, 1.0);
 				break;
 			case FT_VELOCITY:
-				velocity.set(glm::vec4(_force.x, _force.y, 0, 1));
-				break;
-			case FT_TEMPERATURE:
-				temperature.set(_force.x);
+				_value *= glm::vec4(1,1,0,0);
 				break;
 			case FT_PRESSURE:
-				pressure.set(_force.x);
+				_value *= glm::vec4(1,0,0,0);
+				break;
+			case FT_TEMPERATURE:
+				_value *= glm::vec4(1,0,0,0);
 				break;
 			case FT_OBSTACLE:
-				obstacle.set(_force.x);
+				_value = glm::vec4(1,0,0,0);
 				break;
 			default:
 				break;
 		}
+		bForceSet = true;
 	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::pTypeListener(int &_value) {
+		ftFlowForceType newType = static_cast<ftFlowForceType>(_value);
+		
+		pTypeName.set(ftFlowForceNames[_value]);
+		if (type != newType) {
+			saveValue(type, pForce);
+			reset();
+			type = newType;
+			pForce = loadValue(type);
+		}
+	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::reset() {
+		ftFlow::reset();
+		bHasChanged = false;
+	}
+	
+	//--------------------------------------------------------------
+	void ftMouseFlow::saveValue(ftFlowForceType _type, glm::vec4 _force) {
+		switch (_type) {
+			case FT_DENSITY:		density = _force;		break;
+			case FT_INPUT:			input = _force; 		break;
+			case FT_VELOCITY:		velocity = _force; 		break;
+			case FT_TEMPERATURE:	temperature = _force;	break;
+			case FT_PRESSURE:		pressure = _force; 		break;
+			case FT_OBSTACLE:
+			case FT_NONE:
+			default:										break;
+		}
+	}
+	
+	//--------------------------------------------------------------
+	glm::vec4 ftMouseFlow::loadValue(ftFlowForceType _type) {
+		switch (_type) {
+			case FT_DENSITY:		return density;				break;
+			case FT_INPUT:			return input;				break;
+			case FT_VELOCITY:		return velocity;			break;
+			case FT_TEMPERATURE:	return temperature;			break;
+			case FT_PRESSURE:		return pressure;			break;
+			case FT_OBSTACLE:		return glm::vec4(1,0,0,0);	break;
+			case FT_NONE:
+			default:				return glm::vec4(0);		break;
+		}
+	}
+	
 }
 

@@ -21,19 +21,19 @@ public:
 	
 	int		densityWidth, densityHeight, flowWidth, flowHeight, windowWidth, windowHeight;
 	
-	vector< ftFlow* >	flows;
-	ftOpticalFlow		opticalFlow;
-	ftVelocityBridge	velocityBridge;
-	ftDensityBridge		densityBridge;
-	ftFluidSimulation	fluidSimulation;
-	ofImage				flowToolsLogo;
+	vector< ftFlow* >		flows;
+	ftOpticalFlow			opticalFlow;
+	ftVelocityBridgeFlow	velocityBridge;
+	ftDensityBridgeFlow		densityBridge;
+	ftFluidFlow				fluid;
+	ofImage					flowToolsLogo;
 	
-	ofParameterGroup	visualizationParameters;
-	ofParameter<int>	visualizationMode;
-	ofParameter<string> visualizationName;
-	ofParameter<float>	visualizationScale;
-	ofParameter<int>	visualizationSize;
-	ofParameter<bool>	toggleVisualizationField;
+	ofParameterGroup		visualizationParameters;
+	ofParameter<int>		visualizationMode;
+	ofParameter<string> 	visualizationName;
+	ofParameter<float>		visualizationScale;
+	ofParameter<int>		visualizationSize;
+	ofParameter<bool>		toggleVisualizationField;
 	void toggleVisualizationFieldListener(bool &_value)	{ for (auto flow : flows) { flow->setDrawField(_value); } }
 	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setDrawScale(_value); } }
 	void visualizationSizeListener(int& _value)			{ for (auto flow : flows) { flow->setFieldSize(_value); } }

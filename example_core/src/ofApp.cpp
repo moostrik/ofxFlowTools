@@ -17,15 +17,15 @@ void ofApp::setup(){
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridge.setup(flowWidth, flowHeight);
 	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	fluidSimulation.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	fluid.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridge);
 	flows.push_back(&densityBridge);
-	flows.push_back(&fluidSimulation);
+	flows.push_back(&fluid);
 	
 	flowToolsLogo.load("flowtools.png");
-	fluidSimulation.addObstacle(flowToolsLogo.getTexture());
+	fluid.addObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -68,7 +68,7 @@ void ofApp::setupGui() {
 	switchGuiColor(s = !s);
 	gui.add(densityBridge.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(fluidSimulation.getParameters());
+	gui.add(fluid.getParameters());
 
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -112,10 +112,10 @@ void ofApp::update(){
 	densityBridge.setDensity(cameraFbo.getTexture());
 	densityBridge.setVelocity(opticalFlow.getVelocity());
 	densityBridge.update(dt);
-	fluidSimulation.addVelocity(velocityBridge.getVelocity());
-	fluidSimulation.addDensity(densityBridge.getDensity());
-	fluidSimulation.addTemperature(densityBridge.getLuminance());
-	fluidSimulation.update(dt);
+	fluid.addVelocity(velocityBridge.getVelocity());
+	fluid.addDensity(densityBridge.getDensity());
+	fluid.addTemperature(densityBridge.getLuminance());
+	fluid.update(dt);
 }
 
 //--------------------------------------------------------------
@@ -138,14 +138,14 @@ void ofApp::draw(){
 		case BRIDGE_DEN:	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_TMP:	break;
 		case BRIDGE_PRS:	break;
-		case OBSTACLE:		fluidSimulation.drawObstacles(0, 0, windowWidth, windowHeight); break;
-		case FLUID_BUOY:	fluidSimulation.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VORT:	fluidSimulation.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DIVE:	fluidSimulation.drawDivergence(0, 0, windowWidth, windowHeight); break;
-		case FLUID_TMP:		fluidSimulation.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case FLUID_PRS:		fluidSimulation.drawPressure(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VEL:		fluidSimulation.drawVelocity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DEN:		fluidSimulation.draw(0, 0, windowWidth, windowHeight); break;
+		case OBSTACLE:		fluid.drawObstacles(0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluid.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluid.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DIVE:	fluid.drawDivergence(0, 0, windowWidth, windowHeight); break;
+		case FLUID_TMP:		fluid.drawTemperature(0, 0, windowWidth, windowHeight); break;
+		case FLUID_PRS:		fluid.drawPressure(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VEL:		fluid.drawVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DEN:		fluid.draw(0, 0, windowWidth, windowHeight); break;
 		default: break;
 	}
 	
@@ -210,7 +210,7 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			for (auto flow : flows) { flow->reset(); }
-			fluidSimulation.addObstacle(flowToolsLogo.getTexture());
+			fluid.addObstacle(flowToolsLogo.getTexture());
 			break;
 	}
 }

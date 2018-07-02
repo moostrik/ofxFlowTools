@@ -41,6 +41,6 @@
 #include "ftFluidFlow.h"
 
 // EXTENTION
-#include "ftDrawMouseForces.h"
+#include "ftMultipleMouseFlow.h"
 #include "ftParticleFlow.h"
 

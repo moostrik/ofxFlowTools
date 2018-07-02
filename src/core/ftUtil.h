@@ -11,11 +11,13 @@ namespace flowTools {
 		FT_INPUT,			// 3 channel, char
 		FT_DENSITY,			// 4 channel, float
 		FT_VELOCITY,		// 2 channel, float
-		FT_VELOCITY_NORM,	// 2 channel, float, normalized to range 0...1
 		FT_TEMPERATURE,		// 1 channel, float
 		FT_PRESSURE,		// 1 channel, float
-		FT_OBSTACLE			// 1 channel, char
+		FT_OBSTACLE,		// 1 channel, char
+		FT_VELOCITY_NORM,	// 2 channel, float, normalized to range 0...1
 	};
+	
+	const vector<string> ftFlowForceNames{"none", "input", "density", "velocity", "temperature", "pressure", "obstacle", "normalized velocity"};
 	
 	class ftUtil {
 	public:

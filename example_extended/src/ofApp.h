@@ -23,13 +23,13 @@ public:
 	
 	vector< ftFlow* >		flows;
 	ftOpticalFlow			opticalFlow;
-	ftVelocityBridgeFlow	velocityBridge;
-	ftDensityBridgeFlow		densityBridge;
-	ftFluidFlow				fluid;
-	ofImage					flowToolsLogo;
+	ftVelocityBridgeFlow	velocityBridgeFlow;
+	ftDensityBridgeFlow		densityBridgeFlow;
+	ftFluidFlow				fluidFlow;
+	ftMouseFlow				mouseFlow;
+	ftParticleFlow			particleFlow;
 	
-	ftDrawMouseForces		flowMouse;
-	ftParticleFlow			flowParticles;
+	ofImage					flowToolsLogo;
 	
 	ofParameterGroup		visualizationParameters;
 	ofParameter<int>		visualizationMode;

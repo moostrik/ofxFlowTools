@@ -15,21 +15,22 @@ void ofApp::setup(){
 	windowHeight = ofGetWindowHeight();
 	
 	opticalFlow.setup(flowWidth, flowHeight);
-	velocityBridge.setup(flowWidth, flowHeight);
-	densityBridge.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	fluid.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	velocityBridgeFlow.setup(flowWidth, flowHeight);
+	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
-	flowMouse.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	flowParticles.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	mouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
+	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
-	flows.push_back(&velocityBridge);
-	flows.push_back(&densityBridge);
-	flows.push_back(&fluid);
+	flows.push_back(&velocityBridgeFlow);
+	flows.push_back(&densityBridgeFlow);
+	flows.push_back(&fluidFlow);
+	flows.push_back(&mouseFlow);
 	
 	flowToolsLogo.load("flowtools.png");
-	fluid.addObstacle(flowToolsLogo.getTexture());
-	flowParticles.setObstacle(flowToolsLogo.getTexture());
+	fluidFlow.addObstacle(flowToolsLogo.getTexture());
+	particleFlow.setObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -53,7 +54,7 @@ void ofApp::setupGui() {
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
-	visualizationParameters.add(visualizationName.set("name", "Fluid Density"));
+	visualizationParameters.add(visualizationName.set("name", "fluidFlow Density"));
 	visualizationParameters.add(toggleVisualizationField.set("show field", false));
 	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
 	visualizationParameters.add(visualizationSize.set("size", flowWidth / 2, flowWidth / 4, flowWidth));
@@ -68,15 +69,15 @@ void ofApp::setupGui() {
 	switchGuiColor(s = !s);
 	gui.add(opticalFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(velocityBridge.getParameters());
+	gui.add(velocityBridgeFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(densityBridge.getParameters());
+	gui.add(densityBridgeFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(fluid.getParameters());
+	gui.add(fluidFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowMouse.getParameters());
+	gui.add(mouseFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(flowParticles.getParameters());
+	gui.add(particleFlow.getParameters());
 	
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -114,32 +115,38 @@ void ofApp::update(){
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-		flowMouse.update(dt);
-		for (int i=0; i<flowMouse.getNumForces(); i++) {
-			if (flowMouse.didChange(i)) {
-				fluid.addFlow(flowMouse.getType(i), flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-				if (flowMouse.getType(i) == FT_VELOCITY) {
-					flowParticles.addFlowVelocity(flowMouse.getTextureReference(i), flowMouse.getStrength(i));
-				}
-			}
+////		mouseFlow.update(dt);
+//		for (int i=0; i<mouseFlow.getNumForces(); i++) {
+//			if (mouseFlow.didChange(i)) {
+//				fluidFlow.addFlow(mouseFlow.getType(i), mouseFlow.getTextureReference(i), mouseFlow.getStrength(i));
+//				if (mouseFlow.getType(i) == FT_VELOCITY) {
+//					particleFlow.addFlowVelocity(mouseFlow.getTextureReference(i), mouseFlow.getStrength(i));
+//				}
+//			}
+	mouseFlow.update();
+	if (mouseFlow.didChange()) {
+		fluidFlow.addFlow(mouseFlow.getType(), mouseFlow.getTexture(), mouseFlow.getStrength() * dt);
+		if (mouseFlow.getType() == FT_VELOCITY) {
+			particleFlow.addFlowVelocity(mouseFlow.getTexture(), mouseFlow.getStrength());
 		}
-	
+	}
+
 	opticalFlow.update();
-	velocityBridge.setVelocity(opticalFlow.getVelocity());
-	velocityBridge.update(dt);
-	densityBridge.setDensity(cameraFbo.getTexture());
-	densityBridge.setVelocity(opticalFlow.getVelocity());
-	densityBridge.update(dt);
-	fluid.addVelocity(velocityBridge.getVelocity());
-	fluid.addDensity(densityBridge.getDensity());
-	fluid.update(dt);
+	velocityBridgeFlow.setVelocity(opticalFlow.getVelocity());
+	velocityBridgeFlow.update(dt);
+	densityBridgeFlow.setDensity(cameraFbo.getTexture());
+	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
+	densityBridgeFlow.update(dt);
+	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
+	fluidFlow.addDensity(densityBridgeFlow.getDensity());
+	fluidFlow.update(dt);
 	
-	flowParticles.setSpeed(fluid.getSpeed());
-	flowParticles.setCellSize(fluid.getCellSize());
-	flowParticles.addFlowVelocity(opticalFlow.getVelocity());
-	flowParticles.addFluidVelocity(fluid.getVelocity());
-	flowParticles.setObstacle(fluid.getObstacle());
-	flowParticles.update(dt);
+	particleFlow.setSpeed(fluidFlow.getSpeed());
+	particleFlow.setCellSize(fluidFlow.getCellSize());
+	particleFlow.addFlowVelocity(opticalFlow.getVelocity());
+	particleFlow.addFluidVelocity(fluidFlow.getVelocity());
+	particleFlow.setObstacle(fluidFlow.getObstacle());
+	particleFlow.update(dt);
 }
 
 //--------------------------------------------------------------
@@ -155,29 +162,32 @@ void ofApp::draw(){
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	switch(visualizationMode.get()) {
-		case INPUT_FOR_DEN:	densityBridge.drawInput(0, 0, windowWidth, windowHeight); break;
+		case INPUT_FOR_DEN:	densityBridgeFlow.drawInput(0, 0, windowWidth, windowHeight); break;
 		case INPUT_FOR_VEL: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
 		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_VEL:	velocityBridge.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_DEN:	densityBridge.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_VEL:	velocityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_DEN:	densityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_TMP:	break;
 		case BRIDGE_PRS:	break;
-		case OBSTACLE:		fluid.drawObstacles(0, 0, windowWidth, windowHeight); break;
-		case FLUID_BUOY:	fluid.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VORT:	fluid.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DIVE:	fluid.drawDivergence(0, 0, windowWidth, windowHeight); break;
-		case FLUID_TMP:		fluid.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case FLUID_PRS:		fluid.drawPressure(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VEL:		fluid.drawVelocity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DEN:		fluid.draw(0, 0, windowWidth, windowHeight); break;
+		case OBSTACLE:		fluidFlow.drawObstacles(0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluidFlow.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
+		case FLUID_TMP:		fluidFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
+		case FLUID_PRS:		fluidFlow.drawPressure(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VEL:		fluidFlow.drawVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_DEN:		fluidFlow.draw(0, 0, windowWidth, windowHeight); break;
 		default: break;
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	if (flowParticles.isActive()) { flowParticles.draw(0, 0, windowWidth, windowHeight); }
+	if (particleFlow.isActive()) { particleFlow.draw(0, 0, windowWidth, windowHeight); }
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	mouseFlow.draw(0, 0, windowWidth, windowHeight);
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {
@@ -236,7 +246,7 @@ void ofApp::keyPressed(int key){
 		case 'r':
 		case 'R':
 			for (auto flow : flows) { flow->reset(); }
-			fluid.addObstacle(flowToolsLogo.getTexture());
+			fluidFlow.addObstacle(flowToolsLogo.getTexture());
 			break;
 	}
 }

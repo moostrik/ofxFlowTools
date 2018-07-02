@@ -5,9 +5,10 @@
 
 namespace flowTools {
 	
-	class ftVelocityBridgeShader : public ftShader {
+	// normalized trail shader
+	class ftBridgeShader : public ftShader {
 	public:
-		ftVelocityBridgeShader(){
+		ftBridgeShader(){
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			

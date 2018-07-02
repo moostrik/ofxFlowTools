@@ -3,65 +3,51 @@
 #include "ofMain.h"
 #include "ofxFlowTools.h"
 
-#include "ftVelocityBridgeShader.h"
+#include "ftBridgeFlow.h"
 #include "ftDensityBridgeShader.h"
 #include "ftHSVShader.h"
-#include "ftGaussianBlurShader.h"
 #include "ftRGB2LuminanceShader.h"
-#include "ftMultiplyForceShader.h"
 
 
 namespace flowTools {
 	
-	class ftDensityBridgeFlow : public ftFlow {
+	class ftDensityBridgeFlow : public ftBridgeFlow {
 	public:
+		ftDensityBridgeFlow() {
+			parameters.setName("density bridge");
+			parameters.add(saturation.set("saturation", 1, 0, 3));
+			//		parameters.add(hue.set("hue", 0, -.5, .5));
+		}
 		
 		void setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0){
 			if (_densityWidth == 0 ) _densityWidth = _flowWidth;
 			if (_densityHeight == 0 ) _densityHeight = _flowHeight;
-			
-			ftFlow::allocate(_densityWidth, _densityHeight, GL_RGBA32F);
-			velocityBridge.setup(_flowWidth, _flowHeight);
-			luminanceFbo.allocate(_densityWidth, _densityHeight, GL_R32F);
-			ftUtil::zero(luminanceFbo);
+			ftBridgeFlow::allocate(_flowWidth, _flowHeight, _densityWidth, _densityHeight, GL_RGBA32F);
 			visibleFbo.allocate(_densityWidth, _densityHeight, GL_RGBA);
 			ftUtil::zero(visibleFbo);
 			
-			parameters.setName("density bridge");
-			parameters.add(trailWeight.set("trail", .5, 0, .99));
-			parameters.add(blurRadius.set("blur", 5, 0, 10)); // blur works funky above 5
-			parameters.add(saturation.set("saturation", 1, 0, 3));
-			//		parameters.add(hue.set("hue", 0, -.5, .5));
-			parameters.add(speed.set("speed", 10, 0, 20));
+			luminanceFbo.allocate(_densityWidth, _densityHeight, GL_R32F);  // should go to temperatureBridge
+			ftUtil::zero(luminanceFbo);
 		};
 		
 		void update(float _deltaTime) {
+			ftBridgeFlow::update();
+			if (!bInputSet || !bVelocityInputSet) { return; }
+			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			resetOutput();
+			densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * .1);
+			outputFbo.swap();
+			HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
 			
-			if (!bInputSet || !velocityBridge.getInputSet()) {
-				ofLogVerbose("ftDensityBridgeFlow: velocity or density texture not set, can't update");
-			}
-			else {
-				velocityBridge.setTrailWeight(trailWeight.get());
-				velocityBridge.setBlurRadius(blurRadius.get());
-				velocityBridge.update(_deltaTime);
-				
-				outputFbo.swap();
-				densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityBridge.getOutput(),  speed.get() * _deltaTime);
-				outputFbo.swap();
-				HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
-				RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
-//				resetInput();
-			}
-			
+			RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
 			ofPopStyle();
 		}
 		
 		void reset() {
-			ftFlow::reset();
-			velocityBridge.reset();
+			ftBridgeFlow::reset();
+			
 			ftUtil::zero(luminanceFbo);
 			ftUtil::zero(visibleFbo);
 		}
@@ -81,37 +67,26 @@ namespace flowTools {
 		
 		void	setDensity(ofTexture& _inputTex) 					{ setInput(_inputTex); }
 		void	addDensity(ofTexture& _inputTex, float _strength) 	{ addInput(_inputTex, _strength = 1.0); }
-		void	setVelocity(ofTexture& _inputTex) 					{ velocityBridge.setInput(_inputTex); }
-		void	addVelocity(ofTexture& _inputTex, float _strength) 	{ velocityBridge.addInput(_inputTex, _strength = 1.0); }
 		
-		void	setTrailWeight(float value)	{ trailWeight.set(value); }
-		void	setBlurRadius(float value)	{ blurRadius.set(value); }
 		void	setSaturation(float value)	{ saturation.set(value); }
-		void	setSpeed(float value)		{ speed.set(value); }
 		
 		ofTexture& getDensity() 			{ return getOutput(); };
 		ofTexture& getLuminance()			{ return luminanceFbo.getTexture(); };
 		
-		float	getTrailWeight()			{ return trailWeight.get(); }
-		float	getBlurRadius()				{ return blurRadius.get(); }
 		float	getSaturation()				{ return saturation.get(); }
-		float	getSpeed()					{ return speed.get(); }
 		
 	protected:
-		ofParameter<float>		blurRadius;
-		ofParameter<float>		trailWeight;
-//		ofParameter<float>		hue;
 		ofParameter<float>		saturation;
-		ofParameter<float>		speed;
+//		ofParameter<float>		hue;
 		
-		ftVelocityBridgeFlow	velocityBridge;
 		ftDensityBridgeShader 	densityBridgeShader;
-		ofFbo					luminanceFbo;
 		ftMultiplyForceShader	multiplyShader;
 		ofFbo					visibleFbo;
 		
 		ftHSVShader				HSVShader;
 		ftRGB2LuminanceShader	RGB2LuminanceShader;
+		
+		ofFbo					luminanceFbo;  // should go to temperatureBridge
 	};
 }
 

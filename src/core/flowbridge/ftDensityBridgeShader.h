@@ -7,6 +7,7 @@
 
 namespace flowTools {
 	
+	// alpha from velocity shader
 	class ftDensityBridgeShader : public ftShader {
 	public:
 		ftDensityBridgeShader() {

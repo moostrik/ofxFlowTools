@@ -125,7 +125,7 @@ void ofApp::update(){
 		}
 	
 	opticalFlow.update();
-	velocityBridge.setInput(opticalFlow.getVelocity());
+	velocityBridge.setVelocity(opticalFlow.getVelocity());
 	velocityBridge.update(dt);
 	densityBridge.setDensity(cameraFbo.getTexture());
 	densityBridge.setVelocity(opticalFlow.getVelocity());

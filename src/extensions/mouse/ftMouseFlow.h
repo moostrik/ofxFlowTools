@@ -19,29 +19,25 @@ namespace flowTools {
 		void update();
 		void reset();
 		
-		void setName(string _name) 				{parameters.setName(_name);}
-		
-		void setType(ftFlowForceType _type) 	{ pType.set(_type) ;}
-		void setIsTemporary(bool _isTemporary) 	{ reset(); pIsTemporary.set(_isTemporary); }
-		void setRadius(float _radius) 			{ radius.set(_radius); }
-		void setEdge(float _edge) 				{ edge.set(_edge) ;}
-		void setStrength(float _strength)		{ strength = _strength; if (!pIsTemporary) bHasChanged = true; }
-		
+		bool				didChange() 		{ return bHasChanged;}
+		ofTexture&			getTexture() 		{ return outputFbo.getTexture();}
 		
 		ftFlowForceType 	getType() 			{ return type; }
 		bool				getIsTemporary() 	{ return pIsTemporary.get(); }
+		glm::vec4			getForce() 			{ return pForce.get(); }
 		float				getRadius() 		{ return radius.get(); }
 		float				getEdge() 			{ return edge.get(); }
 		float				getStrength()		{ return strength.get(); }
 		
-		bool				didChange() 		{ return bHasChanged;}
-//		glm::vec4			getForce() 			{ return force.get(); }
-		ofTexture&			getTexture() 		{ return outputFbo.getTexture();}
+		void setType(ftFlowForceType _value) 	{ pType.set(_value) ;}
+		void setIsTemporary(bool _value) 		{ reset(); pIsTemporary.set(_value); }
+		void setForce(glm::vec4 _value) 		{ pForce.set(_value); }
+		void setRadius(float _value) 			{ radius.set(_value); }
+		void setEdge(float _value) 				{ edge.set(_value) ;}
+		void setStrength(float _value)			{ strength = _value; if (!pIsTemporary) bHasChanged = true; }
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
-		
-		
-		void applyForce(glm::vec2 _normalizedPosition);
+		void setName(string _name) 				{ parameters.setName(_name); }
 		
 	protected:
 		ofParameterGroup		parameters;
@@ -58,6 +54,7 @@ namespace flowTools {
 		void pIsTemporaryListener(bool &_value) { reset(); }
 		void pForceListener(glm::vec4 &_value);
 		
+		void applyForce(glm::vec2 _normalizedPosition);
 		
 		ftFlowForceType  	type;
 		ftMouseShader		mouseShader;
@@ -74,6 +71,7 @@ namespace flowTools {
 		
 		glm::vec2	lastNormalizedMouse;
 		bool		lastNormalizedMouseSet;
+		
 		
 		bool		bHasChanged;
 		bool		bForceSet;

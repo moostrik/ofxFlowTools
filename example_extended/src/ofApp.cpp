@@ -132,7 +132,6 @@ void ofApp::update(){
 	densityBridge.update(dt);
 	fluid.addVelocity(velocityBridge.getVelocity());
 	fluid.addDensity(densityBridge.getDensity());
-	fluid.addTemperature(densityBridge.getLuminance());
 	fluid.update(dt);
 	
 	flowParticles.setSpeed(fluid.getSpeed());

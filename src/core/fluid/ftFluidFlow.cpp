@@ -40,7 +40,7 @@ namespace flowTools {
 	
 	ftFluidFlow::ftFluidFlow(){
 		
-		parameters.setName("fluid solver");
+		parameters.setName("fluid");
 		parameters.add(doReset.set("reset", false));
 		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
@@ -51,7 +51,7 @@ namespace flowTools {
 		advancedDissipationParameters.setName("advanced dissipation");
 		advancedDissipationParameters.add(velocityOffset.set("velocity offset", -0.001, -0.01, 0.01));
 		advancedDissipationParameters.add(densityOffset.set("density offset", 0, -0.01, 0.01));
-		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0.005, -0.01, 0.01));
+//		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0.005, -0.01, 0.01));
 		advancedDissipationParameters.add(pressureOffset.set("pressure offset", 0.005, -0.01, 0.01));
 		parameters.add(advancedDissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
@@ -59,14 +59,14 @@ namespace flowTools {
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
 		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., 9.80665), ofDefaultVec2(-10, -10), ofDefaultVec2(10, 10)));
-		parameters.add(smokeBuoyancyParameters);
+//		parameters.add(smokeBuoyancyParameters);
 		maxValues.setName("maximum");
 		maxValues.add(clampForce.set("clampForce", 0.05, 0, .1));
 		maxValues.add(maxDensity.set("density", 2,0,5));
 		maxValues.add(maxVelocity.set("velocity", 4,0,10));
-		maxValues.add(maxTemperature.set("temperature", 2,0,5));
+//		maxValues.add(maxTemperature.set("temperature", 2,0,5));
 		maxValues.add(maxPressure.set("pressure", 2,0,5));
-		parameters.add(maxValues);
+//		parameters.add(maxValues);
 		parameters.add(densityFromPressure.set("density from pressure", 0, -0.1, 0.1));
 		parameters.add(densityFromVorticity.set("density from vorticity", -0.1, -0.5, 0.5));
 	}

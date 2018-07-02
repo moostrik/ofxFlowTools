@@ -9,14 +9,14 @@
 namespace flowTools {
 	
 	
-	class ftBaseMouseFlow : public ftFlow{
+	class ftMouseFlow : public ftFlow{
 	public:
 		
-		ftBaseMouseFlow();
-		~ftBaseMouseFlow(){;}
+		ftMouseFlow();
+		~ftMouseFlow(){;}
 		
-		void setup(int _width, int _height);
-		void update();
+		void setup(int _width, int _height, ftFlowForceType _type);
+		void update(float _deltaTime);
 		void reset();
 		
 		bool				didChange()			{ return bFlowChanged;}
@@ -24,14 +24,14 @@ namespace flowTools {
 		
 		ftFlowForceType 	getType()			{ return type; }
 		bool				getIsTemporary()	{ return pIsTemporary.get(); }
-		float				getRadius()			{ return radius.get(); }
-		float				getEdge()			{ return edge.get(); }
-		float				getStrength()		{ return strength.get(); }
+		float				getRadius()			{ return pRadius.get(); }
+		float				getEdge()			{ return pEdge.get(); }
+		float				getStrength()		{ return pStrength.get(); }
 		
 		void setIsTemporary(bool _value)		{ reset(); pIsTemporary.set(_value); }
-		void setRadius(float _value)			{ radius.set(_value); }
-		void setEdge(float _value)				{ edge.set(_value) ;}
-		void setStrength(float _value)			{ strength = _value; if (!pIsTemporary) bStrengthUpdated = true; }
+		void setRadius(float _value)			{ pRadius.set(_value); }
+		void setEdge(float _value)				{ pEdge.set(_value) ;}
+		void setStrength(float _value)			{ pStrength.set(_value); if (!pIsTemporary) bStrengthUpdated = true; }
 		
 		ofParameterGroup&	getParameters()		{ return parameters; }
 		void setName(string _name)				{ parameters.setName(_name); }
@@ -40,15 +40,14 @@ namespace flowTools {
 		ofParameterGroup		parameters;
 		ofParameter<bool>		pIsTemporary;
 		
-		ofParameter<float>		strength;
-		ofParameter<float>		radius;
-		ofParameter<float>		edge;
-		ofParameter<bool>		doReset;
+		ofParameter<float>		pStrength;
+		ofParameter<float>		pRadius;
+		ofParameter<float>		pEdge;
+		ofParameter<bool>		pInverse;
+		ofParameter<ofFloatColor>	pColor;
 		
 		void pTypeListener(int &_value);
 		void pIsTemporaryListener(bool &_value) { reset(); }
-		void pForceListener(glm::vec4 &_value);
-		void pColorListener(ofFloatColor &_value) { _value = ofFloatColor(1,0,0,1); }
 		
 		void drawForce(glm::vec2 _startPosition, glm::vec2 _endPosition);
 		
@@ -56,6 +55,9 @@ namespace flowTools {
 		ftMouseShader		mouseShader;
 		
 		glm::vec4	force;
+		
+//		void pDensityForceListener(ofFloatColor &_value) { force = glm::vec4(_value.r, _value.g, _value.b, _value.a); }
+		
 		
 		void		mouseMoved(ofMouseEventArgs & mouse);
 		void		mouseDragged(ofMouseEventArgs & mouse);

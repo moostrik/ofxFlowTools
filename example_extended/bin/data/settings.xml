@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>58</average_FPS>
-	<minimum_FPS>15.0909</minimum_FPS>
+	<average_FPS>45</average_FPS>
+	<minimum_FPS>24.1741</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>1</draw_camera__C_>
 	<visualization>
-		<mode>14</mode>
-		<name>Fluid Density</name>
-		<show_field>0</show_field>
+		<mode>7</mode>
+		<name>obstacle</name>
+		<show_field>1</show_field>
 		<scale>0.3</scale>
 		<size>160</size>
 	</visualization>
@@ -63,8 +63,22 @@
 			<reset>0</reset>
 		</mouse_1>
 	</mouse>
+	<density_mouse>
+		<is_temporary>1</is_temporary>
+		<speed>50</speed>
+		<radius>0.035</radius>
+		<edge>1</edge>
+		<force>0.5, 0.5, 0.5, 0.5</force>
+	</density_mouse>
+	<velocity_mouse>
+		<is_temporary>1</is_temporary>
+		<speed>50</speed>
+		<radius>0.035</radius>
+		<edge>1</edge>
+		<force>16.2106, 0</force>
+	</velocity_mouse>
 	<particle_flow>
-		<active>1</active>
+		<active>0</active>
 		<speed>100</speed>
 		<cell_size>1.25</cell_size>
 		<birth_chance>0.5</birth_chance>
@@ -78,14 +92,4 @@
 		<twinkle_speed>11</twinkle_speed>
 		<gravity>0, 0</gravity>
 	</particle_flow>
-	<draw_force>
-		<type>2</type>
-		<type_name>density</type_name>
-		<is_temporary>1</is_temporary>
-		<force>1, 1, 1, 1</force>
-		<strength>1</strength>
-		<radius>0.035</radius>
-		<edge>1</edge>
-		<reset>0</reset>
-	</draw_force>
 </settings>

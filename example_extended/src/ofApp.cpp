@@ -19,14 +19,19 @@ void ofApp::setup(){
 	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
-	mouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
+	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
+	velocityMouseFlow.setup(densityWidth, densityHeight, FT_VELOCITY);
 	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
+	flows.push_back(&densityMouseFlow);
+	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&fluidFlow);
-	flows.push_back(&mouseFlow);
+	
+	mouseFlows.push_back(&densityMouseFlow);
+	mouseFlows.push_back(&velocityMouseFlow);
 	
 	flowToolsLogo.load("flowtools.png");
 	fluidFlow.addObstacle(flowToolsLogo.getTexture());
@@ -75,7 +80,9 @@ void ofApp::setupGui() {
 	switchGuiColor(s = !s);
 	gui.add(fluidFlow.getParameters());
 	switchGuiColor(s = !s);
-	gui.add(mouseFlow.getParameters());
+	gui.add(densityMouseFlow.getParameters());
+	switchGuiColor(s = !s);
+	gui.add(velocityMouseFlow.getParameters());
 	switchGuiColor(s = !s);
 	gui.add(particleFlow.getParameters());
 	
@@ -115,19 +122,13 @@ void ofApp::update(){
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-////		mouseFlow.update(dt);
-//		for (int i=0; i<mouseFlow.getNumForces(); i++) {
-//			if (mouseFlow.didChange(i)) {
-//				fluidFlow.addFlow(mouseFlow.getType(i), mouseFlow.getTextureReference(i), mouseFlow.getStrength(i));
-//				if (mouseFlow.getType(i) == FT_VELOCITY) {
-//					particleFlow.addFlowVelocity(mouseFlow.getTextureReference(i), mouseFlow.getStrength(i));
-//				}
-//			}
-	mouseFlow.update();
-	if (mouseFlow.didChange()) {
-		fluidFlow.addFlow(mouseFlow.getType(), mouseFlow.getTexture(), mouseFlow.getStrength() * dt);
-		if (mouseFlow.getType() == FT_VELOCITY) {
-			particleFlow.addFlowVelocity(mouseFlow.getTexture(), mouseFlow.getStrength());
+	for (auto flow: mouseFlows) {
+		flow->update(dt);
+		if (flow->didChange()) {
+			fluidFlow.addFlow(flow->getType(), flow->getTexture());
+			if (flow->getType() == FT_VELOCITY) {
+				particleFlow.addFlowVelocity(flow->getTexture(), flow->getStrength());
+			}
 		}
 	}
 
@@ -186,8 +187,9 @@ void ofApp::draw(){
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	mouseFlow.draw(0, 0, windowWidth, windowHeight);
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
+	velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 	
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {

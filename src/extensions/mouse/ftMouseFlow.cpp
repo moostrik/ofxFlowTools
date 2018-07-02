@@ -1,6 +1,6 @@
 /*  ************************************************************************************
  *
- *  ftBaseMouseFlow
+ *  ftMouseFlow
  *
  *  Created by Matthias Oostrik on 03/16/14.
  *  Copyright 2014 http://www.MatthiasOostrik.com All rights reserved.
@@ -30,40 +30,78 @@
  *
  *  ************************************************************************************ */
 
-#include "ftBaseMouseFlow.h"
+#include "ftMouseFlow.h"
 
 namespace flowTools {
 	
-	ftBaseMouseFlow::ftBaseMouseFlow() {
-		ofAddListener(ofEvents().mouseMoved, this, &ftBaseMouseFlow::mouseMoved);
-		ofAddListener(ofEvents().mouseDragged, this, &ftBaseMouseFlow::mouseDragged);
+	ftMouseFlow::ftMouseFlow() {
+		ofAddListener(ofEvents().mouseMoved, this, &ftMouseFlow::mouseMoved);
+		ofAddListener(ofEvents().mouseDragged, this, &ftMouseFlow::mouseDragged);
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::setup(int _width, int _height) {
-		ftFlow::allocate(_width, _height, GL_RGBA32F);
+	void ftMouseFlow::setup(int _width, int _height, ftFlowForceType _type) {
+		type = _type;
+		ftFlow::allocate(_width, _height, ftUtil::getInternalFormatFromType(type));
+//		ftFlow::allocate(_width, _height, GL_RGBA32F);
 		
 		mousePositionsSet = false;
 		force = glm::vec4(0,0,0,0);
 		
-		parameters.setName("mouse");
-		parameters.add(doReset.set("reset", false));
 		parameters.add(pIsTemporary.set("is temporary", true));
-		pIsTemporary.addListener(this, &ftBaseMouseFlow::pIsTemporaryListener);
-		parameters.add(strength.set("strength", 1, 0, 5));
-		parameters.add(radius.set("radius", 0.035, 0, .1));
-		parameters.add(edge.set("edge", 1.0, 0, 1));
-		
+		pIsTemporary.addListener(this, &ftMouseFlow::pIsTemporaryListener);
+		parameters.add(pStrength.set("speed", 50, 0, 100));
+		parameters.add(pRadius.set("radius", 0.035, 0, .1));
+		parameters.add(pEdge.set("edge", 1.0, 0, 1));
+		parameters.add(pInverse.set("inverse", false));
+		switch (type) {
+			case FT_INPUT:
+				parameters.setName("input mouse");
+				parameters.add(pColor.set("color", ofFloatColor(.5,.5,.5,.5), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
+				break;
+			case FT_DENSITY:
+				parameters.setName("density mouse");
+				parameters.add(pColor.set("color", ofFloatColor(.5,.5,.5,.5), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
+				break;
+			case FT_VELOCITY:
+				parameters.setName("velocity mouse");
+				break;
+			case FT_PRESSURE:
+				parameters.setName("pressure mouse");
+				break;
+			case FT_TEMPERATURE:
+				parameters.setName("temperature mouse");
+				break;
+			case FT_OBSTACLE:
+				parameters.setName("obstacle mouse");
+				break;
+			default:
+				break;
+		}
+
 		bDraw = false;
 		bStrengthUpdated = false;
 		bFlowChanged = false;
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::update() {
+	void ftMouseFlow::update(float _deltaTime) {
 		bFlowChanged = false;
-		if (pIsTemporary) { reset(); }
+		if (pIsTemporary) { ftFlow::reset(); }
 		if (bDraw) {
+			switch (type) {
+				case FT_INPUT:
+					break;
+				case FT_DENSITY:
+					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * pStrength.get() * _deltaTime;
+					break;
+				case FT_VELOCITY:
+					force = glm::vec4((mousePositions[mps] - mousePositions[!mps]) * pStrength.get() * _deltaTime * ofGetFrameRate(), 0, 0);
+					break;
+				default:
+					break;
+			}
+			
 			drawForce(mousePositions[mps], mousePositions[!mps]);
 			bDraw = false;
 			bFlowChanged = true;
@@ -75,13 +113,13 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::mouseDragged( ofMouseEventArgs& _mouse ) {
+	void ftMouseFlow::mouseDragged( ofMouseEventArgs& _mouse ) {
 		mouseMoved(_mouse);
 		bDraw = true;
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::mouseMoved( ofMouseEventArgs& _mouse ){
+	void ftMouseFlow::mouseMoved( ofMouseEventArgs& _mouse ){
 		glm::vec2 normalizedMouse = glm::vec2 (_mouse.x / (float)ofGetWindowWidth(), _mouse.y / (float)ofGetWindowHeight());
 		if (!mousePositionsSet) {
 			mousePositionsSet = true;
@@ -92,22 +130,22 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::drawForce(glm::vec2 _startPosition, glm::vec2 _endPosition) {
+	void ftMouseFlow::drawForce(glm::vec2 _startPosition, glm::vec2 _endPosition) {
 		glm::vec2 absoluteStartPosition = _startPosition * glm::vec2(width, height);
 		glm::vec2 absoluteEndPosition = _endPosition * glm::vec2(width, height);
-		float absoluteRadius = radius * width;
+		float absoluteRadius = pRadius.get() * width;
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 		mouseShader.update(outputFbo,
 						   force,
 						   absoluteEndPosition,
 						   absoluteRadius,
-						   edge);
+						   pEdge.get());
 		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------
-	void ftBaseMouseFlow::reset() {
+	void ftMouseFlow::reset() {
 		ftFlow::reset();
 		bDraw = false;
 		bStrengthUpdated = false;

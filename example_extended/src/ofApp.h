@@ -26,7 +26,9 @@ public:
 	ftVelocityBridgeFlow	velocityBridgeFlow;
 	ftDensityBridgeFlow		densityBridgeFlow;
 	ftFluidFlow				fluidFlow;
-	ftMouseFlow				mouseFlow;
+	vector< ftMouseFlow* >		mouseFlows;
+	ftMouseFlow				densityMouseFlow;
+	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
 	
 	ofImage					flowToolsLogo;

@@ -13,7 +13,7 @@ namespace flowTools {
 	public:
 		
 		ftMouseFlow();
-		~ftMouseFlow(){;}
+		~ftMouseFlow();
 		
 		void setup(int _width, int _height, ftFlowForceType _type);
 		void update(float _deltaTime);
@@ -56,8 +56,6 @@ namespace flowTools {
 		
 		glm::vec4	force;
 		
-//		void pDensityForceListener(ofFloatColor &_value) { force = glm::vec4(_value.r, _value.g, _value.b, _value.a); }
-		
 		
 		void		mouseMoved(ofMouseEventArgs & mouse);
 		void		mouseDragged(ofMouseEventArgs & mouse);
@@ -66,7 +64,7 @@ namespace flowTools {
 		bool		mps;
 		bool		mousePositionsSet;
 		
-		bool		bDraw;
+		bool		bMouseDragged;
 		bool		bFlowChanged;
 		
 		void 		saveValue(ftFlowForceType _type, glm::vec4 _force);

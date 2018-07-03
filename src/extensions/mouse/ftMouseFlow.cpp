@@ -39,8 +39,17 @@ namespace flowTools {
 		ofAddListener(ofEvents().mouseDragged, this, &ftMouseFlow::mouseDragged);
 	}
 	
+	ftMouseFlow::~ftMouseFlow() {
+		ofRemoveListener(ofEvents().mouseMoved, this, &ftMouseFlow::mouseMoved);
+		ofRemoveListener(ofEvents().mouseDragged, this, &ftMouseFlow::mouseDragged);
+	}
+	
 	//--------------------------------------------------------------
 	void ftMouseFlow::setup(int _width, int _height, ftFlowForceType _type) {
+		if (_type < FT_DENSITY || _type > FT_OBSTACLE) {
+			ofLogWarning("ftMouseFlow") << "Type " << ftFlowForceNames[_type] << " not supported";
+			return;
+		}
 		type = _type;
 		ftFlow::allocate(_width, _height, ftUtil::getInternalFormatFromType(type));
 		
@@ -54,10 +63,6 @@ namespace flowTools {
 		parameters.add(pEdge.set("edge", 1.0, 0, 1));
 		parameters.add(pInverse.set("inverse", false));
 		switch (type) {
-			case FT_INPUT:
-				parameters.setName("input mouse");
-				parameters.add(pColor.set("color", ofFloatColor(.5,.5,.5,.5), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
-				break;
 			case FT_DENSITY:
 				parameters.setName("density mouse");
 				parameters.add(pColor.set("color", ofFloatColor(.5,.5,.5,.5), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
@@ -80,7 +85,7 @@ namespace flowTools {
 				break;
 		}
 
-		bDraw = false;
+		bMouseDragged = false;
 		bFlowChanged = false;
 	}
 	
@@ -88,13 +93,12 @@ namespace flowTools {
 	void ftMouseFlow::update(float _deltaTime) {
 		bFlowChanged = false;
 		if (!pPersistent) { ftFlow::reset(); }
-		if (bDraw) {
+		if (bMouseDragged) {
 			float inv = pInverse? -1: 1;
 			glm::vec2 vel = (mousePositions[mps] - mousePositions[!mps]) * inv;
 			float mag = glm::length(vel) * inv;
 			
 			switch (type) {
-				case FT_INPUT:
 				case FT_DENSITY:
 					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * mag;
 					break;
@@ -134,7 +138,7 @@ namespace flowTools {
 			
 			ofPopStyle();
 			
-			bDraw = false;
+			bMouseDragged = false;
 			bFlowChanged = true;
 		}
 		if (pPersistent) {
@@ -147,7 +151,7 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftMouseFlow::mouseDragged( ofMouseEventArgs& _mouse ) {
 		mouseMoved(_mouse);
-		bDraw = true;
+		bMouseDragged = true;
 	}
 	
 	//--------------------------------------------------------------
@@ -164,7 +168,7 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftMouseFlow::reset() {
 		ftFlow::reset();
-		bDraw = false;
+		bMouseDragged = false;
 		bFlowChanged = false;
 	}
 	

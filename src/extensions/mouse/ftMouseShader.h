@@ -39,7 +39,6 @@ namespace flowTools {
 			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			bInitialized *= shader.linkProgram();
 
-			
 		}
 		
 		void glThree() {

@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-	//	ofSetVerticalSync(false);
+	// ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	densityWidth = 1280;
@@ -18,18 +18,17 @@ void ofApp::setup(){
 	velocityBridgeFlow.setup(flowWidth, flowHeight);
 	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	
-	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
-	velocityMouseFlow.setup(densityWidth, densityHeight, FT_VELOCITY);
 	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
+	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
+	flows.push_back(&fluidFlow);
+//	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
-	flows.push_back(&fluidFlow);
-	
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
 	
@@ -56,6 +55,7 @@ void ofApp::setupGui() {
 	toggleFullScreen.addListener(this, &ofApp::toggleFullScreenListener);
 	gui.add(toggleGuiDraw.set("show gui (G)", false));
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
+	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
@@ -80,11 +80,11 @@ void ofApp::setupGui() {
 	switchGuiColor(s = !s);
 	gui.add(fluidFlow.getParameters());
 	switchGuiColor(s = !s);
+	gui.add(particleFlow.getParameters());
+	switchGuiColor(s = !s);
 	gui.add(densityMouseFlow.getParameters());
 	switchGuiColor(s = !s);
 	gui.add(velocityMouseFlow.getParameters());
-	switchGuiColor(s = !s);
-	gui.add(particleFlow.getParameters());
 	
 	// if the settings file is not present the parameters will not be set during this setup
 	if (!ofFile("settings.xml"))
@@ -127,7 +127,7 @@ void ofApp::update(){
 		if (flow->didChange()) {
 			fluidFlow.addFlow(flow->getType(), flow->getTexture());
 			if (flow->getType() == FT_VELOCITY) {
-				particleFlow.addFlowVelocity(flow->getTexture(), flow->getStrength());
+				particleFlow.addFlowVelocity(flow->getTexture());
 			}
 		}
 	}
@@ -187,12 +187,14 @@ void ofApp::draw(){
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
-	velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
+	if (toggleMouseDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
+		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
+	}
 	
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		drawGui();
 	}
 	ofPopStyle();
@@ -245,6 +247,8 @@ void ofApp::keyPressed(int key){
 		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
 		case 'c':
 		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
+		case 'm':
+		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
 		case 'r':
 		case 'R':
 			for (auto flow : flows) { flow->reset(); }

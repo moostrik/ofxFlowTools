@@ -26,7 +26,7 @@ public:
 	ftVelocityBridgeFlow	velocityBridgeFlow;
 	ftDensityBridgeFlow		densityBridgeFlow;
 	ftFluidFlow				fluidFlow;
-	vector< ftMouseFlow* >		mouseFlows;
+	vector< ftMouseFlow* >	mouseFlows;
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
@@ -46,7 +46,6 @@ public:
 	
 	ofVideoGrabber		simpleCam;
 	ofFbo				cameraFbo;
-	ofParameter<bool>	toggleCameraDraw;
 	
 	ofxPanel			gui;
 	void				setupGui();
@@ -54,6 +53,8 @@ public:
 	ofParameter<float>	guiFPS;
 	ofParameter<float>	guiMinFPS;
 	ofParameter<bool>	toggleGuiDraw;
+	ofParameter<bool>	toggleCameraDraw;
+	ofParameter<bool>	toggleMouseDraw;
 	void				drawGui();
 	deque<float>		deltaTimeDeque;
 	float				lastTime;

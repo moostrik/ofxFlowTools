@@ -340,7 +340,7 @@ namespace flowTools {
 			case FT_PRESSURE:		addPressure(_tex, _strength); 		break;
 			case FT_OBSTACLE:		addTempObstacle(_tex); 				break;
 			default:
-				ofLogWarning("ftFluidFlow: addFlow") << "no method to add flow of type " << _type;
+//				ofLogWarning("ftFluidFlow: addFlow") << "no method to add flow of type " << _type;
 				break;
 		}
 	}

@@ -63,7 +63,6 @@ namespace flowTools {
 			bridgeShader.update(velocityTrailFbo, velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
 			if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo, 1, blurRadius.get()); }
 			ftUtil::zero(velocityInputFbo);
-			
 			ofPopStyle();
 		}
 		

@@ -40,6 +40,7 @@ namespace flowTools {
 			densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * .1);
 			outputFbo.swap();
 			HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
+			resetInput();
 			
 			RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
 			ofPopStyle();
@@ -65,8 +66,8 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void	setDensity(ofTexture& _inputTex) 					{ setInput(_inputTex); }
-		void	addDensity(ofTexture& _inputTex, float _strength) 	{ addInput(_inputTex, _strength = 1.0); }
+		void	setDensity(ofTexture& _inputTex) 						{ setInput(_inputTex); }
+		void	addDensity(ofTexture& _inputTex, float _strength = 1.0)	{ addInput(_inputTex, _strength); }
 		
 		void	setSaturation(float value)	{ saturation.set(value); }
 		

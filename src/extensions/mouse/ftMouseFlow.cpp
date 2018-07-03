@@ -56,7 +56,7 @@ namespace flowTools {
 		mousePositionsSet = false;
 		force = glm::vec4(0,0,0,0);
 		
-		parameters.add(pStrength.set("speed", 50, 0, 100));
+		parameters.add(pSpeed.set("speed", 50, 0, 100));
 		parameters.add(pPersistent.set("persistent", false));
 		pPersistent.addListener(this, &ftMouseFlow::pPersistentListener);
 		parameters.add(pRadius.set("radius", 0.035, 0, .1));
@@ -79,9 +79,9 @@ namespace flowTools {
 			case FT_OBSTACLE:
 				parameters.setName("obstacle mouse");
 				pSmooth.set(0);
+				parameters.remove("inverse");
 				parameters.remove("smooth");
 				parameters.remove("speed");
-				parameters.remove("inverse");
 				break;
 			default:
 				break;
@@ -135,7 +135,7 @@ namespace flowTools {
 				addInput(inputFbo.getBackTexture());
 			} else {
 				resetOutput();
-				addOutput(inputFbo.getTexture(), pStrength.get() * _deltaTime * ofGetFrameRate());
+				addOutput(inputFbo.getTexture(), pSpeed.get() * _deltaTime * ofGetFrameRate());
 			}
 			
 			ofPopStyle();
@@ -145,7 +145,7 @@ namespace flowTools {
 		}
 		if (pPersistent) {
 			resetOutput();
-			addOutput(inputFbo.getTexture(), pStrength.get() * _deltaTime);
+			addOutput(inputFbo.getTexture(), pSpeed.get() * _deltaTime);
 			bFlowChanged = true;
 		}
 	}

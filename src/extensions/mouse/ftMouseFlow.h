@@ -26,12 +26,12 @@ namespace flowTools {
 		bool				getPersistent()		{ return pPersistent.get(); }
 		float				getRadius()			{ return pRadius.get(); }
 		float				getSmooth()			{ return pSmooth.get(); }
-		float				getStrength()		{ return pStrength.get(); }
+		float				getSpeed()			{ return pSpeed.get(); }
 		
 		void setPersistent(bool _value)			{ pPersistent.set(_value); }
 		void setRadius(float _value)			{ pRadius.set(_value); }
 		void setSmooth(float _value)			{ pSmooth.set(_value) ;}
-		void setStrength(float _value)			{ pStrength.set(_value); }
+		void setSpeed(float _value)				{ pSpeed.set(_value); }
 		
 		ofParameterGroup&	getParameters()		{ return parameters; }
 		void setName(string _name)				{ parameters.setName(_name); }
@@ -40,7 +40,7 @@ namespace flowTools {
 		ofParameterGroup		parameters;
 		ofParameter<bool>		pPersistent;
 		
-		ofParameter<float>		pStrength;
+		ofParameter<float>		pSpeed;
 		ofParameter<float>		pRadius;
 		ofParameter<float>		pSmooth;
 		ofParameter<bool>		pInverse;

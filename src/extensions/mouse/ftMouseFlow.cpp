@@ -60,7 +60,7 @@ namespace flowTools {
 		parameters.add(pPersistent.set("persistent", false));
 		pPersistent.addListener(this, &ftMouseFlow::pPersistentListener);
 		parameters.add(pRadius.set("radius", 0.035, 0, .1));
-		parameters.add(pEdge.set("edge", 1.0, 0, 1));
+		parameters.add(pSmooth.set("smooth", 1.0, 0, 1));
 		parameters.add(pInverse.set("inverse", false));
 		switch (type) {
 			case FT_DENSITY:
@@ -78,8 +78,10 @@ namespace flowTools {
 				break;
 			case FT_OBSTACLE:
 				parameters.setName("obstacle mouse");
-				parameters.remove(pStrength);
-				parameters.remove(pEdge);
+				pSmooth.set(0);
+				parameters.remove("smooth");
+				parameters.remove("speed");
+				parameters.remove("inverse");
 				break;
 			default:
 				break;
@@ -127,7 +129,7 @@ namespace flowTools {
 							   force,
 							   endPosition,
 							   radius,
-							   pEdge.get());
+							   pSmooth.get());
 			
 			if (pPersistent) {
 				addInput(inputFbo.getBackTexture());

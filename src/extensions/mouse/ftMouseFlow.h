@@ -25,12 +25,12 @@ namespace flowTools {
 		ftFlowForceType 	getType()			{ return type; }
 		bool				getPersistent()		{ return pPersistent.get(); }
 		float				getRadius()			{ return pRadius.get(); }
-		float				getEdge()			{ return pEdge.get(); }
+		float				getSmooth()			{ return pSmooth.get(); }
 		float				getStrength()		{ return pStrength.get(); }
 		
 		void setPersistent(bool _value)			{ pPersistent.set(_value); }
 		void setRadius(float _value)			{ pRadius.set(_value); }
-		void setEdge(float _value)				{ pEdge.set(_value) ;}
+		void setSmooth(float _value)			{ pSmooth.set(_value) ;}
 		void setStrength(float _value)			{ pStrength.set(_value); }
 		
 		ofParameterGroup&	getParameters()		{ return parameters; }
@@ -42,7 +42,7 @@ namespace flowTools {
 		
 		ofParameter<float>		pStrength;
 		ofParameter<float>		pRadius;
-		ofParameter<float>		pEdge;
+		ofParameter<float>		pSmooth;
 		ofParameter<bool>		pInverse;
 		ofParameter<ofFloatColor>	pColor;
 		

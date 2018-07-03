@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>45</average_FPS>
-	<minimum_FPS>24.1741</minimum_FPS>
+	<average_FPS>60</average_FPS>
+	<minimum_FPS>42.7711</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>1</draw_camera__C_>
 	<visualization>
-		<mode>7</mode>
-		<name>obstacle</name>
+		<mode>14</mode>
+		<name>fluid density</name>
 		<show_field>1</show_field>
-		<scale>0.3</scale>
+		<scale>3</scale>
 		<size>160</size>
 	</visualization>
 	<optical_flow>
@@ -65,17 +65,20 @@
 	</mouse>
 	<density_mouse>
 		<is_temporary>1</is_temporary>
-		<speed>50</speed>
-		<radius>0.035</radius>
+		<speed>33.1633</speed>
+		<radius>0.0316327</radius>
 		<edge>1</edge>
 		<force>0.5, 0.5, 0.5, 0.5</force>
+		<inverse>0</inverse>
+		<color>0.23, 0.53, 0.38, 0.33</color>
 	</density_mouse>
 	<velocity_mouse>
 		<is_temporary>1</is_temporary>
 		<speed>50</speed>
-		<radius>0.035</radius>
+		<radius>0.025</radius>
 		<edge>1</edge>
 		<force>16.2106, 0</force>
+		<inverse>0</inverse>
 	</velocity_mouse>
 	<particle_flow>
 		<active>0</active>

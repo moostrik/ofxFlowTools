@@ -23,22 +23,22 @@ namespace flowTools {
 		ofTexture&			getTexture()		{ return outputFbo.getTexture();}
 		
 		ftFlowForceType 	getType()			{ return type; }
-		bool				getIsTemporary()	{ return pIsTemporary.get(); }
+		bool				getPersistent()		{ return pPersistent.get(); }
 		float				getRadius()			{ return pRadius.get(); }
 		float				getEdge()			{ return pEdge.get(); }
 		float				getStrength()		{ return pStrength.get(); }
 		
-		void setIsTemporary(bool _value)		{ reset(); pIsTemporary.set(_value); }
+		void setPersistent(bool _value)			{ pPersistent.set(_value); }
 		void setRadius(float _value)			{ pRadius.set(_value); }
 		void setEdge(float _value)				{ pEdge.set(_value) ;}
-		void setStrength(float _value)			{ pStrength.set(_value); if (!pIsTemporary) bStrengthUpdated = true; }
+		void setStrength(float _value)			{ pStrength.set(_value); }
 		
 		ofParameterGroup&	getParameters()		{ return parameters; }
 		void setName(string _name)				{ parameters.setName(_name); }
 		
 	protected:
 		ofParameterGroup		parameters;
-		ofParameter<bool>		pIsTemporary;
+		ofParameter<bool>		pPersistent;
 		
 		ofParameter<float>		pStrength;
 		ofParameter<float>		pRadius;
@@ -47,7 +47,7 @@ namespace flowTools {
 		ofParameter<ofFloatColor>	pColor;
 		
 		void pTypeListener(int &_value);
-		void pIsTemporaryListener(bool &_value) { reset(); }
+		void pPersistentListener(bool &_value) { reset(); }
 		
 		void drawForce(glm::vec2 _startPosition, glm::vec2 _endPosition);
 		
@@ -67,7 +67,6 @@ namespace flowTools {
 		bool		mousePositionsSet;
 		
 		bool		bDraw;
-		bool		bStrengthUpdated;
 		bool		bFlowChanged;
 		
 		void 		saveValue(ftFlowForceType _type, glm::vec4 _force);

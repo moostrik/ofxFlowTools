@@ -43,14 +43,13 @@ namespace flowTools {
 	void ftMouseFlow::setup(int _width, int _height, ftFlowForceType _type) {
 		type = _type;
 		ftFlow::allocate(_width, _height, ftUtil::getInternalFormatFromType(type));
-//		ftFlow::allocate(_width, _height, GL_RGBA32F);
 		
 		mousePositionsSet = false;
 		force = glm::vec4(0,0,0,0);
 		
-		parameters.add(pIsTemporary.set("is temporary", true));
-		pIsTemporary.addListener(this, &ftMouseFlow::pIsTemporaryListener);
 		parameters.add(pStrength.set("speed", 50, 0, 100));
+		parameters.add(pPersistent.set("persistent", false));
+		pPersistent.addListener(this, &ftMouseFlow::pPersistentListener);
 		parameters.add(pRadius.set("radius", 0.035, 0, .1));
 		parameters.add(pEdge.set("edge", 1.0, 0, 1));
 		parameters.add(pInverse.set("inverse", false));
@@ -74,40 +73,73 @@ namespace flowTools {
 				break;
 			case FT_OBSTACLE:
 				parameters.setName("obstacle mouse");
+				parameters.remove(pStrength);
+				parameters.remove(pEdge);
 				break;
 			default:
 				break;
 		}
 
 		bDraw = false;
-		bStrengthUpdated = false;
 		bFlowChanged = false;
 	}
 	
 	//--------------------------------------------------------------
 	void ftMouseFlow::update(float _deltaTime) {
 		bFlowChanged = false;
-		if (pIsTemporary) { ftFlow::reset(); }
+		if (!pPersistent) { ftFlow::reset(); }
 		if (bDraw) {
+			float inv = pInverse? -1: 1;
+			glm::vec2 vel = (mousePositions[mps] - mousePositions[!mps]) * inv;
+			float mag = glm::length(vel) * inv;
+			
 			switch (type) {
 				case FT_INPUT:
-					break;
 				case FT_DENSITY:
-					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * pStrength.get() * _deltaTime;
+					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * mag;
 					break;
 				case FT_VELOCITY:
-					force = glm::vec4((mousePositions[mps] - mousePositions[!mps]) * pStrength.get() * _deltaTime * ofGetFrameRate(), 0, 0);
+					force = glm::vec4(vel, 0, 0);
+					break;
+				case FT_PRESSURE:
+				case FT_TEMPERATURE:
+					force = glm::vec4(mag, 0, 0, 0);
+					break;
+				case FT_OBSTACLE:
+					force = pInverse? glm::vec4(0, 0, 0, 0): glm::vec4(1, 0, 0, 0);
 					break;
 				default:
 					break;
 			}
 			
-			drawForce(mousePositions[mps], mousePositions[!mps]);
+			glm::vec2 startPosition = mousePositions[!mps] * glm::vec2(width, height);
+			glm::vec2 endPosition = mousePositions[mps] * glm::vec2(width, height);
+			float radius = pRadius.get() * width;
+			
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			inputFbo.swap();
+			mouseShader.update(inputFbo,
+							   force,
+							   endPosition,
+							   radius,
+							   pEdge.get());
+			
+			if (pPersistent) {
+				addInput(inputFbo.getBackTexture());
+			} else {
+				resetOutput();
+				addOutput(inputFbo.getTexture(), pStrength.get() * _deltaTime * ofGetFrameRate());
+			}
+			
+			ofPopStyle();
+			
 			bDraw = false;
 			bFlowChanged = true;
 		}
-		if (bStrengthUpdated && !pIsTemporary) {
-			bStrengthUpdated = false;
+		if (pPersistent) {
+			resetOutput();
+			addOutput(inputFbo.getTexture(), pStrength.get() * _deltaTime);
 			bFlowChanged = true;
 		}
 	}
@@ -130,25 +162,9 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftMouseFlow::drawForce(glm::vec2 _startPosition, glm::vec2 _endPosition) {
-		glm::vec2 absoluteStartPosition = _startPosition * glm::vec2(width, height);
-		glm::vec2 absoluteEndPosition = _endPosition * glm::vec2(width, height);
-		float absoluteRadius = pRadius.get() * width;
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		mouseShader.update(outputFbo,
-						   force,
-						   absoluteEndPosition,
-						   absoluteRadius,
-						   pEdge.get());
-		ofPopStyle();
-	}
-	
-	//--------------------------------------------------------------
 	void ftMouseFlow::reset() {
 		ftFlow::reset();
 		bDraw = false;
-		bStrengthUpdated = false;
 		bFlowChanged = false;
 	}
 	

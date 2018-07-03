@@ -14,9 +14,12 @@ namespace flowTools {
 	public:
 		void setup(int _width, int _height) {
 			ftFlow::allocate(_width, _height, GL_RG32F);
-			
 			inputFbo.allocate(width, height, GL_R8);
 			ftUtil::zero(inputFbo);
+			opticalFlowFbo.allocate(width, height, GL_R8);
+			ftUtil::zero(opticalFlowFbo);
+			RGB2LumFbo.allocate(width, height, GL_R8);
+			ftUtil::zero(RGB2LumFbo);
 			
 			bFirstFrame = true;
 			
@@ -40,9 +43,21 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
+			
+			
 			if (bInputSet) {
 				bInputSet = false;
-				opticalFlowShader.update(outputFbo, inputFbo.getTexture(), inputFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  power.get(), doInverseX.get(), doInverseY.get());
+				
+				opticalFlowFbo.swap();
+				ftUtil::stretch(opticalFlowFbo, inputFbo.getTexture());
+				
+				if (bFirstFrame) {
+					bFirstFrame = false;
+					opticalFlowFbo.swap();
+					ftUtil::stretch(opticalFlowFbo, opticalFlowFbo.getBackTexture());
+				}
+				
+				opticalFlowShader.update(outputFbo, opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  power.get(), doInverseX.get(), doInverseY.get());
 			}
 			
 			ofPopStyle();
@@ -51,17 +66,28 @@ namespace flowTools {
 		void setInput(ofTexture& _tex) {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			
-			inputFbo.swap();
-			if (ofGetNumChannelsFromGLFormat(_tex.getTextureData().glInternalFormat) != 1) { RGB2LumShader.update(inputFbo, _tex); }
-			else { ftUtil::stretch(inputFbo, _tex); }
-			if (bFirstFrame) { bFirstFrame = false; inputFbo.swap(); ftUtil::stretch(inputFbo, inputFbo.getBackTexture()); }
+			ftUtil::zero(inputFbo);
+			if (_tex.getTextureData().glInternalFormat != GL_R8) {
+				RGB2LumShader.update(inputFbo, _tex); }
+			else {
+				ftUtil::stretch(inputFbo, _tex);
+			}
 			bInputSet = true;
 			
 			ofPopStyle();
 		}
 		
-		void addInput(ofTexture& _tex , float _strength = 0) { ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set"; }
+		void addInput(ofTexture& _tex , float _strength = 1.0) {
+			inputFbo.swap();
+			if (_tex.getTextureData().glInternalFormat != GL_R8) {
+				RGB2LumShader.update(RGB2LumFbo, _tex);
+				AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), RGB2LumFbo.getTexture(), 1.0, _strength);
+			} else {
+				AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _tex, 1.0, _strength);
+			}
+			bInputSet = true;
+			//	ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set";
+		}
 		
 		void reset() { ftFlow::reset(); bFirstFrame = true; }
 		
@@ -92,5 +118,7 @@ namespace flowTools {
 		ftOpticalFlowShader 		opticalFlowShader;
 		ftRGB2LuminanceShader		RGB2LumShader;
 		
+		ofFbo						RGB2LumFbo;
+		ftPingPongFbo				opticalFlowFbo;
 	};
 }

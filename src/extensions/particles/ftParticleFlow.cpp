@@ -65,8 +65,8 @@ namespace flowTools {
 		
 		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F);
 		
-		fluidVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(fluidVelocityFbo);
+		fluidVelocityFbo = inputFbo;
+//		ftUtil::zero(fluidVelocityFbo);
 		flowVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		ftUtil::zero(flowVelocityFbo);
 		densityFbo.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
@@ -87,7 +87,7 @@ namespace flowTools {
 		particlePositionFbo.allocate(settings);
 		ftUtil::zero(particlePositionFbo);
 //		initPositionShader.update(*particlePositionFbo.getFbo());
-		particlePositionFbo.swap();
+//		particlePositionFbo.swap();
 		particleHomeFbo.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
 		ftUtil::zero(particleHomeFbo);
 		initPositionShader.update(particleHomeFbo);
@@ -144,6 +144,12 @@ namespace flowTools {
 			ftUtil::zero(densityFbo);
 			ftUtil::zero(obstacleFbo);
 		}
+	}
+	
+	void ftParticleFlow::reset() {
+		ftFlow::reset();
+		ftUtil::zero(particlePositionFbo);
+		ftUtil::zero(particleAgeLifespanMassSizeFbo);
 	}
 	
 	void ftParticleFlow::draw(int _x, int _y, int _width, int _height) {

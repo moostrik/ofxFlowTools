@@ -26,7 +26,7 @@ void ofApp::setup(){
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
 	flows.push_back(&fluidFlow);
-//	flows.push_back(&particleFlow);
+	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	mouseFlows.push_back(&densityMouseFlow);

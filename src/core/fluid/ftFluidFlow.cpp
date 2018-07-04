@@ -86,8 +86,7 @@ namespace flowTools {
 		int	interformatPressure = GL_R32F;
 		int	internalFormatObstacle = GL_R8;
 		
-		ftFlow::allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		outputFbo.allocate(densityWidth, densityHeight, internalFormatDensity);
+		ftFlow::allocate(simulationWidth, simulationHeight, internalFormatVelocity, densityWidth, densityHeight, internalFormatDensity);
 		
 		temperatureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);
 		ftUtil::zero(temperatureFbo);

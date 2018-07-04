@@ -25,6 +25,7 @@ namespace flowTools {
 		void	setObstacle (ofTexture& _tex) ;
 		
 		void	update(float _deltaTime);
+		void	reset();
 		
 		
 //		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}

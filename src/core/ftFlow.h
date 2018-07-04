@@ -26,7 +26,7 @@ namespace flowTools {
 		ofTexture& getOutput()	{ return outputFbo.getTexture(); }
 		ofTexture& getInput()	{ return inputFbo.getTexture(); }
 	
-		void reset() 			{ resetInput(); resetOutput(); }
+		virtual void reset() 	{ resetInput(); resetOutput(); }
 		void resetInput()		{ ftUtil::zero(inputFbo); bInputSet = false; }
 		void resetOutput()		{ ftUtil::zero(outputFbo); }
 		

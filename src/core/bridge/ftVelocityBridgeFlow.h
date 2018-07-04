@@ -18,9 +18,9 @@ namespace flowTools {
 			ftBridgeFlow::allocate(_width, _height, _width, _height, GL_RG32F);
 		};
 		
-		void update(float _deltaTime)  {
+		void update(float _deltaTime) override {
 			bInputSet = true; // input is not used as it is the same as velocityInput
-			ftBridgeFlow::update();
+			ftBridgeFlow::update(_deltaTime);
 			if (!bVelocityInputSet) { return; }
 			
 			ofPushStyle();
@@ -30,10 +30,8 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void reset() { ftBridgeFlow::reset(); }
-		
-		ofTexture&	getVelocity()	{ return getOutput(); }
-		void 	setInput(ofTexture &_texture)			{ setVelocity(_texture); }
+		ofTexture&	getVelocity() override 				{ return getOutput(); }
+		void setInput(ofTexture &_texture) override		{ setVelocity(_texture); }
 		
 	protected:
 		ftMultiplyForceShader		multiplyShader;

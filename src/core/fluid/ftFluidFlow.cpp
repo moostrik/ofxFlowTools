@@ -112,21 +112,13 @@ namespace flowTools {
 		ftUtil::zero(combinedObstacleFbo);
 		ftUtil::stretch(combinedObstacleFbo, obstacleFbo);
 		
-		deltaTime = 0;
-		lastTime = 0;
 		addTempObstacleFboDidChange = true;
 		
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::update(float _deltaTime){
-		float time = ofGetElapsedTimef();
-		if (_deltaTime != -1)
-			deltaTime = _deltaTime;
-		else
-			deltaTime = time - lastTime;
-		lastTime = time;
-		timeStep = deltaTime * speed.get();// * simulationWidth;
+		float timeStep = _deltaTime * speed.get();// * simulationWidth;
 		
 		if (doReset) {
 			doReset.set(false);
@@ -475,12 +467,6 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidFlow::resetBackground() {
-		ftUtil::zero(obstacleFbo);
-		createEdgeImage(obstacleFbo);
-		combinedObstacleNeedsToBeCleaned = true;
-	}
-	
 	void ftFluidFlow::createEdgeImage(ofFbo &_Fbo, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

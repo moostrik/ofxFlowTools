@@ -61,7 +61,7 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void setInput(ofTexture& _tex) {
+		void setInput(ofTexture& _tex) override {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftUtil::zero(inputFbo);
@@ -75,7 +75,7 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void addInput(ofTexture& _tex , float _strength = 1.0) {
+		void addInput(ofTexture& _tex , float _strength = 1.0) override {
 			inputFbo.swap();
 			if (_tex.getTextureData().glInternalFormat != GL_R8) {
 				RGB2LumShader.update(RGB2LumFbo, _tex);
@@ -87,7 +87,7 @@ namespace flowTools {
 			//	ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set";
 		}
 		
-		void reset() { ftFlow::reset(); bFirstFrame = true; }
+		void reset() override { ftFlow::reset(); bFirstFrame = true; }
 		
 		void		setStrength(float value)	{strength.set(value);}
 		void		setOffset(int value)		{offset.set(value);}

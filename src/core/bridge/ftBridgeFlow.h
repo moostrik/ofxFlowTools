@@ -20,34 +20,13 @@ namespace flowTools {
 			parameters.add(speed.set("speed", 50, .1, 100));
 		}
 		
+		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex); bVelocityInputSet = true; }
 		
-		void allocate(int _velocityWidth, int _velocityHeight, int _inputWidth, int _inputHeight, int _internalFormat){
-			ftFlow::allocate(_inputWidth, _inputHeight, _internalFormat);
-			velocityInputFbo.allocate(_velocityWidth, _velocityHeight, GL_RG32F);
-			velocityTrailFbo.allocate(_velocityWidth, _velocityHeight, GL_RG32F);
-			ftUtil::zero(velocityInputFbo);
-			ftUtil::zero(velocityTrailFbo);
-			
-		}
+		void addVelocity(ofTexture &_inputTex, float _strength) { add(velocityInputFbo, _inputTex, _strength); bVelocityInputSet = true; }
 		
-		void setVelocity(ofTexture &_inputTex) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			ftUtil::stretch(velocityInputFbo, _inputTex);
-			bVelocityInputSet = true;
-			ofPopStyle();
-		}
+		virtual ofTexture&	getVelocity()	{ return getOutput(); }
 		
-		void addVelocity(ofTexture &_inputTex, float _strength) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			inputFbo.swap();
-			AddMultipliedShader.update(velocityInputFbo, velocityInputFbo.getBackTexture(), _inputTex, 1.0, _strength);
-			bVelocityInputSet = true;
-			ofPopStyle();
-		}
-		
-		void update()  {
+		virtual void update(float _deltaTime)  {
 			if (!bInputSet) {
 				ofLogWarning("ftBridgeFlow: input texture not set, can't update");
 				return;
@@ -66,13 +45,11 @@ namespace flowTools {
 			ofPopStyle();
 		}
 		
-		void reset() { ftFlow::reset(); ftUtil::zero(velocityTrailFbo); }
+		virtual void reset() { ftFlow::reset(); ftUtil::zero(velocityTrailFbo); }
 		
 		void	setTrailWeight(float value)		{ trailWeight.set(value); }
 		void	setBlurRadius(float value)		{ blurRadius.set(value); }
 		void	setSpeed(float value)			{ speed.set(value); }
-		
-		ofTexture&	getVelocity()	{ return getOutput(); }
 		
 		float	getTrailWeight()	{ return trailWeight.get(); }
 		float	getBlurRadius()		{ return blurRadius.get(); }
@@ -88,6 +65,14 @@ namespace flowTools {
 		ftBridgeShader				bridgeShader;
 		ftGaussianBlurShader		blurShader;
 		ftMultiplyForceShader		multiplyShader;
+		
+		void allocate(int _velocityWidth, int _velocityHeight, int _inputWidth, int _inputHeight, int _internalFormat){
+			ftFlow::allocate(_inputWidth, _inputHeight, _internalFormat);
+			velocityInputFbo.allocate(_velocityWidth, _velocityHeight, GL_RG32F);
+			velocityTrailFbo.allocate(_velocityWidth, _velocityHeight, GL_RG32F);
+			ftUtil::zero(velocityInputFbo);
+			ftUtil::zero(velocityTrailFbo);
+		}
 		
 	};
 }

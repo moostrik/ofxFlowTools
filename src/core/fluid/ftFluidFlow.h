@@ -26,10 +26,9 @@ namespace flowTools {
 		
 		void	setup(int _flowWidth, int _flowHeight) { setup(_flowWidth, _flowHeight, _flowWidth, _flowHeight); }
 		void	setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight);
-		void	update(float _deltaTime = -1);
+		void	update(float _deltaTime);
 		
-		void	reset();
-		void	resetBackground();
+		void	reset() override;
 		
 		void 	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addDensity(ofTexture& _tex, float _strength  = 1.0);
@@ -49,9 +48,7 @@ namespace flowTools {
 		ofTexture&	getConfinement()		{ return vorticitySecondPassFbo.getTexture(); }
 		ofTexture&	getBuoyancy()			{ return smokeBuoyancyFbo.getTexture(); }
 		
-		void	draw() { draw(0, 0, densityWidth, densityHeight); }
-		void	draw(int _x, int _y) { draw(_x, _y, densityWidth, densityHeight); }
-		void	draw(int _x, int _y, float _w, float _h) { drawDensity (_x, _y, _w, _h) ;}
+		void	draw(int _x, int _y, int _w, int _h) override { drawDensity (_x, _y, _w, _h) ;}
 		void	drawDensity(int _x, int _y, int _w, int _h);
 		void	drawVelocity(int _x, int _y, int _w, int _h);
 		void	drawPressure(int _x, int _y, int _w, int _h);
@@ -67,7 +64,6 @@ namespace flowTools {
 		int		getDensityWidth()					{ return densityWidth; }
 		int		getDensityHeight()					{ return densityHeight; }
 		
-		float	getTimeStep()						{ return timeStep; }
 		float	getSpeed()							{ return speed.get(); }
 		float	getCellSize()						{ return cellSize.get(); }
 		float	getNumJacobiIterations()			{ return numJacobiIterations.get(); }
@@ -166,13 +162,7 @@ namespace flowTools {
 		ofFbo		combinedObstacleFbo;
 		bool		combinedObstacleNeedsToBeCleaned;
 		
-		int simulationWidth;
-		int simulationHeight;
-		int densityWidth;
-		int densityHeight;
-		float deltaTime;
-		float lastTime;
-		float timeStep;
+		int simulationWidth, simulationHeight, densityWidth, densityHeight;
 		
 		void createEdgeImage(ofFbo& _Fbo, int _edgeWidth = 1, ofColor _backgroundColor = ofColor(255, 255, 255, 255), ofColor _edgeColor = ofColor(0, 0, 0, 255));
 

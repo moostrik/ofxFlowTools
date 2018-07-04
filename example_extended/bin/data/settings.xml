@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>51.825</minimum_FPS>
+	<minimum_FPS>34.7533</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>1</draw_camera__C_>
@@ -60,8 +60,8 @@
 	</particles>
 	<density_mouse>
 		<is_temporary>1</is_temporary>
-		<speed>33.1633</speed>
-		<radius>0.0316327</radius>
+		<speed>33</speed>
+		<radius>0.1</radius>
 		<edge>1</edge>
 		<force>0.5, 0.5, 0.5, 0.5</force>
 		<inverse>0</inverse>
@@ -79,4 +79,6 @@
 		<persistent>0</persistent>
 		<smooth>1</smooth>
 	</velocity_mouse>
+	<draw_particles__P_>1</draw_particles__P_>
+	<reset__R_>0</reset__R_>
 </settings>

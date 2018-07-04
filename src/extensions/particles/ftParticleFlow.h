@@ -34,9 +34,9 @@ namespace flowTools {
 		void	setObstacle(ofTexture& _tex)								{ ftFlow::set(obstacleFbo, _tex); }
 		
 		void	update(float _deltaTime);
-		void	reset();
+		void	reset() override;
 		
-		void	draw(int _x, int _y, int _width, int _height);
+		void	draw(int _x, int _y, int _width, int _height) override;
 		
 		float	getSpeed() { return speed.get(); }
 		float	getCellSize() { return cellSize.get(); }
@@ -61,11 +61,8 @@ namespace flowTools {
 		void	setSize(float value) { size.set(value); }
 		void	setSizeSpread(float value) { sizeSpread.set(value); }
 		void	setGravity(glm::vec2 value) { gravity.set(value); }
-		
-		ofParameterGroup& getParameters() { return parameters; }
-		
+				
 	private:
-		ofParameterGroup 		parameters;
 		ofParameter<float>		speed;
 		ofParameter<float>		cellSize;
 		ofParameter<float>		birthChance;

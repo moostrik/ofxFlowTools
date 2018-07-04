@@ -17,7 +17,7 @@ namespace flowTools {
 		
 		void setup(int _width, int _height, ftFlowForceType _type);
 		void update(float _deltaTime);
-		void reset();
+		void reset() override;
 		
 		bool				didChange()			{ return bFlowChanged;}
 		ofTexture&			getTexture()		{ return outputFbo.getTexture();}
@@ -33,11 +33,9 @@ namespace flowTools {
 		void setSmooth(float _value)			{ pSmooth.set(_value) ;}
 		void setSpeed(float _value)				{ pSpeed.set(_value); }
 		
-		ofParameterGroup&	getParameters()		{ return parameters; }
 		void setName(string _name)				{ parameters.setName(_name); }
 		
 	protected:
-		ofParameterGroup		parameters;
 		ofParameter<bool>		pPersistent;
 		
 		ofParameter<float>		pSpeed;

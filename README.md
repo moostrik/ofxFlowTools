@@ -34,8 +34,12 @@ My interest in, and knowledge of, fluid simulation was hugely inspired by the wo
 FUTURE ADDITIONS / TODO
 
 first:
-- rebuild the area extension
-- rebuild the fluid
+- rebuild the area and splitvelocity extension and add to examples
+- Visualization: scalar and field in one class
+
+later:
+- rebuild the fluidFlow
+- rebuild the particleFlow
 
 maybe later:
 - Add Turing patterns: cake23.de/turing-fluid.html Beautiful!

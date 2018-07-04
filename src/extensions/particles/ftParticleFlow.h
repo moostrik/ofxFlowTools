@@ -23,12 +23,12 @@ namespace flowTools {
 		void	setFlow(ftFlowForceType _type, ofTexture& _tex);
 		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		
-		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) 	{ ftFlow::addInput(_tex, _strength); }
+		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) 	{ addInput(_tex, _strength); }
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0)		{ ftFlow::add(flowVelocityFbo, _tex, _strength); }
 		void	addDensity(ofTexture& _tex, float _strength  = 1.0) 		{ ftFlow::add(densityFbo, _tex, _strength); }
 		void	addObstacle(ofTexture& _tex)								{ ftFlow::add(obstacleFbo, _tex, 1.0); }
 		
-		void	setFluidVelocity (ofTexture& _tex) 							{ ftFlow::setInput(_tex); }
+		void	setFluidVelocity (ofTexture& _tex) 							{ setInput(_tex); }
 		void	setFlowVelocity(ofTexture& _tex)							{ ftFlow::set(flowVelocityFbo, _tex); }
 		void	setDensity(ofTexture& _tex) 								{ ftFlow::set(densityFbo, _tex); }
 		void	setObstacle(ofTexture& _tex)								{ ftFlow::set(obstacleFbo, _tex); }
@@ -37,9 +37,6 @@ namespace flowTools {
 		void	reset();
 		
 		void	draw(int _x, int _y, int _width, int _height);
-		
-		bool	isActive() {return bIsActive; }
-		void	activate(bool _state) {bIsActive.set(_state);}
 		
 		float	getSpeed() { return speed.get(); }
 		float	getCellSize() { return cellSize.get(); }
@@ -69,7 +66,6 @@ namespace flowTools {
 		
 	private:
 		ofParameterGroup 		parameters;
-		ofParameter<bool>		bIsActive;
 		ofParameter<float>		speed;
 		ofParameter<float>		cellSize;
 		ofParameter<float>		birthChance;
@@ -83,7 +79,6 @@ namespace flowTools {
 		ofParameter<float>		twinkleSpeed;
 		ofParameter<glm::vec2>	gravity;
 		
-//		float					simulationWidth,simulationHeight;
 		int						numParticlesX, numParticlesY, numParticles;
 		
 		ofVboMesh				particleMesh;

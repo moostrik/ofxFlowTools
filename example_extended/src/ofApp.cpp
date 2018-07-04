@@ -56,6 +56,10 @@ void ofApp::setupGui() {
 	gui.add(toggleGuiDraw.set("show gui (G)", false));
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
+	gui.add(toggleParticleDraw.set("draw particles (P)", true));
+	toggleParticleDraw.addListener(this, &ofApp::toggleParticleDrawListener);
+	gui.add(toggleReset.set("reset (R)", false));
+	toggleReset.addListener(this, &ofApp::toggleResetListener);
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
@@ -142,12 +146,14 @@ void ofApp::update(){
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
 	fluidFlow.update(dt);
 	
-	particleFlow.setSpeed(fluidFlow.getSpeed());
-	particleFlow.setCellSize(fluidFlow.getCellSize());
-	particleFlow.addFlowVelocity(opticalFlow.getVelocity());
-	particleFlow.addFluidVelocity(fluidFlow.getVelocity());
-	particleFlow.addObstacle(fluidFlow.getObstacle());
-	particleFlow.update(dt);
+	if (toggleParticleDraw) {
+		particleFlow.setSpeed(fluidFlow.getSpeed());
+		particleFlow.setCellSize(fluidFlow.getCellSize());
+		particleFlow.addFlowVelocity(opticalFlow.getVelocity());
+		particleFlow.addFluidVelocity(fluidFlow.getVelocity());
+		particleFlow.addObstacle(fluidFlow.getObstacle());
+		particleFlow.update(dt);
+	}
 }
 
 //--------------------------------------------------------------
@@ -181,17 +187,19 @@ void ofApp::draw(){
 		default: break;
 	}
 	
-	ofEnableBlendMode(OF_BLENDMODE_ADD);
-	if (particleFlow.isActive()) { particleFlow.draw(0, 0, windowWidth, windowHeight); }
-	
-	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	if (toggleParticleDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+		particleFlow.draw(0, 0, windowWidth, windowHeight);
+	}
 	
 	if (toggleMouseDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 	}
+	
+	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
 	if (toggleGuiDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -250,9 +258,20 @@ void ofApp::keyPressed(int key){
 		case 'm':
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
 		case 'r':
-		case 'R':
-			for (auto flow : flows) { flow->reset(); }
-			fluidFlow.addObstacle(flowToolsLogo.getTexture());
+		case 'R': toggleReset.set(!toggleReset.get()); break;
+		case 'p':
+		case 'P': toggleParticleDraw.set(!toggleParticleDraw.get()); break;
 			break;
 	}
+}
+
+//--------------------------------------------------------------
+void ofApp::toggleResetListener(bool& _value) {
+	if (_value) {
+		for (auto flow : flows) {
+			flow->reset();
+		}
+		fluidFlow.addObstacle(flowToolsLogo.getTexture());
+	}
+	_value = false;
 }

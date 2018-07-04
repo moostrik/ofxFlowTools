@@ -36,7 +36,6 @@ namespace flowTools {
 	
 	ftParticleFlow::ftParticleFlow(){
 		parameters.setName("particles");
-		parameters.add(bIsActive.set("active", true));
 		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(birthChance.set("birth chance", 0.5, 0, 1));
@@ -97,45 +96,42 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::update(float _deltaTime) {
+		float timeStep = _deltaTime * speed.get();
 		
-		if (bIsActive.get()) {
-			float timeStep = _deltaTime * speed.get();
-			
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			
-			
-			particleAgeLifespanMassSizeFbo.swap();
-			ALMSParticleShader.update(particleAgeLifespanMassSizeFbo,
-									   particleAgeLifespanMassSizeFbo.getBackTexture(),
-									   particlePositionFbo.getTexture(),
-									   flowVelocityFbo.getTexture(),
-									   densityFbo.getTexture(),
-									   obstacleFbo.getTexture(),
-									   _deltaTime,	// should this not be timeStep?
-									   birthChance.get(),
-									   birthVelocityChance.get(),
-									   lifeSpan.get(), lifeSpanSpread.get(),
-									   mass.get(), massSpread.get(),
-									   size.get(), sizeSpread.get());
-			
-			particlePositionFbo.swap();
-			moveParticleShader.update(particlePositionFbo,
-									  particlePositionFbo.getBackTexture(),
-									  particleAgeLifespanMassSizeFbo.getTexture(),
-									  inputFbo.getTexture(),
-									  particleHomeFbo.getTexture(),
-									  timeStep,
-									  cellSize.get(),
-									  gravity);
-			
-			ofPopStyle();
-	 
-			ftUtil::zero(flowVelocityFbo);
-			ftUtil::zero(inputFbo);
-			ftUtil::zero(densityFbo);
-			ftUtil::zero(obstacleFbo);
-		}
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		
+		
+		particleAgeLifespanMassSizeFbo.swap();
+		ALMSParticleShader.update(particleAgeLifespanMassSizeFbo,
+								  particleAgeLifespanMassSizeFbo.getBackTexture(),
+								  particlePositionFbo.getTexture(),
+								  flowVelocityFbo.getTexture(),
+								  densityFbo.getTexture(),
+								  obstacleFbo.getTexture(),
+								  _deltaTime,	// should this not be timeStep?
+								  birthChance.get(),
+								  birthVelocityChance.get(),
+								  lifeSpan.get(), lifeSpanSpread.get(),
+								  mass.get(), massSpread.get(),
+								  size.get(), sizeSpread.get());
+		
+		particlePositionFbo.swap();
+		moveParticleShader.update(particlePositionFbo,
+								  particlePositionFbo.getBackTexture(),
+								  particleAgeLifespanMassSizeFbo.getTexture(),
+								  inputFbo.getTexture(),
+								  particleHomeFbo.getTexture(),
+								  timeStep,
+								  cellSize.get(),
+								  gravity);
+		
+		ofPopStyle();
+		
+		ftUtil::zero(flowVelocityFbo);
+		ftUtil::zero(inputFbo);
+		ftUtil::zero(densityFbo);
+		ftUtil::zero(obstacleFbo);
 	}
 	
 	void ftParticleFlow::reset() {
@@ -144,13 +140,11 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::draw(int _x, int _y, int _width, int _height) {
-		if (isActive()) {
-			ofPushView();
-			ofTranslate(_x, _y);
-			ofScale(_width / (float)numParticlesX, _height / (float)numParticlesY);
-			drawParticleShader.update(particleMesh, numParticles, particlePositionFbo.getTexture(), particleAgeLifespanMassSizeFbo.getTexture(), twinkleSpeed.get());
-			ofPopView();
-		}
+		ofPushView();
+		ofTranslate(_x, _y);
+		ofScale(_width / (float)numParticlesX, _height / (float)numParticlesY);
+		drawParticleShader.update(particleMesh, numParticles, particlePositionFbo.getTexture(), particleAgeLifespanMassSizeFbo.getTexture(), twinkleSpeed.get());
+		ofPopView();
 	}
 	
 	//--------------------------------------------------------------

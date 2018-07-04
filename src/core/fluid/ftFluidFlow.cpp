@@ -72,10 +72,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidFlow::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {
-		if (_densityWidth == 0 ) _densityWidth = _flowWidth;
-		if (_densityHeight == 0 ) _densityHeight = _flowHeight;
-		
+	void ftFluidFlow::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {		
 		simulationWidth = _flowWidth;
 		simulationHeight = _flowHeight;
 		densityWidth = _densityWidth;

@@ -24,7 +24,8 @@ namespace flowTools {
 	public:
 		ftFluidFlow();
 		
-		void	setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0);
+		void	setup(int _flowWidth, int _flowHeight) { setup(_flowWidth, _flowHeight, _flowWidth, _flowHeight); }
+		void	setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight);
 		void	update(float _deltaTime = -1);
 		
 		void	reset();

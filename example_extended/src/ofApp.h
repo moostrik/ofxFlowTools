@@ -39,8 +39,8 @@ public:
 	ofParameter<float>		visualizationScale;
 	ofParameter<int>		visualizationSize;
 	ofParameter<bool>		toggleVisualizationField;
-	void toggleVisualizationFieldListener(bool &_value)	{ for (auto flow : flows) { flow->setDrawField(_value); } }
-	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setDrawScale(_value); } }
+	void toggleVisualizationFieldListener(bool &_value)	{ for (auto flow : flows) { flow->toggleVisualizationField(_value); } }
+	void visualizationScaleListener(float& _value)		{ for (auto flow : flows) { flow->setVisualizationScale(_value); } }
 	void visualizationSizeListener(int& _value)			{ for (auto flow : flows) { flow->setFieldSize(_value); } }
 	void visualizationModeListener(int& _value) 		{ visualizationName.set(visualizationNames[_value]); }
 	
@@ -52,14 +52,19 @@ public:
 	void				switchGuiColor(bool _switch);
 	ofParameter<float>	guiFPS;
 	ofParameter<float>	guiMinFPS;
+	ofParameter<bool>	toggleFullScreen;
 	ofParameter<bool>	toggleGuiDraw;
 	ofParameter<bool>	toggleCameraDraw;
 	ofParameter<bool>	toggleMouseDraw;
+	ofParameter<bool>	toggleParticleDraw;
+	ofParameter<bool>	toggleReset;
+	
+	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
+	void				toggleResetListener(bool& _value);
+	void				toggleParticleDrawListener(bool& _value) { if (_value) { particleFlow.reset(); } }
+	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
+	
 	void				drawGui();
 	deque<float>		deltaTimeDeque;
 	float				lastTime;
-	
-	ofParameter<bool>	toggleFullScreen;
-	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
-	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 };

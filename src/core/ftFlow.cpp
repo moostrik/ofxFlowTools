@@ -45,7 +45,7 @@ namespace flowTools {
 		} else { inputFbo.getTexture().draw(_x, _y, _w, _h); }
 	}
 	
-	void ftFlow::setDrawScale(float _scale) {
+	void ftFlow::setVisualizationScale(float _scale) {
 		int internalFormat = ftUtil::getInternalFormat(inputFbo);
 		if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
 			visualizeScalar.setScale(_scale);

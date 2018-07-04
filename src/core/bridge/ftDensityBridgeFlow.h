@@ -19,9 +19,9 @@ namespace flowTools {
 			//		parameters.add(hue.set("hue", 0, -.5, .5));
 		}
 		
-		void setup(int _flowWidth, int _flowHeight, int _densityWidth = 0, int _densityHeight = 0){
-			if (_densityWidth == 0 ) _densityWidth = _flowWidth;
-			if (_densityHeight == 0 ) _densityHeight = _flowHeight;
+		void setup(int _flowWidth, int _flowHeight)	{ setup(_flowWidth, _flowHeight, _flowWidth, _flowHeight); }
+			
+		void setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight){
 			ftBridgeFlow::allocate(_flowWidth, _flowHeight, _densityWidth, _densityHeight, GL_RGBA32F);
 			visibleFbo.allocate(_densityWidth, _densityHeight, GL_RGBA);
 			ftUtil::zero(visibleFbo);

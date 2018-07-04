@@ -34,7 +34,7 @@ void ofApp::setup(){
 	
 	flowToolsLogo.load("flowtools.png");
 	fluidFlow.addObstacle(flowToolsLogo.getTexture());
-	particleFlow.setObstacle(flowToolsLogo.getTexture());
+	particleFlow.addObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -146,7 +146,7 @@ void ofApp::update(){
 	particleFlow.setCellSize(fluidFlow.getCellSize());
 	particleFlow.addFlowVelocity(opticalFlow.getVelocity());
 	particleFlow.addFluidVelocity(fluidFlow.getVelocity());
-	particleFlow.setObstacle(fluidFlow.getObstacle());
+	particleFlow.addObstacle(fluidFlow.getObstacle());
 	particleFlow.update(dt);
 }
 

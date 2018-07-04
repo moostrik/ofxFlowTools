@@ -19,10 +19,11 @@ namespace flowTools {
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
-		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
 		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
+		void	addDensity(ofTexture& _tex, float _strength  = 1.0);
+		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) { ftFlow::addInput(_tex, _strength); }
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
-		void	setObstacle (ofTexture& _tex) ;
+		void	addObstacle(ofTexture& _tex);
 		
 		void	update(float _deltaTime);
 		void	reset();
@@ -89,7 +90,7 @@ namespace flowTools {
 		
 		// inputs
 		ftPingPongFbo			flowVelocityFbo;
-		ftPingPongFbo			fluidVelocityFbo;
+//		ftPingPongFbo			fluidVelocityFbo;
 		ftPingPongFbo			densityFbo;
 		ftPingPongFbo			obstacleFbo;
 		

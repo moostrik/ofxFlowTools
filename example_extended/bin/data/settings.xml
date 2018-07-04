@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>45.0265</minimum_FPS>
+	<minimum_FPS>51.825</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>1</draw_camera__C_>
@@ -43,8 +43,8 @@
 		<density_from_pressure>0</density_from_pressure>
 		<density_from_vorticity>-0.1</density_from_vorticity>
 	</fluid>
-	<particle_flow>
-		<active>0</active>
+	<particles>
+		<active>1</active>
 		<speed>100</speed>
 		<cell_size>1.25</cell_size>
 		<birth_chance>0.5</birth_chance>
@@ -57,7 +57,7 @@
 		<size_spread>0.75</size_spread>
 		<twinkle_speed>11</twinkle_speed>
 		<gravity>0, 0</gravity>
-	</particle_flow>
+	</particles>
 	<density_mouse>
 		<is_temporary>1</is_temporary>
 		<speed>33.1633</speed>

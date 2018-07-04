@@ -35,7 +35,7 @@
 namespace flowTools {
 	
 	ftParticleFlow::ftParticleFlow(){
-		parameters.setName("particle flow");
+		parameters.setName("particles");
 		parameters.add(bIsActive.set("active", true));
 		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
@@ -65,11 +65,11 @@ namespace flowTools {
 		
 		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F);
 		
-		fluidVelocityFbo = inputFbo;
-//		ftUtil::zero(fluidVelocityFbo);
+//		inputFbo = inputFbo;
+//		ftUtil::zero(inputFbo);
 		flowVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
 		ftUtil::zero(flowVelocityFbo);
-		densityFbo.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
+		densityFbo.allocate(numParticlesX, numParticlesY, GL_RGBA32F);
 		ftUtil::zero(densityFbo);
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8); // GL_RED??
 		ftUtil::zero(obstacleFbo);
@@ -131,7 +131,7 @@ namespace flowTools {
 			moveParticleShader.update(particlePositionFbo,
 									  particlePositionFbo.getBackTexture(),
 									  particleAgeLifespanMassSizeFbo.getTexture(),
-									  fluidVelocityFbo.getTexture(),
+									  inputFbo.getTexture(),
 									  particleHomeFbo.getTexture(),
 									  timeStep,
 									  cellSize.get(),
@@ -140,14 +140,13 @@ namespace flowTools {
 			ofPopStyle();
 	 
 			ftUtil::zero(flowVelocityFbo);
-			ftUtil::zero(fluidVelocityFbo);
+			ftUtil::zero(inputFbo);
 			ftUtil::zero(densityFbo);
 			ftUtil::zero(obstacleFbo);
 		}
 	}
 	
 	void ftParticleFlow::reset() {
-		ftFlow::reset();
 		ftUtil::zero(particlePositionFbo);
 		ftUtil::zero(particleAgeLifespanMassSizeFbo);
 	}
@@ -171,8 +170,11 @@ namespace flowTools {
 			case FT_VELOCITY:
 				addFluidVelocity(_tex, _strength);
 				break;
+			case FT_DENSITY:
+				addDensity(_tex, _strength);
+				break;
 			case FT_OBSTACLE:
-				setObstacle(_tex);
+				addObstacle(_tex);
 			default:
 				break;
 		}
@@ -190,28 +192,22 @@ namespace flowTools {
 			ofPopStyle();
 		}
 	}
-	
-	void ftParticleFlow::addFluidVelocity (ofTexture& _tex, float _strength) {
-		if (isActive()) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			fluidVelocityFbo.swap();
-			addMultipliedShader.update(fluidVelocityFbo,
-									   fluidVelocityFbo.getBackTexture(),
-									   _tex,
-									   1.0,
-									   _strength);
-			ofPopStyle();
-		}
-	}
-	
-	void ftParticleFlow::setObstacle (ofTexture& _tex) {
+		
+	void ftParticleFlow::addObstacle (ofTexture& _tex) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(obstacleFbo);
 		obstacleFbo.begin();
 		_tex.draw(0,0,simulationWidth,simulationHeight);
 		obstacleFbo.end();
+		ofPopStyle();
+	}
+	
+	void ftParticleFlow::addDensity (ofTexture& _tex, float _strength) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		densityFbo.begin();
+		_tex.draw(0,0,numParticlesX,numParticlesY);
+		densityFbo.end();
 		ofPopStyle();
 	}
 }

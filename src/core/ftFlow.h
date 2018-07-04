@@ -13,7 +13,8 @@ namespace flowTools {
 	class ftFlow {
 	public:
 		
-		void allocate(int _width, int _height, int _internalFormat);
+		void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
+		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat);
 		
 		void setInput(ofTexture &_inputTex);
 		void addInput(ofTexture &_inputTex, float _strength = 1.0);
@@ -24,7 +25,7 @@ namespace flowTools {
 		
 		ofTexture& getOutput()	{ return outputFbo.getTexture(); }
 		ofTexture& getInput()	{ return inputFbo.getTexture(); }
-		
+	
 		void reset() 			{ resetInput(); resetOutput(); }
 		void resetInput()		{ ftUtil::zero(inputFbo); bInputSet = false; }
 		void resetOutput()		{ ftUtil::zero(outputFbo); }
@@ -34,7 +35,7 @@ namespace flowTools {
 		void drawOutput(int _x, int _y, int _w, int _h);
 		
 		void setFieldSize(int _w, int _h)	{ visualizeField.setup(_w, _h); }
-		void setFieldSize(int _size) 		{ setFieldSize(_size, (float)_size / (float)width * height); }
+		void setFieldSize(int _size) 		{ setFieldSize(_size, (float)_size / (float)outputWidth * outputHeight); }
 		bool setDrawField(bool _value)		{ toggleVisualisationField = _value; }
 		void setDrawScale(float _scale);
 		
@@ -47,9 +48,9 @@ namespace flowTools {
 		ftPingPongFbo		inputFbo;
 		bool				bInputSet;
 		ftPingPongFbo		outputFbo;
-		int					width;
-		int					height;
-		int					internalFormat;
+		
+		int					inputWidth, inputHeight, outputWidth, outputHeight;
+		GLint				inputInternalFormat, outputInternalFormat;
 		
 		ftDisplayScalar		visualizeScalar;
 		ftDisplayField		visualizeField;

@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "ftUtil.h"
+#include "ftFlow.h"
 #include "ftPingPongFbo.h"
 #include "ftInitPositionShader.h"
 #include "ftDrawParticleShader.h"
@@ -12,20 +13,19 @@
 
 namespace flowTools {
 	
-	class ftParticleFlow {
+	class ftParticleFlow : public ftFlow {
 	public:
 		ftParticleFlow();
 		
 		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
 		
+		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
 		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
-		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
 		void	setObstacle (ofTexture& _tex) ;
 		
-		void	update(float _deltaTime = 0);
+		void	update(float _deltaTime);
 		
-		void 	reset() {;}
 		
 //		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
 		void	draw(int _x, int _y, int _width, int _height);
@@ -75,21 +75,22 @@ namespace flowTools {
 		ofParameter<float>		twinkleSpeed;
 		ofParameter<glm::vec2>	gravity;
 		
-		float	simulationWidth,simulationHeight;
-		int		numParticlesX, numParticlesY, numParticles;
-		float	deltaTime, lastTime, timeStep;
+		float					simulationWidth,simulationHeight;
+		int						numParticlesX, numParticlesY, numParticles;
 		
 		ofVboMesh				particleMesh;
 		
-		ftPingPongFbo			particleAgeLifespanMassSizeSwapBuffer;
-		ftPingPongFbo			particlePositionSwapBuffer;
-		ftPingPongFbo			particleColorSwapBuffer;
+		ofFbo					particleHomeFbo;
+		ftPingPongFbo			particleAgeLifespanMassSizeFbo;
+		ftPingPongFbo			particlePositionFbo;
+		ftPingPongFbo			particleColorFbo;
 		
-		ofFbo					particleHomeBuffer;
-		ftPingPongFbo			flowVelocitySwapBuffer;
-		ftPingPongFbo			fluidVelocitySwapBuffer;
-		ftPingPongFbo			densitySwapBuffer;
-		ofFbo					obstacleBuffer;
+		
+		// inputs
+		ftPingPongFbo			flowVelocityFbo;
+		ftPingPongFbo			fluidVelocityFbo;
+		ftPingPongFbo			densityFbo;
+		ftPingPongFbo			obstacleFbo;
 		
 		ftInitPositionShader	initPositionShader;
 		ftDrawParticleShader	drawParticleShader;

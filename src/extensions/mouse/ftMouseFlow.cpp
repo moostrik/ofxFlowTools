@@ -118,9 +118,9 @@ namespace flowTools {
 					break;
 			}
 			
-			glm::vec2 startPosition = mousePositions[!mps] * glm::vec2(width, height);
-			glm::vec2 endPosition = mousePositions[mps] * glm::vec2(width, height);
-			float radius = pRadius.get() * width;
+			glm::vec2 startPosition = mousePositions[!mps] * glm::vec2(inputWidth, inputHeight);
+			glm::vec2 endPosition = mousePositions[mps] * glm::vec2(inputWidth, inputHeight);
+			float radius = pRadius.get() * inputWidth;
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);

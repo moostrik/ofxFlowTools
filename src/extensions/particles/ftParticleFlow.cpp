@@ -57,7 +57,41 @@ namespace flowTools {
 		numParticlesX = _numParticlesX;
 		numParticlesY = _numParticlesY;
 		numParticles = (numParticlesX * numParticlesY);
-				
+		
+		int internalFormatVelocity = GL_RG32F;
+		
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
+		
+		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F);
+		
+		fluidVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(fluidVelocityFbo);
+		flowVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		ftUtil::zero(flowVelocityFbo);
+		densityFbo.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
+		ftUtil::zero(densityFbo);
+		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8); // GL_RED??
+		ftUtil::zero(obstacleFbo);
+		
+		ofFboSettings settings;
+		settings.width = numParticlesX;
+		settings.height = numParticlesY;
+		settings.minFilter	= GL_NEAREST;
+		settings.maxFilter	= GL_NEAREST;
+		settings.numColorbuffers = 2;
+		settings.internalformat	= GL_RGBA32F;
+		particleAgeLifespanMassSizeFbo.allocate(settings);
+		ftUtil::zero(particleAgeLifespanMassSizeFbo);
+		settings.internalformat	= internalFormatVelocity;
+		particlePositionFbo.allocate(settings);
+		ftUtil::zero(particlePositionFbo);
+//		initPositionShader.update(*particlePositionFbo.getFbo());
+		particlePositionFbo.swap();
+		particleHomeFbo.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
+		ftUtil::zero(particleHomeFbo);
+		initPositionShader.update(particleHomeFbo);
+		
 		particleMesh.setMode(OF_PRIMITIVE_POINTS);
 		for(int x = 0; x < _numParticlesX; x++){
 			for(int y = 0; y < _numParticlesY; y++){
@@ -66,89 +100,49 @@ namespace flowTools {
 			}
 		}
 		
-		int internalFormatVelocity = GL_RG32F;
-		
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
-		
-		ofFboSettings settings;
-		settings.width = numParticlesX;
-		settings.height = numParticlesY;
-		settings.minFilter	= GL_NEAREST;
-		settings.maxFilter	= GL_NEAREST;
-		settings.numColorbuffers = 2;
-		
-		settings.internalformat	= GL_RGBA32F;
-		particleAgeLifespanMassSizeSwapBuffer.allocate(settings);
-		ftUtil::zero(particleAgeLifespanMassSizeSwapBuffer);
-		
-		settings.internalformat	= internalFormatVelocity;
-		particlePositionSwapBuffer.allocate(settings);
-		ftUtil::zero(particlePositionSwapBuffer);
-//		initPositionShader.update(*particlePositionSwapBuffer.getBuffer());
-		particlePositionSwapBuffer.swap();
-		particleHomeBuffer.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
-		ftUtil::zero(particleHomeBuffer);
-		initPositionShader.update(particleHomeBuffer);
-		
-		fluidVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(fluidVelocitySwapBuffer);
-		flowVelocitySwapBuffer.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
-		ftUtil::zero(flowVelocitySwapBuffer);
-		densitySwapBuffer.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
-		ftUtil::zero(densitySwapBuffer);
-		obstacleBuffer.allocate(simulationWidth, simulationHeight, GL_RGB); // GL_RED??
-		ftUtil::zero(obstacleBuffer);
-		
 		ofPopStyle();
 		
 	}
 	
 	void ftParticleFlow::update(float _deltaTime) {
-		float time = ofGetElapsedTimef();
-		if (_deltaTime != 0)
-			deltaTime = _deltaTime;
-		else
-			deltaTime = time - lastTime;
-		lastTime = time;
 		
 		if (bIsActive.get()) {
-			timeStep = deltaTime * speed.get();
+			float timeStep = _deltaTime * speed.get();
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
 			
-			particleAgeLifespanMassSizeSwapBuffer.swap();
-			ALMSParticleShader.update(particleAgeLifespanMassSizeSwapBuffer,
-									   particleAgeLifespanMassSizeSwapBuffer.getBackTexture(),
-									   particlePositionSwapBuffer.getTexture(),
-									   flowVelocitySwapBuffer.getTexture(),
-									   densitySwapBuffer.getTexture(),
-									   obstacleBuffer.getTexture(),
-									   deltaTime,
+			particleAgeLifespanMassSizeFbo.swap();
+			ALMSParticleShader.update(particleAgeLifespanMassSizeFbo,
+									   particleAgeLifespanMassSizeFbo.getBackTexture(),
+									   particlePositionFbo.getTexture(),
+									   flowVelocityFbo.getTexture(),
+									   densityFbo.getTexture(),
+									   obstacleFbo.getTexture(),
+									   _deltaTime,	// should this not be timeStep?
 									   birthChance.get(),
 									   birthVelocityChance.get(),
 									   lifeSpan.get(), lifeSpanSpread.get(),
 									   mass.get(), massSpread.get(),
 									   size.get(), sizeSpread.get());
 			
-			particlePositionSwapBuffer.swap();
-			moveParticleShader.update(particlePositionSwapBuffer,
-									  particlePositionSwapBuffer.getBackTexture(),
-									  particleAgeLifespanMassSizeSwapBuffer.getTexture(),
-									  fluidVelocitySwapBuffer.getTexture(),
-									  particleHomeBuffer.getTexture(),
+			particlePositionFbo.swap();
+			moveParticleShader.update(particlePositionFbo,
+									  particlePositionFbo.getBackTexture(),
+									  particleAgeLifespanMassSizeFbo.getTexture(),
+									  fluidVelocityFbo.getTexture(),
+									  particleHomeFbo.getTexture(),
 									  timeStep,
 									  cellSize.get(),
 									  gravity);
 			
 			ofPopStyle();
 	 
-			ftUtil::zero(flowVelocitySwapBuffer);
-			ftUtil::zero(fluidVelocitySwapBuffer);
-			ftUtil::zero(densitySwapBuffer);
-			ftUtil::zero(obstacleBuffer);
+			ftUtil::zero(flowVelocityFbo);
+			ftUtil::zero(fluidVelocityFbo);
+			ftUtil::zero(densityFbo);
+			ftUtil::zero(obstacleFbo);
 		}
 	}
 	
@@ -157,7 +151,7 @@ namespace flowTools {
 			ofPushView();
 			ofTranslate(_x, _y);
 			ofScale(_width / (float)numParticlesX, _height / (float)numParticlesY);
-			drawParticleShader.update(particleMesh, numParticles, particlePositionSwapBuffer.getTexture(), particleAgeLifespanMassSizeSwapBuffer.getTexture(), twinkleSpeed.get());
+			drawParticleShader.update(particleMesh, numParticles, particlePositionFbo.getTexture(), particleAgeLifespanMassSizeFbo.getTexture(), twinkleSpeed.get());
 			ofPopView();
 		}
 	}
@@ -181,9 +175,9 @@ namespace flowTools {
 		if (isActive()) {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			flowVelocitySwapBuffer.swap();
-			addMultipliedShader.update(flowVelocitySwapBuffer,
-									   flowVelocitySwapBuffer.getBackTexture(),
+			flowVelocityFbo.swap();
+			addMultipliedShader.update(flowVelocityFbo,
+									   flowVelocityFbo.getBackTexture(),
 									   _tex,
 									   1.0,
 									   _strength);
@@ -195,9 +189,9 @@ namespace flowTools {
 		if (isActive()) {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			fluidVelocitySwapBuffer.swap();
-			addMultipliedShader.update(fluidVelocitySwapBuffer,
-									   fluidVelocitySwapBuffer.getBackTexture(),
+			fluidVelocityFbo.swap();
+			addMultipliedShader.update(fluidVelocityFbo,
+									   fluidVelocityFbo.getBackTexture(),
 									   _tex,
 									   1.0,
 									   _strength);
@@ -208,10 +202,10 @@ namespace flowTools {
 	void ftParticleFlow::setObstacle (ofTexture& _tex) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(obstacleBuffer);
-		obstacleBuffer.begin();
+		ftUtil::zero(obstacleFbo);
+		obstacleFbo.begin();
 		_tex.draw(0,0,simulationWidth,simulationHeight);
-		obstacleBuffer.end();
+		obstacleFbo.end();
 		ofPopStyle();
 	}
 }

@@ -13,12 +13,10 @@ namespace flowTools {
 	class ftOpticalFlow : public ftFlow {
 	public:
 		void setup(int _width, int _height) {
-			ftFlow::allocate(_width, _height, GL_RG32F);
-			inputFbo.allocate(width, height, GL_R8);
-			ftUtil::zero(inputFbo);
-			opticalFlowFbo.allocate(width, height, GL_R8);
+			ftFlow::allocate(_width, _height, GL_R8, _width, _height, GL_RG32F);
+			opticalFlowFbo.allocate(_width, _height, GL_R8);
 			ftUtil::zero(opticalFlowFbo);
-			RGB2LumFbo.allocate(width, height, GL_R8);
+			RGB2LumFbo.allocate(_width, _height, GL_R8);
 			ftUtil::zero(RGB2LumFbo);
 			
 			bFirstFrame = true;

@@ -9,17 +9,23 @@
 
 namespace flowTools {
 	
-	void ftFlow::allocate(int _width, int _height, int _internalFormat) {
-		width = _width;
-		height = _height;
-		internalFormat = _internalFormat;
-		inputFbo.allocate(width, height, internalFormat);
+	void ftFlow::allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) {
+		inputWidth = _inputWidth;
+		inputHeight = _inputHeight;
+		inputInternalFormat = _inputInternalFormat;
+		outputWidth = _outputWidth;
+		outputHeight = _outputHeight;
+		outputInternalFormat = _outputInternalFormat;
+		
+		inputFbo.allocate(inputWidth, inputWidth, inputInternalFormat);
 		ftUtil::zero(inputFbo);
 		bInputSet = false;
-		outputFbo.allocate(width, height, internalFormat);
+		
+		outputFbo.allocate(outputWidth, outputHeight, outputInternalFormat);
 		ftUtil::zero(outputFbo);
-		visualizeScalar.setup(width, height);
-		visualizeField.setup(width / 2, height / 2);
+		
+		visualizeScalar.setup(outputWidth, outputHeight);
+		visualizeField.setup(outputWidth / 2, outputHeight / 2);
 		toggleVisualisationField = false;
 	}
 	

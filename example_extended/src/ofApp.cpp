@@ -268,9 +268,7 @@ void ofApp::keyPressed(int key){
 //--------------------------------------------------------------
 void ofApp::toggleResetListener(bool& _value) {
 	if (_value) {
-		for (auto flow : flows) {
-			flow->reset();
-		}
+		for (auto flow : flows) { flow->reset(); }
 		fluidFlow.addObstacle(flowToolsLogo.getTexture());
 	}
 	_value = false;

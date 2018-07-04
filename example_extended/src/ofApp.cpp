@@ -40,6 +40,8 @@ void ofApp::setup(){
 	cameraFbo.allocate(densityWidth, densityHeight);
 	ftUtil::zero(cameraFbo);
 	
+	lastTime = ofGetElapsedTimef();
+	
 	setupGui();
 }
 
@@ -100,7 +102,7 @@ void ofApp::setupGui() {
 	toggleGuiDraw = true;
 }
 
-
+//--------------------------------------------------------------
 void ofApp::switchGuiColor(bool _switch) {
 	ofColor guiHeaderColor[2];
 	guiHeaderColor[0].set(160, 160, 80, 200);

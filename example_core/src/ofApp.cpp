@@ -30,6 +30,8 @@ void ofApp::setup(){
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
 	ftUtil::zero(cameraFbo);
+
+	lastTime = ofGetElapsedTimef();
 	
 	setupGui();
 }
@@ -82,7 +84,7 @@ void ofApp::setupGui() {
 	toggleGuiDraw = true;
 }
 
-
+//--------------------------------------------------------------
 void ofApp::switchGuiColor(bool _switch) {
 	ofColor guiHeaderColor[2];
 	guiHeaderColor[0].set(160, 160, 80, 200);
@@ -154,8 +156,8 @@ void ofApp::draw(){
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
-	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	if (toggleGuiDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		drawGui();
 	}
 	ofPopStyle();
@@ -190,7 +192,6 @@ void ofApp::drawGui() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	
 	switch (key) {
 		default: break;
 		case '1': visualizationMode.set(INPUT_FOR_DEN); break;

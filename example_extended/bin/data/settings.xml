@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>34.7533</minimum_FPS>
+	<minimum_FPS>47.108</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>1</draw_camera__C_>
@@ -61,7 +61,7 @@
 	<density_mouse>
 		<is_temporary>1</is_temporary>
 		<speed>33</speed>
-		<radius>0.1</radius>
+		<radius>0.03</radius>
 		<edge>1</edge>
 		<force>0.5, 0.5, 0.5, 0.5</force>
 		<inverse>0</inverse>

@@ -17,7 +17,7 @@ namespace flowTools {
 	public:
 		ftParticleFlow();
 		
-		void	setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY);
+		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX = 0, int _numParticlesY = 0);
 		
 		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addDensity(ofTexture& _tex, float _strength  = 1.0);
@@ -28,8 +28,6 @@ namespace flowTools {
 		void	update(float _deltaTime);
 		void	reset();
 		
-		
-//		void	draw(int _x, int _y) {draw(_x, _y, numParticlesX, numParticlesY);}
 		void	draw(int _x, int _y, int _width, int _height);
 		
 		bool	isActive() {return bIsActive; }
@@ -77,7 +75,7 @@ namespace flowTools {
 		ofParameter<float>		twinkleSpeed;
 		ofParameter<glm::vec2>	gravity;
 		
-		float					simulationWidth,simulationHeight;
+//		float					simulationWidth,simulationHeight;
 		int						numParticlesX, numParticlesY, numParticles;
 		
 		ofVboMesh				particleMesh;

@@ -51,27 +51,21 @@ namespace flowTools {
 		parameters.add(gravity.set("gravity", glm::vec2(0, 0), glm::vec2(-10,-10), glm::vec2(10,10)));
 	}
 	
-	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY) {
-		simulationWidth = _simulationWidth;
-		simulationHeight = _simulationHeight;
-		numParticlesX = _numParticlesX;
-		numParticlesY = _numParticlesY;
+	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX, int _numParticlesY) {
+		numParticlesX = (_numParticlesX == 0)? _densityWidth: _numParticlesX;
+		numParticlesY = (_numParticlesY == 0)? _densityHeight: _numParticlesY;
 		numParticles = (numParticlesX * numParticlesY);
-		
-		int internalFormatVelocity = GL_RG32F;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
 		
-		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F);
+		ftFlow::allocate(_simulationWidth, _simulationHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
 		
-//		inputFbo = inputFbo;
-//		ftUtil::zero(inputFbo);
-		flowVelocityFbo.allocate(simulationWidth, simulationHeight, internalFormatVelocity);
+		flowVelocityFbo.allocate(_simulationWidth, _simulationHeight, GL_RG32F);
 		ftUtil::zero(flowVelocityFbo);
 		densityFbo.allocate(numParticlesX, numParticlesY, GL_RGBA32F);
 		ftUtil::zero(densityFbo);
-		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8); // GL_RED??
+		obstacleFbo.allocate(_simulationWidth, _simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
 		
 		ofFboSettings settings;
@@ -83,12 +77,11 @@ namespace flowTools {
 		settings.internalformat	= GL_RGBA32F;
 		particleAgeLifespanMassSizeFbo.allocate(settings);
 		ftUtil::zero(particleAgeLifespanMassSizeFbo);
-		settings.internalformat	= internalFormatVelocity;
+		settings.internalformat	= GL_RG32F;
 		particlePositionFbo.allocate(settings);
 		ftUtil::zero(particlePositionFbo);
-//		initPositionShader.update(*particlePositionFbo.getFbo());
-//		particlePositionFbo.swap();
-		particleHomeFbo.allocate(numParticlesX, numParticlesY, internalFormatVelocity);
+		particlePositionFbo.swap();
+		particleHomeFbo.allocate(numParticlesX, numParticlesY, GL_RG32F);
 		ftUtil::zero(particleHomeFbo);
 		initPositionShader.update(particleHomeFbo);
 		
@@ -197,17 +190,22 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		obstacleFbo.begin();
-		_tex.draw(0,0,simulationWidth,simulationHeight);
+		_tex.draw(0, 0, obstacleFbo.getWidth(), obstacleFbo.getHeight());
 		obstacleFbo.end();
 		ofPopStyle();
 	}
 	
-	void ftParticleFlow::addDensity (ofTexture& _tex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		densityFbo.begin();
-		_tex.draw(0,0,numParticlesX,numParticlesY);
-		densityFbo.end();
-		ofPopStyle();
+	void ftParticleFlow::addDensity(ofTexture & _tex, float _strength) {
+		if (isActive()) {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			densityFbo.swap();
+			addMultipliedShader.update(densityFbo,
+									   densityFbo.getBackTexture(),
+									   _tex,
+									   1.0,
+									   _strength);
+			ofPopStyle();
+		}
 	}
 }

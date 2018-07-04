@@ -29,41 +29,6 @@ namespace flowTools {
 		toggleVisualisationField = false;
 	}
 	
-	void ftFlow::setInput(ofTexture &_inputTex) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::stretch(inputFbo, _inputTex);
-		bInputSet = true;
-		ofPopStyle();
-	}
-	
-	void ftFlow::addInput(ofTexture &_inputTex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		inputFbo.swap();
-		AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _inputTex, 1.0, _strength);
-		bInputSet = true;
-		ofPopStyle();
-	}
-	
-	void ftFlow::setOutput(ofTexture &_inputTex) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(outputFbo);
-		ftUtil::stretch(outputFbo, _inputTex);
-		bInputSet = true;
-		ofPopStyle();
-	}
-	
-	void ftFlow::addOutput(ofTexture &_inputTex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		outputFbo.swap();
-		AddMultipliedShader.update(outputFbo, outputFbo.getBackTexture(), _inputTex, 1.0, _strength);
-		bInputSet = true;
-		ofPopStyle();
-	}
-	
 	void ftFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int internalFormat = ftUtil::getInternalFormat(outputFbo);
 		if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
@@ -86,6 +51,22 @@ namespace flowTools {
 			visualizeScalar.setScale(_scale);
 			visualizeField.setScale(_scale);
 		}
+	}
+	
+	void ftFlow::add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		_dstFbo.swap();
+		AddMultipliedShader.update(_dstFbo, _dstFbo.getBackTexture(), _srcTex, 1.0, _strength);
+		ofPopStyle();
+	}
+	
+	void ftFlow::set(ftPingPongFbo &_dstFbo, ofTexture &_srcTex) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::zero(_dstFbo);
+		ftUtil::stretch(_dstFbo, _srcTex);
+		ofPopStyle();
 	}
 };
 

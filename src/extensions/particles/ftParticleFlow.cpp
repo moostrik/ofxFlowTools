@@ -52,8 +52,8 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX, int _numParticlesY) {
-		numParticlesX = (_numParticlesX == 0)? _densityWidth: _numParticlesX;
-		numParticlesY = (_numParticlesY == 0)? _densityHeight: _numParticlesY;
+		numParticlesX = _numParticlesX;
+		numParticlesY = _numParticlesY;
 		numParticles = (numParticlesX * numParticlesY);
 		
 		ofPushStyle();
@@ -80,7 +80,6 @@ namespace flowTools {
 		settings.internalformat	= GL_RG32F;
 		particlePositionFbo.allocate(settings);
 		ftUtil::zero(particlePositionFbo);
-		particlePositionFbo.swap();
 		particleHomeFbo.allocate(numParticlesX, numParticlesY, GL_RG32F);
 		ftUtil::zero(particleHomeFbo);
 		initPositionShader.update(particleHomeFbo);
@@ -155,6 +154,25 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+	void ftParticleFlow::setFlow(flowTools::ftFlowForceType _type, ofTexture &_tex) {
+		switch (_type) {
+			case FT_VELOCITY_NORM:
+				setFlowVelocity(_tex);
+				break;
+			case FT_VELOCITY:
+				setFluidVelocity(_tex);
+				break;
+			case FT_DENSITY:
+				setDensity(_tex);
+				break;
+			case FT_OBSTACLE:
+				setObstacle(_tex);
+			default:
+				break;
+		}
+	}
+	
+	//--------------------------------------------------------------
 	void ftParticleFlow::addFlow(flowTools::ftFlowForceType _type, ofTexture &_tex, float _strength) {
 		switch (_type) {
 			case FT_VELOCITY_NORM:
@@ -170,42 +188,6 @@ namespace flowTools {
 				addObstacle(_tex);
 			default:
 				break;
-		}
-	}
-	void ftParticleFlow::addFlowVelocity(ofTexture & _tex, float _strength) {
-		if (isActive()) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			flowVelocityFbo.swap();
-			addMultipliedShader.update(flowVelocityFbo,
-									   flowVelocityFbo.getBackTexture(),
-									   _tex,
-									   1.0,
-									   _strength);
-			ofPopStyle();
-		}
-	}
-		
-	void ftParticleFlow::addObstacle (ofTexture& _tex) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		obstacleFbo.begin();
-		_tex.draw(0, 0, obstacleFbo.getWidth(), obstacleFbo.getHeight());
-		obstacleFbo.end();
-		ofPopStyle();
-	}
-	
-	void ftParticleFlow::addDensity(ofTexture & _tex, float _strength) {
-		if (isActive()) {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			densityFbo.swap();
-			addMultipliedShader.update(densityFbo,
-									   densityFbo.getBackTexture(),
-									   _tex,
-									   1.0,
-									   _strength);
-			ofPopStyle();
 		}
 	}
 }

@@ -17,13 +17,21 @@ namespace flowTools {
 	public:
 		ftParticleFlow();
 		
-		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX = 0, int _numParticlesY = 0);
+		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) { setup(_simulationWidth, _simulationHeight, _densityWidth, _densityHeight, _densityWidth, _densityHeight); }
+		void	setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX, int _numParticlesY);
 		
+		void	setFlow(ftFlowForceType _type, ofTexture& _tex);
 		void	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
-		void	addDensity(ofTexture& _tex, float _strength  = 1.0);
-		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) { ftFlow::addInput(_tex, _strength); }
-		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
-		void	addObstacle(ofTexture& _tex);
+		
+		void	addFluidVelocity (ofTexture& _tex, float _strength = 1.0) 	{ ftFlow::addInput(_tex, _strength); }
+		void	addFlowVelocity(ofTexture& _tex, float _strength = 1.0)		{ ftFlow::add(flowVelocityFbo, _tex, _strength); }
+		void	addDensity(ofTexture& _tex, float _strength  = 1.0) 		{ ftFlow::add(densityFbo, _tex, _strength); }
+		void	addObstacle(ofTexture& _tex)								{ ftFlow::add(obstacleFbo, _tex, 1.0); }
+		
+		void	setFluidVelocity (ofTexture& _tex) 							{ ftFlow::setInput(_tex); }
+		void	setFlowVelocity(ofTexture& _tex)							{ ftFlow::set(flowVelocityFbo, _tex); }
+		void	setDensity(ofTexture& _tex) 								{ ftFlow::set(densityFbo, _tex); }
+		void	setObstacle(ofTexture& _tex)								{ ftFlow::set(obstacleFbo, _tex); }
 		
 		void	update(float _deltaTime);
 		void	reset();
@@ -88,7 +96,7 @@ namespace flowTools {
 		
 		// inputs
 		ftPingPongFbo			flowVelocityFbo;
-//		ftPingPongFbo			fluidVelocityFbo;
+//		ftPingPongFbo			fluidVelocityFbo; // use inputFbo instead
 		ftPingPongFbo			densityFbo;
 		ftPingPongFbo			obstacleFbo;
 		

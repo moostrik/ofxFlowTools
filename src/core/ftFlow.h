@@ -16,15 +16,15 @@ namespace flowTools {
 		void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
 		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat);
 		
-		void setInput(ofTexture &_inputTex);
-		void addInput(ofTexture &_inputTex, float _strength = 1.0);
+		void setInput(ofTexture &_tex)							{ set(inputFbo, _tex); bInputSet = true; }
+		void addInput(ofTexture &_tex, float _strength = 1.0)	{ add(inputFbo, _tex, _strength); bInputSet = true; }
 		bool getInputSet()		{ return bInputSet; }
 		
-		void setOutput(ofTexture &_inputTex);
-		void addOutput(ofTexture &_inputTex, float _strength = 1.0);
+		void setOutput(ofTexture &_tex)							{ set(outputFbo, _tex); bInputSet = true; }
+		void addOutput(ofTexture &_tex, float _strength = 1.0)	{ add(outputFbo, _tex, _strength); bInputSet = true; }
 		
-		ofTexture& getOutput()	{ return outputFbo.getTexture(); }
 		ofTexture& getInput()	{ return inputFbo.getTexture(); }
+		ofTexture& getOutput()	{ return outputFbo.getTexture(); }
 	
 		virtual void reset() 	{ resetInput(); resetOutput(); }
 		void resetInput()		{ ftUtil::zero(inputFbo); bInputSet = false; }
@@ -56,7 +56,11 @@ namespace flowTools {
 		ftDisplayField		visualizeField;
 		bool				toggleVisualisationField;
 		
+		
+		void set(ftPingPongFbo &_fbo, ofTexture &_inputTex);
+		void add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength = 1.0);
 		ftAddMultipliedShader	AddMultipliedShader;
+		
 
 	};
 	

@@ -60,7 +60,7 @@ namespace flowTools {
 			if (numChannels == 1) {
 				float barHeight = _height / (float)fieldHeight;
 				float barWidth = _width / (float)fieldWidth * 0.25;
-				temperatureFieldShader.update(fieldVbo, _tex, pScale.get(), barHeight, barWidth);
+				temperatureFieldShader.update(fieldVbo, _tex, pScale.get() * 0.1, barHeight, barWidth);
 			} else {
 				float arrowLength = _width / (float)fieldWidth;
 				float scale = (1.0 / _width) * arrowLength  * pScale.get();

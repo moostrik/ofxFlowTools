@@ -43,7 +43,7 @@ namespace flowTools {
 		
 		void	setup(int _width, int _height){
 			ftFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RGBA32F);
-			visualizeField.setup(_width, _height);
+			visualizationField.setup(_width, _height);
 		};
 		
 		void	update() {
@@ -60,16 +60,16 @@ namespace flowTools {
 		ofTexture& getSplitVelocity() { return getOutput(); }
 		
 		void drawOutput(int _x, int _y, int _w, int _h) override {
-			visualizeField.draw(outputFbo.getTexture(), _x, _y, _w, _h);
+			visualizationField.draw(outputFbo.getTexture(), _x, _y, _w, _h);
 		}
 		
-		void setVisualizationScale(float _value) override			{ visualizeField.setScale(_value); }
-		void setVisualizationFieldSize(glm::vec2 _value) override	{ visualizeField.setupField(_value.x, _value.y); }
-		bool setVisualizationToggleScalar(bool _value) override		{ visualizeField.setToggleScalar(_value); }
+		void setVisualizationScale(float _value) override			{ visualizationField.setScale(_value); }
+		void setVisualizationFieldSize(glm::vec2 _value) override	{ visualizationField.setupField(_value.x, _value.y); }
+		bool setVisualizationToggleScalar(bool _value) override		{ visualizationField.setToggleScalar(_value); }
 		
 	protected:
 		ftSplitVelocityShader	splitVelocityShader;
-		ftSvVisualizationField		visualizeField;
+		ftSvVisualizationField		visualizationField;
 		
 	};
 }

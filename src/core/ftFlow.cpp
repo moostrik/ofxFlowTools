@@ -24,7 +24,7 @@ namespace flowTools {
 		outputFbo.allocate(outputWidth, outputHeight, outputInternalFormat);
 		ftUtil::zero(outputFbo);
 		
-		visualizeField.setup(outputWidth, outputHeight);
+		visualizationField.setup(outputWidth, outputHeight);
 	}
 	
 	void ftFlow::add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength) {

@@ -5,7 +5,7 @@
 #include "ftUtil.h"
 #include "ftPingPongFbo.h"
 #include "ftAddMultipliedShader.h"
-#include "ftVisualizeField.h"
+#include "ftVisualizationField.h"
 
 namespace flowTools {
 	
@@ -27,12 +27,12 @@ namespace flowTools {
 		virtual void resetOutput()		{ ftUtil::zero(outputFbo); }
 		
 		virtual void draw(int _x, int _y, int _w, int _h)		{ drawOutput(_x, _y, _w, _h); }
-		virtual void drawInput(int _x, int _y, int _w, int _h) 	{ visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-		virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizeField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
+		virtual void drawInput(int _x, int _y, int _w, int _h) 	{ visualizationField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
+		virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizationField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
 		
-		virtual void setVisualizationScale(float _value)		{ visualizeField.setScale(_value); }
-		virtual void setVisualizationFieldSize(glm::vec2 _value){ visualizeField.setupField(_value.x, _value.y); }
-		virtual bool setVisualizationToggleScalar(bool _value)	{ visualizeField.setToggleScalar(_value); }
+		virtual void setVisualizationScale(float _value)		{ visualizationField.setScale(_value); }
+		virtual void setVisualizationFieldSize(glm::vec2 _value){ visualizationField.setupField(_value.x, _value.y); }
+		virtual bool setVisualizationToggleScalar(bool _value)	{ visualizationField.setToggleScalar(_value); }
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
@@ -47,7 +47,7 @@ namespace flowTools {
 		int					inputWidth, inputHeight, outputWidth, outputHeight;
 		GLint				inputInternalFormat, outputInternalFormat;
 		
-		ftVisualizeField	visualizeField;
+		ftVisualizationField	visualizationField;
 		
 		void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
 		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat);

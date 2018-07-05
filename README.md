@@ -34,10 +34,10 @@ My interest in, and knowledge of, fluid simulation was hugely inspired by the wo
 FUTURE ADDITIONS / TODO
 
 first:
-- Visualization: visualisation variations
-- rebuild the area and splitvelocity extension and add to examples
+- rebuild the area  extension and add to examples
 
 later:
+- visualization: better normalization
 - rebuild the fluidFlow
 - rebuild the particleFlow
 

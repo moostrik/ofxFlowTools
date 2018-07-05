@@ -66,11 +66,11 @@ void ofApp::setupGui() {
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
 	visualizationParameters.add(visualizationName.set("name", "fluidFlow Density"));
-	visualizationParameters.add(toggleVisualizationField.set("show field", false));
 	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
-	visualizationParameters.add(visualizationSize.set("size", flowWidth / 2, flowWidth / 4, flowWidth));
+	visualizationParameters.add(visualizationSize.set("size", glm::vec2(flowWidth / 2, flowHeight / 2), glm::vec2(flowWidth / 4, flowHeight / 4), glm::vec2(flowWidth, flowHeight)));
+	visualizationParameters.add(toggleVisualizationScalar.set("show scalar", false));
 	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
-	toggleVisualizationField.addListener(this, &ofApp::toggleVisualizationFieldListener);
+	toggleVisualizationScalar.addListener(this, &ofApp::toggleVisualizationScalarListener);
 	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
 	visualizationSize.addListener(this, &ofApp::visualizationSizeListener);
 	

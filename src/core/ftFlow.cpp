@@ -24,33 +24,7 @@ namespace flowTools {
 		outputFbo.allocate(outputWidth, outputHeight, outputInternalFormat);
 		ftUtil::zero(outputFbo);
 		
-		visualizeScalar.setup(outputWidth, outputHeight);
-		visualizeField.setup(outputWidth / 2, outputHeight / 2);
-		toggleVisualisationField = false;
-	}
-	
-	void ftFlow::drawOutput(int _x, int _y, int _w, int _h) {
-		int internalFormat = ftUtil::getInternalFormat(outputFbo);
-		if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-			if (toggleVisualisationField) { visualizeField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
-			else { visualizeScalar.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
-		} else { outputFbo.getTexture().draw(_x, _y, _w, _h); }
-	}
-	
-	void ftFlow::drawInput(int _x, int _y, int _w, int _h) {
-		int internalFormat = ftUtil::getInternalFormat(inputFbo);
-		if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-			if (toggleVisualisationField) { visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-			else { visualizeScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-		} else { inputFbo.getTexture().draw(_x, _y, _w, _h); }
-	}
-	
-	void ftFlow::setVisualizationScale(float _scale) {
-		int internalFormat = ftUtil::getInternalFormat(inputFbo);
-		if (internalFormat == GL_R32F || internalFormat == GL_RG32F) {
-			visualizeScalar.setScale(_scale);
-			visualizeField.setScale(_scale);
-		}
+		visualizeField.setup(outputWidth, outputHeight);
 	}
 	
 	void ftFlow::add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength) {

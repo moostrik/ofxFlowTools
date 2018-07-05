@@ -84,6 +84,7 @@ namespace flowTools {
 		int	internalFormatObstacle = GL_R8;
 		
 		ftFlow::allocate(simulationWidth, simulationHeight, internalFormatVelocity, densityWidth, densityHeight, internalFormatDensity);
+		visualizeField.setup(simulationWidth, simulationHeight);
 		
 		temperatureFbo.allocate(simulationWidth,simulationHeight,interformatPressure);
 		ftUtil::zero(temperatureFbo);
@@ -412,26 +413,22 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawVelocity(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawPressure(int _x, int _y, int _w, int _h) {
-		if (toggleVisualisationField) { visualizeField.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(pressureFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(pressureFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawTemperature(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawDivergence(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
@@ -441,20 +438,17 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawVorticityVelocity(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(vorticityFirstPassFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawConfinement(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(vorticitySecondPassFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::drawBuoyancy(int _x, int _y, int _w, int _h){
-		if (toggleVisualisationField) { visualizeField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
-		else { visualizeScalar.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
+		visualizeField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
-	<average_FPS>39</average_FPS>
-	<minimum_FPS>15.4013</minimum_FPS>
+	<average_FPS>59</average_FPS>
+	<minimum_FPS>20.5137</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<flip_camera>1</flip_camera>
@@ -136,9 +136,38 @@
 	</fluid_solver>
 	<visualization>
 		<show_field>1</show_field>
-		<scale>3</scale>
-		<size>160</size>
-		<mode>14</mode>
-		<name>Fluid Density</name>
+		<scale>1</scale>
+		<size>160, 90</size>
+		<mode>2</mode>
+		<name>optical flow</name>
+		<show_scalar>0</show_scalar>
 	</visualization>
+	<reset__R_>0</reset__R_>
+	<velocity_bridge>
+		<trail>0.25</trail>
+		<blur>2.5</blur>
+		<speed>50</speed>
+	</velocity_bridge>
+	<density_bridge>
+		<trail>0.25</trail>
+		<blur>2.5</blur>
+		<speed>50</speed>
+		<saturation>1</saturation>
+	</density_bridge>
+	<fluid>
+		<reset>0</reset>
+		<speed>100</speed>
+		<cell_size>1.25</cell_size>
+		<iterations>40</iterations>
+		<viscosity>0.1</viscosity>
+		<vorticity>0.6</vorticity>
+		<dissipation>0.002</dissipation>
+		<advanced_dissipation>
+			<velocity_offset>-0.001</velocity_offset>
+			<density_offset>0</density_offset>
+			<pressure_offset>0.005</pressure_offset>
+		</advanced_dissipation>
+		<density_from_pressure>0</density_from_pressure>
+		<density_from_vorticity>-0.1</density_from_vorticity>
+	</fluid>
 </settings>

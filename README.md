@@ -34,8 +34,8 @@ My interest in, and knowledge of, fluid simulation was hugely inspired by the wo
 FUTURE ADDITIONS / TODO
 
 first:
+- Visualization: visualisation variations
 - rebuild the area and splitvelocity extension and add to examples
-- Visualization: scalar and field in one class
 
 later:
 - rebuild the fluidFlow

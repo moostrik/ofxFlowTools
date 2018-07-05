@@ -7,9 +7,9 @@
 
 namespace flowTools {
 	
-	class ftSvDisplayScalarShader : public ftShader {
+	class ftSvVisualizeScalarShader : public ftShader {
 	public:
-		ftSvDisplayScalarShader() {
+		ftSvVisualizeScalarShader() {
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())

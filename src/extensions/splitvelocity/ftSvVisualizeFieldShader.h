@@ -2,13 +2,13 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftShader.h"
+#include "ftSvVisualizeFieldShader.h"
 
 namespace flowTools {
 	
-	class ftSvFieldShader : public ftShader {
+	class ftSvVisualizeFieldShader : public ftShader {
 	public:
-		ftSvFieldShader() {
+		ftSvVisualizeFieldShader() {
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			

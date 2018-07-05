@@ -21,6 +21,7 @@ void ofApp::setup(){
 	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	splitVelocityFlow.setup(flowWidth, flowHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -29,6 +30,7 @@ void ofApp::setup(){
 	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
+	flows.push_back(&splitVelocityFlow);
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
 	
@@ -134,6 +136,7 @@ void ofApp::update(){
 			fluidFlow.addFlow(flow->getType(), flow->getTexture());
 			if (flow->getType() == FT_VELOCITY) {
 				particleFlow.addFlowVelocity(flow->getTexture());
+				splitVelocityFlow.addVelocity(flow->getTexture());
 			}
 		}
 	}
@@ -156,6 +159,9 @@ void ofApp::update(){
 		particleFlow.addObstacle(fluidFlow.getObstacle());
 		particleFlow.update(dt);
 	}
+	
+	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
+	splitVelocityFlow.update();
 }
 
 //--------------------------------------------------------------

@@ -21,6 +21,10 @@ namespace flowTools {
 		}
 		
 		virtual void draw(ofTexture _tex, int _x, int _y, int _width, int _height) {
+			drawScalar(_tex, _x, _y, _width, _height);
+		}
+		
+		virtual void drawScalar(ofTexture _tex, int _x, int _y, int _width, int _height) {
 			ftUtil::zero(displayScalarFbo);
 			displayScalarShader.update(displayScalarFbo, _tex, pScale.get());
 			displayScalarFbo.draw(_x, _y, _width, _height);

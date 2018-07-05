@@ -30,6 +30,7 @@ public:
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
+	ftSplitVelocityFlow		splitVelocityFlow;
 	
 	ofImage					flowToolsLogo;
 	

@@ -43,4 +43,5 @@
 // EXTENTION
 #include "ftMouseFlow.h"
 #include "ftParticleFlow.h"
+#include "ftSplitVelocityFlow.h"
 

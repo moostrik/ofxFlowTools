@@ -7,16 +7,16 @@
 
 namespace flowTools {
 	
-	class ftSvFromVelocityShader : public ftShader {
+	class ftSplitVelocityShader : public ftShader {
 	public:
-		ftSvFromVelocityShader() {
+		ftSplitVelocityShader() {
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
             if (bInitialized)
-                ofLogVerbose("ftSvShader initialized");
+                ofLogVerbose("ftSplitVelocityShader initialized");
 			else
-				ofLogWarning("ftSvShader failed to initialize");
+				ofLogWarning("ftSplitVelocityShader failed to initialize");
 		}
 		
 	protected:

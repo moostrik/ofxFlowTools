@@ -30,9 +30,9 @@ namespace flowTools {
 		virtual void drawInput(int _x, int _y, int _w, int _h) 	{ visualizeField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 		virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizeField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
 		
-		void setVisualizationScale(float _value)				{ visualizeField.setScale(_value); }
-		void setVisualizationFieldSize(glm::vec2 _value)		{ visualizeField.setupField(_value.x, _value.y); }
-		bool setVisualizationToggleScalar(bool _value)			{ visualizeField.setToggleScalar(_value); }
+		virtual void setVisualizationScale(float _value)		{ visualizeField.setScale(_value); }
+		virtual void setVisualizationFieldSize(glm::vec2 _value){ visualizeField.setupField(_value.x, _value.y); }
+		virtual bool setVisualizationToggleScalar(bool _value)	{ visualizeField.setToggleScalar(_value); }
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		

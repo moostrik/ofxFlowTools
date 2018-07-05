@@ -31,7 +31,47 @@
 
 #pragma once
 
-#include "ftSvFromVelocity.h"
-#include "ftSvDisplayScalar.h"
-#include "ftSvField.h"
+#include "ftFlow.h"
+#include "ftSplitVelocityShader.h"
+#include "ftSvVisualize.h"
+#include "ftSvVisualizeField.h"
+
+namespace flowTools {
+	
+	class ftSplitVelocityFlow : public ftFlow {
+	public:
+		
+		void	setup(int _width, int _height){
+			ftFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RGBA32F);
+			visualizeField.setup(_width, _height);
+		};
+		
+		void	update() {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			ftFlow::resetOutput();
+			splitVelocityShader.update(outputFbo, inputFbo.getTexture(), 1.0);
+			ftFlow::resetInput();
+			ofPopStyle();
+		}
+		
+		void setVelocity(ofTexture& _tex) { setInput(_tex); }
+		void addVelocity(ofTexture& _tex, float _strength = 1.0) { addInput(_tex, _strength); }
+		ofTexture& getSplitVelocity() { return getOutput(); }
+		
+		void drawOutput(int _x, int _y, int _w, int _h) override {
+			visualizeField.draw(outputFbo.getTexture(), _x, _y, _w, _h);
+		}
+		
+		void setVisualizationScale(float _value) override			{ visualizeField.setScale(_value); }
+		void setVisualizationFieldSize(glm::vec2 _value) override	{ visualizeField.setupField(_value.x, _value.y); }
+		bool setVisualizationToggleScalar(bool _value) override		{ visualizeField.setToggleScalar(_value); }
+		
+	protected:
+		ftSplitVelocityShader	splitVelocityShader;
+		ftSvVisualizeField		visualizeField;
+		
+	};
+}
+
 

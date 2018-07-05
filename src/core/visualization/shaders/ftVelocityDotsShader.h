@@ -6,16 +6,16 @@
 
 namespace flowTools {
 	
-	class ftVelocitySpheresShader : public ftShader {
+	class ftVelocityDotsShader : public ftShader {
 	public:
-		ftVelocitySpheresShader() {
+		ftVelocityDotsShader() {
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			
             if (bInitialized)
-                ofLogVerbose("ftVelocitySpheresShader initialized");
+                ofLogVerbose("ftVelocityDotsShader initialized");
 			else
-				ofLogWarning("ftVelocitySpheresShader failed to initialize");
+				ofLogWarning("ftVelocityDotsShader failed to initialize");
 		}
 		
 	protected:

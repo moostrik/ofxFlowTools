@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>46.2539</minimum_FPS>
+	<minimum_FPS>49.6579</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>0</draw_camera__C_>
 	<draw_mouse__M_>1</draw_mouse__M_>
 	<visualization>
-		<mode>1</mode>
-		<name>input for velocity</name>
+		<mode>12</mode>
+		<name>fluid pressure</name>
 		<show_field>1</show_field>
 		<scale>2</scale>
 		<size>160, 90</size>
-		<show_scalar>1</show_scalar>
+		<show_scalar>0</show_scalar>
 	</visualization>
 	<optical_flow>
 		<threshold>0.02</threshold>

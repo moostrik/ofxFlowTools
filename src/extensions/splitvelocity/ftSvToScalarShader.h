@@ -7,9 +7,9 @@
 
 namespace flowTools {
 	
-	class ftSvVisualizeScalarShader : public ftShader {
+	class ftSvToScalarShader : public ftShader {
 	public:
-		ftSvVisualizeScalarShader() {
+		ftSvToScalarShader() {
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())
@@ -18,9 +18,9 @@ namespace flowTools {
 				glTwo();
 			
 			if (bInitialized)
-				ofLogNotice("ftSvDisplayScalarShader initialized");
+				ofLogVerbose("ftSvToScalarShader initialized");
 			else
-				ofLogWarning("ftSvDisplayScalarShader failed to initialize");
+				ofLogWarning("ftSvToScalarShader failed to initialize");
 		}
 		
 	protected:

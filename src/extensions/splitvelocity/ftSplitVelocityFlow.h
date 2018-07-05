@@ -33,8 +33,8 @@
 
 #include "ftFlow.h"
 #include "ftSplitVelocityShader.h"
-#include "ftSvVisualize.h"
-#include "ftSvVisualizeField.h"
+#include "ftSvVisualization.h"
+#include "ftSvVisualizationField.h"
 
 namespace flowTools {
 	
@@ -69,7 +69,7 @@ namespace flowTools {
 		
 	protected:
 		ftSplitVelocityShader	splitVelocityShader;
-		ftSvVisualizeField		visualizeField;
+		ftSvVisualizationField		visualizeField;
 		
 	};
 }

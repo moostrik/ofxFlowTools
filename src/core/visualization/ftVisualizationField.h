@@ -2,15 +2,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftVisualize.h"
+#include "ftVisualization.h"
 #include "ftVelocityFieldShader.h"
 #include "ftTemperatureFieldShader.h"
 
 namespace flowTools {
 	
-	class ftVisualizeField : public ftVisualize {
+	class ftVisualizationField : public ftVisualization {
 	public:
-		ftVisualizeField() {
+		ftVisualizationField() {
 			parameters.add(pToggleScalar.set("toggle scalar", false));
 		}
 		
@@ -23,7 +23,7 @@ namespace flowTools {
 			setupScalar(_scalarWidth, _scalarHeight);
 		}
 
-		void setupField(int _width, int _height) {
+		virtual void setupField(int _width, int _height) {
 			fieldWidth = _width;
 			fieldHeight = _height;
 			
@@ -40,12 +40,6 @@ namespace flowTools {
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
 			fieldColor = ofFloatColor(1,1,1,1);
-		}
-		
-		void setupScalar(int _width, int _height) {
-			scalarWidth = _width;
-			scalarHeight = _height;
-			displayScalarFbo.allocate(scalarWidth, scalarHeight, GL_RGBA);
 		}
 		
 		void draw(ofTexture _tex, int _x, int _y, int _width, int _height) override {
@@ -69,7 +63,8 @@ namespace flowTools {
 				temperatureFieldShader.update(fieldVbo, _tex, pScale.get(), barHeight, barWidth);
 			} else {
 				float arrowLength = _width / (float)fieldWidth;
-				velocityFieldShader.update(fieldVbo, _tex, (1.0 / _width) * arrowLength * pScale.get(), fieldColor);
+				float scale = (1.0 / _width) * arrowLength  * pScale.get();
+				velocityFieldShader.update(fieldVbo, _tex, scale, fieldColor);
 			}
 			ofPopMatrix();
 		}

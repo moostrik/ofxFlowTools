@@ -7,12 +7,12 @@
 
 namespace flowTools {
 	
-	class ftDisplayScalarShader : public ftShader {
+	class ftToScalarShader : public ftShader {
 	public:
-		ftDisplayScalarShader() {
+		ftToScalarShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftDisplayScalarShader";
+			string shaderName = "ftToScalarShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}

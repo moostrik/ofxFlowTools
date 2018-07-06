@@ -31,7 +31,7 @@ public:
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
 	ftSplitVelocityFlow		splitVelocityFlow;
-	ftAreaFlowNormalized	splitVelocityAreaFlow;
+	ftAreaFlowNormalized	areaFlow;
 	
 	ofImage					flowToolsLogo;
 	

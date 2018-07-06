@@ -22,7 +22,7 @@ void ofApp::setup(){
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	splitVelocityFlow.setup(flowWidth, flowHeight);
-	splitVelocityAreaFlow.setup(32, 32, FT_VELOCITY_SPLIT);
+	areaFlow.setup(32, 32, FT_VELOCITY_SPLIT);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -32,7 +32,7 @@ void ofApp::setup(){
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&splitVelocityFlow);
-	flows.push_back(&splitVelocityAreaFlow);
+	flows.push_back(&areaFlow);
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
 	
@@ -152,8 +152,8 @@ void ofApp::update(){
 	
 	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
 	splitVelocityFlow.update();
-	splitVelocityAreaFlow.addInput(splitVelocityFlow.getVelocity());
-	splitVelocityAreaFlow.update();
+	areaFlow.addInput(splitVelocityFlow.getVelocity());
+	areaFlow.update();
 }
 
 //--------------------------------------------------------------
@@ -200,7 +200,7 @@ void ofApp::draw(){
 	
 	if (toggleAreaDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		splitVelocityAreaFlow.draw(0, 0, windowWidth, windowHeight);
+		areaFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);

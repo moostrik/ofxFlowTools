@@ -19,9 +19,7 @@ namespace flowTools {
 		};
 		
 		void update(float _deltaTime) override {
-			bInputSet = true; // input is not used as it is the same as velocityInput
 			ftBridgeFlow::update(_deltaTime);
-			if (!bVelocityInputSet) { return; }
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);

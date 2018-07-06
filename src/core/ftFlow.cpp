@@ -19,7 +19,6 @@ namespace flowTools {
 		
 		inputFbo.allocate(inputWidth, inputHeight, inputInternalFormat);
 		ftUtil::zero(inputFbo);
-		bInputSet = false;
 		
 		outputFbo.allocate(outputWidth, outputHeight, outputInternalFormat);
 		ftUtil::zero(outputFbo);

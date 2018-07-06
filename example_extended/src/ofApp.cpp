@@ -120,6 +120,7 @@ void ofApp::update(){
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
+	splitVelocityFlow.resetInput();
 	for (auto flow: mouseFlows) {
 		flow->update(dt);
 		if (flow->didChange()) {
@@ -152,7 +153,7 @@ void ofApp::update(){
 	
 	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
 	splitVelocityFlow.update();
-	areaFlow.addInput(splitVelocityFlow.getVelocity());
+	areaFlow.setInput(splitVelocityFlow.getVelocity());
 	areaFlow.update();
 }
 

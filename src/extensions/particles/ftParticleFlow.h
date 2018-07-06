@@ -36,7 +36,7 @@ namespace flowTools {
 		void	update(float _deltaTime);
 		void	reset() override;
 		
-		void	draw(int _x, int _y, int _width, int _height) override;
+		void	drawOutput(int _x, int _y, int _w, int _h) override;
 		
 		float	getSpeed() { return speed.get(); }
 		float	getCellSize() { return cellSize.get(); }

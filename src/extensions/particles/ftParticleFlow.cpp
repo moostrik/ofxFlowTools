@@ -139,10 +139,10 @@ namespace flowTools {
 		ftUtil::zero(particleAgeLifespanMassSizeFbo);
 	}
 	
-	void ftParticleFlow::draw(int _x, int _y, int _width, int _height) {
+	void ftParticleFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		ofPushView();
 		ofTranslate(_x, _y);
-		ofScale(_width / (float)numParticlesX, _height / (float)numParticlesY);
+		ofScale(_w / (float)numParticlesX, _h / (float)numParticlesY);
 		drawParticleShader.update(particleMesh, numParticles, particlePositionFbo.getTexture(), particleAgeLifespanMassSizeFbo.getTexture(), twinkleSpeed.get());
 		ofPopView();
 	}

@@ -20,21 +20,13 @@ namespace flowTools {
 			parameters.add(speed.set("speed", 50, .1, 100));
 		}
 		
-		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex); bVelocityInputSet = true; }
+		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex);}
 		
-		void addVelocity(ofTexture &_inputTex, float _strength) { add(velocityInputFbo, _inputTex, _strength); bVelocityInputSet = true; }
+		void addVelocity(ofTexture &_inputTex, float _strength) { add(velocityInputFbo, _inputTex, _strength);}
 		
 		virtual ofTexture&	getVelocity()	{ return getOutput(); }
 		
 		virtual void update(float _deltaTime)  {
-			if (!bInputSet) {
-				ofLogWarning("ftBridgeFlow: input texture not set, can't update");
-				return;
-			}
-			if (!bVelocityInputSet) {
-				ofLogWarning("ftBridgeFlow: velocity input texture not set, can't update");
-				return;
-			}
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
@@ -60,7 +52,6 @@ namespace flowTools {
 		ofParameter<float>			blurRadius;
 		ofParameter<float>			speed;
 		ftPingPongFbo				velocityInputFbo;
-		bool						bVelocityInputSet;
 		ftPingPongFbo				velocityTrailFbo;
 		ftBridgeShader				bridgeShader;
 		ftGaussianBlurShader		blurShader;

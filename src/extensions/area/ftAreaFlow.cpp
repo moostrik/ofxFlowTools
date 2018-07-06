@@ -77,17 +77,15 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::roi(inputFbo, _tex, roi);
 		ofPopStyle();
-		bInputSet = true;
 	}
 	
 	void ftAreaFlow::addInput(ofTexture &_tex, float _strength) {
-		resetInput();
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::zero(roiFbo);
 		ftUtil::roi(roiFbo, _tex, roi);
 		ofPopStyle();
 		ftFlow::addInput(roiFbo.getTexture(), _strength);
-		bInputSet = true;
 	}
 //
 	void ftAreaFlow::update() {
@@ -135,9 +133,11 @@ namespace flowTools {
 		pMeanMagnitude.set(meanMagnitude);
 		pStdevMagnitude.set(stdevMagnitude);
 		
+//		resetInput();
+		
 	}
 	
-	void ftAreaFlow::draw(int _x, int _y, int _w, int _h) {
+	void ftAreaFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
 		int w = roi.width * _w;

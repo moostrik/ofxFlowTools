@@ -48,7 +48,7 @@ namespace flowTools {
 		ofTexture&	getConfinement()		{ return vorticitySecondPassFbo.getTexture(); }
 		ofTexture&	getBuoyancy()			{ return smokeBuoyancyFbo.getTexture(); }
 		
-		void	draw(int _x, int _y, int _w, int _h) override { drawDensity (_x, _y, _w, _h) ;}
+		void	drawOutput(int _x, int _y, int _w, int _h) override { drawDensity (_x, _y, _w, _h) ;}
 		void	drawDensity(int _x, int _y, int _w, int _h);
 		void	drawVelocity(int _x, int _y, int _w, int _h);
 		void	drawPressure(int _x, int _y, int _w, int _h);

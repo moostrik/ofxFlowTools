@@ -32,7 +32,6 @@ namespace flowTools {
 		
 		void update(float _deltaTime) override {
 			ftBridgeFlow::update(_deltaTime);
-			if (!bInputSet || !bVelocityInputSet) { return; }
 			
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -40,7 +39,6 @@ namespace flowTools {
 			densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * .1);
 			outputFbo.swap();
 			HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
-			resetInput();
 			
 			RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
 			ofPopStyle();
@@ -59,7 +57,7 @@ namespace flowTools {
 			return visibleFbo.getTexture();
 		}
 		
-		void draw(int _x, int _y, int _w, int _h) override { getVisible().draw(_x, _y, _w, _h); }
+		void drawOutput(int _x, int _y, int _w, int _h) override { getVisible().draw(_x, _y, _w, _h); }
 		
 		void	setDensity(ofTexture& _inputTex) 						{ setInput(_inputTex); }
 		void	addDensity(ofTexture& _inputTex, float _strength = 1.0)	{ addInput(_inputTex, _strength); }

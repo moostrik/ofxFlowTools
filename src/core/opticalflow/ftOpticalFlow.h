@@ -38,13 +38,11 @@ namespace flowTools {
 		};
 		
 		void update() {
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			
-			
-			
 			if (bInputSet) {
 				bInputSet = false;
+				
+				ofPushStyle();
+				ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 				
 				opticalFlowFbo.swap();
 				ftUtil::stretch(opticalFlowFbo, inputFbo.getTexture());
@@ -56,9 +54,9 @@ namespace flowTools {
 				}
 				
 				opticalFlowShader.update(outputFbo, opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  power.get(), doInverseX.get(), doInverseY.get());
+				
+				ofPopStyle();
 			}
-			
-			ofPopStyle();
 		}
 		
 		void setInput(ofTexture& _tex) override {
@@ -104,7 +102,6 @@ namespace flowTools {
 		bool		getInverseY()	{return doInverseY.get();}
 		
 	protected:
-		
 		ofParameter<float>			threshold;
 		ofParameter<int>			offset;
 		ofParameter<float>			strength;
@@ -112,6 +109,7 @@ namespace flowTools {
 		ofParameter<bool>			doInverseX;
 		ofParameter<bool>			doInverseY;
 		
+		bool						bInputSet;
 		bool						bFirstFrame;
 		ftOpticalFlowShader 		opticalFlowShader;
 		ftRGB2LuminanceShader		RGB2LumShader;

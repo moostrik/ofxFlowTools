@@ -296,6 +296,7 @@ namespace flowTools {
 	GLint ftUtil::getInternalFormatFromType(flowTools::ftFlowForceType _type) {
 		switch(_type) {
 			case FT_DENSITY:
+			case FT_VELOCITY_SPLIT:
 				return GL_RGBA32F;
 				break;
 			case FT_VELOCITY:

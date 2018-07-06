@@ -65,19 +65,12 @@ void ofApp::setupGui() {
 	bool s = true;
 	switchGuiColor(s = !s);
 	gui.add(visualizationParameters);
-	switchGuiColor(s = !s);
-	gui.add(opticalFlow.getParameters());
-	switchGuiColor(s = !s);
-	gui.add(velocityBridgeFlow.getParameters());
-	switchGuiColor(s = !s);
-	gui.add(densityBridgeFlow.getParameters());
-	switchGuiColor(s = !s);
-	gui.add(fluidFlow.getParameters());
+	for (auto flow : flows) {
+		switchGuiColor(s = !s);
+		gui.add(flow->getParameters());
+	}
 
-	// if the settings file is not present the parameters will not be set during this setup
-	if (!ofFile("settings.xml"))
-		gui.saveToFile("settings.xml");
-	
+	if (!ofFile("settings.xml")) { gui.saveToFile("settings.xml"); }	
 	gui.loadFromFile("settings.xml");
 	
 	gui.minimizeAll();

@@ -40,13 +40,14 @@ namespace flowTools {
 	
 	class ftSplitVelocityFlow : public ftFlow {
 	public:
+		ftSplitVelocityFlow() { parameters.setName("split velocity flow"); }
 		
-		void	setup(int _width, int _height){
+		void setup(int _width, int _height){
 			ftFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RGBA32F);
 			visualizationField.setup(_width, _height);
 		};
 		
-		void	update() {
+		void update() {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftFlow::resetOutput();
@@ -57,7 +58,7 @@ namespace flowTools {
 		
 		void setVelocity(ofTexture& _tex) { setInput(_tex); }
 		void addVelocity(ofTexture& _tex, float _strength = 1.0) { addInput(_tex, _strength); }
-		ofTexture& getSplitVelocity() { return getOutput(); }
+		ofTexture& getVelocity() { return getOutput(); }
 		
 		void drawOutput(int _x, int _y, int _w, int _h) override {
 			visualizationField.draw(outputFbo.getTexture(), _x, _y, _w, _h);

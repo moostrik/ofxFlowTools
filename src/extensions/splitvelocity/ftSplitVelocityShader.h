@@ -12,11 +12,8 @@ namespace flowTools {
 		ftSplitVelocityShader() {
             bInitialized = 1;
             if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftSplitVelocityShader initialized");
-			else
-				ofLogWarning("ftSplitVelocityShader failed to initialize");
+			if (bInitialized) {   ofLogVerbose("ftSplitVelocityShader initialized"); }
+			else {ofLogWarning("ftSplitVelocityShader failed to initialize"); }
 		}
 		
 	protected:

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>48.8346</minimum_FPS>
+	<minimum_FPS>47.9766</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>0</draw_camera__C_>
 	<draw_mouse__M_>1</draw_mouse__M_>
 	<visualization>
-		<mode>7</mode>
-		<name>obstacle</name>
+		<mode>1</mode>
+		<name>input for velocity</name>
 		<show_field>1</show_field>
 		<scale>3</scale>
 		<size>160, 90</size>
@@ -127,12 +127,12 @@
 	</area_split_velocity_2>
 	<draw_area__A_>1</draw_area__A_>
 	<area_split_velocity_1>
-		<mean_mag>0</mean_mag>
+		<mean_mag>0.122569</mean_mag>
 		<components>
-			<right>0</right>
-			<down>0</down>
-			<left>0</left>
-			<up>0</up>
+			<right>0.118688</right>
+			<down>0.028615</down>
+			<left>0.000389785</left>
+			<up>0.0108359</up>
 		</components>
 		<direction>
 			<right>0</right>

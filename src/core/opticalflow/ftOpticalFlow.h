@@ -85,7 +85,9 @@ namespace flowTools {
 			//	ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set";
 		}
 		
-		void reset() override { ftFlow::reset(); bFirstFrame = true; }
+		void drawInput(int _x, int _y, int _w, int _h) override { inputFbo.draw(_x, _y, _w, _h); }
+		
+		void reset() override { ftFlow::reset(); bFirstFrame = true; bInputSet = false; }
 		
 		void		setStrength(float value)	{strength.set(value);}
 		void		setOffset(int value)		{offset.set(value);}

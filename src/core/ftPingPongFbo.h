@@ -30,10 +30,11 @@ namespace flowTools {
 			flag = 1-flag;
 			bind();
 			setActiveDrawBuffer(flag);
+			setDefaultTextureIndex(flag);
 			unbind();
 		}
 		
-		ofTexture& getTexture() { return ofFbo::getTexture(flag); }
+//		ofTexture& getTexture() { return ofFbo::getTexture(flag); }
 		ofTexture& getBackTexture() { return ofFbo::getTexture(1-flag); }
 		
 		private:

@@ -39,11 +39,9 @@ public:
 	ofParameter<int>		visualizationMode;
 	ofParameter<string>		visualizationName;
 	ofParameter<float>		visualizationScale;
-	ofParameter<glm::vec2>	visualizationSize;
 	ofParameter<bool>		toggleVisualizationScalar;
 	void visualizationModeListener(int& _value) 			{ visualizationName.set(visualizationNames[_value]); }
 	void visualizationScaleListener(float& _value)			{ for (auto flow : flows) { flow->setVisualizationScale(_value); } }
-	void visualizationSizeListener(glm::vec2& _value)		{ for (auto flow : flows) { flow->setVisualizationFieldSize(_value); } }
 	void toggleVisualizationScalarListener(bool &_value)	{ for (auto flow : flows) { flow->setVisualizationToggleScalar(_value); } }
 	
 	ofVideoGrabber		simpleCam;

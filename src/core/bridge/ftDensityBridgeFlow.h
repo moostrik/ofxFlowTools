@@ -57,7 +57,8 @@ namespace flowTools {
 			return visibleFbo.getTexture();
 		}
 		
-		void drawOutput(int _x, int _y, int _w, int _h) override { getVisible().draw(_x, _y, _w, _h); }
+		void	drawInput(int _x, int _y, int _w, int _h) override { inputFbo.draw(_x, _y, _w, _h); }
+		void	drawOutput(int _x, int _y, int _w, int _h) override { getVisible().draw(_x, _y, _w, _h); }
 		
 		void	setDensity(ofTexture& _inputTex) 						{ setInput(_inputTex); }
 		void	addDensity(ofTexture& _inputTex, float _strength = 1.0)	{ addInput(_inputTex, _strength); }

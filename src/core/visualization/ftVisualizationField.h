@@ -15,7 +15,7 @@ namespace flowTools {
 		}
 		
 		void setup(int _width, int _height) override {
-			setup(_width / 2, _height / 2, _width, _height);
+			setup(_width / 4, _height / 4, _width, _height);
 		}
 
 		void setup(int _fieldWidth, int _fieldHeight, int _scalarWidth, int _scalarHeight) {

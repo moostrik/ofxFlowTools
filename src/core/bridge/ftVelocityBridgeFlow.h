@@ -30,7 +30,7 @@ namespace flowTools {
 		
 		ofTexture&	getVelocity() override 				{ return getOutput(); }
 		void setInput(ofTexture &_texture) override		{ setVelocity(_texture); }
-		
+				
 	protected:
 		ftMultiplyForceShader		multiplyShader;
 		

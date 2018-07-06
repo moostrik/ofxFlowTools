@@ -33,6 +33,9 @@ void ofApp::setup(){
 	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&splitVelocityFlow);
 	flows.push_back(&areaFlow);
+	
+	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }
+	
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
 	
@@ -72,12 +75,10 @@ void ofApp::setupGui() {
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
 	visualizationParameters.add(visualizationName.set("name", "fluidFlow Density"));
 	visualizationParameters.add(visualizationScale.set("scale", 1, 0.1, 10.0));
-	visualizationParameters.add(visualizationSize.set("size", glm::vec2(flowWidth / 2, flowHeight / 2), glm::vec2(flowWidth / 4, flowHeight / 4), glm::vec2(flowWidth, flowHeight)));
 	visualizationParameters.add(toggleVisualizationScalar.set("show scalar", false));
 	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
 	toggleVisualizationScalar.addListener(this, &ofApp::toggleVisualizationScalarListener);
 	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
-	visualizationSize.addListener(this, &ofApp::visualizationSizeListener);
 	
 	bool s = true;
 	switchGuiColor(s = !s);

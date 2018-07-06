@@ -7,10 +7,11 @@ namespace flowTools {
 	void ftAreaFlow::setup(int _width, int _height, ftFlowForceType _type) {
 		areaCount++;
 		type = _type;
-		ftFlow::allocate(_width, _height, ftUtil::getInternalFormatFromType(type));
-		roiFbo.allocate(_width, _height, inputInternalFormat);
+		GLint internalFormat = ftUtil::getInternalFormatFromType(type);
+		ftFlow::allocate(_width, _height, internalFormat);
+		roiFbo.allocate(_width, _height, internalFormat);
 		ftUtil::zero(roiFbo);
-		numChannels = ftUtil::getNumChannelsFromInternalFormat(inputInternalFormat);
+		numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
 		
 		direction.clear();
 		direction.resize(numChannels, 0);
@@ -55,7 +56,7 @@ namespace flowTools {
 				directionParameters.add(pDirection[i].set(componentNames[i], 0, -1, 1));
 			}
 			parameters.add(componentParameters);
-			parameters.add(directionParameters);
+//			parameters.add(directionParameters);
 		}
 		
 		roiParameters.setName("ROI");
@@ -70,23 +71,37 @@ namespace flowTools {
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaFlow::addInput(ofTexture &_tex, float _strength) {
-		ftUtil::roi(roiFbo, _tex, roi);
-		ftFlow::addInput(roiFbo.getTexture(), _strength);
+	void ftAreaFlow::setInput(ofTexture &_tex){
+		resetInput();
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::roi(inputFbo, _tex, roi);
+		ofPopStyle();
 		bInputSet = true;
 	}
 	
+	void ftAreaFlow::addInput(ofTexture &_tex, float _strength) {
+		resetInput();
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::roi(roiFbo, _tex, roi);
+		ofPopStyle();
+		ftFlow::addInput(roiFbo.getTexture(), _strength);
+		bInputSet = true;
+	}
+//
 	void ftAreaFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
 		float* floatPixelData = inputPixels.getData();
 		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
+		
 		int numPixels = inputWidth * inputHeight;
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
-				float vel = floatPixelData[i * numChannels + j] * 10.0 ; // times 10 should give values closer to 1
+				float vel = floatPixelData[i * numChannels + j];
 				totalVelocity[j] += vel;
 				mag += vel * vel;
 			}
@@ -120,7 +135,6 @@ namespace flowTools {
 		pMeanMagnitude.set(meanMagnitude);
 		pStdevMagnitude.set(stdevMagnitude);
 		
-		resetInput();
 	}
 	
 	void ftAreaFlow::draw(int _x, int _y, int _w, int _h) {

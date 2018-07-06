@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
-#include "ftAreaFlowNormalized.h"
 
 #define USE_PROGRAMMABLE_GL
 
@@ -32,7 +31,6 @@ public:
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
 	ftSplitVelocityFlow		splitVelocityFlow;
-	ftAreaFlowNormalized	velocityAreaFlow;
 	ftAreaFlowNormalized	splitVelocityAreaFlow;
 	
 	ofImage					flowToolsLogo;

@@ -22,7 +22,6 @@ void ofApp::setup(){
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	splitVelocityFlow.setup(flowWidth, flowHeight);
-	velocityAreaFlow.setup(32, 32, FT_VELOCITY);
 	splitVelocityAreaFlow.setup(32, 32, FT_VELOCITY_SPLIT);
 	
 	flows.push_back(&opticalFlow);
@@ -33,7 +32,6 @@ void ofApp::setup(){
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&splitVelocityFlow);
-	flows.push_back(&velocityAreaFlow);
 	flows.push_back(&splitVelocityAreaFlow);
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
@@ -73,7 +71,7 @@ void ofApp::setupGui() {
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
 	visualizationParameters.add(visualizationName.set("name", "fluidFlow Density"));
-	visualizationParameters.add(visualizationScale.set("scale", 0.3, 0.1, 3.0));
+	visualizationParameters.add(visualizationScale.set("scale", 1, 0.1, 10.0));
 	visualizationParameters.add(visualizationSize.set("size", glm::vec2(flowWidth / 2, flowHeight / 2), glm::vec2(flowWidth / 4, flowHeight / 4), glm::vec2(flowWidth, flowHeight)));
 	visualizationParameters.add(toggleVisualizationScalar.set("show scalar", false));
 	visualizationMode.addListener(this, &ofApp::visualizationModeListener);
@@ -154,8 +152,6 @@ void ofApp::update(){
 	
 	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
 	splitVelocityFlow.update();
-	velocityAreaFlow.addInput(splitVelocityFlow.getVelocity());
-	velocityAreaFlow.update();
 	splitVelocityAreaFlow.addInput(splitVelocityFlow.getVelocity());
 	splitVelocityAreaFlow.update();
 }
@@ -202,9 +198,8 @@ void ofApp::draw(){
 		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
-	if (toggleMouseDraw) {
+	if (toggleAreaDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		velocityAreaFlow.draw(0, 0, windowWidth, windowHeight);
 		splitVelocityAreaFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	

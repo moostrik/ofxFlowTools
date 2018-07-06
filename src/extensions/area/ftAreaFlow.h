@@ -14,7 +14,7 @@ namespace flowTools {
 		
 		void draw(int _x, int _y, int _w, int _h) override;	
 		
-		void	setInput(ofTexture &_tex) override { ftUtil::roi(inputFbo, _tex, roi); bInputSet = true; }
+		void	setInput(ofTexture &_tex) override;
 		void	addInput(ofTexture &_tex, float _strength = 1.0) override;
 		
 		void	setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }

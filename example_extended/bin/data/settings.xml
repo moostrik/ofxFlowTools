@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>47.924</minimum_FPS>
+	<minimum_FPS>48.8346</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
 	<draw_camera__C_>0</draw_camera__C_>
 	<draw_mouse__M_>1</draw_mouse__M_>
 	<visualization>
-		<mode>4</mode>
-		<name>bridge density</name>
+		<mode>7</mode>
+		<name>obstacle</name>
 		<show_field>1</show_field>
-		<scale>2</scale>
+		<scale>3</scale>
 		<size>160, 90</size>
 		<show_scalar>0</show_scalar>
 	</visualization>
@@ -84,16 +84,16 @@
 	<reset__R_>0</reset__R_>
 	<split_velocity_flow />
 	<area_velocity_1>
-		<mean_mag>0.000110946</mean_mag>
+		<mean_mag>0.000153154</mean_mag>
 		<components>
-			<x>0.000110939</x>
-			<y>1.23964e-06</y>
+			<x>0.000105189</x>
+			<y>0.000111316</y>
 		</components>
 		<direction>
-			<x>0.999938</x>
-			<y>0.0111734</y>
+			<x>0.686819</x>
+			<y>0.726828</y>
 		</direction>
-		<normalization>0.25</normalization>
+		<normalization>0.01</normalization>
 		<boost_highest_comp_>0</boost_highest_comp_>
 		<ROI>
 			<x>0.2</x>
@@ -126,4 +126,27 @@
 		</ROI>
 	</area_split_velocity_2>
 	<draw_area__A_>1</draw_area__A_>
+	<area_split_velocity_1>
+		<mean_mag>0</mean_mag>
+		<components>
+			<right>0</right>
+			<down>0</down>
+			<left>0</left>
+			<up>0</up>
+		</components>
+		<direction>
+			<right>0</right>
+			<down>0</down>
+			<left>0</left>
+			<up>0</up>
+		</direction>
+		<ROI>
+			<x>0.3</x>
+			<y>0.3</y>
+			<width>0.4</width>
+			<height>0.4</height>
+		</ROI>
+		<normalization>0.1</normalization>
+		<boost_highest_comp_>0</boost_highest_comp_>
+	</area_split_velocity_1>
 </settings>

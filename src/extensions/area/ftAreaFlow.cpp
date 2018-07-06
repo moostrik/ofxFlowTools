@@ -42,13 +42,20 @@ namespace flowTools {
 			case FT_DENSITY:
 				componentNames = {"red", "green", "blue", "alpha"};
 				break;
+			case FT_PRESSURE:
+				componentNames = {"pressure"};
+				break;
+			case FT_TEMPERATURE:
+				componentNames = {"temperature"};
+				break;
 			default:
 				componentNames = {"unknown 0", "unknown 1", "unknown 2", "unknown 3"};
 				break;
 		}
+		
+		pComponents.resize(numChannels);
+		pDirection.resize(numChannels);
 		if (numChannels > 1) {
-			pComponents.resize(numChannels);
-			pDirection.resize(numChannels);
 			componentParameters.setName("components");
 			directionParameters.setName("direction");
 			for (int i=0; i<numChannels; i++) {
@@ -57,6 +64,9 @@ namespace flowTools {
 			}
 			parameters.add(componentParameters);
 //			parameters.add(directionParameters);
+		} else {
+			parameters.add(pComponents[0].set(componentNames[0], 0, -1, 1));
+//			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
 		}
 		
 		roiParameters.setName("ROI");
@@ -107,34 +117,23 @@ namespace flowTools {
 		}
 		getMeanStDev(magnitudes, meanMagnitude, stdevMagnitude);
 		
-		if (numChannels > 1) {
-			float length;
-			for (int i=0; i<numChannels; i++) {
-				length += totalVelocity[i] * totalVelocity[i];
-			}
-			length = sqrt(length);
-			for (int i=0; i<numChannels; i++) {
-				direction[i] = totalVelocity[i] / length;
-				velocity[i] = direction[i] * meanMagnitude;
-			}
+		float length;
+		for (int i=0; i<numChannels; i++) {
+			length += totalVelocity[i] * totalVelocity[i];
 		}
-		else {
-			direction[0] = 1; // 1 for normalization with one component
-			velocity[0] = meanMagnitude;
+		length = sqrt(length);
+		for (int i=0; i<numChannels; i++) {
+			direction[i] = totalVelocity[i] / length;
+			velocity[i] = direction[i] * meanMagnitude;
 		}
 		
-		if (numChannels > 1) {
-			for (int i=0; i<numChannels; i++) {
-				pComponents[i] = velocity[i];
-				pDirection[i] = direction[i];
-			}
+		for (int i=0; i<numChannels; i++) {
+			pComponents[i] = velocity[i];
+			pDirection[i] = direction[i];
 		}
 		
 		pMeanMagnitude.set(meanMagnitude);
 		pStdevMagnitude.set(stdevMagnitude);
-		
-//		resetInput();
-		
 	}
 	
 	void ftAreaFlow::drawOutput(int _x, int _y, int _w, int _h) {

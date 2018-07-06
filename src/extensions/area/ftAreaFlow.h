@@ -50,11 +50,11 @@ namespace flowTools {
 		static int		areaCount;
 		
 		ofFloatPixels 	inputPixels;
+		vector<float>	magnitudes;
 		ofRectangle 	roi;
 		
 		float			meanMagnitude;
 		float			stdevMagnitude;
-		vector<float>	magnitudes;
 		vector<float> 	direction;
 		vector<float> 	velocity;
 		

@@ -22,6 +22,8 @@ void ofApp::setup(){
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	splitVelocityFlow.setup(flowWidth, flowHeight);
+	velocityAreaFlow.setup(32, 32, FT_VELOCITY);
+	splitVelocityAreaFlow.setup(32, 32, FT_VELOCITY_SPLIT);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -31,6 +33,8 @@ void ofApp::setup(){
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&splitVelocityFlow);
+	flows.push_back(&velocityAreaFlow);
+	flows.push_back(&splitVelocityAreaFlow);
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
 	
@@ -61,6 +65,7 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	gui.add(toggleParticleDraw.set("draw particles (P)", true));
+	gui.add(toggleAreaDraw.set("draw area (A)", true));
 	toggleParticleDraw.addListener(this, &ofApp::toggleParticleDrawListener);
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
@@ -149,6 +154,10 @@ void ofApp::update(){
 	
 	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
 	splitVelocityFlow.update();
+	velocityAreaFlow.addInput(splitVelocityFlow.getVelocity());
+	velocityAreaFlow.update();
+	splitVelocityAreaFlow.addInput(splitVelocityFlow.getVelocity());
+	splitVelocityAreaFlow.update();
 }
 
 //--------------------------------------------------------------
@@ -191,6 +200,12 @@ void ofApp::draw(){
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
+	}
+	
+	if (toggleMouseDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		velocityAreaFlow.draw(0, 0, windowWidth, windowHeight);
+		splitVelocityAreaFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
@@ -256,6 +271,8 @@ void ofApp::keyPressed(int key){
 		case 'R': toggleReset.set(!toggleReset.get()); break;
 		case 'p':
 		case 'P': toggleParticleDraw.set(!toggleParticleDraw.get()); break;
+		case 'a':
+		case 'A': toggleParticleDraw.set(!toggleAreaDraw.get()); break;
 			break;
 	}
 }

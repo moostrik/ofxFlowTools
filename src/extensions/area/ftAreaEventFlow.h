@@ -56,7 +56,7 @@ namespace flowTools {
 					magnitudeInActiveLow = eV;
 				}
 			}
-			pMagnitudeEvent = (magnitudeEvent)? true : false;
+			pMagnitudeEvent = (magnitudeEventActive)? true : false;
 			
 			for (int i=0; i<numChannels; i++) {
 				componentEvents[i] = 0;

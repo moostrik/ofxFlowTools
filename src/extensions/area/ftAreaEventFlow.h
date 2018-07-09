@@ -2,15 +2,25 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftAreaFlowNormalized.h"
+#include "ftAreaFlow.h"
 
 namespace flowTools {
 	
-	class ftAreaEventFlow: public ftAreaFlowNormalized {
+	class ftAreaEventFlow: public ftAreaFlow {
 	public:
 		
 		void setup(int _width, int _height, ftFlowForceType _type) override  {
-			ftAreaFlowNormalized::setup(_width, _height, _type);
+			ftAreaFlow::setup(_width, _height, _type);
+			
+			event.clear();
+			event.resize(numChannels + 1, 0);
+			activeHigh.clear();
+			activeHigh.resize(numChannels + 1, 0);
+			inActiveLow.clear();
+			inActiveLow.resize(numChannels + 1, 0);
+			eventActive.clear();
+			eventActive.resize(numChannels + 1, 0);
+			
 			eventParameters.setName("events");
 			eventParameters.add(pTreshold.set("threshold", .25, .1, .3));
 			eventParameters.add(pBase.set("base", .6, .5, .75));
@@ -22,17 +32,7 @@ namespace flowTools {
 			parameters.add(eventParameters);
 		}
 		void update() override {
-			ftAreaFlowNormalized::update();
-			if (event.size() != numChannels + 1) {
-				event.clear();
-				event.resize(numChannels + 1, 0);
-				activeHigh.clear();
-				activeHigh.resize(numChannels + 1, 0);
-				inActiveLow.clear();
-				inActiveLow.resize(numChannels + 1, 0);
-				eventActive.clear();
-				eventActive.resize(numChannels + 1, 0);
-			}
+			ftAreaFlow::update();
 			
 			for (int i=0; i<numChannels + 1; i++) {
 				event[i] = 0;
@@ -51,8 +51,9 @@ namespace flowTools {
 				}
 				
 				if (eventActive[i]) {
-					if (eV > activeHigh[i]) { activeHigh[i] = eV; }
-					
+					if (eV > activeHigh[i]) {
+						activeHigh[i] = eV;
+					}
 					if (eV < activeHigh[i] * pTreshold.get()) {
 						event[i] = -1;
 						eventActive[i] = false;

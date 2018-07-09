@@ -54,7 +54,7 @@ namespace flowTools {
 				break;
 		}
 		
-			pComponents.resize(numChannels);
+		pComponents.resize(numChannels);
 		pDirection.resize(numChannels);
 		if (numChannels > 1) {
 			componentParameters.setName("components");

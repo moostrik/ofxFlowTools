@@ -22,7 +22,7 @@ namespace flowTools {
 			eventActive.resize(numChannels + 1, 0);
 			
 			eventParameters.setName("events");
-			eventParameters.add(pTreshold.set("threshold", .25, .1, .3));
+			eventParameters.add(pThreshold.set("threshold", .25, .1, .3));
 			eventParameters.add(pBase.set("base", .6, .5, .75));
 			eventParameters.add(pMagnitudeEvent.set("magnitude", 0, -1, 1));
 			pVelocityEvent.resize(4);
@@ -43,7 +43,7 @@ namespace flowTools {
 				if (!eventActive[i]) {
 					if (eV < inActiveLow[i]) { inActiveLow[i] = eV; }
 					
-					if (eV > inActiveLow [i] + pTreshold.get() && eV > meanMagnitude * pBase.get()) {
+					if (eV > inActiveLow [i] + pThreshold.get() && eV > meanMagnitude * pBase.get()) {
 						event[i] = 1;
 						eventActive[i] = true;
 						activeHigh[i] = eV;
@@ -54,7 +54,7 @@ namespace flowTools {
 					if (eV > activeHigh[i]) {
 						activeHigh[i] = eV;
 					}
-					if (eV < activeHigh[i] * pTreshold.get()) {
+					if (eV < activeHigh[i] * pThreshold.get()) {
 						event[i] = -1;
 						eventActive[i] = false;
 						inActiveLow[i] = eV;
@@ -76,10 +76,10 @@ namespace flowTools {
 		float	getVelocityEventStart(int _index)	{ return getVelocityEvent(_index) == 1; }
 		float	getVelocityEventEnd(int _index)		{ return getVelocityEvent(_index) == 0; }
 		
-		float	getThreshold()				{ return pTreshold.get(); }
+		float	getThreshold()				{ return pThreshold.get(); }
 		float	getBase()					{ return pBase.get(); }
 		
-		void	setThreshold(float _value)	{ pTreshold.set(_value); }
+		void	setThreshold(float _value)	{ pThreshold.set(_value); }
 		void	setBase(float _value)		{ pBase.set(_value); }
 		
 	protected:
@@ -89,7 +89,7 @@ namespace flowTools {
 		vector<float> 		inActiveLow;
 		vector<bool> 		eventActive;
 		
-		ofParameter<float>	pTreshold;
+		ofParameter<float>	pThreshold;
 		ofParameter<float>	pBase;
 		ofParameter<bool> 	pMagnitudeEvent;
 		vector< ofParameter<bool> > pVelocityEvent;

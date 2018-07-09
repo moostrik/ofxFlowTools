@@ -7,7 +7,7 @@
 
 namespace flowTools {
 	
-	class ftAreaFlow : public ftFlow {
+	class ftAreaAverageFlow : public ftFlow {
 	public:
 		virtual void setup(int _width, int _height, ftFlowForceType _type);
 		virtual void update();
@@ -23,8 +23,8 @@ namespace flowTools {
 		float	setNormalizationMax(float _value)	{ pNormalizationMax.set(_value); }
 		void	setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
-		float	getComponent(int _index) 	{ getVelocity(_index); }
-		float	getVelocity(int _index) 	{ if (_index < numChannels) { return velocity[_index];  } else { return 0; } }
+		vector<float>	getComponents() 	{ return components; }
+		float	getComponent(int _index) 	{ if (_index < numChannels) { return components[_index];  } else { return 0; } }
 		float	getDirection(int _index)	{ if (_index < numChannels) { return direction[_index];  } else { return 0; } }
 		float	getMagnitude()				{ return getMeanMagnitude(); }
 		float	getMeanMagnitude()			{ return meanMagnitude; }
@@ -64,13 +64,13 @@ namespace flowTools {
 		float			meanMagnitude;
 		float			stdevMagnitude;
 		vector<float> 	direction;
-		vector<float> 	velocity;
+		vector<float> 	components;
 		
 		ofFbo			roiFbo;
 		
 		void allocate(int _width, int _height, int _numChannels);
 		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		
-		
+		string getComponentName(int _index);
 	};
 }

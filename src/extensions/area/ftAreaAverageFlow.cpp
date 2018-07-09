@@ -1,10 +1,10 @@
-#include "ftAreaFlow.h"
+#include "ftAreaAverageFlow.h"
 
 namespace flowTools {
 	
-	int ftAreaFlow::areaCount = 0;
+	int ftAreaAverageFlow::areaCount = 0;
 	
-	void ftAreaFlow::setup(int _width, int _height, ftFlowForceType _type) {
+	void ftAreaAverageFlow::setup(int _width, int _height, ftFlowForceType _type) {
 		areaCount++;
 		type = _type;
 		GLint internalFormat = ftUtil::getInternalFormatFromType(type);
@@ -15,8 +15,8 @@ namespace flowTools {
 		
 		direction.clear();
 		direction.resize(numChannels, 0);
-		velocity.clear();
-		velocity.resize(numChannels, 0);
+		components.clear();
+		components.resize(numChannels, 0);
 		
 		inputPixels.allocate(inputWidth, inputHeight, numChannels);
 		magnitudes.resize(inputWidth * inputHeight, 0);
@@ -30,43 +30,20 @@ namespace flowTools {
 		
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
-		
-		vector<string> componentNames;
-		switch (_type) {
-			case FT_VELOCITY:
-			case FT_VELOCITY_NORM:
-				componentNames = {"x", "y"};
-				break;
-			case FT_VELOCITY_SPLIT:
-				componentNames = {"right", "down", "left", "up"};
-				break;
-			case FT_DENSITY:
-				componentNames = {"red", "green", "blue", "alpha"};
-				break;
-			case FT_PRESSURE:
-				componentNames = {"pressure"};
-				break;
-			case FT_TEMPERATURE:
-				componentNames = {"temperature"};
-				break;
-			default:
-				componentNames = {"unknown 0", "unknown 1", "unknown 2", "unknown 3"};
-				break;
-		}
-		
+				
 		pComponents.resize(numChannels);
 		pDirection.resize(numChannels);
 		if (numChannels > 1) {
 			componentParameters.setName("components");
 			directionParameters.setName("direction");
 			for (int i=0; i<numChannels; i++) {
-				componentParameters.add(pComponents[i].set(componentNames[i], 0, -1, 1));
-//				directionParameters.add(pDirection[i].set(componentNames[i], 0, -1, 1));
+				componentParameters.add(pComponents[i].set(getComponentName(i), 0, -1, 1));
+//				directionParameters.add(pDirection[i].set(getComponentName(i), 0, -1, 1));
 			}
 			parameters.add(componentParameters);
 //			parameters.add(directionParameters);
 		} else {
-			parameters.add(pComponents[0].set(componentNames[0], 0, -1, 1));
+			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
 //			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
 		}
 		parameters.add(pNormalizationMax.set("normalization max", .25, .01, 1));
@@ -79,12 +56,12 @@ namespace flowTools {
 		roiParameters.add(pRoi[2].set("width", 1, 0, 1));
 		roiParameters.add(pRoi[3].set("height", 1, 0, 1));
 		for (int i=0; i<4; i++) {
-			pRoi[i].addListener(this, &ftAreaFlow::pRoiListener);
+			pRoi[i].addListener(this, &ftAreaAverageFlow::pRoiListener);
 		}
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaFlow::setInput(ofTexture &_tex){
+	void ftAreaAverageFlow::setInput(ofTexture &_tex){
 		resetInput();
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -92,7 +69,7 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftAreaFlow::addInput(ofTexture &_tex, float _strength) {
+	void ftAreaAverageFlow::addInput(ofTexture &_tex, float _strength) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(roiFbo);
@@ -101,7 +78,7 @@ namespace flowTools {
 		ftFlow::addInput(roiFbo.getTexture(), _strength);
 	}
 
-	void ftAreaFlow::update() {
+	void ftAreaAverageFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
 		float* floatPixelData = inputPixels.getData();
 		
@@ -129,7 +106,7 @@ namespace flowTools {
 		
 		for (int i=0; i<numChannels; i++) {
 			direction[i] = totalVelocity[i] / totalMagnitude;
-			velocity[i] = direction[i] * meanMagnitude;
+			components[i] = direction[i] * meanMagnitude;
 		}
 		
 		if (pHighComponentBoost.get() > 0 && numChannels > 1) {
@@ -137,27 +114,27 @@ namespace flowTools {
 			float highVelocity = 0;
 			float P = 1;
 			for (int i=0; i<numChannels; i++) {
-				if (fabs(velocity[i]) > highVelocity) {
-					highVelocity = fabs(velocity[i]);
-					if (velocity[i] < 0) P = -1;
+				if (fabs(components[i]) > highVelocity) {
+					highVelocity = fabs(components[i]);
+					if (components[i] < 0) P = -1;
 				}
 			}
 			for (int i=0; i<numChannels; i++) {
-				velocity[i] /= highVelocity;
-				velocity[i] = powf(fabs(velocity[i]), pHighComponentBoost.get()) * P;
-				velocity[i] *= highVelocity;
+				components[i] /= highVelocity;
+				components[i] = powf(fabs(components[i]), pHighComponentBoost.get()) * P;
+				components[i] *= highVelocity;
 			}
 		}
 		
 		for (int i=0; i<numChannels; i++) {
-			pComponents[i] = int(velocity[i] * 100) / 100.0;
+			pComponents[i] = int(components[i] * 100) / 100.0;
 			pDirection[i] = int(direction[i] * 100) / 100.0;
 		}
 		pMeanMagnitude.set(int(meanMagnitude * 100) / 100.0);
 		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
 	}
 	
-	void ftAreaFlow::drawOutput(int _x, int _y, int _w, int _h) {
+	void ftAreaAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
 		int w = roi.width * _w;
@@ -168,7 +145,7 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftAreaFlow::setRoi(ofRectangle _rect) {
+	void ftAreaAverageFlow::setRoi(ofRectangle _rect) {
 		float x = _rect.x;
 		float y = _rect.y;
 		float maxW = 1.0 - x;
@@ -186,7 +163,7 @@ namespace flowTools {
 		if (pRoi[3] != h) { pRoi[3].set(h); }
 	}
 	
-	void ftAreaFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
+	void ftAreaAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
 		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
 		std::vector<float> diff(_v.size());
 		std::transform(_v.begin(), _v.end(), diff.begin(), std::bind2nd(std::minus<float>(), mean));
@@ -195,5 +172,36 @@ namespace flowTools {
 		
 		_mean = mean;
 		_stDev = stDev;
+	}
+	
+	string ftAreaAverageFlow::getComponentName(int _index)  {
+		vector<string> componentNames;
+		switch (type) {
+			case FT_VELOCITY:
+			case FT_VELOCITY_NORM:
+				componentNames = {"x", "y"};
+				break;
+			case FT_VELOCITY_SPLIT:
+				componentNames = {"right", "down", "left", "up"};
+				break;
+			case FT_DENSITY:
+				componentNames = {"red", "green", "blue", "alpha"};
+				break;
+			case FT_PRESSURE:
+				componentNames = {"pressure"};
+				break;
+			case FT_TEMPERATURE:
+				componentNames = {"temperature"};
+				break;
+			default:
+				componentNames = {"unknown 0", "unknown 1", "unknown 2", "unknown 3"};
+				break;
+		}
+		
+		if (_index < componentNames.size()) {
+			return componentNames[_index];
+		}
+		return "unknown";
+		
 	}
 }

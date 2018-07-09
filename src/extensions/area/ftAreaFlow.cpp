@@ -27,6 +27,7 @@ namespace flowTools {
 		stdevMagnitude = 0;
 		
 		parameters.setName("area " + ftFlowForceNames[type] + " " + ofToString(areaCount));
+		
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 		
@@ -53,14 +54,14 @@ namespace flowTools {
 				break;
 		}
 		
-		pComponents.resize(numChannels);
+			pComponents.resize(numChannels);
 		pDirection.resize(numChannels);
 		if (numChannels > 1) {
 			componentParameters.setName("components");
 			directionParameters.setName("direction");
 			for (int i=0; i<numChannels; i++) {
 				componentParameters.add(pComponents[i].set(componentNames[i], 0, -1, 1));
-				directionParameters.add(pDirection[i].set(componentNames[i], 0, -1, 1));
+//				directionParameters.add(pDirection[i].set(componentNames[i], 0, -1, 1));
 			}
 			parameters.add(componentParameters);
 //			parameters.add(directionParameters);
@@ -68,6 +69,8 @@ namespace flowTools {
 			parameters.add(pComponents[0].set(componentNames[0], 0, -1, 1));
 //			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
 		}
+		parameters.add(pNormalizationMax.set("normalization max", .25, .01, 1));
+		parameters.add(pHighComponentBoost.set("boost highest comp.", 0, 0, 5));
 		
 		roiParameters.setName("ROI");
 		pRoi.resize(4);
@@ -97,7 +100,7 @@ namespace flowTools {
 		ofPopStyle();
 		ftFlow::addInput(roiFbo.getTexture(), _strength);
 	}
-//
+
 	void ftAreaFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
 		float* floatPixelData = inputPixels.getData();
@@ -117,23 +120,41 @@ namespace flowTools {
 		}
 		getMeanStDev(magnitudes, meanMagnitude, stdevMagnitude);
 		
-		float length;
+		meanMagnitude = meanMagnitude / pNormalizationMax.get();
+		meanMagnitude = ofClamp(meanMagnitude, 0, 1);
+		
+		float totalMagnitude;
+		for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }
+		totalMagnitude = sqrt(totalMagnitude);
+		
 		for (int i=0; i<numChannels; i++) {
-			length += totalVelocity[i] * totalVelocity[i];
-		}
-		length = sqrt(length);
-		for (int i=0; i<numChannels; i++) {
-			direction[i] = totalVelocity[i] / length;
+			direction[i] = totalVelocity[i] / totalMagnitude;
 			velocity[i] = direction[i] * meanMagnitude;
 		}
 		
-		for (int i=0; i<numChannels; i++) {
-			pComponents[i] = velocity[i];
-			pDirection[i] = direction[i];
+		if (pHighComponentBoost.get() > 0 && numChannels > 1) {
+			// normalize to highest component and apply boost
+			float highVelocity = 0;
+			float P = 1;
+			for (int i=0; i<numChannels; i++) {
+				if (fabs(velocity[i]) > highVelocity) {
+					highVelocity = fabs(velocity[i]);
+					if (velocity[i] < 0) P = -1;
+				}
+			}
+			for (int i=0; i<numChannels; i++) {
+				velocity[i] /= highVelocity;
+				velocity[i] = powf(fabs(velocity[i]), pHighComponentBoost.get()) * P;
+				velocity[i] *= highVelocity;
+			}
 		}
 		
-		pMeanMagnitude.set(meanMagnitude);
-		pStdevMagnitude.set(stdevMagnitude);
+		for (int i=0; i<numChannels; i++) {
+			pComponents[i] = int(velocity[i] * 100) / 100.0;
+			pDirection[i] = int(direction[i] * 100) / 100.0;
+		}
+		pMeanMagnitude.set(int(meanMagnitude * 100) / 100.0);
+		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
 	}
 	
 	void ftAreaFlow::drawOutput(int _x, int _y, int _w, int _h) {

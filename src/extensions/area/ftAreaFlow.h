@@ -19,6 +19,9 @@ namespace flowTools {
 		
 		void	setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void	setRoi(ofRectangle _rect);
+		
+		float	setNormalizationMax(float _value)	{ pNormalizationMax.set(_value); }
+		void	setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
 		float	getComponent(int _index) 	{ getVelocity(_index); }
 		float	getVelocity(int _index) 	{ if (_index < numChannels) { return velocity[_index];  } else { return 0; } }
@@ -30,6 +33,9 @@ namespace flowTools {
 		int		getNumChannels()			{ return numChannels; }
 		int		getWidth()					{ return inputWidth; }
 		int		getHeight()					{ return inputHeight; }
+		
+		float	getNormalizationMax()		{ return pNormalizationMax.get(); }
+		float	getHighComponentBoost()		{ return pHighComponentBoost.get(); }
 
 		ofRectangle		getRoi()			{ return roi; }
 		ofPoint			getRoiCentre()		{ return ofPoint(roi.x + roi.width / 2, roi.y + roi.height / 2); }
@@ -40,16 +46,18 @@ namespace flowTools {
 		ofParameterGroup 					directionParameters;
 		ofParameter<float>					pMeanMagnitude;
 		ofParameter<float>					pStdevMagnitude;
-		vector< ofParameter<float> > 		pRoi;
-		vector< ofParameter<float> > 		pComponents;
-		vector< ofParameter<float> > 		pDirection;
-		void pRoiListener(float& _value) 	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
+		ofParameter<float>					pNormalizationMax;
+		ofParameter<float>					pHighComponentBoost;
+		vector< ofParameter<float> >		pRoi;
+		vector< ofParameter<float> >		pComponents;
+		vector< ofParameter<float> >		pDirection;
+		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		
 		ftFlowForceType type;
 		int 			numChannels;
 		static int		areaCount;
 		
-		ofFloatPixels 	inputPixels;
+		ofFloatPixels	inputPixels;
 		vector<float>	magnitudes;
 		ofRectangle 	roi;
 		

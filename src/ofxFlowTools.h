@@ -44,5 +44,5 @@
 #include "ftMouseFlow.h"
 #include "ftParticleFlow.h"
 #include "ftSplitVelocityFlow.h"
-#include "ftAreaFlowNormalized.h"
+#include "ftAreaFlow.h"
 

@@ -7,7 +7,7 @@
 
 namespace flowTools {
 	
-	class ftAreaAverageFlow : public ftFlow {
+	class ftAverageFlow : public ftFlow {
 	public:
 		virtual void setup(int _width, int _height, ftFlowForceType _type);
 		virtual void update();
@@ -23,8 +23,8 @@ namespace flowTools {
 		float	setNormalizationMax(float _value)	{ pNormalizationMax.set(_value); }
 		void	setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
-		vector<float>	getComponents() 	{ return components; }
-		float	getComponent(int _index) 	{ if (_index < numChannels) { return components[_index];  } else { return 0; } }
+		vector<float>	getComponents()		{ return components; }
+		float	getComponent(int _index)	{ if (_index < numChannels) { return components[_index];  } else { return 0; } }
 		float	getDirection(int _index)	{ if (_index < numChannels) { return direction[_index];  } else { return 0; } }
 		float	getMagnitude()				{ return getMeanMagnitude(); }
 		float	getMeanMagnitude()			{ return meanMagnitude; }
@@ -53,7 +53,7 @@ namespace flowTools {
 		vector< ofParameter<float> >		pDirection;
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		
-		ftFlowForceType type;
+		ftFlowForceType	type;
 		int 			numChannels;
 		static int		areaCount;
 		
@@ -63,8 +63,16 @@ namespace flowTools {
 		
 		float			meanMagnitude;
 		float			stdevMagnitude;
-		vector<float> 	direction;
-		vector<float> 	components;
+		vector<float>	direction;
+		vector<float>	components;
+		
+		float			prevMeanMagnitude;
+		vector<float>	prevComponents;
+		
+		ofFloatColor			magnitudeColor;
+		vector<ofFloatColor>	componentColors;
+		
+		ofParameter<bool>		pPauze;
 		
 		ofFbo			roiFbo;
 		

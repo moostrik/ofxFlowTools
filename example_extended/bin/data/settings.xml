@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <settings>
 	<average_FPS>60</average_FPS>
-	<minimum_FPS>47.9766</minimum_FPS>
+	<minimum_FPS>50.4705</minimum_FPS>
 	<fullscreen__F_>0</fullscreen__F_>
 	<show_gui__G_>1</show_gui__G_>
-	<draw_camera__C_>0</draw_camera__C_>
+	<draw_camera__C_>1</draw_camera__C_>
 	<draw_mouse__M_>1</draw_mouse__M_>
+	<draw_particles__P_>1</draw_particles__P_>
+	<draw_area__A_>1</draw_area__A_>
+	<reset__R_>0</reset__R_>
 	<visualization>
-		<mode>1</mode>
-		<name>input for velocity</name>
-		<show_field>1</show_field>
+		<mode>14</mode>
+		<name>fluid density</name>
 		<scale>3</scale>
-		<size>160, 90</size>
 		<show_scalar>0</show_scalar>
 	</visualization>
 	<optical_flow>
@@ -45,7 +46,6 @@
 		<density_from_vorticity>-0.1</density_from_vorticity>
 	</fluid>
 	<particles>
-		<active>1</active>
 		<speed>100</speed>
 		<cell_size>1.25</cell_size>
 		<birth_chance>0.5</birth_chance>
@@ -60,93 +60,61 @@
 		<gravity>0, 0</gravity>
 	</particles>
 	<density_mouse>
-		<is_temporary>1</is_temporary>
 		<speed>33</speed>
+		<persistent>0</persistent>
 		<radius>0.03</radius>
-		<edge>1</edge>
-		<force>0.5, 0.5, 0.5, 0.5</force>
+		<smooth>1</smooth>
 		<inverse>0</inverse>
 		<color>0.23, 0.53, 0.43, 0.33</color>
-		<persistent>0</persistent>
-		<smooth>1</smooth>
 	</density_mouse>
 	<velocity_mouse>
-		<is_temporary>1</is_temporary>
 		<speed>50</speed>
-		<radius>0.025</radius>
-		<edge>1</edge>
-		<force>16.2106, 0</force>
-		<inverse>0</inverse>
 		<persistent>0</persistent>
+		<radius>0.025</radius>
 		<smooth>1</smooth>
+		<inverse>0</inverse>
 	</velocity_mouse>
-	<draw_particles__P_>0</draw_particles__P_>
-	<reset__R_>0</reset__R_>
 	<split_velocity_flow />
-	<area_velocity_1>
-		<mean_mag>0.000153154</mean_mag>
+	<split_velocity_area_1>
+		<mean_mag>0</mean_mag>
 		<components>
-			<x>0.000105189</x>
-			<y>0.000111316</y>
-		</components>
-		<direction>
-			<x>0.686819</x>
-			<y>0.726828</y>
-		</direction>
-		<normalization>0.01</normalization>
-		<boost_highest_comp_>0</boost_highest_comp_>
-		<ROI>
-			<x>0.2</x>
-			<y>0.3</y>
-			<width>0.4</width>
-			<height>0.4</height>
-		</ROI>
-	</area_velocity_1>
-	<area_split_velocity_2>
-		<mean_mag>0.0226044</mean_mag>
-		<components>
-			<right>0</right>
-			<down>5.8052e-06</down>
-			<left>0.0215395</left>
-			<up>0.00685634</up>
-		</components>
-		<direction>
-			<right>0</right>
-			<down>0.000256818</down>
-			<left>0.952889</left>
-			<up>0.303319</up>
-		</direction>
-		<normalization>0.25</normalization>
-		<boost_highest_comp_>0</boost_highest_comp_>
-		<ROI>
-			<x>0.4</x>
-			<y>0.3</y>
-			<width>0.4</width>
-			<height>0.4</height>
-		</ROI>
-	</area_split_velocity_2>
-	<draw_area__A_>1</draw_area__A_>
-	<area_split_velocity_1>
-		<mean_mag>0.122569</mean_mag>
-		<components>
-			<right>0.118688</right>
-			<down>0.028615</down>
-			<left>0.000389785</left>
-			<up>0.0108359</up>
-		</components>
-		<direction>
 			<right>0</right>
 			<down>0</down>
 			<left>0</left>
 			<up>0</up>
-		</direction>
-		<ROI>
-			<x>0.3</x>
-			<y>0.3</y>
-			<width>0.4</width>
-			<height>0.4</height>
-		</ROI>
-		<normalization>0.1</normalization>
+		</components>
+		<normalization>0.025</normalization>
 		<boost_highest_comp_>0</boost_highest_comp_>
-	</area_split_velocity_1>
+		<ROI>
+			<x>0.25</x>
+			<y>0.25</y>
+			<width>0.5</width>
+			<height>0.5</height>
+		</ROI>
+		<events>
+			<threshold>0.25</threshold>
+			<base>0.6</base>
+			<magnitude>0</magnitude>
+			<component_0>0</component_0>
+			<component_1>0</component_1>
+			<component_2>0</component_2>
+			<component_3>0</component_3>
+		</events>
+		<pauze>0</pauze>
+	</split_velocity_area_1>
+	<velocity_area_1>
+		<mean_mag>0</mean_mag>
+		<components>
+			<x>0</x>
+			<y>0</y>
+		</components>
+		<normalization>0.025</normalization>
+		<boost_direction>0</boost_direction>
+		<ROI>
+			<x>0.25</x>
+			<y>0.25</y>
+			<width>0.5</width>
+			<height>0.5</height>
+		</ROI>
+	</velocity_area_1>
 </settings>

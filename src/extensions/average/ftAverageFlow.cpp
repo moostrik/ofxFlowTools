@@ -1,10 +1,10 @@
-#include "ftAreaAverageFlow.h"
+#include "ftAverageFlow.h"
 
 namespace flowTools {
 	
-	int ftAreaAverageFlow::areaCount = 0;
+	int ftAverageFlow::areaCount = 0;
 	
-	void ftAreaAverageFlow::setup(int _width, int _height, ftFlowForceType _type) {
+	void ftAverageFlow::setup(int _width, int _height, ftFlowForceType _type) {
 		areaCount++;
 		type = _type;
 		GLint internalFormat = ftUtil::getInternalFormatFromType(type);
@@ -17,6 +17,8 @@ namespace flowTools {
 		direction.resize(numChannels, 0);
 		components.clear();
 		components.resize(numChannels, 0);
+		prevComponents.clear();
+		prevComponents.resize(numChannels, 0);
 		
 		inputPixels.allocate(inputWidth, inputHeight, numChannels);
 		magnitudes.resize(inputWidth * inputHeight, 0);
@@ -24,10 +26,17 @@ namespace flowTools {
 		roi = ofRectangle(0,0,1,1);
 		
 		meanMagnitude = 0;
+		prevMeanMagnitude = 0;
 		stdevMagnitude = 0;
 		
-		parameters.setName("area " + ftFlowForceNames[type] + " " + ofToString(areaCount));
+		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
+		componentColors.push_back(ofFloatColor(.6, 1, .2, 1.));	// light green
+		componentColors.push_back(ofFloatColor(.4, .8, 1, 1.));	// blue
+		componentColors.push_back(ofFloatColor(.2, 1, .6, 1.));	// dark green
+		componentColors.push_back(ofFloatColor(.8, .4, 1, 1.));	// purple
+		outputFbo.allocate(_width, _height);
 		
+		parameters.setName(ftFlowForceNames[type] +  " area " + ofToString(areaCount));
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 				
@@ -46,8 +55,8 @@ namespace flowTools {
 			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
 //			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
 		}
-		parameters.add(pNormalizationMax.set("normalization max", .25, .01, 1));
-		parameters.add(pHighComponentBoost.set("boost highest comp.", 0, 0, 5));
+		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
+		parameters.add(pHighComponentBoost.set("boost direction", 0, 0, 5));
 		
 		roiParameters.setName("ROI");
 		pRoi.resize(4);
@@ -56,12 +65,12 @@ namespace flowTools {
 		roiParameters.add(pRoi[2].set("width", 1, 0, 1));
 		roiParameters.add(pRoi[3].set("height", 1, 0, 1));
 		for (int i=0; i<4; i++) {
-			pRoi[i].addListener(this, &ftAreaAverageFlow::pRoiListener);
+			pRoi[i].addListener(this, &ftAverageFlow::pRoiListener);
 		}
 		parameters.add(roiParameters);
 	}
 	
-	void ftAreaAverageFlow::setInput(ofTexture &_tex){
+	void ftAverageFlow::setInput(ofTexture &_tex){
 		resetInput();
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -69,7 +78,7 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
-	void ftAreaAverageFlow::addInput(ofTexture &_tex, float _strength) {
+	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(roiFbo);
@@ -78,7 +87,7 @@ namespace flowTools {
 		ftFlow::addInput(roiFbo.getTexture(), _strength);
 	}
 
-	void ftAreaAverageFlow::update() {
+	void ftAverageFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
 		float* floatPixelData = inputPixels.getData();
 		
@@ -134,18 +143,68 @@ namespace flowTools {
 		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
 	}
 	
-	void ftAreaAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
+	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
+		ofPushStyle();
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
 		int w = roi.width * _w;
 		int h = roi.height * _h;
-		ofPushStyle();
-		ofSetColor(128, 128, 128, 64);
+		if (outputFbo.getWidth() != w || outputFbo.getHeight() != h) {
+			outputFbo.allocate(w, h);
+			ftUtil::zero(outputFbo);
+		}
+		outputFbo.swap();
+		outputFbo.begin();
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofClear(0, 0, 0, 0);
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ofSetColor(255, 255, 255, 255);
+		outputFbo.getBackTexture().draw(-4, 0);
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		
+		int halfH = h * .5;
+		ofSetColor(magnitudeColor);
+		ofDrawLine(w - 4, (1 - prevMeanMagnitude) * halfH, w, (1 - meanMagnitude) * halfH);
+		ofDrawLine(w - 4, 1 + (1 - prevMeanMagnitude) * halfH, w, 1 + (1 - meanMagnitude) * halfH);
+		prevMeanMagnitude = meanMagnitude;
+		for (int i=0; i<numChannels; i++) {
+			ofSetColor(componentColors[i]);
+			ofDrawLine(w - 4, (1 - prevComponents[i]) * halfH, w, (1 - getComponent(i)) * halfH);
+			prevComponents[i] = getComponent(i);
+		}
+		outputFbo.end();
+		outputFbo.draw(x, y, w, h);
+		
+		// overlay
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofSetColor(0, 0, 0, 63);
 		ofDrawRectangle(x, y, w, h);
+		ofNoFill();
+		ofSetColor(0, 0, 0, 255);
+		ofDrawRectangle(x-1, y-1, w+2, h+2);
+		ofFill();
+		
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofSetColor(255, 255, 255, 255);
+		int step = 16;
+		ofDrawBitmapString("1",  x + w - 10, y + step);
+		ofDrawBitmapString("0",  x + w - 10, y + halfH + step);
+		ofDrawBitmapString("-1", x + w - 18, y + h - step * .5);
+		
+		int yOffset = step;
+		ofSetColor(magnitudeColor);
+		ofDrawBitmapString("magnitude", x + 5, y + yOffset);
+		yOffset += step;
+		
+		for (int i=0; i<numChannels; i++) {
+			ofSetColor(componentColors[i]);
+			ofDrawBitmapString(getComponentName(i), x + 5, y + yOffset);
+			yOffset += step;
+		}
 		ofPopStyle();
 	}
 	
-	void ftAreaAverageFlow::setRoi(ofRectangle _rect) {
+	void ftAverageFlow::setRoi(ofRectangle _rect) {
 		float x = _rect.x;
 		float y = _rect.y;
 		float maxW = 1.0 - x;
@@ -163,7 +222,7 @@ namespace flowTools {
 		if (pRoi[3] != h) { pRoi[3].set(h); }
 	}
 	
-	void ftAreaAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
+	void ftAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
 		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
 		std::vector<float> diff(_v.size());
 		std::transform(_v.begin(), _v.end(), diff.begin(), std::bind2nd(std::minus<float>(), mean));
@@ -174,7 +233,7 @@ namespace flowTools {
 		_stDev = stDev;
 	}
 	
-	string ftAreaAverageFlow::getComponentName(int _index)  {
+	string ftAverageFlow::getComponentName(int _index)  {
 		vector<string> componentNames;
 		switch (type) {
 			case FT_VELOCITY:

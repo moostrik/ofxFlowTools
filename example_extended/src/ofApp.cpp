@@ -21,8 +21,7 @@ void ofApp::setup(){
 	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
-	splitVelocityFlow.setup(flowWidth, flowHeight);
-	areaFlow.setup(32, 32, FT_VELOCITY_SPLIT);
+	averageFlow.setup(32, 32, FT_VELOCITY);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -31,8 +30,7 @@ void ofApp::setup(){
 	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
-	flows.push_back(&splitVelocityFlow);
-	flows.push_back(&areaFlow);
+	flows.push_back(&averageFlow);
 	
 	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }
 	
@@ -91,7 +89,9 @@ void ofApp::setupGui() {
 	if (!ofFile("settings.xml")) { gui.saveToFile("settings.xml"); }
 	gui.loadFromFile("settings.xml");
 	
-	gui.minimizeAll();
+//	gui.minimizeAll();
+	minimizeGui(&gui);
+	
 	toggleGuiDraw = true;
 }
 
@@ -109,6 +109,17 @@ void ofApp::switchGuiColor(bool _switch) {
 }
 
 //--------------------------------------------------------------
+void ofApp::minimizeGui(ofxGuiGroup* _group) {
+	for (int i=0; i< _group->getNumControls(); i++) {
+		ofxGuiGroup * subGroup  = dynamic_cast<ofxGuiGroup*>(_group->getControl(i));
+		if (subGroup) {
+			minimizeGui(subGroup);
+			_group->minimizeAll();
+		}
+	}
+}
+
+//--------------------------------------------------------------
 void ofApp::update(){
 	float dt = 1.0 / max(ofGetFrameRate(), 1.f); // more smooth as 'real' deltaTime.
 	
@@ -121,14 +132,12 @@ void ofApp::update(){
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-	splitVelocityFlow.resetInput();
 	for (auto flow: mouseFlows) {
 		flow->update(dt);
 		if (flow->didChange()) {
 			fluidFlow.addFlow(flow->getType(), flow->getTexture());
 			if (flow->getType() == FT_VELOCITY) {
 				particleFlow.addFlowVelocity(flow->getTexture());
-				splitVelocityFlow.addVelocity(flow->getTexture());
 			}
 		}
 	}
@@ -152,10 +161,8 @@ void ofApp::update(){
 		particleFlow.update(dt);
 	}
 	
-	splitVelocityFlow.addVelocity(opticalFlow.getVelocity());
-	splitVelocityFlow.update();
-	areaFlow.setInput(splitVelocityFlow.getVelocity());
-	areaFlow.update();
+	averageFlow.setInput(opticalFlow.getVelocity());
+	averageFlow.update();
 }
 
 //--------------------------------------------------------------
@@ -202,7 +209,7 @@ void ofApp::draw(){
 	
 	if (toggleAreaDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		areaFlow.draw(0, 0, windowWidth, windowHeight);
+		averageFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);

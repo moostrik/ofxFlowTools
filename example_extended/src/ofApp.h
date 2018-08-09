@@ -30,8 +30,7 @@ public:
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
-	ftSplitVelocityFlow		splitVelocityFlow;
-	ftAreaFlow				areaFlow;
+	ftAverageFlow			averageFlow;
 	
 	ofImage					flowToolsLogo;
 	
@@ -49,6 +48,7 @@ public:
 	
 	ofxPanel			gui;
 	void				setupGui();
+	void				minimizeGui(ofxGuiGroup* _group);	
 	void				switchGuiColor(bool _switch);
 	ofParameter<float>	guiFPS;
 	ofParameter<float>	guiMinFPS;

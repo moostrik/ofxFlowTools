@@ -2,15 +2,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ftAreaAverageFlow.h"
+#include "ftAverageFlow.h"
 
 namespace flowTools {
 	
-	class ftAreaEventFlow: public ftAreaAverageFlow {
+	class ftAverageFlowEvent: public ftAverageFlow {
 	public:
 		
 		void setup(int _width, int _height, ftFlowForceType _type) override  {
-			ftAreaAverageFlow::setup(_width, _height, _type);
+			ftAverageFlow::setup(_width, _height, _type);
 
 			magnitudeEvent = 0;
 			magnitudeEventActive = false;
@@ -26,15 +26,15 @@ namespace flowTools {
 			eventParameters.add(pThreshold.set("threshold", .25, .1, .3));
 			eventParameters.add(pBase.set("base", .6, .5, .75));
 			eventParameters.add(pMagnitudeEvent.set("magnitude", 0, -1, 1));
-			pComponentEvents.resize(4);
-			for (int i=0; i<4; i++) {
+			pComponentEvents.resize(numChannels);
+			for (int i=0; i<numChannels; i++) {
 				eventParameters.add(pComponentEvents[i].set("component " + ofToString(i), false));
 			}
 			parameters.add(eventParameters);
 		}
 		
 		void update() override {
-			ftAreaAverageFlow::update();
+			ftAverageFlow::update();
 			
 			float eV = meanMagnitude;
 			if (!magnitudeEventActive) {

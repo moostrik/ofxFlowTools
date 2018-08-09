@@ -38,7 +38,9 @@ namespace flowTools {
 		overlayFbo.allocate(16, 16);
 		bUpdateVisualizer = false;
 		
-		parameters.setName(ftFlowForceNames[type] +  " area " + ofToString(areaCount));
+		string name = "average " + ftFlowForceNames[type];
+		if (areaCount > 1) name += " " + ofToString(areaCount - 1);
+		parameters.setName(name);
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 				
@@ -60,7 +62,7 @@ namespace flowTools {
 		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
 		parameters.add(pHighComponentBoost.set("boost direction", 0, 0, 5));
 		
-		roiParameters.setName("ROI");
+		roiParameters.setName("region of interest");
 		pRoi.resize(4);
 		roiParameters.add(pRoi[0].set("x", 0, 0, 1));
 		roiParameters.add(pRoi[1].set("y", 0, 0, 1));

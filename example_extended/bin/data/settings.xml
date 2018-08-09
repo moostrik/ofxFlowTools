@@ -59,50 +59,22 @@
 		<twinkle_speed>11</twinkle_speed>
 		<gravity>0, 0</gravity>
 	</particles>
-	<density_mouse>
+	<mouse_density>
 		<speed>33</speed>
 		<persistent>0</persistent>
 		<radius>0.03</radius>
 		<smooth>1</smooth>
 		<inverse>0</inverse>
 		<color>0.23, 0.53, 0.43, 0.33</color>
-	</density_mouse>
-	<velocity_mouse>
+	</mouse_density>
+	<mouse_velocity>
 		<speed>50</speed>
 		<persistent>0</persistent>
 		<radius>0.025</radius>
 		<smooth>1</smooth>
 		<inverse>0</inverse>
-	</velocity_mouse>
-	<split_velocity_flow />
-	<split_velocity_area_1>
-		<mean_mag>0</mean_mag>
-		<components>
-			<right>0</right>
-			<down>0</down>
-			<left>0</left>
-			<up>0</up>
-		</components>
-		<normalization>0.025</normalization>
-		<boost_highest_comp_>0</boost_highest_comp_>
-		<ROI>
-			<x>0.25</x>
-			<y>0.25</y>
-			<width>0.5</width>
-			<height>0.5</height>
-		</ROI>
-		<events>
-			<threshold>0.25</threshold>
-			<base>0.6</base>
-			<magnitude>0</magnitude>
-			<component_0>0</component_0>
-			<component_1>0</component_1>
-			<component_2>0</component_2>
-			<component_3>0</component_3>
-		</events>
-		<pauze>0</pauze>
-	</split_velocity_area_1>
-	<velocity_area_1>
+	</mouse_velocity>
+	<average_velocity>
 		<mean_mag>0</mean_mag>
 		<components>
 			<x>0</x>
@@ -110,11 +82,11 @@
 		</components>
 		<normalization>0.025</normalization>
 		<boost_direction>0</boost_direction>
-		<ROI>
+		<region_of_interest>
 			<x>0.25</x>
 			<y>0.25</y>
 			<width>0.5</width>
 			<height>0.5</height>
-		</ROI>
-	</velocity_area_1>
+		</region_of_interest>
+	</average_velocity>
 </settings>

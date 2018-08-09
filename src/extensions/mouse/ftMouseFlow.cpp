@@ -64,20 +64,20 @@ namespace flowTools {
 		parameters.add(pInverse.set("inverse", false));
 		switch (type) {
 			case FT_DENSITY:
-				parameters.setName("density mouse");
+				parameters.setName("mouse density");
 				parameters.add(pColor.set("color", ofFloatColor(.5,.5,.5,.5), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
 				break;
 			case FT_VELOCITY:
-				parameters.setName("velocity mouse");
+				parameters.setName("mouse velocity");
 				break;
 			case FT_PRESSURE:
-				parameters.setName("pressure mouse");
+				parameters.setName("mouse pressure");
 				break;
 			case FT_TEMPERATURE:
-				parameters.setName("temperature mouse");
+				parameters.setName("mouse temperature");
 				break;
 			case FT_OBSTACLE:
-				parameters.setName("obstacle mouse");
+				parameters.setName("mouse obstacle");
 				pSmooth.set(0);
 				parameters.remove("inverse");
 				parameters.remove("smooth");

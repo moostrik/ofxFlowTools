@@ -69,7 +69,7 @@ namespace flowTools {
 		
 	protected:
 		ftSplitVelocityShader	splitVelocityShader;
-		ftSvVisualizationField		visualizationField;
+		ftSvVisualizationField	visualizationField;
 		
 	};
 }

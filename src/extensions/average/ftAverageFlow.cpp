@@ -42,7 +42,8 @@ namespace flowTools {
 		string name = "average " + ftFlowForceNames[type];
 		if (areaCount > 1) name += " " + ofToString(areaCount - 1);
 		parameters.setName(name);
-		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
+		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
+		parameters.add(pMeanMagnitude.set("magnitude", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 				
 		pComponents.resize(numChannels);
@@ -60,8 +61,9 @@ namespace flowTools {
 			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
 //			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
 		}
-		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
-		parameters.add(pHighComponentBoost.set("boost direction", 0, 0, 5));
+		if (type == FT_VELOCITY_SPLIT) {
+			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
+		}	else { pHighComponentBoost.set(0); }
 		
 		roiParameters.setName("region of interest");
 		pRoi.resize(4);
@@ -202,6 +204,8 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 			
 			int halfH = _h * .5;
+			if (type == FT_VELOCITY_SPLIT) { halfH = (_h); }
+			
 			ofSetColor(magnitudeColor);
 			ofDrawLine(_w - 4, (1 - prevMeanMagnitude) * halfH, _w, (1 - meanMagnitude) * halfH);
 			ofDrawLine(_w - 4, 1 + (1 - prevMeanMagnitude) * halfH, _w, 1 + (1 - meanMagnitude) * halfH);
@@ -231,20 +235,25 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		ofSetColor(255, 255, 255, 255);
-		int step = 16;
-		ofDrawBitmapString("1",  _w - 10, step);
-		ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + step);
-		ofDrawBitmapString("-1", _w - 18, _h - step * .5);
+		int yStep = 16;
+		if (type != FT_VELOCITY_SPLIT) {
+			ofDrawBitmapString("1",  _w - 10, yStep);
+			ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
+			ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
+		} else {
+			ofDrawBitmapString("1", _w - 10, yStep);
+			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
+		}
 		
-		int yOffset = step;
+		int yOffset = yStep;
 		ofSetColor(magnitudeColor);
 		ofDrawBitmapString("magnitude",5, yOffset);
-		yOffset += step;
+		yOffset += yStep;
 		
 		for (int i=0; i<numChannels; i++) {
 			ofSetColor(componentColors[i]);
 			ofDrawBitmapString(getComponentName(i), 5, yOffset);
-			yOffset += step;
+			yOffset += yStep;
 		}
 		ofPopStyle();
 		

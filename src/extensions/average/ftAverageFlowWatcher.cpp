@@ -39,7 +39,7 @@ namespace flowTools {
 			if (eV < magnitudeInActiveLow) { magnitudeInActiveLow = eV; }
 			
 			if (eV > magnitudeInActiveLow + pThreshold.get() && eV > meanMagnitude * pBase.get()) {
-				magnitudeEvent = 1;
+				magnitudeEvent = true;
 				magnitudeActiveHigh = eV;
 			}
 		}
@@ -48,11 +48,11 @@ namespace flowTools {
 				magnitudeActiveHigh = eV;
 			}
 			if (eV < magnitudeActiveHigh * pThreshold.get()) {
-				magnitudeEvent = 0;
+				magnitudeEvent = false;
 				magnitudeInActiveLow = eV;
 			}
 		}
-		pMagnitudeEvent = (magnitudeEvent)? true : false;
+		pMagnitudeEvent = magnitudeEvent;
 		
 		for (int i=0; i<numChannels; i++) {
 			eV = fabs(components[i]);
@@ -74,7 +74,7 @@ namespace flowTools {
 					componentInActiveLows[i] = eV;
 				}
 			}
-			pComponentEvents[i] = componentEvents[i];
+			pComponentEvents[i] = componentEvents[i] != 0;
 		}
 	}
 	
@@ -159,9 +159,14 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		ofSetColor(255, 255, 255, 255);
 		int yStep = 16;
-		ofDrawBitmapString("1",  _w - 10, yStep);
-		ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
-		ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
+		if (type != FT_VELOCITY_SPLIT) {
+			ofDrawBitmapString("1",  _w - 10, yStep);
+			ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
+			ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
+		} else {
+			ofDrawBitmapString("1", _w - 10, yStep);
+			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
+		}
 		
 		int yOffset = yStep;
 		ofSetColor(magnitudeColor);

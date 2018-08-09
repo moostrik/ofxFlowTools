@@ -13,9 +13,9 @@ namespace flowTools {
 		
 		void update() override;
 		
-		bool	getMagnitudeEvent()					{ return magnitudeEvent; }
+		int		getMagnitudeEvent()					{ return magnitudeEvent; } // 0 or 1 : off or on
 		
-		vector<int>	getComponentEvents()			{ return componentEvents; }
+		vector<int>	getComponentEvents()			{ return componentEvents; } // 0 or 1 or -1 : off, positive or negative
 		int		getComponentEvent(int _index)		{ if (_index < numChannels) { return componentEvents[_index]; } else { return 0; } }
 		
 		float	getThreshold()						{ return pThreshold.get(); }

@@ -6,7 +6,7 @@
 
 namespace flowTools {
 	
-	class ftAverageFlowEvent: public ftAverageFlow {
+	class ftAverageFlowEvents: public ftAverageFlow {
 	public:
 		
 		void setup(int _width, int _height, ftFlowForceType _type) override  {

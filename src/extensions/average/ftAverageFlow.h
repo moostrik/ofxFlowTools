@@ -12,7 +12,8 @@ namespace flowTools {
 		virtual void setup(int _width, int _height, ftFlowForceType _type);
 		virtual void update();
 		
-		void 	drawOutput(int _x, int _y, int _w, int _h) override;	
+		void 	drawOutput(int _x, int _y, int _w, int _h) override;
+		void 	drawVisualizer(int _x, int _y, int _w, int _h);
 		
 		void	setInput(ofTexture &_tex) override;
 		void	addInput(ofTexture &_tex, float _strength = 1.0) override;
@@ -69,8 +70,12 @@ namespace flowTools {
 		float			prevMeanMagnitude;
 		vector<float>	prevComponents;
 		
+		
 		ofFloatColor			magnitudeColor;
 		vector<ofFloatColor>	componentColors;
+		void					createOverlay(int _w, int _h);
+		ofFbo					overlayFbo;
+		bool 					bUpdateVisualizer;
 		
 		ofParameter<bool>		pPauze;
 		

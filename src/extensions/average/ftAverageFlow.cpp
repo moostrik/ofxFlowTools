@@ -34,7 +34,9 @@ namespace flowTools {
 		componentColors.push_back(ofFloatColor(.4, .8, 1, 1.));	// blue
 		componentColors.push_back(ofFloatColor(.2, 1, .6, 1.));	// dark green
 		componentColors.push_back(ofFloatColor(.8, .4, 1, 1.));	// purple
-		outputFbo.allocate(_width, _height);
+		outputFbo.allocate(16, 16);
+		overlayFbo.allocate(16, 16);
+		bUpdateVisualizer = false;
 		
 		parameters.setName(ftFlowForceNames[type] +  " area " + ofToString(areaCount));
 		parameters.add(pMeanMagnitude.set("mean mag", 0, 0, 1));
@@ -141,67 +143,95 @@ namespace flowTools {
 		}
 		pMeanMagnitude.set(int(meanMagnitude * 100) / 100.0);
 		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
+		
+		bUpdateVisualizer = true;
 	}
 	
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
-		ofPushStyle();
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
 		int w = roi.width * _w;
 		int h = roi.height * _h;
-		if (outputFbo.getWidth() != w || outputFbo.getHeight() != h) {
-			outputFbo.allocate(w, h);
-			ftUtil::zero(outputFbo);
+		
+		drawVisualizer(x, y, w, h);
+	}
+	
+	void ftAverageFlow::drawVisualizer(int _x, int _y, int _w, int _h) {
+		if (bUpdateVisualizer) {
+			if (outputFbo.getWidth() != _w || outputFbo.getHeight() != _h) {
+				outputFbo.allocate(_w, _h);
+				ftUtil::zero(outputFbo);
+				createOverlay(_w, _h);
+			}
+			
+			// background
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			ofSetColor(0, 0, 0, 63);
+			ofDrawRectangle(_x, _y, _w, _h);
+			ofNoFill();
+			ofSetColor(0, 0, 0, 255);
+			ofDrawRectangle(_x-1, _y-1, _w+2, _h+2);
+			ofPopStyle();
+			
+			// graph
+			ofPushStyle();
+			outputFbo.swap();
+			outputFbo.begin();
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			ofClear(0, 0, 0, 0);
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			ofSetColor(255, 255, 255, 255);
+			outputFbo.getBackTexture().draw(-4, 0);
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			
+			int halfH = _h * .5;
+			ofSetColor(magnitudeColor);
+			ofDrawLine(_w - 4, (1 - prevMeanMagnitude) * halfH, _w, (1 - meanMagnitude) * halfH);
+			ofDrawLine(_w - 4, 1 + (1 - prevMeanMagnitude) * halfH, _w, 1 + (1 - meanMagnitude) * halfH);
+			prevMeanMagnitude = meanMagnitude;
+			for (int i=0; i<numChannels; i++) {
+				ofSetColor(componentColors[i]);
+				ofDrawLine(_w - 4, (1 - prevComponents[i]) * halfH, _w, (1 - getComponent(i)) * halfH);
+				prevComponents[i] = getComponent(i);
+			}
+			outputFbo.end();
+			outputFbo.draw(_x, _y, _w, _h);
+			
+			// overlay
+			overlayFbo.draw(_x, _y, _w, _h);
+			
+			ofPopStyle();
 		}
-		outputFbo.swap();
-		outputFbo.begin();
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		ofClear(0, 0, 0, 0);
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ofSetColor(255, 255, 255, 255);
-		outputFbo.getBackTexture().draw(-4, 0);
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		bUpdateVisualizer = false;
+	}
+	
+	void ftAverageFlow::createOverlay(int _w, int _h) {
+		overlayFbo.allocate(_w, _h);
+		ftUtil::zero(overlayFbo);
 		
-		int halfH = h * .5;
-		ofSetColor(magnitudeColor);
-		ofDrawLine(w - 4, (1 - prevMeanMagnitude) * halfH, w, (1 - meanMagnitude) * halfH);
-		ofDrawLine(w - 4, 1 + (1 - prevMeanMagnitude) * halfH, w, 1 + (1 - meanMagnitude) * halfH);
-		prevMeanMagnitude = meanMagnitude;
-		for (int i=0; i<numChannels; i++) {
-			ofSetColor(componentColors[i]);
-			ofDrawLine(w - 4, (1 - prevComponents[i]) * halfH, w, (1 - getComponent(i)) * halfH);
-			prevComponents[i] = getComponent(i);
-		}
-		outputFbo.end();
-		outputFbo.draw(x, y, w, h);
-		
-		// overlay
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		ofSetColor(0, 0, 0, 63);
-		ofDrawRectangle(x, y, w, h);
-		ofNoFill();
-		ofSetColor(0, 0, 0, 255);
-		ofDrawRectangle(x-1, y-1, w+2, h+2);
-		ofFill();
-		
+		overlayFbo.begin();
+		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		ofSetColor(255, 255, 255, 255);
 		int step = 16;
-		ofDrawBitmapString("1",  x + w - 10, y + step);
-		ofDrawBitmapString("0",  x + w - 10, y + halfH + step);
-		ofDrawBitmapString("-1", x + w - 18, y + h - step * .5);
+		ofDrawBitmapString("1",  _w - 10, step);
+		ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + step);
+		ofDrawBitmapString("-1", _w - 18, _h - step * .5);
 		
 		int yOffset = step;
 		ofSetColor(magnitudeColor);
-		ofDrawBitmapString("magnitude", x + 5, y + yOffset);
+		ofDrawBitmapString("magnitude",5, yOffset);
 		yOffset += step;
 		
 		for (int i=0; i<numChannels; i++) {
 			ofSetColor(componentColors[i]);
-			ofDrawBitmapString(getComponentName(i), x + 5, y + yOffset);
+			ofDrawBitmapString(getComponentName(i), 5, yOffset);
 			yOffset += step;
 		}
 		ofPopStyle();
+		
+		overlayFbo.end();
 	}
 	
 	void ftAverageFlow::setRoi(ofRectangle _rect) {

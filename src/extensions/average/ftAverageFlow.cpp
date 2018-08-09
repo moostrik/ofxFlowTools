@@ -4,6 +4,7 @@ namespace flowTools {
 	
 	int ftAverageFlow::areaCount = 0;
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::setup(int _width, int _height, ftFlowForceType _type) {
 		areaCount++;
 		type = _type;
@@ -74,6 +75,7 @@ namespace flowTools {
 		parameters.add(roiParameters);
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::setInput(ofTexture &_tex){
 		resetInput();
 		ofPushStyle();
@@ -82,6 +84,7 @@ namespace flowTools {
 		ofPopStyle();
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -91,6 +94,7 @@ namespace flowTools {
 		ftFlow::addInput(roiFbo.getTexture(), _strength);
 	}
 
+	//--------------------------------------------------------------
 	void ftAverageFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
 		float* floatPixelData = inputPixels.getData();
@@ -149,6 +153,7 @@ namespace flowTools {
 		bUpdateVisualizer = true;
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
@@ -158,23 +163,32 @@ namespace flowTools {
 		drawVisualizer(x, y, w, h);
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::drawVisualizer(int _x, int _y, int _w, int _h) {
+		drawROI(_x, _y, _w, _h);
+		drawGraph(_x, _y, _w, _h);
+	}
+	
+	//--------------------------------------------------------------
+	void ftAverageFlow::drawROI(int _x, int _y, int _w, int _h) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofSetColor(0, 0, 0, 63);
+		ofDrawRectangle(_x, _y, _w, _h);
+		ofNoFill();
+		ofSetColor(0, 0, 0, 255);
+		ofDrawRectangle(_x-1, _y-1, _w+2, _h+2);
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftAverageFlow::drawGraph(int _x, int _y, int _w, int _h) {
 		if (bUpdateVisualizer) {
 			if (outputFbo.getWidth() != _w || outputFbo.getHeight() != _h) {
 				outputFbo.allocate(_w, _h);
 				ftUtil::zero(outputFbo);
-				createOverlay(_w, _h);
+				createGraphOverlay(_w, _h);
 			}
-			
-			// background
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			ofSetColor(0, 0, 0, 63);
-			ofDrawRectangle(_x, _y, _w, _h);
-			ofNoFill();
-			ofSetColor(0, 0, 0, 255);
-			ofDrawRectangle(_x-1, _y-1, _w+2, _h+2);
-			ofPopStyle();
 			
 			// graph
 			ofPushStyle();
@@ -208,7 +222,8 @@ namespace flowTools {
 		bUpdateVisualizer = false;
 	}
 	
-	void ftAverageFlow::createOverlay(int _w, int _h) {
+	//--------------------------------------------------------------
+	void ftAverageFlow::createGraphOverlay(int _w, int _h) {
 		overlayFbo.allocate(_w, _h);
 		ftUtil::zero(overlayFbo);
 		
@@ -236,6 +251,7 @@ namespace flowTools {
 		overlayFbo.end();
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::setRoi(ofRectangle _rect) {
 		float x = _rect.x;
 		float y = _rect.y;
@@ -254,6 +270,7 @@ namespace flowTools {
 		if (pRoi[3] != h) { pRoi[3].set(h); }
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
 		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
 		std::vector<float> diff(_v.size());
@@ -265,6 +282,7 @@ namespace flowTools {
 		_stDev = stDev;
 	}
 	
+	//--------------------------------------------------------------
 	string ftAverageFlow::getComponentName(int _index)  {
 		vector<string> componentNames;
 		switch (type) {

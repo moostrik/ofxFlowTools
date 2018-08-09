@@ -9,11 +9,13 @@ namespace flowTools {
 	
 	class ftAverageFlow : public ftFlow {
 	public:
-		virtual void setup(int _width, int _height, ftFlowForceType _type);
-		virtual void update();
+		virtual void	setup(int _width, int _height, ftFlowForceType _type);
+		virtual void	update();
 		
-		void 	drawOutput(int _x, int _y, int _w, int _h) override;
-		void 	drawVisualizer(int _x, int _y, int _w, int _h);
+		void			drawOutput(int _x, int _y, int _w, int _h) override;
+		void			drawROI(int _x, int _y, int _w, int _h);
+		void			drawVisualizer(int _x, int _y, int _w, int _h);
+		
 		
 		void	setInput(ofTexture &_tex) override;
 		void	addInput(ofTexture &_tex, float _strength = 1.0) override;
@@ -30,7 +32,7 @@ namespace flowTools {
 		float	getMagnitude()				{ return getMeanMagnitude(); }
 		float	getMeanMagnitude()			{ return meanMagnitude; }
 		float	getStDevMagnitude()			{ return stdevMagnitude; }
-//
+
 		int		getNumChannels()			{ return numChannels; }
 		int		getWidth()					{ return inputWidth; }
 		int		getHeight()					{ return inputHeight; }
@@ -70,16 +72,17 @@ namespace flowTools {
 		float			prevMeanMagnitude;
 		vector<float>	prevComponents;
 		
-		
 		ofFloatColor			magnitudeColor;
 		vector<ofFloatColor>	componentColors;
-		void					createOverlay(int _w, int _h);
 		ofFbo					overlayFbo;
 		bool 					bUpdateVisualizer;
 		
 		ofParameter<bool>		pPauze;
 		
 		ofFbo			roiFbo;
+		
+		virtual void	drawGraph(int _x, int _y, int _w, int _h);
+		 void			createGraphOverlay(int _w, int _h);
 		
 		void allocate(int _width, int _height, int _numChannels);
 		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);

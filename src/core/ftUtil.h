@@ -14,7 +14,7 @@ namespace flowTools {
 		FT_TEMPERATURE,		// 1 channel, float
 		FT_PRESSURE,		// 1 channel, float
 		FT_OBSTACLE,		// 1 channel, char
-		FT_VELOCITY_NORM,	// 2 channel, float, normalized to range 0...1
+		FT_VELOCITY_NORM,	// 2 channel, float, normalized to range -1...1
 		FT_VELOCITY_SPLIT,	// 4 channel, float >=0, right, down, left, up
 	};
 	

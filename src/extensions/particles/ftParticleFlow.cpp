@@ -128,10 +128,10 @@ namespace flowTools {
 		
 		ofPopStyle();
 		
-		ftUtil::zero(flowVelocityFbo);
-		ftUtil::zero(inputFbo);
-		ftUtil::zero(densityFbo);
-		ftUtil::zero(obstacleFbo);
+//		ftUtil::zero(flowVelocityFbo);
+//		ftUtil::zero(inputFbo);
+//		ftUtil::zero(densityFbo);
+//		ftUtil::zero(obstacleFbo);
 	}
 	
 	void ftParticleFlow::reset() {

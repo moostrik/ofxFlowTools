@@ -81,8 +81,9 @@ namespace flowTools {
 		
 		ofFbo			roiFbo;
 		
+		virtual void	drawBackground(int _x, int _y, int _w, int _h);
 		virtual void	drawGraph(int _x, int _y, int _w, int _h);
-		 void			createGraphOverlay(int _w, int _h);
+		void			createGraphOverlay(int _w, int _h);
 		
 		void allocate(int _width, int _height, int _numChannels);
 		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);

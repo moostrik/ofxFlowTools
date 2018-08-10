@@ -166,13 +166,23 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+	void ftAverageFlow::drawROI(int _x, int _y, int _w, int _h) {
+		int x = _x + roi.x * _w;
+		int y = _y + roi.y * _h;
+		int w = roi.width * _w;
+		int h = roi.height * _h;
+		
+		drawBackground(x, y, w, h);
+	}
+	
+	//--------------------------------------------------------------
 	void ftAverageFlow::drawVisualizer(int _x, int _y, int _w, int _h) {
-		drawROI(_x, _y, _w, _h);
+		drawBackground(_x, _y, _w, _h);
 		drawGraph(_x, _y, _w, _h);
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlow::drawROI(int _x, int _y, int _w, int _h) {
+	void ftAverageFlow::drawBackground(int _x, int _y, int _w, int _h) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		ofSetColor(0, 0, 0, 63);
@@ -180,6 +190,7 @@ namespace flowTools {
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		ofDrawRectangle(_x-1, _y-1, _w+2, _h+2);
+		ofDrawBitmapStringHighlight(parameters.getName(), _x + _w * .5 - (parameters.getName().length() * 4), _y + 16);
 		ofPopStyle();
 	}
 	

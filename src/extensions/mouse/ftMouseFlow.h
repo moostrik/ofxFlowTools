@@ -16,7 +16,7 @@ namespace flowTools {
 		~ftMouseFlow();
 		
 		void setup(int _width, int _height, ftFlowForceType _type);
-		void update(float _deltaTime);
+		virtual void update(float _deltaTime);
 		void reset() override;
 		
 		bool				didChange()			{ return bFlowChanged;}

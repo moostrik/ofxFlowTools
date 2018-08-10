@@ -22,6 +22,7 @@ void ofApp::setup(){
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	averageFlow.setup(32, 32, FT_VELOCITY);
+	averageFlow.setRoi(.2, .2, .6, .6);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -60,11 +61,11 @@ void ofApp::setupGui() {
 	gui.add(guiMinFPS.set("minimum FPS", 0, 0, 60));
 	gui.add(toggleFullScreen.set("fullscreen (F)", false));
 	toggleFullScreen.addListener(this, &ofApp::toggleFullScreenListener);
-	gui.add(toggleGuiDraw.set("show gui (G)", false));
+	gui.add(toggleGuiDraw.set("show gui (G)", true));
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	gui.add(toggleParticleDraw.set("draw particles (P)", true));
-	gui.add(toggleAreaDraw.set("draw area (A)", true));
+	gui.add(toggleAverageDraw.set("draw average (A)", true));
 	toggleParticleDraw.addListener(this, &ofApp::toggleParticleDrawListener);
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
@@ -132,36 +133,33 @@ void ofApp::update(){
 		opticalFlow.setInput(cameraFbo.getTexture());
 	}
 	
-	for (auto flow: mouseFlows) {
-		flow->update(dt);
-		if (flow->didChange()) {
-			fluidFlow.addFlow(flow->getType(), flow->getTexture());
-			if (flow->getType() == FT_VELOCITY) {
-				particleFlow.addFlowVelocity(flow->getTexture());
-			}
-		}
-	}
+	for (auto flow: mouseFlows) { flow->update(dt); }
 
 	opticalFlow.update();
+	
 	velocityBridgeFlow.setVelocity(opticalFlow.getVelocity());
 	velocityBridgeFlow.update(dt);
 	densityBridgeFlow.setDensity(cameraFbo.getTexture());
 	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
 	densityBridgeFlow.update(dt);
+	
 	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
+	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	
 	if (toggleParticleDraw) {
 		particleFlow.setSpeed(fluidFlow.getSpeed());
 		particleFlow.setCellSize(fluidFlow.getCellSize());
-		particleFlow.addFlowVelocity(opticalFlow.getVelocity());
-		particleFlow.addFluidVelocity(fluidFlow.getVelocity());
-		particleFlow.addObstacle(fluidFlow.getObstacle());
+		particleFlow.setFlowVelocity(opticalFlow.getVelocity());
+		for (auto flow: mouseFlows) if (flow->didChange() && flow->getType() == FT_VELOCITY) { particleFlow.addFlowVelocity(flow->getTexture()); }
+		particleFlow.setFluidVelocity(fluidFlow.getVelocity());
+		particleFlow.setObstacle(fluidFlow.getObstacle());
 		particleFlow.update(dt);
 	}
 	
 	averageFlow.setInput(opticalFlow.getVelocity());
+	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { averageFlow.addInput(flow->getTexture()); } }
 	averageFlow.update();
 }
 
@@ -210,7 +208,7 @@ void ofApp::draw(){
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
-	if (toggleAreaDraw) {
+	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		averageFlow.draw(0, 0, windowWidth, windowHeight);
 	}
@@ -263,20 +261,13 @@ void ofApp::keyPressed(int key){
 		case '8': visualizationMode.set(FLUID_PRS); break;
 		case '9': visualizationMode.set(FLUID_VEL); break;
 		case '0': visualizationMode.set(FLUID_DEN); break;
-		case 'G':
-		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
-		case 'f':
+		case 'G':toggleGuiDraw = !toggleGuiDraw; break;
 		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
-		case 'c':
 		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
-		case 'm':
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
-		case 'r':
 		case 'R': toggleReset.set(!toggleReset.get()); break;
-		case 'p':
 		case 'P': toggleParticleDraw.set(!toggleParticleDraw.get()); break;
-		case 'a':
-		case 'A': toggleParticleDraw.set(!toggleAreaDraw.get()); break;
+		case 'A': toggleAverageDraw.set(!toggleAverageDraw.get()); break;
 			break;
 	}
 }

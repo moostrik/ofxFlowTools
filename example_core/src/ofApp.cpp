@@ -46,7 +46,7 @@ void ofApp::setupGui() {
 	gui.add(guiMinFPS.set("minimum FPS", 0, 0, 60));
 	gui.add(toggleFullScreen.set("fullscreen (F)", false));
 	toggleFullScreen.addListener(this, &ofApp::toggleFullScreenListener);
-	gui.add(toggleGuiDraw.set("show gui (G)", false));
+	gui.add(toggleGuiDraw.set("show gui (G)", true));
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
@@ -102,11 +102,13 @@ void ofApp::update(){
 	}
 	
 	opticalFlow.update();
+	
 	velocityBridgeFlow.setInput(opticalFlow.getVelocity());
 	velocityBridgeFlow.update(dt);
 	densityBridgeFlow.setDensity(cameraFbo.getTexture());
 	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
 	densityBridgeFlow.update(dt);
+	
 	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
 	fluidFlow.addTemperature(densityBridgeFlow.getLuminance());
@@ -174,7 +176,6 @@ void ofApp::drawGui() {
 	
 	guiMinFPS.set(1.0 / longestTime);
 	
-	
 	ofPushStyle();
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	gui.draw();
@@ -195,13 +196,9 @@ void ofApp::keyPressed(int key){
 		case '8': visualizationMode.set(FLUID_PRS); break;
 		case '9': visualizationMode.set(FLUID_VEL); break;
 		case '0': visualizationMode.set(FLUID_DEN); break;
-		case 'G':
-		case 'g': toggleGuiDraw = !toggleGuiDraw; break;
-		case 'f':
+		case 'G':toggleGuiDraw = !toggleGuiDraw; break;
 		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
-		case 'c':
 		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
-		case 'r':
 		case 'R': toggleReset.set(!toggleReset.get()); break;
 	}
 }

@@ -57,7 +57,7 @@ public:
 	ofParameter<bool>	toggleCameraDraw;
 	ofParameter<bool>	toggleParticleDraw;
 	ofParameter<bool>	toggleMouseDraw;
-	ofParameter<bool>	toggleAreaDraw;
+	ofParameter<bool>	toggleAverageDraw;
 	ofParameter<bool>	toggleReset;
 	
 	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}

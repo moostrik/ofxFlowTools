@@ -15,7 +15,7 @@ DEPENDENCIES & SYSTEM SPECS
 INTRODUCTION
 
 The addon is meant for developers who like to use fluid simulation in combination with a live camera input to create psychedelic live visuals.
-http://vimeo.com/92334462
+http://vimeo.com/92334462 (video is of an older version)
 
 
 CREDITS AND ACKNOWLEDGEMENTS:
@@ -32,9 +32,6 @@ My interest in, and knowledge of, fluid simulation was hugely inspired by the wo
 
 
 FUTURE ADDITIONS / TODO
-
-first:
-- rebuild the area  extension and add to examples
 
 later:
 - visualization: better normalization

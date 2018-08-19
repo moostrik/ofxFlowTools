@@ -27,7 +27,8 @@ namespace flowTools {
 		roi = ofRectangle(0,0,1,1);
 		
 		meanMagnitude = 0;
-		prevMeanMagnitude = 0;
+		normalizedMagnitude = 0;
+		prevNormalizedMagnitude = 0;
 		stdevMagnitude = 0;
 		
 		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
@@ -43,23 +44,20 @@ namespace flowTools {
 		if (areaCount > 1) name += " " + ofToString(areaCount - 1);
 		parameters.setName(name);
 		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
-		parameters.add(pMeanMagnitude.set("magnitude", 0, 0, 1));
+		parameters.add(pNormalizedMagnitude.set("magnitude", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 				
 		pComponents.resize(numChannels);
 		pDirection.resize(numChannels);
 		if (numChannels > 1) {
 			componentParameters.setName("components");
-			directionParameters.setName("direction");
 			for (int i=0; i<numChannels; i++) {
 				componentParameters.add(pComponents[i].set(getComponentName(i), 0, -1, 1));
-//				directionParameters.add(pDirection[i].set(getComponentName(i), 0, -1, 1));
 			}
 			parameters.add(componentParameters);
-//			parameters.add(directionParameters);
 		} else {
 			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
-//			parameters.add(pDirection[0].set(componentNames[0], 0, -1, 1));
+			parameters.add(pDirection[0].set(getComponentName(0), 0, -1, 1));
 		}
 		if (type == FT_VELOCITY_SPLIT) {
 			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
@@ -116,8 +114,8 @@ namespace flowTools {
 		}
 		getMeanStDev(magnitudes, meanMagnitude, stdevMagnitude);
 		
-		meanMagnitude = meanMagnitude / pNormalizationMax.get();
-		meanMagnitude = ofClamp(meanMagnitude, 0, 1);
+		normalizedMagnitude = meanMagnitude / pNormalizationMax.get();
+		normalizedMagnitude = ofClamp(normalizedMagnitude, 0, 1);
 		
 		float totalMagnitude;
 		for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }
@@ -125,11 +123,11 @@ namespace flowTools {
 		
 		for (int i=0; i<numChannels; i++) {
 			direction[i] = totalVelocity[i] / totalMagnitude;
-			components[i] = direction[i] * meanMagnitude;
+			components[i] = direction[i] * normalizedMagnitude;
 		}
 		
+		// normalize to highest component and apply boost
 		if (pHighComponentBoost.get() > 0 && numChannels > 1) {
-			// normalize to highest component and apply boost
 			float highVelocity = 0;
 			float P = 1;
 			for (int i=0; i<numChannels; i++) {
@@ -145,11 +143,12 @@ namespace flowTools {
 			}
 		}
 		
+		// use only 2 decimals
 		for (int i=0; i<numChannels; i++) {
 			pComponents[i] = int(components[i] * 100) / 100.0;
 			pDirection[i] = int(direction[i] * 100) / 100.0;
 		}
-		pMeanMagnitude.set(int(meanMagnitude * 100) / 100.0);
+		pNormalizedMagnitude.set(int(normalizedMagnitude * 100) / 100.0);
 		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
 		
 		bUpdateVisualizer = true;
@@ -218,9 +217,9 @@ namespace flowTools {
 			if (type == FT_VELOCITY_SPLIT) { halfH = (_h); }
 			
 			ofSetColor(magnitudeColor);
-			ofDrawLine(_w - 4, (1 - prevMeanMagnitude) * halfH, _w, (1 - meanMagnitude) * halfH);
-			ofDrawLine(_w - 4, 1 + (1 - prevMeanMagnitude) * halfH, _w, 1 + (1 - meanMagnitude) * halfH);
-			prevMeanMagnitude = meanMagnitude;
+			ofDrawLine(_w - 4, (1 - prevNormalizedMagnitude) * halfH, _w, (1 - normalizedMagnitude) * halfH);
+			ofDrawLine(_w - 4, 1 + (1 - prevNormalizedMagnitude) * halfH, _w, 1 + (1 - normalizedMagnitude) * halfH);
+			prevNormalizedMagnitude = normalizedMagnitude;
 			for (int i=0; i<numChannels; i++) {
 				ofSetColor(componentColors[i]);
 				ofDrawLine(_w - 4, (1 - prevComponents[i]) * halfH, _w, (1 - getComponent(i)) * halfH);

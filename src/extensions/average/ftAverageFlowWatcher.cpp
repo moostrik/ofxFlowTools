@@ -34,11 +34,11 @@ namespace flowTools {
 		
 //		cout << magnitudeEvent << " " << endl;
 		
-		float eV = meanMagnitude;
+		float eV = normalizedMagnitude;
 		if (!magnitudeEvent) {
 			if (eV < magnitudeInActiveLow) { magnitudeInActiveLow = eV; }
 			
-			if (eV > magnitudeInActiveLow + pThreshold.get() && eV > meanMagnitude * pBase.get()) {
+			if (eV > magnitudeInActiveLow + pThreshold.get() && eV > normalizedMagnitude * pBase.get()) {
 				magnitudeEvent = true;
 				magnitudeActiveHigh = eV;
 			}
@@ -59,7 +59,7 @@ namespace flowTools {
 			if (componentEvents[i] == 0) {
 				if (eV < componentInActiveLows[i]) { componentInActiveLows[i] = eV; }
 				
-				if (eV > componentInActiveLows [i] + pThreshold.get() && eV > meanMagnitude * pBase.get()) {
+				if (eV > componentInActiveLows [i] + pThreshold.get() && eV > normalizedMagnitude * pBase.get()) {
 					
 					componentEvents[i] = (components[i] > 0)? 1 : -1;
 					componentActiveHighs[i] = eV;
@@ -110,13 +110,13 @@ namespace flowTools {
 			if (type != FT_VELOCITY_SPLIT) { ofDrawLine(_w - 4, _h - (1 - pThreshold.get()) * halfH, _w, _h - (1 - pThreshold.get()) * halfH); }
 			
 			ofSetColor(baseColor);
-			ofDrawLine(_w - 4, (1 - prevMeanMagnitude * pBase.get()) * halfH, _w, (1 - meanMagnitude * pBase.get()) * halfH);
-			if (type != FT_VELOCITY_SPLIT) { ofDrawLine(_w - 4, _h - (1 - prevMeanMagnitude * pBase.get()) * halfH, _w, _h - (1 - meanMagnitude * pBase.get()) * halfH); }
+			ofDrawLine(_w - 4, (1 - prevNormalizedMagnitude * pBase.get()) * halfH, _w, (1 - normalizedMagnitude * pBase.get()) * halfH);
+			if (type != FT_VELOCITY_SPLIT) { ofDrawLine(_w - 4, _h - (1 - prevNormalizedMagnitude * pBase.get()) * halfH, _w, _h - (1 - normalizedMagnitude * pBase.get()) * halfH); }
 			
 			ofSetColor(magnitudeColor);
-			ofDrawLine(_w - 4, (1 - prevMeanMagnitude) * halfH, _w, (1 - meanMagnitude) * halfH);
-			ofDrawLine(_w - 4, 1 + (1 - prevMeanMagnitude) * halfH, _w, 1 + (1 - meanMagnitude) * halfH);
-			prevMeanMagnitude = meanMagnitude;
+			ofDrawLine(_w - 4, (1 - prevNormalizedMagnitude) * halfH, _w, (1 - normalizedMagnitude) * halfH);
+			ofDrawLine(_w - 4, 1 + (1 - prevNormalizedMagnitude) * halfH, _w, 1 + (1 - normalizedMagnitude) * halfH);
+			prevNormalizedMagnitude = normalizedMagnitude;
 			if (getMagnitudeEvent()) {
 				ofSetColor(ofFloatColor(magnitudeColor.r, magnitudeColor.g, magnitudeColor.b, .75));
 				if (type != FT_VELOCITY_SPLIT) {

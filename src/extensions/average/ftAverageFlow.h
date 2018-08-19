@@ -12,10 +12,9 @@ namespace flowTools {
 		virtual void	setup(int _width, int _height, ftFlowForceType _type);
 		virtual void	update();
 		
-		void			drawOutput(int _x, int _y, int _w, int _h) override;
-		void			drawROI(int _x, int _y, int _w, int _h);
-		void			drawVisualizer(int _x, int _y, int _w, int _h);
-		
+		void	drawOutput(int _x, int _y, int _w, int _h) override;
+		void	drawROI(int _x, int _y, int _w, int _h);
+		void	drawVisualizer(int _x, int _y, int _w, int _h);
 		
 		void	setInput(ofTexture &_tex) override;
 		void	addInput(ofTexture &_tex, float _strength = 1.0) override;
@@ -29,9 +28,10 @@ namespace flowTools {
 		vector<float>	getComponents()		{ return components; }
 		float	getComponent(int _index)	{ if (_index < numChannels) { return components[_index];  } else { return 0; } }
 		float	getDirection(int _index)	{ if (_index < numChannels) { return direction[_index];  } else { return 0; } }
-		float	getMagnitude()				{ return getMeanMagnitude(); }
-		float	getMeanMagnitude()			{ return meanMagnitude; }
-		float	getStDevMagnitude()			{ return stdevMagnitude; }
+		float	getMagnitude()				{ return getNormalizedMagnitude(); }
+		float	getNormalizedMagnitude()	{ return normalizedMagnitude; }
+		float	getMeanMagnitude()			{ return meanMagnitude; }		// not normalized
+		float	getStDevMagnitude()			{ return stdevMagnitude; }		// not normalized
 
 		int		getNumChannels()			{ return numChannels; }
 		int		getWidth()					{ return inputWidth; }
@@ -46,8 +46,7 @@ namespace flowTools {
 	protected:
 		ofParameterGroup 					roiParameters;
 		ofParameterGroup 					componentParameters;
-		ofParameterGroup 					directionParameters;
-		ofParameter<float>					pMeanMagnitude;
+		ofParameter<float>					pNormalizedMagnitude;
 		ofParameter<float>					pStdevMagnitude;
 		ofParameter<float>					pNormalizationMax;
 		ofParameter<float>					pHighComponentBoost;
@@ -65,11 +64,12 @@ namespace flowTools {
 		ofRectangle 	roi;
 		
 		float			meanMagnitude;
+		float			normalizedMagnitude;
 		float			stdevMagnitude;
 		vector<float>	direction;
 		vector<float>	components;
 		
-		float			prevMeanMagnitude;
+		float			prevNormalizedMagnitude;
 		vector<float>	prevComponents;
 		
 		ofFloatColor			magnitudeColor;

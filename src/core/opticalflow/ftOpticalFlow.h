@@ -77,9 +77,9 @@ namespace flowTools {
 			inputFbo.swap();
 			if (_tex.getTextureData().glInternalFormat != GL_R8) {
 				RGB2LumShader.update(RGB2LumFbo, _tex);
-				AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), RGB2LumFbo.getTexture(), 1.0, _strength);
+				addMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), RGB2LumFbo.getTexture(), 1.0, _strength);
 			} else {
-				AddMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _tex, 1.0, _strength);
+				addMultipliedShader.update(inputFbo, inputFbo.getBackTexture(), _tex, 1.0, _strength);
 			}
 			bInputSet = true;
 			//	ofLogWarning("ftOpticalFlow: addInput") << " to the optical flow input can only be set";

@@ -65,7 +65,7 @@ namespace flowTools {
 		
 		void setVisualizationScale(float _value) override			{ visualizationField.setScale(_value); }
 		void setVisualizationFieldSize(glm::vec2 _value) override	{ visualizationField.setupField(_value.x, _value.y); }
-		bool setVisualizationToggleScalar(bool _value) override		{ visualizationField.setToggleScalar(_value); }
+		void setVisualizationToggleScalar(bool _value) override		{ visualizationField.setToggleScalar(_value); }
 		
 	protected:
 		ftSplitVelocityShader	splitVelocityShader;

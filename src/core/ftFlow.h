@@ -30,7 +30,7 @@ namespace flowTools {
 		
 		virtual void setVisualizationScale(float _value)		{ visualizationField.setScale(_value); }
 		virtual void setVisualizationFieldSize(glm::vec2 _value){ visualizationField.setupField(_value.x, _value.y); }
-		virtual bool setVisualizationToggleScalar(bool _value)	{ visualizationField.setToggleScalar(_value); }
+		virtual void setVisualizationToggleScalar(bool _value)	{ visualizationField.setToggleScalar(_value); }
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
 		
@@ -51,7 +51,7 @@ namespace flowTools {
 		
 		void set(ftPingPongFbo &_fbo, ofTexture &_inputTex);
 		void add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength = 1.0);
-		ftAddMultipliedShader	AddMultipliedShader;
+		ftAddMultipliedShader	addMultipliedShader;
 		
 
 	};

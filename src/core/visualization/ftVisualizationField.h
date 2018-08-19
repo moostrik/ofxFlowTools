@@ -43,13 +43,11 @@ namespace flowTools {
 		}
 		
 		void draw(ofTexture _tex, int _x, int _y, int _width, int _height) override {
-			ofPushStyle();
 			if (pToggleScalar) {
 				drawScalar(_tex, _x, _y, _width, _height);
 			} else {
 				drawField(_tex, _x, _y, _width, _height);
 			}
-			ofPopStyle();
 		}
 		
 		virtual void drawField(ofTexture _tex, int _x, int _y, int _width, int _height) {

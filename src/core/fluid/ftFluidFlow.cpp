@@ -44,7 +44,7 @@ namespace flowTools {
 		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.1, 0, .4));
+		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
 		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
 		smokeBuoyancyParameters.setName("smoke buoyancy");
@@ -52,7 +52,7 @@ namespace flowTools {
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
 		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., 9.80665), ofDefaultVec2(-10, -10), ofDefaultVec2(10, 10)));
-//		parameters.add(smokeBuoyancyParameters);
+		parameters.add(smokeBuoyancyParameters);
 	}
 	
 	//--------------------------------------------------------------
@@ -95,104 +95,52 @@ namespace flowTools {
 		ftPingPongFbo& velocityFbo = inputFbo;
 		ftPingPongFbo& densityFbo = outputFbo;
 		
-		
-		// VORTEX CONFINEMENT
-		if (vorticity.get() > 0.0) {
-			vorticityFirstPassShader.update(vorticityVelocityFbo,
-											velocityFbo.getTexture(),
-											obstacleFbo.getTexture());
-			
-			vorticitySecondPassShader.update(vorticityConfinementFbo,
-											 vorticityVelocityFbo.getTexture(),
-											 timeStep,
-											 vorticity.get(),
-											 cellSize.get());
-			
-			addVelocity(vorticityConfinementFbo.getTexture());
-		}
-		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo,
-							velocityFbo.getBackTexture(),
-							velocityFbo.getBackTexture(),
-							obstacleFbo.getTexture(),
-							timeStep,
-							1.0 - (dissipation.get()),
-							cellSize.get());
+		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 		
-		densityFbo.swap();
-		advectShader.update(densityFbo,
-							densityFbo.getBackTexture(),
-							velocityFbo.getTexture(),
-							obstacleFbo.getTexture(),
-							timeStep,
-							1.0 - (dissipation.get()),
-							cellSize.get());
 		
-		// DIFFUSE
+		// ADD FORCES: DIFFUSE
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
-				diffuseShader.update(velocityFbo,
-									 velocityFbo.getBackTexture(),
-									 obstacleFbo.getTexture(),
-//									 viscosity.get() * deltaTime); // works better than timeStep
-									 viscosity.get() * timeStep);
+				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
 			}
 		}
 		
-		// SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
+		// ADD FORCES: VORTEX CONFINEMENT
+		if (vorticity.get() > 0.0) {
+			vorticityFirstPassShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
+			vorticitySecondPassShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
+			addVelocity(vorticityConfinementFbo.getTexture());
+		}
+		
+		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
 //		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
-//
 //			temperatureFbo.swap();
-//			advectShader.update(*temperatureFbo.getFbo(),
-//								temperatureFbo.getBackTexture(),
-//								velocityFbo.getTexture(),
-//								obstacleFbo.getTexture(),
-//								timeStep,
-//								1.0 - (dissipation.get() + temperatureOffset.get()), // WHY?
-//								cellSize.get());
-//			
-//			smokeBuoyancyShader.update(smokeBuoyancyFbo,
-//									   velocityFbo.getTexture(),
-//									   temperatureFbo.getTexture(),
-//									   densityFbo.getTexture(),
-//									   ambientTemperature.get(),
-//									   timeStep,
-//									   smokeSigma.get(),
-//									   smokeWeight.get(),
-//									   gravity.get() * timeStep);
+//			advectShader.update(temperatureFbo, temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
+//			smokeBuoyancyShader.update(smokeBuoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get() * timeStep);
 //			addVelocity(smokeBuoyancyFbo.getTexture());
-//	
-//		}
-//		else
-		ftUtil::zero(temperatureFbo);
+//		} else { ftUtil::zero(temperatureFbo); }
 		
-		
-		// DIVERGENCE AND JACOBI
+		// PRESSURE: DIVERGENCE
 		ftUtil::zero(divergenceFbo);
-		divergenceShader.update(divergenceFbo,
-								velocityFbo.getTexture(),
-								obstacleFbo.getTexture(),
-								cellSize.get());
+		divergenceShader.update(divergenceFbo, velocityFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 		
+		// PRESSURE: JACOBI
 		ftUtil::zero(pressureFbo);
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
-			jacobiShader.update(pressureFbo,
-								pressureFbo.getBackTexture(),
-								divergenceFbo.getTexture(),
-								obstacleFbo.getTexture(),
-								cellSize.get());
+			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 		}
 		
+		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
-		substractGradientShader.update(velocityFbo,
-									   velocityFbo.getBackTexture(),
-									   pressureFbo.getTexture(),
-									   obstacleFbo.getTexture(),
-									   cellSize.get());
+		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+		
+		// DENSITY:
+		densityFbo.swap();
+		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 		
 		ofPopStyle();
 	}

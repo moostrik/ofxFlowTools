@@ -10,8 +10,8 @@
 #include "ftJacobiShader.h"
 #include "ftSubstractGradientShader.h"
 #include "ftSmokeBuoyancyShader.h"
-#include "ftVorticityFirstPassShader.h"
-#include "ftVorticitySecondPassShader.h"
+#include "ftVorticityVelocityShader.h"
+#include "ftVorticityConfinementShader.h"
 
 
 namespace flowTools {
@@ -100,14 +100,14 @@ namespace flowTools {
 		ofParameter<glm::vec2>		gravity;
 		ofParameterGroup			maxValues;
 		
-		ftDiffuseShader				diffuseShader;
 		ftAdvectShader				advectShader;
+		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;
 		ftSubstractGradient			substractGradientShader;
 		ftSmokeBuoyancyShader		smokeBuoyancyShader;
-		ftVorticityFirstPassShader	vorticityFirstPassShader;
-		ftVorticitySecondPassShader	vorticitySecondPassShader;
+		ftVorticityVelocityShader	vorticityVelocityShader;
+		ftVorticityConfinementShader vorticityConfinementShader;
 		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;

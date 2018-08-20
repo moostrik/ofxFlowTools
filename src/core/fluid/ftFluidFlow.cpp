@@ -110,8 +110,8 @@ namespace flowTools {
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
-			vorticityFirstPassShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
-			vorticitySecondPassShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
+			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
+			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 		}
 		
@@ -172,6 +172,7 @@ namespace flowTools {
 				break;
 		}
 	}
+	
 	//--------------------------------------------------------------
 	void ftFluidFlow::addObstacle(ofTexture & _tex){
 		ofPushStyle();

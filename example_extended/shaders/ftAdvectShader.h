@@ -46,6 +46,8 @@ namespace flowTools {
 		}
 		
 		void glThree() {
+			
+			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect Backbuffer;
 									 uniform sampler2DRect Obstacle;

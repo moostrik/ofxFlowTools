@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftVorticityFirstPassShader : public ftShader {
+	class ftVorticityVelocityShader : public ftShader {
 	public:
-		ftVorticityFirstPassShader() {
+		ftVorticityVelocityShader() {
 			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftVorticityFirstPassShader";
+			string shaderName = "ftVorticityVelocityShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}

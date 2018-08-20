@@ -67,7 +67,6 @@ namespace flowTools {
 			ofPopMatrix();
 		}
 		
-		
 		int		getFieldWidth()				{ return fieldWidth; }
 		int		getFieldHeight()			{ return fieldHeight; }
 		

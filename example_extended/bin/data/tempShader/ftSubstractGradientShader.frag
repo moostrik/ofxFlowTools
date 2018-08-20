@@ -35,7 +35,8 @@ void main(){
 	if (oT > 0.9) { pT = pC; vMask.y = 0.0; }
 	
 	vec2 oldV = texture(Velocity, st).xy;
-	vec2 grad = vec2(pR - pL, pT - pB) * HalfInverseCellSize;
+//	vec2 grad = vec2(pR - pL, pT - pB) * HalfInverseCellSize;
+	vec2 grad = vec2(pR - pL, pT - pB) * 0.5;
 	vec2 newV = oldV - grad;
 	
 	fragColor = vec4((vMask * newV), 0.0, 0.0);

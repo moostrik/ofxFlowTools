@@ -4,8 +4,10 @@
 #include "ofMain.h"
 #include "ofxFlowTools.h"
 
-#include "ftDiffuseShader.h"
 #include "ftAdvectShader.h"
+#include "ftBorderShader.h"
+#include "ftDrawBorderShader.h"
+#include "ftDiffuseShader.h"
 #include "ftDivergenceShader.h"
 #include "ftJacobiShader.h"
 #include "ftSubstractGradientShader.h"
@@ -101,6 +103,8 @@ namespace flowTools {
 		ofParameterGroup			maxValues;
 		
 		ftAdvectShader				advectShader;
+		ftBorderShader				borderShader;
+		ftDrawBorderShader			drawBorderShader;
 		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;
@@ -119,7 +123,7 @@ namespace flowTools {
 		
 		int simulationWidth, simulationHeight, densityWidth, densityHeight;
 		
-		void createEdgeImage(ofFbo& _Fbo, int _edgeWidth = 1, ofColor _backgroundColor = ofColor(255, 255, 255, 255), ofColor _edgeColor = ofColor(0, 0, 0, 255));
+		void createEdgeImage(ofFbo& _Fbo);
 	};
 }
 

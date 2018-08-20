@@ -39,7 +39,6 @@
 namespace flowTools {
 	
 	ftFluidFlow::ftFluidFlow(){
-		
 		parameters.setName("fluid");
 		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
@@ -62,6 +61,8 @@ namespace flowTools {
 		densityWidth = _densityWidth;
 		densityHeight = _densityHeight;
 		
+		borderShader.setup(simulationWidth, simulationHeight);
+		
 		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F, densityWidth, densityHeight, GL_RGBA32F);
 		visualizationField.setup(simulationWidth, simulationHeight);
 		
@@ -72,7 +73,7 @@ namespace flowTools {
 		
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
-		createEdgeImage(obstacleFbo);
+//		createEdgeImage(obstacleFbo);
 		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
@@ -98,22 +99,23 @@ namespace flowTools {
 		// ADVECT
 		velocityFbo.swap();
 		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
-		
+//		velocityFbo.swap();
+//		borderShader.update(velocityFbo, velocityFbo.getBackTexture());
 		
 		// ADD FORCES: DIFFUSE
-		if (viscosity.get() > 0.0) {
-			for (int i = 0; i < numJacobiIterations.get(); i++) {
-				velocityFbo.swap();
-				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
-			}
-		}
+//		if (viscosity.get() > 0.0) {
+//			for (int i = 0; i < numJacobiIterations.get(); i++) {
+//				velocityFbo.swap();
+//				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
+//			}
+//		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
-		if (vorticity.get() > 0.0) {
-			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
-			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
-			addVelocity(vorticityConfinementFbo.getTexture());
-		}
+//		if (vorticity.get() > 0.0) {
+//			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
+//			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
+//			addVelocity(vorticityConfinementFbo.getTexture());
+//		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
 //		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
@@ -132,6 +134,8 @@ namespace flowTools {
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+//			pressureFbo.swap();
+//			borderShader.update(pressureFbo, pressureFbo.getBackTexture());
 		}
 		
 		// PRESSURE: SUBSTRACT GRADIENT
@@ -186,7 +190,8 @@ namespace flowTools {
 		ftFlow::reset();
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
-		createEdgeImage(obstacleFbo);
+		ftUtil::zero(obstacleFbo);
+//		createEdgeImage(obstacleFbo);
 		
 		advectShader = ftAdvectShader();
 		diffuseShader = ftDiffuseShader();
@@ -196,13 +201,14 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidFlow::createEdgeImage(ofFbo &_Fbo, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
+	void ftFluidFlow::createEdgeImage(ofFbo &_Fbo) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		_Fbo.begin();
-		ofClear(_backgroundColor);
-		ofSetColor(_edgeColor);
-		ofDrawRectangle(_edgeWidth, _edgeWidth, _Fbo.getWidth() - _edgeWidth * 2, _Fbo.getHeight() - _edgeWidth * 2);
+		ofClear(ofColor(255, 255, 255, 255));
+		ofSetColor(ofColor(0,0,0,0));
+		int edgeWidth = 2;
+		ofDrawRectangle(edgeWidth, edgeWidth, _Fbo.getWidth() - edgeWidth * 2, _Fbo.getHeight() - edgeWidth * 2);
 		_Fbo.end();
 		ofPopStyle();
 	}

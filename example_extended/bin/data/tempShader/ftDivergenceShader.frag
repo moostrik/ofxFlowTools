@@ -41,6 +41,7 @@ void main(){
 	vB *= 1.0 - oB;
 	vT *= 1.0 - oT;
 	
-	fragColor.r = HalfInverseCellSize * (vR.x - vL.x + vT.y - vB.y);
+//	fragColor.r = HalfInverseCellSize * (vR.x - vL.x + vT.y - vB.y);
+	fragColor.r = 0.5 * (vR.x - vL.x + vT.y - vB.y);
 }
 

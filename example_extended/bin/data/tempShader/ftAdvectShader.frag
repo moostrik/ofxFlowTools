@@ -16,10 +16,11 @@ void main(){
 	vec2 st = texCoordVarying;
 	vec2 st2 = st * Scale;
 	
-	float inverseSolid = 1.0 - ceil(texture(Obstacle, st2).x - 0.5);
+	float inverseSolid = 1.0;// - ceil(texture(Obstacle, st2).x - 0.5);
 	
 	vec2 u = texture(Velocity, st2).rg / Scale;
-	vec2 coord =  st - TimeStep * InverseCellSize * u;
+//	vec2 coord =  st - TimeStep * InverseCellSize * u;
+	vec2 coord =  st - TimeStep * u;
 	
 	fragColor = Dissipation * texture(Backbuffer, coord) * inverseSolid;
 }

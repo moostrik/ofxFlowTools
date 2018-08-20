@@ -48,6 +48,6 @@ void main() {
 	pT = pT * (1.0 - oT) + pC * oT;
 	
 	
-	fragColor = vec4((pL + pR + pB + pT + Alpha * bC) * 0.25, 0.0,0.0,0.0);
+	fragColor = vec4((pL + pR + pB + pT - bC) * 0.25, 0.0,0.0,0.0);
 }
 

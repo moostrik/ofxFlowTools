@@ -14,19 +14,14 @@ namespace flowTools {
 	public:
 		ftShader() {
 			bInitialized = false;
-			
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
 			quad.getVertices().resize(4);
 			quad.getTexCoords().resize(4);
 			quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
 		}
 		
-//		ofShader& getShader()	{ return shader; }
-		
 	protected:
 		void glTwo()  {
-			
 			vertexShader = GLSL120(
 								   void main() {
 									   gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;
@@ -73,8 +68,6 @@ namespace flowTools {
 									 );
 		}
 		
-		~ftShader() {shader.unload();};
-		
 	protected:
 		
 		void renderFrame(float _width, float _height){
@@ -97,7 +90,6 @@ namespace flowTools {
 		}
 		
 		ofMesh		quad;
-		ofShader	shader;
 		string		fragmentShader;
 		string		vertexShader;
 		bool		bInitialized;

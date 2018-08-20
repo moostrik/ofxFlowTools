@@ -1,21 +1,19 @@
 
 #pragma once
+
 #include "ofMain.h"
 #include "ftShader.h"
 
 namespace flowTools {
 	
-	// normalized trail shader
 	class ftBridgeShader : public ftShader {
 	public:
 		ftBridgeShader(){
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftVelocityBridgeShader initialized");
-			else
-				ofLogWarning("ftVelocityBridgeShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftBridgeShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -37,11 +35,9 @@ namespace flowTools {
 			
 			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			bInitialized *= linkProgram();
-			
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect tex0;
 									 uniform sampler2DRect tex1;
@@ -64,7 +60,6 @@ namespace flowTools {
 			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			bInitialized *= bindDefaults();
 			bInitialized *= linkProgram();
-			
 		}
 		
 	public:
@@ -80,3 +75,5 @@ namespace flowTools {
 		}
 	};
 }
+
+

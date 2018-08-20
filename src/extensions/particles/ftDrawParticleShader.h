@@ -4,19 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftDrawParticleShader : public ftShader {
 	public:
 		ftDrawParticleShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftDrawParticleShader initialized");
-			else
-				ofLogWarning("ftDrawParticleShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftDrawParticleShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -44,15 +41,11 @@ namespace flowTools {
 									   alpha = max(alpha, 0.0);
 									   
 									   gl_FrontColor = vec4(vec3(1.0), alpha);
-									   
 								   }
 								   );
 			
-			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.linkProgram();
-
-			
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -94,42 +87,39 @@ namespace flowTools {
 									   
 									   colorVarying = vec4(vec3(1.0), alpha);
 								   }
-								);
-			
-			
+								   );
 			
 			// thanx to: http://mmmovania.blogspot.nl/2010/12/circular-point-sprites-in-opengl-33.html
 			
 			fragmentShader = GLSL150(
-								  in vec4 colorVarying;
-								  out vec4 fragColor;
-								  
-								  void main()
-								  {
-									  vec2 p = gl_PointCoord * 2.0 - vec2(1.0);
-									  float d = dot(p,p);
-									  float r = sqrt(d);
-									  
-									  if(d > r)
-										  discard;
-									  else
-										  fragColor = colorVarying * (1.0, 1.0, 1.0, 1.0 - pow(r, 2.5));
-								  }
-								  );
+									 in vec4 colorVarying;
+									 out vec4 fragColor;
+									 
+									 void main()
+									 {
+										 vec2 p = gl_PointCoord * 2.0 - vec2(1.0);
+										 float d = dot(p,p);
+										 float r = sqrt(d);
+										 
+										 if(d > r)
+											 discard;
+										 else
+											 fragColor = colorVarying * (1.0, 1.0, 1.0, 1.0 - pow(r, 2.5));
+									 }
+									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofVboMesh &particleVbo, int _numParticles, ofTexture& _posTex, ofTexture& _ALMSTex, float _twinkleSpeed){
-			shader.begin();
-			shader.setUniformTexture("PositionTexture", _posTex, 0);
-			shader.setUniformTexture("ALMSTexture", _ALMSTex, 1);
-			shader.setUniform1f("TwinkleSpeed", _twinkleSpeed);
+			begin();
+			setUniformTexture("PositionTexture", _posTex, 0);
+			setUniformTexture("ALMSTexture", _ALMSTex, 1);
+			setUniform1f("TwinkleSpeed", _twinkleSpeed);
 			
 			bool dinges = true;
 			//glEnable(GL_POINT_SMOOTH);
@@ -139,8 +129,8 @@ namespace flowTools {
 			
 			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			//glDisable(GL_POINT_SMOOTH);
-			shader.end();
-			
+			end();
 		}
 	};
 }
+

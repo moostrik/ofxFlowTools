@@ -4,13 +4,12 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftToScalarShader : public ftShader {
 	public:
 		ftToScalarShader() {
-			bInitialized = 1;
+			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftToScalarShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -36,7 +35,6 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect FloatTexture;
 									 uniform float Scale;
@@ -58,11 +56,9 @@ namespace flowTools {
 			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			bInitialized *= bindDefaults();
 			bInitialized *= linkProgram();
-			
 		}
-	
+		
 	public:
-			
 		void update(ofFbo& _fbo, ofTexture& _floatTex, float _scale){
 			_fbo.begin();
 			begin();
@@ -74,3 +70,4 @@ namespace flowTools {
 		}
 	};
 }
+

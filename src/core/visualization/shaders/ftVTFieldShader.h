@@ -9,19 +9,16 @@ namespace flowTools {
 	class ftVTFieldShader : public ftShader {
 	public:
 		ftVTFieldShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftVTFieldShader initialized");
-			else
-				ofLogWarning("ftVTFieldShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftVTFieldShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
 		void glTwo() {
 			string geometryShader;
-			
 			
 			vertexShader = GLSL120(
 								   void main() {
@@ -45,7 +42,7 @@ namespace flowTools {
 										uniform float maxArrowSize;
 										
 										void main(){
-									  
+											
 											vec4 lineStart = gl_PositionIn[0];
 											vec2 uv = lineStart.xy * texResolution;
 											vec2 velocity = texture2DRect(velocityTexture, uv).xy * velocityScale;
@@ -101,19 +98,18 @@ namespace flowTools {
 										}
 										);
 			
-			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
-			shader.setGeometryInputType(GL_POINTS);
-			shader.setGeometryOutputType(GL_LINE_STRIP);
-			shader.setGeometryOutputCount(5);
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.linkProgram();
-			
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
+			setGeometryInputType(GL_POINTS);
+			setGeometryOutputType(GL_LINE_STRIP);
+			setGeometryOutputCount(5);
+
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+						bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			string geometryShader;
 			
 			vertexShader = GLSL150(
@@ -206,8 +202,8 @@ namespace flowTools {
 										 
 										 EndPrimitive();
 										 
-										}
-										);
+									 }
+									 );
 			
 			fragmentShader = GLSL150(
 									 in vec4 colorVarying;
@@ -219,27 +215,27 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
 		void update(ofVbo& _fieldVbo, ofTexture& _velTex, ofTexture& _temTex, float _velocityScale, float _temperatureScale, float _maxArrowSize){
 			int width = _velTex.getWidth();
 			int height = _velTex.getHeight();
-			
-			shader.begin();
-			shader.setUniformTexture("velocityTexture", _velTex,0);
-			shader.setUniformTexture("temperatureTexture", _temTex,1);
-			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("velocityScale", _velocityScale);
-			shader.setUniform1f("temperatureScale", _temperatureScale);
-			shader.setUniform1f("maxArrowSize", _maxArrowSize);
+			begin();
+			setUniformTexture("velocityTexture", _velTex,0);
+			setUniformTexture("temperatureTexture", _temTex,1);
+			setUniform2f("texResolution", width, height);
+			setUniform1f("velocityScale", _velocityScale);
+			setUniform1f("temperatureScale", _temperatureScale);
+			setUniform1f("maxArrowSize", _maxArrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
-			shader.end();
+			end();
 		}
 	};
 }
+

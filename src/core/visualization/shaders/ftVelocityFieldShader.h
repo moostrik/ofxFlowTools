@@ -9,19 +9,16 @@ namespace flowTools {
 	class ftVelocityFieldShader : public ftShader {
 	public:
 		ftVelocityFieldShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftVelocityFieldShader initialized");
-			else
-				ofLogWarning("ftVelocityFieldShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftVelocityFieldShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
 		void glTwo() {
 			string geometryShader;
-			
 			
 			vertexShader = GLSL120(
 								   void main() {
@@ -89,19 +86,18 @@ namespace flowTools {
 									 }
 									 );
 			
-			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
-			shader.setGeometryInputType(GL_POINTS);
-			shader.setGeometryOutputType(GL_LINE_STRIP);
-			shader.setGeometryOutputCount(5);
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
-			
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
+			setGeometryInputType(GL_POINTS);
+			setGeometryOutputType(GL_LINE_STRIP);
+			setGeometryOutputCount(5);
+
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+						bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			string geometryShader;
 			
 			vertexShader = GLSL150(
@@ -194,25 +190,24 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
 		void update(ofVbo& _fieldVbo, ofTexture& _floatTex, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
 			int width = _floatTex.getWidth();
 			int height = _floatTex.getHeight();
-			
-			shader.begin();
-			shader.setUniformTexture("fieldTexture", _floatTex,0);
-			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
-			shader.setUniform1f("arrowSize", _arrowSize);
+			begin();
+			setUniformTexture("fieldTexture", _floatTex,0);
+			setUniform2f("texResolution", width, height);
+			setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
+			setUniform1f("arrowSize", _arrowSize);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
-			shader.end();
+			end();
 		}
 	};
 }

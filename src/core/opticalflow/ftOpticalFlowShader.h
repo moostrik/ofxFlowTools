@@ -4,19 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftOpticalFlowShader : public ftShader {
 	public:
 		ftOpticalFlowShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftOpticalFlowShader initialized");
-			else
-				ofLogWarning("ftOpticalFlowShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftOpticalFlowShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -65,12 +62,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect	tex0;
 									 uniform sampler2DRect	tex1;
@@ -117,29 +113,29 @@ namespace flowTools {
 										 // set color
 										 fragColor = vec4(flow, 0.0, 1.0);
 									 }
-									 
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
-	public:	
+	public:
 		void update(ofFbo& _fbo, ofTexture& _currTex, ofTexture& _prevTex, float _offset = 3.0, float _threshold = 0.04, glm::vec2 _force = glm::vec2(1.0, 1.0), float _power = 1.0, bool _inverseX = 0, bool _inverseY = 0){
 			
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("tex0", _currTex, 0);
-			shader.setUniformTexture("tex1", _prevTex, 1);
-			shader.setUniform1f("offset", _offset);
-			shader.setUniform1f("threshold", _threshold);
-			shader.setUniform2f("force", _force * glm::vec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
-			shader.setUniform1f("power", _power);
+			begin();
+			setUniformTexture("tex0", _currTex, 0);
+			setUniformTexture("tex1", _prevTex, 1);
+			setUniform1f("offset", _offset);
+			setUniform1f("threshold", _threshold);
+			setUniform2f("force", _force * glm::vec2(_inverseX? -1 : 1, _inverseY? -1 : 1));
+			setUniform1f("power", _power);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};
 }
+

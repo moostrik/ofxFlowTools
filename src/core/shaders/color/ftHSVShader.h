@@ -9,13 +9,11 @@ namespace flowTools {
 	class ftHSVShader : public ftShader {
 	public:
 		ftHSVShader(){
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftHSLShader initialized");
-			else
-				ofLogWarning("ftHSLShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftHSLShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -52,9 +50,8 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
-
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -94,26 +91,26 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
-		
 		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _hue, float _saturation, float _value){
 			_drawBuffer.begin();
-			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTex, 0 );
-			shader.setUniform1f("hue", _hue );
-			shader.setUniform1f("saturation", _saturation);
-			shader.setUniform1f("value", _value);
+			begin();
+			setUniformTexture( "tex0" , _srcTex, 0 );
+			setUniform1f("hue", _hue );
+			setUniform1f("saturation", _saturation);
+			setUniform1f("value", _value);
 			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
-			shader.end();
+			end();
 			_drawBuffer.end();
 		}
 		
 	};
 }
+
+

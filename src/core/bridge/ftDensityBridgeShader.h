@@ -4,16 +4,13 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
-	// alpha from velocity shader
 	class ftDensityBridgeShader : public ftShader {
 	public:
 		ftDensityBridgeShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftDensityBridgeShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -21,7 +18,6 @@ namespace flowTools {
 		
 	protected:
 		void glTwo() {
-			
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect	tex0;
 									 uniform sampler2DRect	tex1;
@@ -46,11 +42,9 @@ namespace flowTools {
 			
 			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
 			bInitialized *= linkProgram();
-			
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect tex0;
 									 uniform sampler2DRect tex1;
@@ -83,7 +77,6 @@ namespace flowTools {
 		}
 		
 	public:
-		
 		void update(ofFbo& _fbo, ofTexture& _denTex, ofTexture& _velTex, float _speed){
 			_fbo.begin();
 			begin();
@@ -98,4 +91,6 @@ namespace flowTools {
 		}
 	};
 }
+
+
 

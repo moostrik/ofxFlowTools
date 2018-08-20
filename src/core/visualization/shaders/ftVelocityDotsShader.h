@@ -9,19 +9,16 @@ namespace flowTools {
 	class ftVelocityDotsShader : public ftShader {
 	public:
 		ftVelocityDotsShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftVelocityDotsShader initialized");
-			else
-				ofLogWarning("ftVelocityDotsShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftVelocityDotsShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
 		void glTwo() {
 			string geometryShader;
-			
 			
 			ofLogWarning("Velocity Dots not supported for GLSL 120");
 			
@@ -33,19 +30,17 @@ namespace flowTools {
 								   );
 			
 			fragmentShader = GLSL120(
-								  void main() {
-									  gl_FragColor = gl_Color;
-								  }
-								  );
+									 void main() {
+										 gl_FragColor = gl_Color;
+									 }
+									 );
 			
-			
-			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
-			shader.setGeometryInputType(GL_POINTS);
-			shader.setGeometryOutputCount(5);
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
-			
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
+			setGeometryInputType(GL_POINTS);
+			setGeometryOutputCount(5);
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -92,21 +87,21 @@ namespace flowTools {
 									 
 									 void main()
 									 {
-										vec2 p = gl_PointCoord * 2.0 - vec2(1.0);
-										float d = dot(p,p);
-										float r = sqrt(d);
-								
-										if(d > r)
-											discard;
-										else
-											fragColor = colorVarying * vec4(1.0, 1.0, 1.0, 1.0 - pow(r, 8.5)); // power is for gradient edge
+										 vec2 p = gl_PointCoord * 2.0 - vec2(1.0);
+										 float d = dot(p,p);
+										 float r = sqrt(d);
+										 
+										 if(d > r)
+											 discard;
+										 else
+											 fragColor = colorVarying * vec4(1.0, 1.0, 1.0, 1.0 - pow(r, 8.5)); // power is for gradient edge
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
@@ -114,19 +109,21 @@ namespace flowTools {
 			int width = _velTex.getWidth();
 			int height = _velTex.getHeight();
 			
-			shader.begin();
-			shader.setUniformTexture("velocityTexture", _velTex,0);
-			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("displacementScale", (_displacementScale == 0)? 10: _displacementScale );
-			shader.setUniform1f("sizeScale", _sizeScale);
-			shader.setUniform1f("minDotSize", _minDotSize);
-			shader.setUniform1f("maxDotSize", _maxDotSize);
+			begin();
+			setUniformTexture("velocityTexture", _velTex,0);
+			setUniform2f("texResolution", width, height);
+			setUniform1f("displacementScale", (_displacementScale == 0)? 10: _displacementScale );
+			setUniform1f("sizeScale", _sizeScale);
+			setUniform1f("minDotSize", _minDotSize);
+			setUniform1f("maxDotSize", _maxDotSize);
 			
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
 			glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			
-			shader.end();
+			end();
 		}
 	};
 }
+
+

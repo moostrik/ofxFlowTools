@@ -1,20 +1,19 @@
 
 #pragma once
+
 #include "ofMain.h"
 #include "ftShader.h"
 
 namespace flowTools {
-
+	
 	class ftContrastShader : public ftShader {
 	public:
 		ftContrastShader(){
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftContrastShader initialized");
-			else
-				ofLogWarning("ftContrastShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftContrastShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -36,13 +35,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
-			
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect tex0;
 									 uniform float contrast;
@@ -63,23 +60,24 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
-			
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
 		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _contrast, float _brightness){
 			_drawBuffer.begin();
-			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTex, 0 );
-			shader.setUniform1f("contrast", _contrast);
-			shader.setUniform1f("brightness", _brightness);
+			begin();
+			setUniformTexture( "tex0" , _srcTex, 0 );
+			setUniform1f("contrast", _contrast);
+			setUniform1f("brightness", _brightness);
 			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
-			shader.end();
+			end();
 			_drawBuffer.end();
 		}
 	};
 }
+
+

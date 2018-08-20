@@ -1,5 +1,6 @@
 
 #pragma once
+
 #include "ofMain.h"
 #include "ftShader.h"
 
@@ -8,13 +9,11 @@ namespace flowTools {
 	class ftRGB2LuminanceShader : public ftShader {
 	public:
 		ftRGB2LuminanceShader(){
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftLuminanceShader initialized");
-			else
-				ofLogWarning("ftLuminanceShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftLuminanceShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -31,10 +30,10 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -53,22 +52,22 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofFbo& _fbo, ofTexture& _srcTex){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("tex0" , _srcTex, 0 );
-			shader.setUniform2f("scale0", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight() / _fbo.getHeight());
+			begin();
+			setUniformTexture("tex0" , _srcTex, 0 );
+			setUniform2f("scale0", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight() / _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};
 }
+

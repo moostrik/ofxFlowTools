@@ -4,19 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftPressureFieldShader : public ftShader {
 	public:
 		ftPressureFieldShader() {
-			bInitialized = 1;
+			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftPressureFieldShader initialized");
-			else
-				ofLogWarning("ftPressureFieldShader failed to initialize");
+			string shaderName = "ftPressureFieldShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -88,14 +85,15 @@ namespace flowTools {
 										}
 										);
 			
-			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
-			shader.setGeometryInputType(GL_POINTS);
-			shader.setGeometryOutputType(GL_LINE_STRIP);
-			shader.setGeometryOutputCount(5);
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.linkProgram();
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
+			setGeometryInputType(GL_POINTS);
+			setGeometryOutputType(GL_LINE_STRIP);
+			setGeometryOutputCount(5);
+			
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -119,7 +117,7 @@ namespace flowTools {
 								   }
 								   
 								   );
-
+			
 			geometryShader = GLSL150(
 									 uniform mat4 modelViewProjectionMatrix;
 									 uniform sampler2DRect pressureTexture;
@@ -142,12 +140,12 @@ namespace flowTools {
 										 pressure = min(pressure, maxRadius);
 										 pressure = max(pressure, -maxRadius);
 										 float aspectRatio = texResolution.x / texResolution.y;
-											
+										 
 										 vec4 north = centre + vec4(pressure, 0, 0, 0);
 										 vec4 east  = centre + vec4(0, pressure * aspectRatio, 0, 0);
 										 vec4 south = centre + vec4(-pressure, 0, 0, 0);
 										 vec4 west  = centre + vec4(0, -pressure * aspectRatio, 0, 0);
-											
+										 
 										 float normalizedPressure = pressure / maxRadius;
 										 float highPressure = pow(max(0.0, normalizedPressure), 0.5);
 										 float lowPressure = pow(max(0.0, -normalizedPressure), 0.5);
@@ -155,7 +153,7 @@ namespace flowTools {
 										 float green = 1.0;// - lowPressure - highPressure;
 										 float blue = 1.0 - highPressure;
 										 float alpha = 0.3 + 0.3 * (abs(normalizedPressure));
-											
+										 
 										 vec4 color = vec4(red, green, blue, alpha);
 										 
 										 gl_Position = modelViewProjectionMatrix * north;
@@ -192,36 +190,28 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofVbo& _fieldVbo, ofTexture& _prsTexture, float _pressureScale, float _radius){
 			int width = _prsTexture.getWidth();
 			int height = _prsTexture.getHeight();
-			
-//			glEnable(GL_CULL_FACE);
-			
-			shader.begin();
-			shader.setUniformTexture("pressureTexture", _prsTexture, 0);
-			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("pressureScale", _pressureScale);
-			shader.setUniform1f("maxRadius", _radius);
-			
-			
+			//			glEnable(GL_CULL_FACE);
+			begin();
+			setUniformTexture("pressureTexture", _prsTexture, 0);
+			setUniform2f("texResolution", width, height);
+			setUniform1f("pressureScale", _pressureScale);
+			setUniform1f("maxRadius", _radius);
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
-			shader.end();
-			
-//			glDisable(GL_CULL_FACE);
-			
+			end();
+			//			glDisable(GL_CULL_FACE);
 			glFlush();
-			
-			
 		}
 	};
 }
+

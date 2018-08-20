@@ -13,11 +13,6 @@
 #include "ftVorticityFirstPassShader.h"
 #include "ftVorticitySecondPassShader.h"
 
-#include "ftAddMultipliedShader.h"
-#include "ftClampLengthShader.h"
-
-#include "ftDensityVec2Multiplier.h"
-#include "ftDensityFloatMultiplier.h"
 
 namespace flowTools {
 	class ftFluidFlow : public ftFlow{
@@ -113,10 +108,6 @@ namespace flowTools {
 		ftSmokeBuoyancyShader		smokeBuoyancyShader;
 		ftVorticityFirstPassShader	vorticityFirstPassShader;
 		ftVorticitySecondPassShader	vorticitySecondPassShader;
-		
-		ftClampLengthShader			clampLengthShader;
-		ftDensityFloatMultiplier	densityFloatMultiplierShader;
-		ftDensityVec2Multiplier		densityVec2MultiplierShader;
 		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;

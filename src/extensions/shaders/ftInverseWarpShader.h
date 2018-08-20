@@ -4,19 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftInverseWarpShader : public ftShader {
 	public:
 		ftInverseWarpShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftInverseWarpShader initialized");
-			else
-				ofLogWarning("ftInverseWarpShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftInverseWarpShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -45,10 +42,10 @@ namespace flowTools {
 										 
 										 gl_FragColor = texture2DRect(tex0,vec2(sourceX * Scale.x, sourceY * Scale.y));
 									 }
-								  );
+									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -80,26 +77,26 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofFbo& _fbo, ofTexture& _srcTex, ofPoint _ul, ofPoint _ur, ofPoint _ll, ofPoint _lr){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("tex0", _srcTex, 0);
-			shader.setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
-			shader.setUniform2f("Upper_left",  _ul.x, _ul.y);
-			shader.setUniform2f("Upper_right", _ur.x, _ur.y);
-			shader.setUniform2f("Lower_left",  _ll.x, _ll.y);
-			shader.setUniform2f("Lower_right", _lr.x, _lr.y);
+			begin();
+			setUniformTexture("tex0", _srcTex, 0);
+			setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
+			setUniform2f("Upper_left",  _ul.x, _ul.y);
+			setUniform2f("Upper_right", _ur.x, _ur.y);
+			setUniform2f("Lower_left",  _ll.x, _ll.y);
+			setUniform2f("Lower_right", _lr.x, _lr.y);
 			renderNormalizedFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};
 }
+

@@ -4,98 +4,94 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftNormalizationShader : public ftShader {
 	public:
 		ftNormalizationShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftNormalizationShader initialized");
-			else
-				ofLogWarning("ftNormalizationShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftNormalizationShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-								  uniform sampler2DRect Texture;
-								  uniform float Min;
-								  uniform float Range;
-								  uniform vec2	Scale;
-								  
-								  void main(){
-									  vec2 st = gl_TexCoord[0].st;
-									  vec2 st2 = st * Scale;
-									  
-									  vec4 color = texture2DRect(Texture, st);
-									  
-									  float magnitude = length(color) - Min;
-									  if(magnitude > 0.0) {
-										  color = normalize(color) * (magnitude / Range);
-									  }
-									  else {
-										  color = vec4(0.0);
-									  }
-									  
-									  gl_FragColor = color ;
-								  }
-								  
-								  );
+									 uniform sampler2DRect Texture;
+									 uniform float Min;
+									 uniform float Range;
+									 uniform vec2	Scale;
+									 
+									 void main(){
+										 vec2 st = gl_TexCoord[0].st;
+										 vec2 st2 = st * Scale;
+										 
+										 vec4 color = texture2DRect(Texture, st);
+										 
+										 float magnitude = length(color) - Min;
+										 if(magnitude > 0.0) {
+											 color = normalize(color) * (magnitude / Range);
+										 }
+										 else {
+											 color = vec4(0.0);
+										 }
+										 
+										 gl_FragColor = color ;
+									 }
+									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
 			fragmentShader = GLSL150(
-								  uniform sampler2DRect Texture;
-								  uniform float Min;
-								  uniform float Range;
-								  uniform vec2	Scale;
-								  
-								  in vec2 texCoordVarying;
-								  out vec4 fragColor;
-								  
-								  void main(){
-									  vec2 st = texCoordVarying;
-									  vec2 st2 = st * Scale;
-									  
-									  vec4 color = texture(Texture, st);
-									  
-									  float magnitude = length(color) - Min;
-									  if(magnitude > 0.0) {
-										  color = normalize(color) * (magnitude / Range);
-									  }
-									  else {
-										  color = vec4(0.0);
-									  }
-									  
-									  fragColor = color ;
-								  }
-								  );
+									 uniform sampler2DRect Texture;
+									 uniform float Min;
+									 uniform float Range;
+									 uniform vec2	Scale;
+									 
+									 in vec2 texCoordVarying;
+									 out vec4 fragColor;
+									 
+									 void main(){
+										 vec2 st = texCoordVarying;
+										 vec2 st2 = st * Scale;
+										 
+										 vec4 color = texture(Texture, st);
+										 
+										 float magnitude = length(color) - Min;
+										 if(magnitude > 0.0) {
+											 color = normalize(color) * (magnitude / Range);
+										 }
+										 else {
+											 color = vec4(0.0);
+										 }
+										 
+										 fragColor = color ;
+									 }
+									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofFbo& _fbo, ofTexture& _srcTex, float _min, float _range){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("Texture", _srcTex, 0);
-			shader.setUniform1f("Min", _min);
-			shader.setUniform1f("Range", _range);
-			shader.setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
+			begin();
+			setUniformTexture("Texture", _srcTex, 0);
+			setUniform1f("Min", _min);
+			setUniform1f("Range", _range);
+			setUniform2f("Scale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};
 }
+

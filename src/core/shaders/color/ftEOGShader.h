@@ -1,20 +1,19 @@
 
 #pragma once
+
 #include "ofMain.h"
 #include "ftShader.h"
 
 namespace flowTools {
-
+	
 	class ftEOGShader : public ftShader {
 	public:
 		ftEOGShader(){
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-			if (bInitialized)
-				ofLogVerbose("ftEOGShader initialized");
-			else
-				ofLogWarning("ftEOGShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftEOGShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -32,13 +31,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
-
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect tex0;
 									 uniform float exposure;
@@ -55,25 +52,26 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-				
 		void update(ofFbo& _drawBuffer, ofTexture& _srcTex, float _exposure, float _offset, float _gamma){
 			_drawBuffer.begin();
-			shader.begin();
-			shader.setUniformTexture( "tex0" , _srcTex, 0 );
-			shader.setUniform1f("exposure", _exposure );
-			shader.setUniform1f("offset", _offset);
-			shader.setUniform1f("gamma", _gamma);
+			begin();
+			setUniformTexture( "tex0" , _srcTex, 0 );
+			setUniform1f("exposure", _exposure );
+			setUniform1f("offset", _offset);
+			setUniform1f("gamma", _gamma);
 			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
-			shader.end();
+			end();
 			_drawBuffer.end();
 		}
 		
 	};
 }
+
+

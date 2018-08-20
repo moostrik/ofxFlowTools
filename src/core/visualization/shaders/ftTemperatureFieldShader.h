@@ -4,19 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftTemperatureFieldShader : public ftShader {
 	public:
 		ftTemperatureFieldShader() {
-            bInitialized = 1;
-            if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			
-            if (bInitialized)
-                ofLogVerbose("ftTemperatureFieldShader initialized");
-			else
-				ofLogWarning("ftTemperatureFieldShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftTemperatureFieldShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -70,15 +67,15 @@ namespace flowTools {
 											EndPrimitive();
 										}
 										);
-			
-			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(shader.getGeometryMaxOutputCount()));
-			shader.setGeometryInputType(GL_POINTS);
-			shader.setGeometryOutputType(GL_LINE_STRIP);
-			shader.setGeometryOutputCount(2);
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.linkProgram();
+			ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
+			setGeometryInputType(GL_POINTS);
+			setGeometryOutputType(GL_LINE_STRIP);
+			setGeometryOutputCount(2);
+
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
@@ -170,31 +167,29 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
-
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
 		
 	public:
-		
 		void update(ofVbo& _fieldVbo, ofTexture& _temTex, float _temperatureScale, float _barHeight, float _barWidth){
 			int width = _temTex.getWidth();
 			int height = _temTex.getHeight();
 			
-			shader.begin();
-			shader.setUniformTexture("temperatureTexture", _temTex,0);
-			shader.setUniform2f("texResolution", width, height);
-			shader.setUniform1f("temperatureScale", _temperatureScale);
-			shader.setUniform1f("maxHeight", _barHeight);
+			begin();
+			setUniformTexture("temperatureTexture", _temTex,0);
+			setUniform2f("texResolution", width, height);
+			setUniform1f("temperatureScale", _temperatureScale);
+			setUniform1f("maxHeight", _barHeight);
 			
 			glLineWidth(_barWidth); // for openGL 2
-			shader.setUniform1f("lineWidth", _barWidth / ofGetWindowWidth());  // for openGL 3
+			setUniform1f("lineWidth", _barWidth / ofGetWindowWidth());  // for openGL 3
 			
 			_fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
-			shader.end();
+			end();
 			
 			glFlush();
 			

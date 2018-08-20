@@ -4,23 +4,16 @@
 #include "ofMain.h"
 #include "ftShader.h"
 
-
 namespace flowTools {
 	
 	class ftSvToScalarShader : public ftShader {
 	public:
 		ftSvToScalarShader() {
-			bInitialized = 1;
-			
-			if (ofIsGLProgrammableRenderer())
-				glThree();
-			else
-				glTwo();
-			
-			if (bInitialized)
-				ofLogVerbose("ftSvToScalarShader initialized");
-			else
-				ofLogWarning("ftSvToScalarShader failed to initialize");
+			bInitialized = true;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			string shaderName = "ftSvToScalarShader";
+			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
+			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
 		
 	protected:
@@ -30,12 +23,12 @@ namespace flowTools {
 									 uniform float Scale;
 									 void main(){
 										 vec4 velocity = texture2DRect(FloatTexture, gl_TexCoord[0].st);
-
+										 
 										 vec3 cLeft = vec3(velocity.x) * vec3(0.75, 0.00, 0.00); // red
 										 vec3 cDown = vec3(velocity.y) * vec3(0.00, 0.09, 0.75); // blue
 										 vec3 cRight= vec3(velocity.z) * vec3(0.00, 0.75, 0.17); // green
 										 vec3 cUp	= vec3(velocity.w) * vec3(0.75, 0.59, 0.00); // ocre
-
+										 
 										 vec3 color = cLeft + cDown + cRight + cUp;
 										 color *= vec3(Scale);
 										 
@@ -43,12 +36,11 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.linkProgram();
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= linkProgram();
 		}
 		
 		void glThree() {
-			
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect FloatTexture;
 									 uniform float Scale;
@@ -72,22 +64,22 @@ namespace flowTools {
 									 }
 									 );
 			
-			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			bInitialized *= shader.bindDefaults();
-			bInitialized *= shader.linkProgram();
-			
+			bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= bindDefaults();
+			bInitialized *= linkProgram();
 		}
-	
+		
 	public:
 		void update(ofFbo& _fbo, ofTexture& _floatTex, float _scale){
 			_fbo.begin();
-			shader.begin();
-			shader.setUniformTexture("FloatTexture", _floatTex, 0);
-			shader.setUniform1f("Scale", _scale);
+			begin();
+			setUniformTexture("FloatTexture", _floatTex, 0);
+			setUniform1f("Scale", _scale);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
-			shader.end();
+			end();
 			_fbo.end();
 		}
 	};
 }
+

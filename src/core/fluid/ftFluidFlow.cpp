@@ -187,6 +187,12 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
 		createEdgeImage(obstacleFbo);
+		
+		advectShader = ftAdvectShader();
+		diffuseShader = ftDiffuseShader();
+		divergenceShader = ftDivergenceShader();
+		jacobiShader = ftJacobiShader();
+		substractGradientShader = ftSubstractGradientShader();
 	}
 	
 	//--------------------------------------------------------------

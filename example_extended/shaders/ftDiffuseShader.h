@@ -14,6 +14,7 @@ namespace flowTools {
 			string shaderName = "ftDiffuseShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:

@@ -104,7 +104,7 @@ namespace flowTools {
 		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;
-		ftSubstractGradient			substractGradientShader;
+		ftSubstractGradientShader	substractGradientShader;
 		ftSmokeBuoyancyShader		smokeBuoyancyShader;
 		ftVorticityVelocityShader	vorticityVelocityShader;
 		ftVorticityConfinementShader vorticityConfinementShader;

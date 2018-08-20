@@ -6,14 +6,15 @@
 
 namespace flowTools {
 	
-	class ftSubstractGradient : public ftShader {
+	class ftSubstractGradientShader : public ftShader {
 	public:
-		ftSubstractGradient() {
+		ftSubstractGradientShader() {
 			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftSubstractGradient";
+			string shaderName = "ftSubstractGradientShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:

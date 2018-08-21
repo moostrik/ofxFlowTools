@@ -74,9 +74,8 @@ namespace flowTools {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect Velocity;
 									 uniform sampler2DRect Obstacle;
-									 uniform float Viscosity;
-									 uniform float C;
-									 uniform int test;
+									 uniform float Alpha;
+									 uniform float Beta;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -115,7 +114,7 @@ namespace flowTools {
 										 vT *= 1.0 - oT;
 										 // ADD NEIGHBOR OBSTACLES;
 										 
-										 vec2 newVel = ((vC + Viscosity * (vL + vR + vB + vT)) / C) * inverseSolid;
+										 vec2 newVel = ((vC + Alpha * (vL + vR + vB + vT)) / Beta) * inverseSolid;
 										 
 										 fragColor = vec4(newVel, 0.0, 0.0);
 									 }
@@ -131,8 +130,10 @@ namespace flowTools {
 		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsTex, float _viscosity){
 			_fbo.begin();
 			begin();
-			setUniform1f("Viscosity", _viscosity);
-			setUniform1f("C", 1.0 + 4. * _viscosity);
+			float alpha = _viscosity;
+			float beta = 1.0 + 4. * alpha;
+			setUniform1f("Alpha", alpha);
+			setUniform1f("Beta", beta);
 			setUniformTexture("Velocity", _backTex, 0);
 			setUniformTexture("Obstacle", _obsTex, 1);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());

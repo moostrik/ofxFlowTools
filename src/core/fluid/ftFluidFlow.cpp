@@ -99,16 +99,16 @@ namespace flowTools {
 		// ADVECT
 		velocityFbo.swap();
 		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
-//		velocityFbo.swap();
-//		borderShader.update(velocityFbo, velocityFbo.getBackTexture());
+		velocityFbo.swap();
+		borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 		
 		// ADD FORCES: DIFFUSE
-//		if (viscosity.get() > 0.0) {
-//			for (int i = 0; i < numJacobiIterations.get(); i++) {
-//				velocityFbo.swap();
-//				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
-//			}
-//		}
+		if (viscosity.get() > 0.0) {
+			for (int i = 0; i < numJacobiIterations.get(); i++) {
+				velocityFbo.swap();
+				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * timeStep); // deltaTime works better than timeStep
+			}
+		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 //		if (vorticity.get() > 0.0) {
@@ -134,13 +134,15 @@ namespace flowTools {
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
-//			pressureFbo.swap();
-//			borderShader.update(pressureFbo, pressureFbo.getBackTexture());
+			pressureFbo.swap();
+			borderShader.update(pressureFbo, pressureFbo.getBackTexture(), 1);
 		}
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
 		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+		velocityFbo.swap();
+		borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 		
 		// DENSITY:
 		densityFbo.swap();
@@ -194,6 +196,8 @@ namespace flowTools {
 //		createEdgeImage(obstacleFbo);
 		
 		advectShader = ftAdvectShader();
+		borderShader = ftBorderShader();
+		borderShader.setup(simulationWidth, simulationHeight);
 		diffuseShader = ftDiffuseShader();
 		divergenceShader = ftDivergenceShader();
 		jacobiShader = ftJacobiShader();

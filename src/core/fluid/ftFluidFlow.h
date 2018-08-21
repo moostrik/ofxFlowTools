@@ -6,7 +6,6 @@
 
 #include "ftAdvectShader.h"
 #include "ftBorderShader.h"
-#include "ftDrawBorderShader.h"
 #include "ftDiffuseShader.h"
 #include "ftDivergenceShader.h"
 #include "ftJacobiShader.h"
@@ -104,7 +103,6 @@ namespace flowTools {
 		
 		ftAdvectShader				advectShader;
 		ftBorderShader				borderShader;
-		ftDrawBorderShader			drawBorderShader;
 		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;

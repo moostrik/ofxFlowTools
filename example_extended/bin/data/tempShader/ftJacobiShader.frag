@@ -12,9 +12,10 @@ void main() {
 	float pR = texture(Pressure, st + vec2(1, 0)).x;
 	float pB = texture(Pressure, st - vec2(0, 1)).x;
 	float pT = texture(Pressure, st + vec2(0, 1)).x;
-	float bC = texture(Divergence, st ).x;
+	float div = texture(Divergence, st ).x;
 	float alpha = -1;
 	float beta = 0.25;
-	fragColor = vec4((pL + pR + pB + pT + alpha * bC) * beta, 0.0, 0.0, 0.0);
+	float pres = (pL + pR + pB + pT + alpha * div) * beta;
+	fragColor = vec4(pres, 0.0, 0.0, 0.0);
 }
 

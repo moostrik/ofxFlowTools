@@ -106,16 +106,18 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
-				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * timeStep); // deltaTime works better than timeStep
+				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
+//				velocityFbo.swap();
+//				borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 			}
 		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
-//		if (vorticity.get() > 0.0) {
-//			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
-//			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
-//			addVelocity(vorticityConfinementFbo.getTexture());
-//		}
+		if (vorticity.get() > 0.0) {
+			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
+			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
+			addVelocity(vorticityConfinementFbo.getTexture());
+		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
 //		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
@@ -123,7 +125,9 @@ namespace flowTools {
 //			advectShader.update(temperatureFbo, temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 //			smokeBuoyancyShader.update(smokeBuoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get() * timeStep);
 //			addVelocity(smokeBuoyancyFbo.getTexture());
-//		} else { ftUtil::zero(temperatureFbo); }
+//		} else {
+//			ftUtil::zero(temperatureFbo);
+//		}
 		
 		// PRESSURE: DIVERGENCE
 		ftUtil::zero(divergenceFbo);

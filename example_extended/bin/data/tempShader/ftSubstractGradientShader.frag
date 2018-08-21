@@ -12,8 +12,8 @@ void main(){
 	float pR = texture(Pressure, st + vec2(1, 0)).x;
 	float pB = texture(Pressure, st - vec2(0, 1)).x;
 	float pT = texture(Pressure, st + vec2(0, 1)).x;
-	vec2 vel = texture(Velocity, st).xy;
 	vec2 gradient = 0.5 * vec2(pR - pL, pT - pB);
-	fragColor = vec4(vel - gradient, 0.0, 0.0);
+	vec2 vel = texture(Velocity, st).xy  - gradient;
+	fragColor = vec4(vel, 0.0, 0.0);
 }
 

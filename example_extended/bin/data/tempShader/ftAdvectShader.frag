@@ -13,10 +13,7 @@ out vec4 fragColor;
 void main(){
 	vec2 st = texCoordVarying;
 	vec2 st2 = st * Scale;
-	
 	vec2 u = texture(Velocity, st2).rg / Scale;
-	vec2 coord =  st - TimeStep * u;
-	
-	fragColor = Dissipation * texture(Backbuffer, coord);
+	fragColor = Dissipation * texture(Backbuffer,  st - TimeStep * u);
 }
 

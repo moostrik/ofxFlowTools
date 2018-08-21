@@ -14,6 +14,7 @@ namespace flowTools {
 			string shaderName = "ftVorticityConfinementShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:

@@ -5,7 +5,6 @@
 #include "ofxFlowTools.h"
 
 #include "ftAdvectShader.h"
-#include "ftBorderShader.h"
 #include "ftDiffuseShader.h"
 #include "ftDivergenceShader.h"
 #include "ftJacobiShader.h"
@@ -13,6 +12,10 @@
 #include "ftSmokeBuoyancyShader.h"
 #include "ftVorticityVelocityShader.h"
 #include "ftVorticityConfinementShader.h"
+
+#include "ftBorderShader.h"
+#include "ftObstacleOffsetShader.h"
+#include "ftAddBooleanShader.h"
 
 
 namespace flowTools {
@@ -45,6 +48,7 @@ namespace flowTools {
 		ofTexture&	getTemperature()			{ return temperatureFbo.getTexture(); }
 		ofTexture&	getDivergence()				{ return divergenceFbo.getTexture(); }
 		ofTexture&	getObstacle()				{ return obstacleFbo.getTexture(); }
+		ofTexture&	getObstacleOffset()			{ return obstacleOffsetFbo.getTexture(); }
 		ofTexture&	getVorticityVelocity()		{ return vorticityVelocityFbo.getTexture(); }
 		ofTexture&	getVorticityConfinement()	{ return vorticityConfinementFbo.getTexture(); }
 		ofTexture&	getBuoyancy()				{ return smokeBuoyancyFbo.getTexture(); }
@@ -56,6 +60,7 @@ namespace flowTools {
 		void	drawTemperature(int _x, int _y, int _w, int _h)			{ visualizationField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawDivergence(int _x, int _y, int _w, int _h)			{ visualizationField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawObstacle(int _x, int _y, int _w, int _h)			{ obstacleFbo.draw(_x, _y, _w, _h); }
+		void	drawObstacleOffset(int _x, int _y, int _w, int _h)		{ visualizationField.draw(obstacleOffsetFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawVorticityVelocity(int _x, int _y, int _w, int _h)	{ visualizationField.draw(vorticityVelocityFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawVorticityConfinement(int _x, int _y, int _w, int _h){ visualizationField.draw(vorticityConfinementFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawBuoyancy(int _x, int _y, int _w, int _h)			{ visualizationField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
@@ -111,13 +116,17 @@ namespace flowTools {
 		ftVorticityVelocityShader	vorticityVelocityShader;
 		ftVorticityConfinementShader vorticityConfinementShader;
 		
+		ftAddBooleanShader			addBooleanShader;
+		ftObstacleOffsetShader		obstacleOffsetShader;
+		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;
 		ofFbo			divergenceFbo;
-		ofFbo			obstacleFbo;
 		ofFbo			vorticityVelocityFbo;
 		ofFbo			vorticityConfinementFbo;
 		ofFbo			smokeBuoyancyFbo;
+		ftPingPongFbo	obstacleFbo;
+		ofFbo			obstacleOffsetFbo;
 		
 		int simulationWidth, simulationHeight, densityWidth, densityHeight;
 		

@@ -73,7 +73,10 @@ namespace flowTools {
 		
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
-//		createEdgeImage(obstacleFbo);
+		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
+		ftUtil::zero(obstacleOffsetFbo);
+		createEdgeImage(obstacleFbo);
+		
 		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
@@ -107,8 +110,8 @@ namespace flowTools {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
 				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
-//				velocityFbo.swap();
-//				borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
+				velocityFbo.swap();
+				borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 			}
 		}
 		
@@ -117,6 +120,8 @@ namespace flowTools {
 			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
+			velocityFbo.swap();
+			borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
@@ -186,8 +191,12 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftFluidFlow::addObstacle(ofTexture & _tex){
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		ftUtil::stretch(obstacleFbo, _tex);
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		obstacleFbo.swap();
+		addBooleanShader.update(obstacleFbo, obstacleFbo.getBackTexture(), _tex);
+		
+		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+		
 		ofPopStyle();
 	}
 	
@@ -197,7 +206,7 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
 		ftUtil::zero(obstacleFbo);
-//		createEdgeImage(obstacleFbo);
+		createEdgeImage(obstacleFbo);
 		
 		advectShader = ftAdvectShader();
 		borderShader = ftBorderShader();
@@ -206,6 +215,7 @@ namespace flowTools {
 		divergenceShader = ftDivergenceShader();
 		jacobiShader = ftJacobiShader();
 		substractGradientShader = ftSubstractGradientShader();
+		obstacleOffsetShader = ftObstacleOffsetShader();
 	}
 	
 	//--------------------------------------------------------------
@@ -215,7 +225,7 @@ namespace flowTools {
 		_Fbo.begin();
 		ofClear(ofColor(255, 255, 255, 255));
 		ofSetColor(ofColor(0,0,0,0));
-		int edgeWidth = 2;
+		int edgeWidth = 1;
 		ofDrawRectangle(edgeWidth, edgeWidth, _Fbo.getWidth() - edgeWidth * 2, _Fbo.getHeight() - edgeWidth * 2);
 		_Fbo.end();
 		ofPopStyle();

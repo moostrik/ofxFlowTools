@@ -43,9 +43,9 @@ namespace flowTools {
 		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
-		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
-		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
+		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
+		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
+		parameters.add(dissipation.set("dissipation", 0.001, 0, 0.01));
 		smokeBuoyancyParameters.setName("smoke buoyancy");
 		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
@@ -71,7 +71,7 @@ namespace flowTools {
 		
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
-		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
+		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
 		ftUtil::zero(obstacleOffsetFbo);
 		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
@@ -99,7 +99,7 @@ namespace flowTools {
 		velocityFbo.swap();
 		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 		velocityFbo.swap();
-		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
 		// ADD FORCES: DIFFUSE
 		if (viscosity.get() > 0.0) {
@@ -108,7 +108,7 @@ namespace flowTools {
 				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get());
 			}
 			velocityFbo.swap();
-			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
@@ -117,7 +117,7 @@ namespace flowTools {
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();
-			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
@@ -140,14 +140,14 @@ namespace flowTools {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 			pressureFbo.swap();
-			applyObstacleShader.update(pressureFbo, pressureFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+			applyObstacleShader.update(pressureFbo, pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		}
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
 		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 		velocityFbo.swap();
-		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
 		// DENSITY:
 		densityFbo.swap();
@@ -155,7 +155,7 @@ namespace flowTools {
 		densityFbo.swap();
 		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
 		densityFbo.swap();
-		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 0.0);
 		
 		ofPopStyle();
 	}

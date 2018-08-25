@@ -205,8 +205,8 @@ void ofApp::draw(){
 		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
-//	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-//	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
 	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);

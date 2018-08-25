@@ -49,8 +49,7 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect	SrcTex;
-									 uniform sampler2DRect	ObstacleTex;
-									 uniform sampler2DRect	OffsetTex;
+									 uniform sampler2DRect	ObstacleOffsetTex;
 									 
 									 uniform float	Weight;
 									 uniform vec2	Scale;
@@ -62,14 +61,15 @@ namespace flowTools {
 									 {
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
-										 vec2 offset = texture(OffsetTex, st2).xy;
-										 float obstacle = texture(ObstacleTex, st2).x;
+										 vec3 obs = texture(ObstacleOffsetTex, st2).xyz;
+										 vec2 offset = obs.xy;
+										 float obstacle = obs.z;
 										 vec4 src = texture(SrcTex, st + offset);
 										 if (length(offset) > 0) {
-											 fragColor = src * vec4((1.0 - obstacle) * Weight);
+											 fragColor = src * vec4(obstacle * Weight);
 										 }
 										 else {
-											 fragColor = src * vec4((1.0 - obstacle));
+											 fragColor = src * vec4(obstacle);
 										 }
 									 }
 									 );
@@ -81,20 +81,20 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _obstacleTex, ofTexture& _obstacleOffsetTex, float _weight){
+		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _obstacleOffsetTex, float _weight){
 			_fbo.begin();
 			begin();
 			setUniformTexture("ScrTex", _srcTex, 0);
-			setUniformTexture("ObstacleTex", _obstacleTex, 1);
-			setUniformTexture("OffsetTex", _obstacleOffsetTex, 2);
+			setUniformTexture("ObstacleOffsetTex", _obstacleOffsetTex, 1);
 			setUniform1f("Weight", _weight);
-			setUniform2f("Scale", _obstacleTex.getWidth() / _fbo.getWidth(), _obstacleTex.getHeight()/ _fbo.getHeight());
+			setUniform2f("Scale", _obstacleOffsetTex.getWidth() / _fbo.getWidth(), _obstacleOffsetTex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();
 		}
 	};
 }
+
 
 
 

@@ -79,7 +79,7 @@ namespace flowTools {
 										 if (st.y < 1) { offset.y = 1; }
 										 if (st.y > Height - 1.0) { offset.y = -1; }
 										 
-										 fragColor = vec4(offset, 0.0, 0.0);
+										 fragColor = vec4(offset, scr, 0.0);
 									 }
 									 );
 			

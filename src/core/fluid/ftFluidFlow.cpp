@@ -194,10 +194,8 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(obstacleFbo);
 		addBooleanShader.update(obstacleFbo, obstacleFbo.getBackTexture(), _tex);
-		
 		ftUtil::zero(obstacleOffsetFbo);
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
-		
 		ofPopStyle();
 	}
 	
@@ -207,9 +205,7 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		obstacleFbo.swap();
 		addBooleanShader.update(obstacleFbo, obstacleFbo.getBackTexture(), _tex);
-		
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
-		
 		ofPopStyle();
 	}
 	

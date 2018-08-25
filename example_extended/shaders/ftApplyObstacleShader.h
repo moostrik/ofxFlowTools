@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftObstacleOffsetShader : public ftShader {
+	class ftApplyObstacleShader : public ftShader {
 	public:
-		ftObstacleOffsetShader() {
+		ftApplyObstacleShader() {
 			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftObstacleOffsetShader";
+			string shaderName = "ftApplyObstacleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
@@ -48,15 +48,18 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL150(
-									 uniform sampler2DRect Backbuffer;
-									 uniform float Scale;
+									 uniform sampler2DRect	SrcTex;
+									 uniform sampler2DRect	ObstacleTex;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
-									 void main(){
+									 void main()
+									 {
 										 vec2 st = texCoordVarying;
-										 fragColor = texture(Backbuffer, st) * vec4(Scale);
+										 vec4 src = texture(SrcTex, st);
+										 float obstacle = texture(ObstacleTex, st).x;
+										 fragColor = src * vec4((1.0 - obstacle));
 									 }
 									 );
 			
@@ -67,17 +70,20 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _tex){
+		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _obstacleTex, ofTexture& _obstacleOffsetTex, float _weight){
 			_fbo.begin();
 			begin();
-			setUniformTexture("tex0", _tex, 0);
-			setUniform1i("Width", _fbo.getWidth());
-			setUniform1i("Height", _fbo.getHeight());
+			setUniformTexture("ScrTex", _srcTex, 0);
+			setUniformTexture("ObstacleTex", _obstacleTex, 1);
+			setUniformTexture("OffsetTex", _obstacleOffsetTex, 2);
+			setUniform1f("Weight", _weight);
+			setUniform2f("Scale", _obstacleTex.getWidth() / _fbo.getWidth(), _obstacleTex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();
 		}
 	};
 }
+
 
 

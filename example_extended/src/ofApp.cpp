@@ -154,7 +154,7 @@ void ofApp::update(){
 		particleFlow.setFlowVelocity(opticalFlow.getVelocity());
 		for (auto flow: mouseFlows) if (flow->didChange() && flow->getType() == FT_VELOCITY) { particleFlow.addFlowVelocity(flow->getTexture()); }
 		particleFlow.setFluidVelocity(fluidFlow.getVelocity());
-//		particleFlow.setObstacle(fluidFlow.getObstacle());
+		particleFlow.setObstacle(fluidFlow.getObstacle());
 		particleFlow.update(dt);
 	}
 	
@@ -276,7 +276,7 @@ void ofApp::keyPressed(int key){
 void ofApp::toggleResetListener(bool& _value) {
 	if (_value) {
 		for (auto flow : flows) { flow->reset(); }
-//		fluidFlow.addObstacle(flowToolsLogo.getTexture());
+		fluidFlow.addObstacle(flowToolsLogo.getTexture());
 	}
 	_value = false;
 }

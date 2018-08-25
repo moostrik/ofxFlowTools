@@ -14,8 +14,11 @@
 #include "ftVorticityConfinementShader.h"
 
 #include "ftBorderShader.h"
-#include "ftObstacleOffsetShader.h"
+
 #include "ftAddBooleanShader.h"
+#include "ftObstacleOffsetShader.h"
+#include "ftApplyObstacleShader.h"
+#include "ftApplyObstacleDensityShader.h"
 
 
 namespace flowTools {
@@ -33,7 +36,7 @@ namespace flowTools {
 		void	setDensity(ofTexture& _tex)		{ setOutput(_tex); }
 		void	setTemperature(ofTexture& _tex)	{ set(temperatureFbo, _tex); }
 		void	setPressure(ofTexture& _tex)	{ set(pressureFbo, _tex); }
-		void	setObstacle(ofTexture& _tex)	{ createEdgeImage(obstacleFbo); addObstacle(_tex); }
+		void	setObstacle(ofTexture& _tex);
 		
 		void 	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addVelocity(ofTexture& _tex, float _strength  = 1.0)	{ addInput(_tex, _strength); }
@@ -118,6 +121,8 @@ namespace flowTools {
 		
 		ftAddBooleanShader			addBooleanShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
+		ftApplyObstacleShader		applyObstacleShader;
+		ftApplyObstacleDensityShader applyObstacleDensityShader;
 		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;

@@ -73,6 +73,7 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect Velocity;
+									 
 									 uniform float Alpha;
 									 uniform float Beta;
 									 
@@ -98,7 +99,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsTex, float _viscosity){
+		void update(ofFbo& _fbo, ofTexture& _backTex, float _viscosity){
 			_fbo.begin();
 			begin();
 			float alpha = _viscosity;
@@ -106,7 +107,6 @@ namespace flowTools {
 			setUniform1f("Alpha", alpha);
 			setUniform1f("Beta", beta);
 			setUniformTexture("Velocity", _backTex, 0);
-			setUniformTexture("Obstacle", _obsTex, 1);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

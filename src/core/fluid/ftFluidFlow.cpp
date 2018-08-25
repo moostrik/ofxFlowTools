@@ -41,7 +41,6 @@ namespace flowTools {
 	ftFluidFlow::ftFluidFlow(){
 		parameters.setName("fluid");
 		parameters.add(speed.set("speed", 50, 0, 200));
-		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
 		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
@@ -101,7 +100,7 @@ namespace flowTools {
 		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - dissipationVel.get(), cellSize.get());
+		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), timeStep, 1.0 - dissipationVel.get());
 		velocityFbo.swap();
 		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
@@ -109,7 +108,7 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
-				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get());
+				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), viscosity.get());
 			}
 			velocityFbo.swap();
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
@@ -117,8 +116,8 @@ namespace flowTools {
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
-			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture(), obstacleFbo.getTexture());
-			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
+			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture());
+			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
@@ -136,7 +135,7 @@ namespace flowTools {
 		
 		// PRESSURE: DIVERGENCE
 		ftUtil::zero(divergenceFbo);
-		divergenceShader.update(divergenceFbo, velocityFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+		divergenceShader.update(divergenceFbo, velocityFbo.getTexture());
 		
 		// PRESSURE: JACOBI
 //		ftUtil::zero(pressureFbo);
@@ -144,20 +143,20 @@ namespace flowTools {
 		multiplyForceShader.update(pressureFbo, pressureFbo.getBackTexture(), 1.0 - dissipationPrs.get());
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
-			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture());
 			pressureFbo.swap();
 			applyObstacleShader.update(pressureFbo, pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		}
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
-		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
+		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture());
 		velocityFbo.swap();
 		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
 		// DENSITY:
 		densityFbo.swap();
-		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - dissipationDen.get(), cellSize.get());
+		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
 		densityFbo.swap();
 		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
 		densityFbo.swap();

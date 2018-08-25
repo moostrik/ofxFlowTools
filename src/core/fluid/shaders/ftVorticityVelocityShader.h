@@ -89,11 +89,10 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obstacleTexture){
+		void update(ofFbo& _fbo, ofTexture& _velTex){
 			_fbo.begin();
 			begin();
 			setUniformTexture("Velocity", _velTex, 0);
-			setUniformTexture("Obstacle", _obstacleTexture, 1);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

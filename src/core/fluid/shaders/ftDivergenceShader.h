@@ -70,7 +70,6 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect Velocity;
-									 uniform float HalfInverseCellSize;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -93,12 +92,10 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obsTex, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _velTex){
 			_fbo.begin();
 			begin();
-			setUniform1f("HalfInverseCellSize", 0.5f / _cellSize);
 			setUniformTexture("Velocity", _velTex, 1);
-			setUniformTexture("Obstacle", _obsTex, 2);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

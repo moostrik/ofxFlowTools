@@ -73,7 +73,6 @@ namespace flowTools {
 		int		getDensityHeight()					{ return densityHeight; }
 		
 		float	getSpeed()							{ return speed.get(); }
-		float	getCellSize()						{ return cellSize.get(); }
 		float	getNumJacobiIterations()			{ return numJacobiIterations.get(); }
 		float	getViscosity()						{ return viscosity.get(); }
 		float	getVorticity()						{ return vorticity.get(); }
@@ -84,7 +83,6 @@ namespace flowTools {
 		glm::vec2 getGravity()						{ return gravity.get(); }
 		
 		void	setSpeed(float value)				{speed.set(value);}
-		void	setCellSize(float value)			{cellSize.set(value);}
 		void	setNumJacobiIterations(float value)	{numJacobiIterations.set(value);}
 		void	setViscosity(float value)			{viscosity.set(value);}
 		void	setVorticity(float value)			{vorticity.set(value);}
@@ -96,7 +94,6 @@ namespace flowTools {
 		
 	protected:
 		ofParameter<float>			speed;
-		ofParameter<float>			cellSize;
 		ofParameter<int>			numJacobiIterations;
 		ofParameter<float>			viscosity;
 		ofParameter<float>			vorticity;

@@ -102,14 +102,13 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divergenceTexture, ofTexture& _obsTex, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divergenceTexture){
 			_fbo.begin();
 			begin();
-			setUniform1f("Alpha", -_cellSize * _cellSize);
+//			setUniform1f("Alpha", -_cellSize * _cellSize);
 			//			setUniform1f("InverseBeta", _inverseBeta);
 			setUniformTexture("Pressure", _backTex, 0);
 			setUniformTexture("Divergence", _divergenceTexture, 1);
-			setUniformTexture("Obstacle", _obsTex, 2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

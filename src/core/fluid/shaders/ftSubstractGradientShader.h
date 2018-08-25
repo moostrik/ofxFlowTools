@@ -90,13 +90,11 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& pressureTexture, ofTexture& _obsTex, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& pressureTexture){
 			_fbo.begin();
 			begin();
-			setUniform1f("HalfInverseCellSize", 0.5f / _cellSize);
 			setUniformTexture("Velocity", _backTex, 0);
 			setUniformTexture("Pressure", pressureTexture, 1);
-			setUniformTexture("Obstacle", _obsTex, 2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

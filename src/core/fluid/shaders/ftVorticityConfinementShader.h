@@ -99,11 +99,10 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _timeStep, float _scale, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _timeStep, float _scale){
 			_fbo.begin();
 			ofClear(0);
 			begin();
-			setUniform1f("HalfInverseCellSize", 0.5f / _cellSize);
 			setUniformTexture( "Vorticity" , _vorticityTexture, 0 );
 			setUniform1f("TimeStep", _timeStep);
 			setUniform1f("ConfinementScale", _scale);

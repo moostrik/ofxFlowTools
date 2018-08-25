@@ -73,16 +73,14 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, ofTexture& _obsTex, float _timeStep, float _dissipation, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, float _timeStep, float _dissipation){
 			_fbo.begin();
 			begin();
 			setUniform1f("TimeStep", _timeStep);
 			setUniform1f("Dissipation", _dissipation);
-			setUniform1f("InverseCellSize", 1.0 / _cellSize);
 			setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
 			setUniformTexture("Backbuffer", _backTex, 0);
 			setUniformTexture("Velocity", _velTex, 1);
-			setUniformTexture("Obstacle", _obsTex, 2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

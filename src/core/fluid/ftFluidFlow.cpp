@@ -43,7 +43,7 @@ namespace flowTools {
 		parameters.add(speed.set("speed", 100, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.1, 0, 10));
+		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
 		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
 		smokeBuoyancyParameters.setName("smoke buoyancy");
@@ -105,11 +105,10 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
-				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
-				velocityFbo.swap();
-//			}
+				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get());
+			}
+			velocityFbo.swap();
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
-		}
 		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT

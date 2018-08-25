@@ -17,6 +17,7 @@
 #include "ftObstacleOffsetShader.h"
 #include "ftApplyObstacleShader.h"
 
+#include "ftMultiplyForceShader.h"
 #include "ftClampLengthShader.h"
 
 namespace flowTools {
@@ -76,7 +77,7 @@ namespace flowTools {
 		float	getNumJacobiIterations()			{ return numJacobiIterations.get(); }
 		float	getViscosity()						{ return viscosity.get(); }
 		float	getVorticity()						{ return vorticity.get(); }
-		float	getDissipation()					{ return dissipation.get(); }
+//		float	getDissipation()					{ return dissipation.get(); }
 		float	getSmokeSigma()						{ return smokeSigma.get(); }
 		float	getSmokeWeight()					{ return smokeWeight.get(); }
 		float	getAmbientTemperature()				{ return ambientTemperature.get(); }
@@ -87,7 +88,7 @@ namespace flowTools {
 		void	setNumJacobiIterations(float value)	{numJacobiIterations.set(value);}
 		void	setViscosity(float value)			{viscosity.set(value);}
 		void	setVorticity(float value)			{vorticity.set(value);}
-		void	setDissipation(float value)			{dissipation.set(value);}
+//		void	setDissipation(float value)			{dissipation.set(value);}
 		void	setSmokeSigma(float value)			{smokeSigma.set(value);}
 		void	setSmokeWeight(float value)			{smokeWeight.set(value);}
 		void	setAmbientTemperature(float value)	{ambientTemperature.set(value);}
@@ -99,7 +100,10 @@ namespace flowTools {
 		ofParameter<int>			numJacobiIterations;
 		ofParameter<float>			viscosity;
 		ofParameter<float>			vorticity;
-		ofParameter<float>			dissipation;
+		ofParameterGroup			dissipationParameters;
+		ofParameter<float>			dissipationVel;
+		ofParameter<float>			dissipationDen;
+		ofParameter<float>			dissipationPrs;
 		ofParameterGroup			smokeBuoyancyParameters;
 		ofParameter<float>			smokeSigma;
 		ofParameter<float>			smokeWeight;
@@ -119,6 +123,8 @@ namespace flowTools {
 		ftAddBooleanShader			addBooleanShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
 		ftApplyObstacleShader		applyObstacleShader;
+		
+		ftMultiplyForceShader		multiplyForceShader;
 		ftClampLengthShader			clampLengthShader;
 		
 		ftPingPongFbo	temperatureFbo;

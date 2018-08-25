@@ -40,12 +40,16 @@ namespace flowTools {
 	
 	ftFluidFlow::ftFluidFlow(){
 		parameters.setName("fluid");
-		parameters.add(speed.set("speed", 100, 0, 200));
+		parameters.add(speed.set("speed", 50, 0, 200));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
 		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
-		parameters.add(dissipation.set("dissipation", 0.001, 0, 0.01));
+		dissipationParameters.setName("dissipation");
+		dissipationParameters.add(dissipationVel.set("velocity",0.0015, 0, 0.01));
+		dissipationParameters.add(dissipationDen.set("density", 0.0015, 0, 0.01));
+		dissipationParameters.add(dissipationPrs.set("pressure",0.025, 0, 0.1));
+		parameters.add(dissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
 		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
@@ -97,7 +101,7 @@ namespace flowTools {
 		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
+		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - dissipationVel.get(), cellSize.get());
 		velocityFbo.swap();
 		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
@@ -136,6 +140,8 @@ namespace flowTools {
 		
 		// PRESSURE: JACOBI
 //		ftUtil::zero(pressureFbo);
+		pressureFbo.swap();
+		multiplyForceShader.update(pressureFbo, pressureFbo.getBackTexture(), 1.0 - dissipationPrs.get());
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
@@ -151,7 +157,7 @@ namespace flowTools {
 		
 		// DENSITY:
 		densityFbo.swap();
-		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
+		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - dissipationDen.get(), cellSize.get());
 		densityFbo.swap();
 		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
 		densityFbo.swap();

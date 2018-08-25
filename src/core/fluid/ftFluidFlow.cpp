@@ -61,8 +61,6 @@ namespace flowTools {
 		densityWidth = _densityWidth;
 		densityHeight = _densityHeight;
 		
-		borderShader.setup(simulationWidth, simulationHeight);
-		
 		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F, densityWidth, densityHeight, GL_RGBA32F);
 		visualizationField.setup(simulationWidth, simulationHeight);
 		
@@ -75,8 +73,6 @@ namespace flowTools {
 		ftUtil::zero(obstacleFbo);
 		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
 		ftUtil::zero(obstacleOffsetFbo);
-//		createEdgeImage(obstacleFbo);
-		
 		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
@@ -103,7 +99,6 @@ namespace flowTools {
 		velocityFbo.swap();
 		advectShader.update(velocityFbo, velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 		velocityFbo.swap();
-//		borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
 		// ADD FORCES: DIFFUSE
@@ -112,7 +107,6 @@ namespace flowTools {
 				velocityFbo.swap();
 				diffuseShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), viscosity.get() * _deltaTime); // deltaTime works better than timeStep
 				velocityFbo.swap();
-//				borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 //			}
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		}
@@ -124,7 +118,6 @@ namespace flowTools {
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get(), cellSize.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();
-//			borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		}
 		
@@ -148,7 +141,6 @@ namespace flowTools {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo, pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 			pressureFbo.swap();
-//			borderShader.update(pressureFbo, pressureFbo.getBackTexture(), 1);
 			applyObstacleShader.update(pressureFbo, pressureFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		}
 		
@@ -156,16 +148,15 @@ namespace flowTools {
 		velocityFbo.swap();
 		substractGradientShader.update(velocityFbo, velocityFbo.getBackTexture(), pressureFbo.getTexture(), obstacleFbo.getTexture(), cellSize.get());
 		velocityFbo.swap();
-//		borderShader.update(velocityFbo, velocityFbo.getBackTexture(), -1);
 		applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
 		// DENSITY:
 		densityFbo.swap();
 		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
 		densityFbo.swap();
+		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
+		densityFbo.swap();
 		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), 1.0);
-		
-//		applyObstacleDensityShader.update(densityFbo, densityFbo.getBackTexture(), obstacleFbo.getTexture());
 		
 		ofPopStyle();
 	}
@@ -229,29 +220,13 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
 		ftUtil::zero(obstacleFbo);
-//		createEdgeImage(obstacleFbo);
 		
 		advectShader = ftAdvectShader();
-		borderShader = ftBorderShader();
-		borderShader.setup(simulationWidth, simulationHeight);
 		diffuseShader = ftDiffuseShader();
 		divergenceShader = ftDivergenceShader();
 		jacobiShader = ftJacobiShader();
 		substractGradientShader = ftSubstractGradientShader();
 		obstacleOffsetShader = ftObstacleOffsetShader();
 		applyObstacleShader = ftApplyObstacleShader();
-	}
-	
-	//--------------------------------------------------------------
-	void ftFluidFlow::createEdgeImage(ofFbo &_Fbo) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		_Fbo.begin();
-		ofClear(ofColor(255, 255, 255, 255));
-		ofSetColor(ofColor(0,0,0,0));
-		int edgeWidth = 1;
-		ofDrawRectangle(edgeWidth, edgeWidth, _Fbo.getWidth() - edgeWidth * 2, _Fbo.getHeight() - edgeWidth * 2);
-		_Fbo.end();
-		ofPopStyle();
 	}
 }

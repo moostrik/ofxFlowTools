@@ -6,15 +6,15 @@
 
 namespace flowTools {
 	
-	class ftDivergenceShader : public ftShader {
+	class ftDiffuseShader : public ftShader {
 	public:
-		ftDivergenceShader() {
+		ftDiffuseShader() {
 			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftDivergenceShader";
+			string shaderName = "ftDiffuseShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -22,7 +22,9 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Velocity;
 									 uniform sampler2DRect Obstacle;
-									 uniform float HalfInverseCellSize;
+									 uniform float Viscosity;
+									 uniform float C;
+									 uniform int test;
 									 
 									 void v2TexNeighbors(sampler2DRect tex, vec2 st,
 														 out vec2 left, out vec2 right, out vec2 bottom, out vec2 top) {
@@ -43,23 +45,24 @@ namespace flowTools {
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
 										 
+										 
 										 vec2 vL; vec2 vR; vec2 vB; vec2 vT;
 										 v2TexNeighbors (Velocity, st, vL, vR, vB, vT);
+										 vec2 vC = texture2DRect(Velocity, st).xy;
+										 
 										 float oL; float oR; float oB; float oT;
 										 fRoundTexNeighbors (Obstacle, st, oL, oR, oB, oT);
-										 
-										 //   if (oL > 0.9) vL = vec2(0.0, 0.0);
-										 //   if (oR > 0.9) vR = vec2(0.0, 0.0);
-										 //   if (oB > 0.9) vB = vec2(0.0, 0.0);
-										 //   if (oT > 0.9) vT = vec2(0.0, 0.0);
+										 float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, st).x - 0.5);
 										 
 										 vL *= 1.0 - oL;
 										 vR *= 1.0 - oR;
 										 vB *= 1.0 - oB;
 										 vT *= 1.0 - oT;
+										 // ADD NEIGHBOR OBSTACLES;
 										 
-										 gl_FragColor.r = HalfInverseCellSize * (vR.x - vL.x + vT.y - vB.y);
+										 vec2 newVel = ((vC + Viscosity * (vL + vR + vB + vT)) / C) * inverseSolid;
 										 
+										 gl_FragColor = vec4(newVel, 0.0, 0.0);
 									 }
 									 );
 			
@@ -70,47 +73,21 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect Velocity;
-									 uniform sampler2DRect Obstacle;
-									 uniform float HalfInverseCellSize;
+									 uniform float Alpha;
+									 uniform float Beta;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
-									 void v2TexNeighbors(sampler2DRect tex, vec2 st,
-														 out vec2 left, out vec2 right, out vec2 bottom, out vec2 top) {
-										 left   = texture(tex, st - vec2(1, 0)).xy;
-										 right  = texture(tex, st + vec2(1, 0)).xy;
-										 bottom = texture(tex, st - vec2(0, 1)).xy;
-										 top    = texture(tex, st + vec2(0, 1)).xy;
-									 }
-									 
-									 void fRoundTexNeighbors(sampler2DRect tex, vec2 st,
-															 out float left, out float right, out float bottom, out float top) {
-										 left   = ceil(texture(tex, st - vec2(1, 0)).x - 0.5); // round not available
-										 right  = ceil(texture(tex, st + vec2(1, 0)).x - 0.5);
-										 bottom = ceil(texture(tex, st - vec2(0, 1)).x - 0.5);
-										 top    = ceil(texture(tex, st + vec2(0, 1)).x - 0.5);
-									 }
-									 
 									 void main(){
 										 vec2 st = texCoordVarying;
-										 
-										 vec2 vL; vec2 vR; vec2 vB; vec2 vT;
-										 v2TexNeighbors (Velocity, st, vL, vR, vB, vT);
-										 float oL; float oR; float oB; float oT;
-										 fRoundTexNeighbors (Obstacle, st, oL, oR, oB, oT);
-										 
-										 //   if (oL > 0.9) vL = vec2(0.0, 0.0);
-										 //   if (oR > 0.9) vR = vec2(0.0, 0.0);
-										 //   if (oB > 0.9) vB = vec2(0.0, 0.0);
-										 //   if (oT > 0.9) vT = vec2(0.0, 0.0);
-										 
-										 vL *= 1.0 - oL;
-										 vR *= 1.0 - oR;
-										 vB *= 1.0 - oB;
-										 vT *= 1.0 - oT;
-										 
-										 fragColor.r = HalfInverseCellSize * (vR.x - vL.x + vT.y - vB.y);
+										 vec2 vL = texture(Velocity, st - vec2(1, 0)).xy;
+										 vec2 vR = texture(Velocity, st + vec2(1, 0)).xy;
+										 vec2 vB = texture(Velocity, st - vec2(0, 1)).xy;
+										 vec2 vT = texture(Velocity, st + vec2(0, 1)).xy;
+										 vec2 vel = texture(Velocity, st).xy;
+										 vec2 diffusion = (vel + Alpha * (vL + vR + vB + vT)) / Beta;
+										 fragColor = vec4(diffusion, 0.0, 0.0);
 									 }
 									 );
 			
@@ -121,13 +98,16 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obsTex, float _cellSize){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsTex, float _viscosity){
 			_fbo.begin();
 			begin();
-			setUniform1f("HalfInverseCellSize", 0.5f / _cellSize);
-			setUniformTexture("Velocity", _velTex, 1);
-			setUniformTexture("Obstacle", _obsTex, 2);
-			renderFrame(_fbo.getWidth(),_fbo.getHeight());
+			float alpha = _viscosity;
+			float beta = 1.0 + 4. * alpha;
+			setUniform1f("Alpha", alpha);
+			setUniform1f("Beta", beta);
+			setUniformTexture("Velocity", _backTex, 0);
+			setUniformTexture("Obstacle", _obsTex, 1);
+			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();
 		}

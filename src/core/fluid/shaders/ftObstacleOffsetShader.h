@@ -6,15 +6,15 @@
 
 namespace flowTools {
 	
-	class ftApplyObstacleShader : public ftShader {
+	class ftObstacleOffsetShader : public ftShader {
 	public:
-		ftApplyObstacleShader() {
+		ftObstacleOffsetShader() {
 			bInitialized = true;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftApplyObstacleShader";
+			string shaderName = "ftObstacleOffsetShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -48,8 +48,10 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL150(
-									 uniform sampler2DRect	SrcTex;
-									 uniform sampler2DRect	ObstacleTex;
+									 uniform sampler2DRect	tex0;
+									 
+									 uniform int Width;
+									 uniform int Height;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -57,9 +59,27 @@ namespace flowTools {
 									 void main()
 									 {
 										 vec2 st = texCoordVarying;
-										 vec4 src = texture(SrcTex, st);
-										 float obstacle = texture(ObstacleTex, st).x;
-										 fragColor = src * vec4((1.0 - obstacle));
+										 float off = 1;
+										 vec2 off_x = vec2(off, 0.0);
+										 vec2 off_y = vec2(0.0, off);
+										 
+										 //calculate the gradient
+										 float gradx; float grady; float gradmag;
+										 gradx = texture(tex0, st - off_x).x - texture(tex0, st + off_x).x;
+										 grady = texture(tex0, st - off_y).x - texture(tex0, st + off_y).x;
+										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
+										 
+										 vec2 offset;
+										 float scr = 1.0 - texture(tex0, st).x;
+										 offset.x = scr*round(gradx/gradmag);
+										 offset.y = scr*round(grady/gradmag);
+										 
+										 if (st.x < 1) { offset.x = 1; }
+										 if (st.x > Width - 1.0) { offset.x = -1; }
+										 if (st.y < 1) { offset.y = 1; }
+										 if (st.y > Height - 1.0) { offset.y = -1; }
+										 
+										 fragColor = vec4(offset, 0.0, 0.0);
 									 }
 									 );
 			
@@ -70,14 +90,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _obstacleTex, ofTexture& _obstacleOffsetTex, float _weight){
+		void update(ofFbo& _fbo, ofTexture& _tex){
 			_fbo.begin();
 			begin();
-			setUniformTexture("ScrTex", _srcTex, 0);
-			setUniformTexture("ObstacleTex", _obstacleTex, 1);
-			setUniformTexture("OffsetTex", _obstacleOffsetTex, 2);
-			setUniform1f("Weight", _weight);
-			setUniform2f("Scale", _obstacleTex.getWidth() / _fbo.getWidth(), _obstacleTex.getHeight()/ _fbo.getHeight());
+			setUniformTexture("tex0", _tex, 0);
+			setUniform1i("Width", _fbo.getWidth());
+			setUniform1i("Height", _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

@@ -13,13 +13,11 @@
 #include "ftVorticityVelocityShader.h"
 #include "ftVorticityConfinementShader.h"
 
-#include "ftBorderShader.h"
-
 #include "ftAddBooleanShader.h"
 #include "ftObstacleOffsetShader.h"
 #include "ftApplyObstacleShader.h"
-#include "ftApplyObstacleDensityShader.h"
 
+#include "ftClampLengthShader.h"
 
 namespace flowTools {
 	class ftFluidFlow : public ftFlow{
@@ -110,7 +108,6 @@ namespace flowTools {
 		ofParameterGroup			maxValues;
 		
 		ftAdvectShader				advectShader;
-		ftBorderShader				borderShader;
 		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;
@@ -122,7 +119,7 @@ namespace flowTools {
 		ftAddBooleanShader			addBooleanShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
 		ftApplyObstacleShader		applyObstacleShader;
-		ftApplyObstacleDensityShader applyObstacleDensityShader;
+		ftClampLengthShader			clampLengthShader;
 		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;
@@ -134,8 +131,6 @@ namespace flowTools {
 		ofFbo			obstacleOffsetFbo;
 		
 		int simulationWidth, simulationHeight, densityWidth, densityHeight;
-		
-		void createEdgeImage(ofFbo& _Fbo);
 	};
 }
 

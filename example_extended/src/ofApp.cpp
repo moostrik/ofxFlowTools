@@ -151,7 +151,6 @@ void ofApp::update(){
 	
 	if (toggleParticleDraw) {
 		particleFlow.setSpeed(fluidFlow.getSpeed());
-		particleFlow.setCellSize(fluidFlow.getCellSize());
 		particleFlow.setFlowVelocity(opticalFlow.getVelocity());
 		for (auto flow: mouseFlows) if (flow->didChange() && flow->getType() == FT_VELOCITY) { particleFlow.addFlowVelocity(flow->getTexture()); }
 		particleFlow.setFluidVelocity(fluidFlow.getVelocity());

@@ -19,10 +19,18 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect tex0;
+									 uniform sampler2DRect baseTex;
+									 uniform sampler2DRect blendTex;
+									 
+									 uniform vec2	baseScale;
+									 uniform vec2	blendScale;
 
 									 void main(){
-										 gl_FragColor = clamp(ceil(texture2DRect(tex0, gl_TexCoord[0].st) - vec4(0.5)), 0.0, 1.0);
+										 vec2 baseSt = gl_TexCoord[0].st * baseScale;
+										 vec2 blendSt = gl_TexCoord[0].st * blendScale;
+										 vec4 base = texture2DRect(baseTex, baseSt);
+										 vec4 blend = clamp(floor(texture2DRect(blendTex, blendSt) + 0.1), 0.0, 1.0);
+										 gl_FragColor = base + blend;
 									 }
 									 );
 			
@@ -34,6 +42,7 @@ namespace flowTools {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect baseTex;
 									 uniform sampler2DRect blendTex;
+									 
 									 uniform vec2	baseScale;
 									 uniform vec2	blendScale;
 									 

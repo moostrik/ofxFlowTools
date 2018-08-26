@@ -160,7 +160,7 @@ namespace flowTools {
 		densityFbo.swap();
 		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
 		densityFbo.swap();
-		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 0.0);
+		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		
 		ofPopStyle();
 	}

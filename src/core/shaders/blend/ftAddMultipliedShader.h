@@ -21,6 +21,7 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect baseTex;
 									 uniform sampler2DRect blendTex;
+									 
 									 uniform float	baseWeight;
 									 uniform float	blendWeight;
 									 uniform vec2	baseScale;
@@ -43,6 +44,7 @@ namespace flowTools {
 			fragmentShader = GLSL150(
 									 uniform sampler2DRect baseTex;
 									 uniform sampler2DRect blendTex;
+									 
 									 uniform float	baseWeight;
 									 uniform float	blendWeight;
 									 uniform vec2	baseScale;

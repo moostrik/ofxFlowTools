@@ -20,25 +20,25 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Backbuffer;
-									 uniform sampler2DRect Obstacle;
-									 uniform sampler2DRect Velocity;
+									 uniform sampler2DRect SrcTex;
+									 uniform sampler2DRect ObstacleOffsetTex;
 									 
-									 uniform float TimeStep;
-									 uniform float Dissipation;
-									 uniform float InverseCellSize;
+									 uniform float	Weight;
 									 uniform vec2	Scale;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
 										 vec2 st2 = st * Scale;
-										 
-										 float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, st2).x - 0.5);
-										 
-										 vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										 vec2 coord =  st - TimeStep * InverseCellSize * u;
-										 
-										 gl_FragColor = Dissipation * texture2DRect(Backbuffer, coord) * inverseSolid;
+										 vec3 obs = texture2DRect(ObstacleOffsetTex, st2).xyz;
+										 vec2 offset = obs.xy;
+										 float obstacle = obs.z;
+										 vec4 src = texture2DRect(SrcTex, st + offset);
+										 if (length(offset) > 0) {
+											 gl_FragColor = src * vec4(obstacle * Weight);
+										 }
+										 else {
+											 gl_FragColor = src * vec4(obstacle);
+										 }
 									 }
 									 );
 			

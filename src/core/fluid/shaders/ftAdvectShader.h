@@ -21,24 +21,17 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Backbuffer;
-									 uniform sampler2DRect Obstacle;
 									 uniform sampler2DRect Velocity;
 									 
-									 uniform float TimeStep;
-									 uniform float Dissipation;
-									 uniform float InverseCellSize;
+									 uniform float	TimeStep;
+									 uniform float	Dissipation;
 									 uniform vec2	Scale;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
 										 vec2 st2 = st * Scale;
-										 
-										 float inverseSolid = 1.0 - ceil(texture2DRect(Obstacle, st2).x - 0.5);
-										 
 										 vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										 vec2 coord =  st - TimeStep * InverseCellSize * u;
-										 
-										 gl_FragColor = Dissipation * texture2DRect(Backbuffer, coord) * inverseSolid;
+										 gl_FragColor = Dissipation * texture2DRect(Backbuffer,  st - TimeStep * u);
 									 }
 									 );
 			

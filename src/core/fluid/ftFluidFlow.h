@@ -129,7 +129,7 @@ namespace flowTools {
 		ofFbo			divergenceFbo;
 		ofFbo			vorticityVelocityFbo;
 		ofFbo			vorticityConfinementFbo;
-		ftPingPongFbo	smokeBuoyancyFbo;
+		ofFbo			smokeBuoyancyFbo;
 		ftPingPongFbo	obstacleFbo;
 		ofFbo			obstacleOffsetFbo;
 		

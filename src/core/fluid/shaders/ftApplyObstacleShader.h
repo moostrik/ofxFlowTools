@@ -62,7 +62,7 @@ namespace flowTools {
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
 										 vec3 obs = texture(ObstacleOffsetTex, st2).xyz;
-										 vec2 offset = obs.xy;
+										 vec2 offset = obs.xy;// / Scale;
 										 float obstacle = obs.z;
 										 vec4 src = texture(SrcTex, st + offset);
 										 if (length(offset) > 0) {

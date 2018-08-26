@@ -8,9 +8,9 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	// process all but the density on 16th resolution
-	flowWidth = densityWidth / 4;
-	flowHeight = densityHeight / 4;
+	// on older graphics cards process all but the density on 16th resolution
+	flowWidth = densityWidth;// / 4;
+	flowHeight = densityHeight;// / 4;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	

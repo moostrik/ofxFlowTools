@@ -25,14 +25,14 @@ namespace flowTools {
 									 
 									 void main() {
 										 vec2 st = gl_TexCoord[0].st;
+										 float pC = texture2DRect(Divergence, st ).x;
 										 float pL = texture2DRect(Pressure, st - vec2(1, 0)).x;
 										 float pR = texture2DRect(Pressure, st + vec2(1, 0)).x;
 										 float pB = texture2DRect(Pressure, st - vec2(0, 1)).x;
 										 float pT = texture2DRect(Pressure, st + vec2(0, 1)).x;
-										 float div = texture2DRect(Divergence, st ).x;
 										 float alpha = -1;
 										 float beta = 0.25;
-										 float pres = (pL + pR + pB + pT + alpha * div) * beta;
+										 float pres = (alpha * pC + pL + pR + pB + pT) * beta;
 										 gl_FragColor = vec4(pres, 0.0, 0.0, 0.0);
 									 }
 									 );
@@ -51,14 +51,14 @@ namespace flowTools {
 									 
 									 void main() {
 										 vec2 st = texCoordVarying;
+										 float pC = texture(Divergence, st ).x;
 										 float pL = texture(Pressure, st - vec2(1, 0)).x;
 										 float pR = texture(Pressure, st + vec2(1, 0)).x;
 										 float pB = texture(Pressure, st - vec2(0, 1)).x;
 										 float pT = texture(Pressure, st + vec2(0, 1)).x;
-										 float div = texture(Divergence, st ).x;
 										 float alpha = -1;
 										 float beta = 0.25;
-										 float pres = (pL + pR + pB + pT + alpha * div) * beta;
+										 float pres = (alpha * pC + pL + pR + pB + pT) * beta;
 										 fragColor = vec4(pres, 0.0, 0.0, 0.0);
 									 }
 									 );

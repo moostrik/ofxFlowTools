@@ -53,7 +53,7 @@ namespace flowTools {
 		smokeBuoyancyParameters.add(smokeSigma.set("buoyancy", 0.5, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.75, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., 0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., -0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
 		parameters.add(smokeBuoyancyParameters);
 	}
 	

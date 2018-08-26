@@ -66,6 +66,7 @@ namespace flowTools {
 		void	setSaturation(float value)	{ saturation.set(value); }
 		
 		ofTexture& getDensity() 			{ return getOutput(); };
+		ofTexture& getTemperature() 		{ return getLuminance(); };
 		ofTexture& getLuminance()			{ return luminanceFbo.getTexture(); };
 		
 		float	getSaturation()				{ return saturation.get(); }

@@ -145,6 +145,7 @@ void ofApp::update(){
 	
 	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
+	fluidFlow.addTemperature(densityBridgeFlow.getTemperature());
 	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	

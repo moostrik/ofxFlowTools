@@ -50,10 +50,10 @@ namespace flowTools {
 		dissipationParameters.add(dissipationPrs.set("pressure",0.025, 0, 0.1));
 		parameters.add(dissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
-		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
+		smokeBuoyancyParameters.add(smokeSigma.set("buoyancy", 1.0, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., 9.80665), ofDefaultVec2(-10, -10), ofDefaultVec2(10, 10)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., 0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
 		parameters.add(smokeBuoyancyParameters);
 	}
 	
@@ -123,15 +123,23 @@ namespace flowTools {
 			applyObstacleShader.update(velocityFbo, velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		}
 		
-		// ADD FORCES:  SMOKE BUOYANCY -- UNSTABLE __ DISABLED FOR NOW
-//		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
-//			temperatureFbo.swap();
-//			advectShader.update(temperatureFbo, temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), timeStep, 1.0 - (dissipation.get()), cellSize.get());
-//			smokeBuoyancyShader.update(smokeBuoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get() * timeStep);
-//			addVelocity(smokeBuoyancyFbo.getTexture());
-//		} else {
-//			ftUtil::zero(temperatureFbo);
-//		}
+		// ADD FORCES:  SMOKE BUOYANCY
+		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
+			temperatureFbo.swap();
+			advectShader.update(temperatureFbo, temperatureFbo.getBackTexture(), velocityFbo.getTexture(),  timeStep, 1.0 - dissipationDen.get());
+			temperatureFbo.swap();
+			clampLengthShader.update(temperatureFbo, temperatureFbo.getBackTexture(), 2.0, 1.0);
+			temperatureFbo.swap();
+			applyObstacleShader.update(temperatureFbo, temperatureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+			ftUtil::zero(smokeBuoyancyFbo);
+			smokeBuoyancyShader.update(smokeBuoyancyFbo, temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get());
+			smokeBuoyancyFbo.swap();
+			applyObstacleShader.update(smokeBuoyancyFbo, smokeBuoyancyFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			addVelocity(smokeBuoyancyFbo.getTexture());
+		}
+		else {
+			ftUtil::zero(temperatureFbo);
+		}
 		
 		// PRESSURE: DIVERGENCE
 		ftUtil::zero(divergenceFbo);

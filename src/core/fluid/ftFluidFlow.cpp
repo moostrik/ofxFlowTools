@@ -40,7 +40,7 @@ namespace flowTools {
 	
 	ftFluidFlow::ftFluidFlow(){
 		parameters.setName("fluid");
-		parameters.add(speed.set("speed", 50, 0, 200));
+		parameters.add(speed.set("speed", 0, 0, 1));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
 		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
@@ -90,7 +90,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::update(float _deltaTime){
-		float timeStep = _deltaTime * speed.get();
+		float timeStep = _deltaTime * speed.get() * simulationWidth;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

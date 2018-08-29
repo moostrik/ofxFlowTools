@@ -45,8 +45,8 @@ namespace flowTools {
 		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
 		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
 		dissipationParameters.setName("dissipation");
-		dissipationParameters.add(dissipationVel.set("velocity",0.0015, 0, 0.01));
-		dissipationParameters.add(dissipationDen.set("density", 0.0015, 0, 0.01));
+		dissipationParameters.add(dissipationVel.set("velocity",0.0015, 0, 0.025));
+		dissipationParameters.add(dissipationDen.set("density", 0.0015, 0, 0.025));
 		dissipationParameters.add(dissipationPrs.set("pressure",0.025, 0, 0.1));
 		parameters.add(dissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");

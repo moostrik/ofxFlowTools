@@ -34,7 +34,7 @@ namespace flowTools {
 										 
 										 float alpha = length(vel.xy); // magnitude of the velocity
 										 den.w = alpha * speed;
-										 den.xyz *= den.w;
+//										 den.xyz *= den.w;
 										 
 										 gl_FragColor = den;
 									 }
@@ -64,7 +64,7 @@ namespace flowTools {
 										 
 										 float alpha = length(vel.xy); // magnitude of the velocity
 										 den.w = alpha * speed;
-										 den.xyz *= den.w;
+//										 den.xyz *= den.w;
 										 
 										 fragColor = den;
 									 }

@@ -25,14 +25,14 @@ namespace flowTools {
 			offset.set("offset", 3, 1, 10);
 			threshold.set("threshold", 0.02, 0, 0.2);
 			strength.set("force", 3, .1, 10);			// 3 is best for normalization
-			power.set("power", 1.0, .01, 1);			//
+			boost.set("boost", 0.0, 0.0, .9);			//
 			doInverseX.set("inverse x", true); 			// flow velocity is inverse to fluid velocity
 			doInverseY.set("inverse y", true); 			// flow velocity is inverse to fluid velocity
 			
 			//		parameters.add(offset);
 			parameters.add(threshold);
 			//		parameters.add(strength);
-			//		parameters.add(power);
+					parameters.add(boost);
 			//		parameters.add(doInverseX);
 			//		parameters.add(doInverseY);
 		};
@@ -53,7 +53,7 @@ namespace flowTools {
 					ftUtil::stretch(opticalFlowFbo, opticalFlowFbo.getBackTexture());
 				}
 				
-				opticalFlowShader.update(outputFbo, opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  power.get(), doInverseX.get(), doInverseY.get());
+				opticalFlowShader.update(outputFbo, opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  1.0 - boost.get(), doInverseX.get(), doInverseY.get());
 				
 				ofPopStyle();
 			}
@@ -107,7 +107,7 @@ namespace flowTools {
 		ofParameter<float>			threshold;
 		ofParameter<int>			offset;
 		ofParameter<float>			strength;
-		ofParameter<float>			power;
+		ofParameter<float>			boost;
 		ofParameter<bool>			doInverseX;
 		ofParameter<bool>			doInverseY;
 		

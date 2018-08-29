@@ -166,7 +166,7 @@ namespace flowTools {
 		densityFbo.swap();
 		advectShader.update(densityFbo, densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
 		densityFbo.swap();
-		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), 2.0, 1.0);
+		clampLengthShader.update(densityFbo, densityFbo.getBackTexture(), sqrt(3), 1.0);
 		densityFbo.swap();
 		applyObstacleShader.update(densityFbo, densityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		

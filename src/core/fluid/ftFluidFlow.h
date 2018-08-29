@@ -106,7 +106,6 @@ namespace flowTools {
 		ofParameter<float>			smokeWeight;
 		ofParameter<float>			ambientTemperature;
 		ofParameter<glm::vec2>		gravity;
-		ofParameterGroup			maxValues;
 		
 		ftAdvectShader				advectShader;
 		ftDiffuseShader				diffuseShader;

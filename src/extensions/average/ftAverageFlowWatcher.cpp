@@ -18,7 +18,7 @@ namespace flowTools {
 		thresholdColor =	ofFloatColor(1., .4, .0, .85);	// pinkish
 		
 		eventParameters.setName("events");
-		eventParameters.add(pThreshold.set("threshold", .25, .1, .3));
+		eventParameters.add(pThreshold.set("threshold", .25, .0, .3));
 		eventParameters.add(pBase.set("base", .6, .5, .75));
 		eventParameters.add(pMagnitudeEvent.set("magnitude", 0, -1, 1));
 		pComponentEvents.resize(numChannels);

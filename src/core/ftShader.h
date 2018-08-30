@@ -2,18 +2,18 @@
 
 #include "ofMain.h"
 
-#define GLSL120(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n" #shader
+#define GLSL120(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #define TINY 0.000001 \n" #shader
 #define GLSL120PI(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
 #define GLSL120GEO(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #extension GL_EXT_geometry_shader4: enable \n" #shader
-#define GLSL150(shader)  "#version 150 \n" #shader
-#define GLSL150PI(shader)  "#version 150 \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
+#define GLSL150(shader)  "#version 410 \n #define TINY 0.000001 \n" #shader
+#define GLSL150PI(shader)  "#version 410 \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
 
 namespace flowTools {
 	
 	class ftShader : public ofShader{
 	public:
 		ftShader() {
-			bInitialized = false;
+			bInitialized = 0;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			quad.getVertices().resize(4);
 			quad.getTexCoords().resize(4);
@@ -92,7 +92,7 @@ namespace flowTools {
 		ofMesh		quad;
 		string		fragmentShader;
 		string		vertexShader;
-		bool		bInitialized;
+		int			bInitialized;
 	};
 	
 }

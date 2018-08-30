@@ -76,9 +76,9 @@ namespace flowTools {
 		float	getNumJacobiIterations()			{ return numJacobiIterations.get(); }
 		float	getViscosity()						{ return viscosity.get(); }
 		float	getVorticity()						{ return vorticity.get(); }
-		void	getDissipationVel()					{ return dissipationVel.get(); }
-		void	getDissipationDen()					{ return dissipationDen.get(); }
-		void	getDissipationPrs()					{ return dissipationPrs.get(); }
+		float	getDissipationVel()					{ return dissipationVel.get(); }
+		float	getDissipationDen()					{ return dissipationDen.get(); }
+		float	getDissipationPrs()					{ return dissipationPrs.get(); }
 		float	getSmokeSigma()						{ return smokeSigma.get(); }
 		float	getSmokeWeight()					{ return smokeWeight.get(); }
 		float	getAmbientTemperature()				{ return ambientTemperature.get(); }

@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftBridgeShader : public ftShader {
 	public:
 		ftBridgeShader(){
-			bInitialized = true;
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftBridgeShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -51,6 +51,7 @@ namespace flowTools {
 										 vec2 blendVel = texture(tex1, texCoordVarying).xy;
 										 vec2 vel = (baseVel * weight) + blendVel;
 										 float magnitude = min(length(vel), 1);
+										 vel += TINY; // win fix
 										 vel = normalize(vel) * magnitude;
 										 fragColor = vec4(vel, 0.0, 1.0);
 									 }

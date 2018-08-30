@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftOpticalFlowShader : public ftShader {
 	public:
 		ftOpticalFlowShader() {
-			bInitialized = true;
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftOpticalFlowShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -35,12 +35,12 @@ namespace flowTools {
 										 float scr_dif = texture2DRect(tex0, st).x - texture2DRect(tex1, st).x;
 										 
 										 //calculate the gradient
-										 float gradx; float grady; float gradmag; float lambda = 0.01;
+										 float gradx; float grady; float gradmag;
 										 gradx =  texture2DRect(tex1, st + off_x).x - texture2DRect(tex1, st - off_x).x;
 										 gradx += texture2DRect(tex0, st + off_x).x - texture2DRect(tex0, st - off_x).x;
 										 grady =  texture2DRect(tex1, st + off_y).x - texture2DRect(tex1, st - off_y).x;
 										 grady += texture2DRect(tex0, st + off_y).x - texture2DRect(tex0, st - off_y).x;
-										 gradmag = sqrt((gradx*gradx)+(grady*grady)+lambda);
+										 gradmag = sqrt((gradx*gradx)+(grady*grady)+TINY);
 										 
 										 vec2 flow;
 										 flow.x = scr_dif*(gradx/gradmag);
@@ -55,6 +55,7 @@ namespace flowTools {
 										 magnitude -= threshold;
 										 magnitude /= (1-threshold);
 										 magnitude = pow(magnitude, power);
+										 flow += TINY; // flow length cannot be 0 for normalization to work on windows
 										 flow = normalize(flow) * vec2(min(magnitude, 1));
 										 
 										 // set color
@@ -93,7 +94,7 @@ namespace flowTools {
 										 gradx += texture(tex0, st + off_x).x - texture(tex0, st - off_x).x;
 										 grady =  texture(tex1, st + off_y).x - texture(tex1, st - off_y).x;
 										 grady += texture(tex0, st + off_y).x - texture(tex0, st - off_y).x;
-										 gradmag = sqrt((gradx*gradx)+(grady*grady)+lambda);
+										 gradmag = sqrt((gradx*gradx)+(grady*grady)+TINY);
 										 
 										 vec2 flow;
 										 flow.x = scr_dif*(gradx/gradmag);
@@ -108,8 +109,9 @@ namespace flowTools {
 										 magnitude -= threshold;
 										 magnitude /= (1-threshold);
 										 magnitude = pow(magnitude, power);
-										 flow = normalize(flow) * vec2(min(magnitude, 1));
-										 
+										 flow += TINY; // flow length cannot be 0 for normalization to work on windows
+										 flow = normalize(flow) * vec2(min(max(magnitude, 0), 1));
+
 										 // set color
 										 fragColor = vec4(flow, 0.0, 1.0);
 									 }

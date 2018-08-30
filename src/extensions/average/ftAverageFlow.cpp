@@ -117,7 +117,7 @@ namespace flowTools {
 		normalizedMagnitude = meanMagnitude / pNormalizationMax.get();
 		normalizedMagnitude = ofClamp(normalizedMagnitude, 0, 1);
 		
-		float totalMagnitude;
+		float totalMagnitude = 0;
 		for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }
 		totalMagnitude = sqrt(totalMagnitude);
 		

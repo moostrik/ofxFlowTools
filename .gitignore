@@ -62,6 +62,15 @@ openFrameworks-Info.plist
 *.dll
 *.exp
 *.pdb
+*.db
+*.filters
+*.icons.rc
+*.sln
+*.vcxproj
+*icon.rc
+*.opendb
+*.db-shm
+*.db-wal
 ipch/
 [Oo]bj/
 [Dd]ebug*/

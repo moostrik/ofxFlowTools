@@ -27,17 +27,10 @@ namespace flowTools {
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
 										 vec2 st2 = st * Scale;
-										 
 										 vec4 color = texture2DRect(Texture, st);
-										 
 										 float magnitude = length(color) - Min;
-										 if(magnitude > 0.0) {
-											 color = normalize(color) * (magnitude / Range);
-										 }
-										 else {
-											 color = vec4(0.0);
-										 }
-										 
+										 color += TINY;
+										 color = normalize(color) * (magnitude / Range);
 										 gl_FragColor = color ;
 									 }
 									 );
@@ -59,17 +52,10 @@ namespace flowTools {
 									 void main(){
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
-										 
 										 vec4 color = texture(Texture, st);
-										 
 										 float magnitude = length(color) - Min;
-										 if(magnitude > 0.0) {
-											 color = normalize(color) * (magnitude / Range);
-										 }
-										 else {
-											 color = vec4(0.0);
-										 }
-										 
+										 color += TINY;
+										 color = normalize(color) * (magnitude / Range);
 										 fragColor = color ;
 									 }
 									 );

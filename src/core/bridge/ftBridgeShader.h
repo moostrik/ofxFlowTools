@@ -28,6 +28,7 @@ namespace flowTools {
 										 vec2 blendVel = texture2DRect(tex1, gl_TexCoord[0].st).xy;
 										 vec2 vel = (baseVel * weight) + blendVel;
 										 float magnitude = min(length(vel), 1);
+										 vel += TINY;
 										 vel = normalize(vel) * magnitude;
 										 gl_FragColor = vec4(vel, 0.0, 1.0);
 									 }
@@ -51,7 +52,7 @@ namespace flowTools {
 										 vec2 blendVel = texture(tex1, texCoordVarying).xy;
 										 vec2 vel = (baseVel * weight) + blendVel;
 										 float magnitude = min(length(vel), 1);
-										 vel += TINY; // win fix
+										 vel += TINY;
 										 vel = normalize(vel) * magnitude;
 										 fragColor = vec4(vel, 0.0, 1.0);
 									 }

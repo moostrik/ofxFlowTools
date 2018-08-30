@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftApplyObstacleShader : public ftShader {
 	public:
 		ftApplyObstacleShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftApplyObstacleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -47,7 +47,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect	SrcTex;
 									 uniform sampler2DRect	ObstacleOffsetTex;
 									 

@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftVelocityDotsShader : public ftShader {
 	public:
 		ftVelocityDotsShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftVelocityDotsShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -47,7 +47,7 @@ namespace flowTools {
 			
 			string geometryShader;
 			
-			vertexShader = GLSL150(
+			vertexShader = GLSL410(
 								   uniform mat4 modelViewProjectionMatrix;
 								   uniform mat4 textureMatrix;
 								   uniform sampler2DRect velocityTexture;
@@ -81,7 +81,7 @@ namespace flowTools {
 								   
 								   );
 			
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 in vec4 colorVarying;
 									 out vec4 fragColor;
 									 

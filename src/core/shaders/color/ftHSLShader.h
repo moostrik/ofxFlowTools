@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftHSLShader : public ftShader {
 	public:
 		ftHSLShader(){
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftHSLShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -114,7 +114,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect tex0;
 									 uniform float hue;
 									 uniform float saturation;

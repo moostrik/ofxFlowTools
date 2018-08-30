@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftAddBooleanShader : public ftShader {
 	public:
 		ftAddBooleanShader(){
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftAddBooleanShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -39,7 +39,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect baseTex;
 									 uniform sampler2DRect blendTex;
 									 

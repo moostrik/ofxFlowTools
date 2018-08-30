@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftSplitVelocityShader : public ftShader {
 	public:
 		ftSplitVelocityShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftSplitVelocityShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -40,7 +40,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect VelocityTexture;
 									 uniform float Force;
 									 uniform vec2	Scale;

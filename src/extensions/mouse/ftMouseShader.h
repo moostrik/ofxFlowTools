@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftMouseShader : public ftShader {
 	public:
 		ftMouseShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftMouseShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -39,7 +39,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform vec2	Point;
 									 uniform float	Radius;
 									 uniform float	EdgeSmooth;

@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftGaussianBlurShader : public ftShader {
 	public:
 		ftGaussianBlurShader(){
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftGaussianBlurShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -78,7 +78,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			string fragmentHorizontalBlurShader = GLSL150(
+			string fragmentHorizontalBlurShader = GLSL410(
 														  uniform sampler2DRect backbuffer;
 														  uniform float radius;
 														  
@@ -112,7 +112,7 @@ namespace flowTools {
 			bInitialized *= blurShader[0].bindDefaults();
 			bInitialized *= blurShader[0].linkProgram();
 			
-			string fragmentVerticalBlurShader = GLSL150(
+			string fragmentVerticalBlurShader = GLSL410(
 														uniform sampler2DRect backbuffer;
 														uniform float radius;
 														

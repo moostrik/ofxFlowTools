@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftMoveParticleShader : public ftShader {
 	public:
 		ftMoveParticleShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftMoveParticleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -59,7 +59,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Backbuffer;
 									 uniform sampler2DRect ALMSTexture;
 									 uniform sampler2DRect Velocity;

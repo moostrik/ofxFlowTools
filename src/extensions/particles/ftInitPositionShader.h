@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftInitPositionShader : public ftShader {
 	public:
 		ftInitPositionShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftInitPositionShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -32,7 +32,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform vec2 Dimensions;
 									 
 									 in vec2 texCoordVarying;

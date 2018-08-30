@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftDivergenceShader : public ftShader {
 	public:
 		ftDivergenceShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftDivergenceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -38,7 +38,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Velocity;
 									 
 									 in vec2 texCoordVarying;

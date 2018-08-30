@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftDiffuseShader : public ftShader {
 	public:
 		ftDiffuseShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftDiffuseShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -42,7 +42,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Velocity;
 									 
 									 uniform float Alpha;

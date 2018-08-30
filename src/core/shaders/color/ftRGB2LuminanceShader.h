@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftRGB2LuminanceShader : public ftShader {
 	public:
 		ftRGB2LuminanceShader(){
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftLuminanceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -37,7 +37,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect tex0;
 									 uniform vec2 scale0;
 									 

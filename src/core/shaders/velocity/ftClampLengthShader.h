@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftClampLengthShader : public ftShader {
 	public:
 		ftClampLengthShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftClampLengthShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -31,6 +31,7 @@ namespace flowTools {
 										 float l = length(color.xyz);
 										 if (l > MaxLength) {
 											 float dinges = (l - MaxLength) * ClampForce;
+											 color.xyz += TINY;
 											 color.xyz = normalize(color.xyz) * (l - dinges);
 										 }
 										 gl_FragColor = color ;
@@ -42,7 +43,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Backbuffer;
 									 uniform float MaxLength;
 									 uniform float ClampForce;
@@ -58,6 +59,7 @@ namespace flowTools {
 										 float l = length(color.xyz);
 										 if (l > MaxLength) {
 											 float dinges = (l - MaxLength) * ClampForce;
+											 color.xyz += TINY;
 											 color.xyz = normalize(color.xyz) * (l - dinges);
 										 }
 										 fragColor = color ;

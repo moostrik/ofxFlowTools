@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftColorizeVelocityShader  : public ftShader {
 	public:
 		ftColorizeVelocityShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftColorizeVelocityShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -35,7 +35,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect FloatTexture;
 									 uniform sampler2DRect GradientTexture;
 									 

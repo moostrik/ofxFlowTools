@@ -5,8 +5,8 @@
 #define GLSL120(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #define TINY 0.000001 \n" #shader
 #define GLSL120PI(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
 #define GLSL120GEO(shader)  "#version 120 \n #extension GL_ARB_texture_rectangle : enable \n #extension GL_EXT_geometry_shader4: enable \n" #shader
-#define GLSL150(shader)  "#version 410 \n #define TINY 0.000001 \n" #shader
-#define GLSL150PI(shader)  "#version 410 \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
+#define GLSL410(shader)  "#version 410 \n #define TINY 0.000001 \n" #shader
+#define GLSL410PI(shader)  "#version 410 \n #define PI 3.1415926535897932 \n #define HALF_PI 1.5707963267948966 \n" #shader
 
 namespace flowTools {
 	
@@ -39,7 +39,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			vertexShader = GLSL150(
+			vertexShader = GLSL410(
 								   uniform mat4 modelViewProjectionMatrix;
 								   uniform mat4 textureMatrix;
 								   
@@ -58,7 +58,7 @@ namespace flowTools {
 								   }
 								   );
 			
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 out vec4 fragColor;
 									 
 									 void main()

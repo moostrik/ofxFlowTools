@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftEOGShader : public ftShader {
 	public:
 		ftEOGShader(){
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftEOGShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -36,7 +36,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect tex0;
 									 uniform float exposure;
 									 uniform float offset;

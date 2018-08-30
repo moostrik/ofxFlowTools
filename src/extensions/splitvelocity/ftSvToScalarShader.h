@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftSvToScalarShader : public ftShader {
 	public:
 		ftSvToScalarShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftSvToScalarShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -41,7 +41,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect FloatTexture;
 									 uniform float Scale;
 									 

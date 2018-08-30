@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftDrawParticleShader : public ftShader {
 	public:
 		ftDrawParticleShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftDrawParticleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -49,7 +49,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			vertexShader = GLSL150(
+			vertexShader = GLSL410(
 								   uniform	mat4 modelViewProjectionMatrix;
 								   uniform	mat4 textureMatrix;
 								   uniform	sampler2DRect PositionTexture;
@@ -91,7 +91,7 @@ namespace flowTools {
 			
 			// thanx to: http://mmmovania.blogspot.nl/2010/12/circular-point-sprites-in-opengl-33.html
 			
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 in vec4 colorVarying;
 									 out vec4 fragColor;
 									 

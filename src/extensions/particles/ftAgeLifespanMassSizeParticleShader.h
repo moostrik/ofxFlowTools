@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftAgeLifespanMassSizeParticleShader : public ftShader {
 	public:
 		ftAgeLifespanMassSizeParticleShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftAgeLifespanMassSizeParticleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -91,7 +91,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(uniform sampler2DRect Backbuffer;
+			fragmentShader = GLSL410(uniform sampler2DRect Backbuffer;
 									 uniform sampler2DRect Position;
 									 uniform sampler2DRect Velocity;
 									 uniform sampler2DRect Density;

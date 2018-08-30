@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftSmokeBuoyancyShader : public ftShader {
 	public:
 		ftSmokeBuoyancyShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftSmokeBuoyancyShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -46,7 +46,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Temperature;
 									 uniform sampler2DRect Density;
 									 

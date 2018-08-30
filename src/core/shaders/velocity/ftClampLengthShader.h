@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftClampLengthShader : public ftShader {
 	public:
 		ftClampLengthShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftClampLengthShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -43,7 +43,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Backbuffer;
 									 uniform float MaxLength;
 									 uniform float ClampForce;

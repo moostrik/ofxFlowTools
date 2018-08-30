@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftPressureFieldShader : public ftShader {
 	public:
 		ftPressureFieldShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftPressureFieldShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -99,7 +99,7 @@ namespace flowTools {
 		void glThree() {
 			string geometryShader;
 			
-			vertexShader = GLSL150(
+			vertexShader = GLSL410(
 								   uniform mat4 modelViewProjectionMatrix;
 								   uniform mat4 textureMatrix;
 								   
@@ -118,7 +118,7 @@ namespace flowTools {
 								   
 								   );
 			
-			geometryShader = GLSL150(
+			geometryShader = GLSL410(
 									 uniform mat4 modelViewProjectionMatrix;
 									 uniform sampler2DRect pressureTexture;
 									 uniform vec2 texResolution;
@@ -180,7 +180,7 @@ namespace flowTools {
 									 }
 									 );
 			
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 in vec4 colorVarying;
 									 out vec4 fragColor;
 									 

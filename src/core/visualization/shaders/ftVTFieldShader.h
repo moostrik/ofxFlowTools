@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftVTFieldShader : public ftShader {
 	public:
 		ftVTFieldShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftVTFieldShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -46,8 +46,7 @@ namespace flowTools {
 											vec4 lineStart = gl_PositionIn[0];
 											vec2 uv = lineStart.xy * texResolution;
 											vec2 velocity = texture2DRect(velocityTexture, uv).xy * velocityScale;
-											if (length(velocity) > maxArrowSize)
-												velocity = normalize(velocity) * maxArrowSize;
+											if (length(velocity) > maxArrowSize) { velocity = normalize(velocity) * maxArrowSize; }
 											vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
 											
 											float alpha = 0.3 + 0.3 * (length(velocity) / maxArrowSize);
@@ -112,7 +111,7 @@ namespace flowTools {
 		void glThree() {
 			string geometryShader;
 			
-			vertexShader = GLSL150(
+			vertexShader = GLSL410(
 								   uniform mat4 modelViewProjectionMatrix;
 								   uniform mat4 textureMatrix;
 								   
@@ -131,7 +130,7 @@ namespace flowTools {
 								   
 								   );
 			
-			geometryShader = GLSL150(
+			geometryShader = GLSL410(
 									 uniform mat4 modelViewProjectionMatrix;
 									 uniform sampler2DRect velocityTexture;
 									 uniform sampler2DRect temperatureTexture;
@@ -152,8 +151,7 @@ namespace flowTools {
 										 
 										 vec2 uv = lineStart.xy * texResolution;
 										 vec2 velocity = texture(velocityTexture, uv).xy * velocityScale;
-										 if (length(velocity) > maxArrowSize)
-											 velocity = normalize(velocity) * maxArrowSize;
+										 if (length(velocity) > maxArrowSize) { velocity = normalize(velocity) * maxArrowSize; }
 										 vec4 lineEnd = lineStart + vec4(velocity, 0.0, 0.0);
 										 
 										 float alpha = 0.3 + 0.3 * (length(velocity) / maxArrowSize);
@@ -205,7 +203,7 @@ namespace flowTools {
 									 }
 									 );
 			
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 in vec4 colorVarying;
 									 out vec4 fragColor;
 									 

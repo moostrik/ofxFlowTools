@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftNormalizationShader : public ftShader {
 	public:
 		ftNormalizationShader() {
-			bInitialized = true;
+            bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftNormalizationShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
@@ -40,7 +40,7 @@ namespace flowTools {
 		}
 		
 		void glThree() {
-			fragmentShader = GLSL150(
+			fragmentShader = GLSL410(
 									 uniform sampler2DRect Texture;
 									 uniform float Min;
 									 uniform float Range;

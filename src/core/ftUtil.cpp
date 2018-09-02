@@ -319,4 +319,21 @@ namespace flowTools {
 				break;
 		}
 	}
+
+	bool ftUtil::hasNan(ofTexture& _tex) {
+		bool nanFound = false;
+		GLint internalformat = getInternalFormat(_tex);
+		if (isFloat(internalformat)) {
+			ofFloatPixels pix;
+			ftUtil::toPixels(_tex, pix);
+			float* pixelData = pix.getData();
+			int dataSize = getNumChannelsFromInternalFormat(internalformat) * _tex.getWidth() * _tex.getHeight();
+
+			for (int p = 0; p < dataSize; p++) {
+				if (isnan(pixelData[p])) { nanFound = true; }
+			}
+		//	if (nanFound) { cout << "nan found" << endl; }
+		}
+		return nanFound;
+	}
 }

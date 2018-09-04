@@ -71,6 +71,8 @@ openFrameworks-Info.plist
 *.opendb
 *.db-shm
 *.db-wal
+*.iobj
+*.ipdb
 ipch/
 [Oo]bj/
 [Dd]ebug*/

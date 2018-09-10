@@ -16,6 +16,8 @@ namespace flowTools {
 		
 		direction.clear();
 		direction.resize(numChannels, 0);
+		areas.clear();
+		areas.resize(numChannels, 0);
 		components.clear();
 		components.resize(numChannels, 0);
 		prevComponents.clear();
@@ -46,7 +48,10 @@ namespace flowTools {
 		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
 		parameters.add(pNormalizedMagnitude.set("magnitude", 0, 0, 1));
 //		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
-				
+		
+		if (type == FT_VELOCITY_SPLIT) {
+			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
+		}	else { pHighComponentBoost.set(0); }
 		pComponents.resize(numChannels);
 		pDirection.resize(numChannels);
 		if (numChannels > 1) {
@@ -59,9 +64,17 @@ namespace flowTools {
 			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
 			parameters.add(pDirection[0].set(getComponentName(0), 0, -1, 1));
 		}
-		if (type == FT_VELOCITY_SPLIT) {
-			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
-		}	else { pHighComponentBoost.set(0); }
+		
+		pAreas.resize(numChannels);
+		if (numChannels > 1) {
+			areaParameters.setName("areas");
+			for (int i=0; i<numChannels; i++) {
+				areaParameters.add(pAreas[i].set(getComponentName(i), 0, 0, 1));
+			}
+			parameters.add(areaParameters);
+		} else {
+			parameters.add(pAreas[0].set(getComponentName(0), 0, 0, 1));
+		}
 		
 		roiParameters.setName("region of interest");
 		pRoi.resize(4);
@@ -74,25 +87,6 @@ namespace flowTools {
 		}
 		parameters.add(roiParameters);
 	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::setInput(ofTexture &_tex){
-		resetInput();
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::roi(inputFbo, _tex, roi);
-		ofPopStyle();
-	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(roiFbo);
-		ftUtil::roi(roiFbo, _tex, roi);
-		ofPopStyle();
-		ftFlow::addInput(roiFbo.getTexture(), _strength);
-	}
 
 	//--------------------------------------------------------------
 	void ftAverageFlow::update() {
@@ -101,12 +95,15 @@ namespace flowTools {
 		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
+		vector<int> areaCounter;
+		areaCounter.resize(numChannels, 0);
 		
 		int numPixels = inputWidth * inputHeight;
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
 				float vel = floatPixelData[i * numChannels + j];
+				if (vel > 0) { areaCounter[j]++; }
 				totalVelocity[j] += vel;
 				mag += vel * vel;
 			}
@@ -125,6 +122,7 @@ namespace flowTools {
 			if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
 			else { direction[i] = 0; }
 			components[i] = direction[i] * normalizedMagnitude;
+			areas[i] = areaCounter[i] / (float)numPixels;
 		}
 		
 		// normalize to highest component and apply boost
@@ -148,11 +146,31 @@ namespace flowTools {
 		for (int i=0; i<numChannels; i++) {
 			pComponents[i] = int(components[i] * 100) / 100.0;
 			pDirection[i] = int(direction[i] * 100) / 100.0;
+			pAreas[i] = int(areas[i] * 100) / 100.0;
 		}
 		pNormalizedMagnitude.set(int(normalizedMagnitude * 100) / 100.0);
 		pStdevMagnitude.set(int(stdevMagnitude * 100) / 100.0);
 		
 		bUpdateVisualizer = true;
+	}
+	
+	//--------------------------------------------------------------
+	void ftAverageFlow::setInput(ofTexture &_tex){
+		resetInput();
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::roi(inputFbo, _tex, roi);
+		ofPopStyle();
+	}
+	
+	//--------------------------------------------------------------
+	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		ftUtil::zero(roiFbo);
+		ftUtil::roi(roiFbo, _tex, roi);
+		ofPopStyle();
+		ftFlow::addInput(roiFbo.getTexture(), _strength);
 	}
 	
 	//--------------------------------------------------------------

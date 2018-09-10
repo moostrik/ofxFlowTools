@@ -32,6 +32,8 @@ namespace flowTools {
 		float	getNormalizedMagnitude()	{ return normalizedMagnitude; }
 		float	getMeanMagnitude()			{ return meanMagnitude; }		// not normalized
 		float	getStDevMagnitude()			{ return stdevMagnitude; }		// not normalized
+		vector<float>	getAreas()			{ return areas; }
+		float	getArea(int _index)			{ if (_index < numChannels) { return areas[_index]; } else { return 0; } }
 
 		int		getNumChannels()			{ return numChannels; }
 		int		getWidth()					{ return inputWidth; }
@@ -46,10 +48,12 @@ namespace flowTools {
 	protected:
 		ofParameterGroup 					roiParameters;
 		ofParameterGroup 					componentParameters;
+		ofParameterGroup 					areaParameters;
 		ofParameter<float>					pNormalizedMagnitude;
 		ofParameter<float>					pStdevMagnitude;
 		ofParameter<float>					pNormalizationMax;
 		ofParameter<float>					pHighComponentBoost;
+		vector< ofParameter<float> >		pAreas;
 		vector< ofParameter<float> >		pRoi;
 		vector< ofParameter<float> >		pComponents;
 		vector< ofParameter<float> >		pDirection;
@@ -68,6 +72,7 @@ namespace flowTools {
 		float			stdevMagnitude;
 		vector<float>	direction;
 		vector<float>	components;
+		vector<float>	areas;
 		
 		float			prevNormalizedMagnitude;
 		vector<float>	prevComponents;

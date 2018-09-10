@@ -122,7 +122,8 @@ namespace flowTools {
 		totalMagnitude = sqrt(totalMagnitude);
 		
 		for (int i=0; i<numChannels; i++) {
-			direction[i] = totalVelocity[i] / totalMagnitude;
+			if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
+			else { direction[i] = 0; }
 			components[i] = direction[i] * normalizedMagnitude;
 		}
 		

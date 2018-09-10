@@ -216,8 +216,8 @@ namespace flowTools {
 			default:
 				ofLogWarning("ftUtil") << "getNumChannelsFromInternalFormat: " << "flowtools does not use internalFormat " << ofToHex(_internalFormat);
 				break;
-				return 0;
 		}
+		return 0;
 	}
 	
 	// get number of channels in texture format
@@ -234,8 +234,8 @@ namespace flowTools {
 			default:
 				ofLogWarning("ftUtil") << "getNumChannelsFromFormat: " << "flowtools does not use format " << ofToHex(_format);
 				break;
-				return 0;
 		}
+		return 0;
 	}
 	
 		// get unsigned char format from number of channels;
@@ -288,9 +288,10 @@ namespace flowTools {
 				return false;
 				break;
 			default:
-				ofLogWarning("ftUtil") << "isFloat: " << "Internal format " << ofToHex(_internalFormat) << " not supported";
 				break;
 		}
+		ofLogWarning("ftUtil") << "isFloat: " << "Internal format " << ofToHex(_internalFormat) << " not supported";
+		return false;
 	}
 	
 	GLint ftUtil::getInternalFormatFromType(flowTools::ftFlowForceType _type) {

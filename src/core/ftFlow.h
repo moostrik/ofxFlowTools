@@ -34,6 +34,7 @@ namespace flowTools {
 		virtual void setVisualizationToggleScalar(bool _value)	{ visualizationField.setToggleScalar(_value); }
 		
 		ofParameterGroup&	getParameters() 	{ return parameters; }
+		void	setParameters(ofParameterGroup& _parameters);
 		
 	protected:
 		
@@ -53,8 +54,9 @@ namespace flowTools {
 		void set(ftPingPongFbo &_fbo, ofTexture &_inputTex);
 		void add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength = 1.0);
 		ftAddMultipliedShader	addMultipliedShader;
-		
 
+		bool checkParameters(ofParameterGroup& _sourceParameters, ofParameterGroup& _destinationParameters);
+		void setParameters(ofParameterGroup& _sourceParameters, ofParameterGroup& _destinationParameters);
 	};
 	
 }

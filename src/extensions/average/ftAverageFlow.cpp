@@ -91,19 +91,25 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftAverageFlow::update() {
 		ftUtil::toPixels(inputFbo, inputPixels);
-		float* floatPixelData = inputPixels.getData();
+		compute(inputPixels);
+	}
+	
+	void ftAverageFlow::compute(ofFloatPixels _pix) {
+		float* floatPixelData = _pix.getData();
 		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
 		vector<int> areaCounter;
 		areaCounter.resize(numChannels, 0);
 		
-		int numPixels = inputWidth * inputHeight;
+		int numPixels = _pix.getWidth() * _pix.getHeight();
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
 				float vel = floatPixelData[i * numChannels + j];
-				if (vel > 0) { areaCounter[j]++; }
+				if (vel > 0) {
+					areaCounter[j]++;
+				}
 				totalVelocity[j] += vel;
 				mag += vel * vel;
 			}
@@ -126,7 +132,7 @@ namespace flowTools {
 		}
 		
 		// normalize to highest component and apply boost
-		if (pHighComponentBoost.get() > 0 && numChannels > 1) {
+		if (pHighComponentBoost.get() > 0 && type == FT_VELOCITY_SPLIT) {
 			float highVelocity = 0;
 			float P = 1;
 			for (int i=0; i<numChannels; i++) {

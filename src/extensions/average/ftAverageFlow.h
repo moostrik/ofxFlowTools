@@ -94,5 +94,6 @@ namespace flowTools {
 		void getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		
 		string getComponentName(int _index);
+		void 	compute(ofFloatPixels _pix);
 	};
 }

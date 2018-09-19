@@ -11,7 +11,7 @@ namespace flowTools {
 		ftHSVShader(){
             bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftHSLShader";
+			string shaderName = "ftHSVShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}

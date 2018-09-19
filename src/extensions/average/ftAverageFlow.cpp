@@ -103,6 +103,7 @@ namespace flowTools {
 		areaCounter.resize(numChannels, 0);
 		
 		int numPixels = _pix.getWidth() * _pix.getHeight();
+		magnitudes.resize(numPixels);
 		for (int i=0; i<numPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {

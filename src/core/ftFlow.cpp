@@ -41,37 +41,5 @@ namespace flowTools {
 		ftUtil::stretch(_dstFbo, _srcTex);
 		ofPopStyle();
 	}
-	
-	void ftFlow::setParameters(ofParameterGroup &_parameters) {
-		if (!checkParameters(parameters, _parameters)) {
-			ofLogWarning("ftFlow::setParameters") << "parameters \"" << parameters.getName() << "\" and \"" << _parameters.getName() << "\" are not the same";
-		}
-		else {
-			setParameters(_parameters, parameters);
-		}
-	}
-	
-	bool ftFlow::checkParameters(ofParameterGroup& _sourceParameters, ofParameterGroup& _destinationParameters) {
-		if (_sourceParameters.size() != _destinationParameters.size()) { return false; }
-		for (int i=0; i<_sourceParameters.size(); i++) {
-			if (_sourceParameters.getName(i) != _destinationParameters.getName(i)) { return false; }
-			if (_sourceParameters.getType(i) != _destinationParameters.getType(i)) { return false; }
-			if (_sourceParameters.getType(i) == typeid(ofParameterGroup).name()) {
-				if (!checkParameters(_sourceParameters.getGroup(i), _destinationParameters.getGroup(i))) { return false; }
-			}
-		}
-		return true;
-	}
-	
-	void ftFlow::setParameters(ofParameterGroup& _sourceParameters, ofParameterGroup& _destinationParameters) {
-		for (int i=0; i<_sourceParameters.size(); i++) {
-			if (_sourceParameters.getType(i) == typeid(ofParameterGroup).name()) {
-				setParameters(_sourceParameters.getGroup(i), _destinationParameters.getGroup(i));
-			}
-			else {
-				// set each parameter
-			};
-		}
-	}
 };
 

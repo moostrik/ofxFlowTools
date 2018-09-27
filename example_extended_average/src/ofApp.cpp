@@ -240,11 +240,12 @@ void ofApp::draw(){
 			aW = regios[i].width * windowWidth;
 			aH = regios[i].height * windowHeight;
 			ofDrawRectangle(aX, aY, aW, aH);
-			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + 20);
+			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + aH - 20);
 			float aM = int(magnitudeParameters[i] * 100) / 100.;
-			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + 40);
+			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + aH - 40);
 		}
 		ofPopStyle();
+		averageFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
 	if (toggleGuiDraw) {

@@ -244,7 +244,6 @@ namespace flowTools {
 		ofNoFill();
 		ofSetColor(0, 0, 0, 255);
 		ofDrawRectangle(_x-1, _y-1, _w+2, _h+2);
-		ofDrawBitmapStringHighlight(parameters.getName(), _x + _w * .5 - (parameters.getName().length() * 4), _y + 16);
 		ofPopStyle();
 	}
 	
@@ -300,17 +299,12 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		ofSetColor(255, 255, 255, 255);
+		
 		int yStep = 16;
-		if (type != FT_VELOCITY_SPLIT) {
-			ofDrawBitmapString("1",  _w - 10, yStep);
-			ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
-			ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
-		} else {
-			ofDrawBitmapString("1", _w - 10, yStep);
-			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
-		}
 		
 		int yOffset = yStep;
+		ofDrawBitmapStringHighlight(parameters.getName(), 5, yOffset);
+		yOffset += yStep * 1.5;
 		ofSetColor(magnitudeColor);
 		ofDrawBitmapString("magnitude",5, yOffset);
 		yOffset += yStep;
@@ -319,6 +313,15 @@ namespace flowTools {
 			ofSetColor(componentColors[i]);
 			ofDrawBitmapString(getComponentName(i), 5, yOffset);
 			yOffset += yStep;
+		}
+		
+		if (type != FT_VELOCITY_SPLIT) {
+			ofDrawBitmapString("1",  _w - 10, yStep);
+			ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
+			ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
+		} else {
+			ofDrawBitmapString("1", _w - 10, yStep);
+			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
 		}
 		ofPopStyle();
 		

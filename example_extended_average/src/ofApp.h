@@ -3,6 +3,9 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
+//#include "ftAverageFlowSubSection.h"
+
+#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 
@@ -28,6 +31,7 @@ public:
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
 	ftParticleFlow			particleFlow;
+	ftAverageFlow			averageFlow;
 	
 	ofImage					flowToolsLogo;
 	
@@ -54,6 +58,7 @@ public:
 	ofParameter<bool>	toggleCameraDraw;
 	ofParameter<bool>	toggleParticleDraw;
 	ofParameter<bool>	toggleMouseDraw;
+	ofParameter<bool>	toggleAverageDraw;
 	ofParameter<bool>	toggleReset;
 	
 	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}

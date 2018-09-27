@@ -2,37 +2,40 @@
 
 namespace flowTools {
 	
-	int ftAverageFlow::areaCount = 0;
+	int ftAverageFlow::averageFlowCount = 0;
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::setup(int _width, int _height, ftFlowForceType _type) {
-		areaCount++;
+		averageFlowCount++;
 		type = _type;
 		GLint internalFormat = ftUtil::getInternalFormatFromType(type);
 		ftFlow::allocate(_width, _height, internalFormat);
-		roiFbo.allocate(_width, _height, internalFormat);
-		ftUtil::zero(roiFbo);
 		numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
 		
+		bInputChanged = false;
+		inputPixels.allocate(inputWidth, inputHeight, numChannels);
+		roiPixels.allocate(inputWidth, inputHeight, numChannels);
+		roi = ofRectangle(0,0,1,1);
+		
+		magnitudes.clear();
+		magnitudes.reserve(inputWidth * inputHeight);
+		magnitudes.resize(inputWidth * inputHeight, 0);
 		direction.clear();
 		direction.resize(numChannels, 0);
 		areas.clear();
 		areas.resize(numChannels, 0);
 		components.clear();
 		components.resize(numChannels, 0);
+		
 		prevComponents.clear();
 		prevComponents.resize(numChannels, 0);
-		
-		inputPixels.allocate(inputWidth, inputHeight, numChannels);
-		magnitudes.resize(inputWidth * inputHeight, 0);
-		
-		roi = ofRectangle(0,0,1,1);
 		
 		meanMagnitude = 0;
 		normalizedMagnitude = 0;
 		prevNormalizedMagnitude = 0;
 		stdevMagnitude = 0;
 		
+		// move draw graph out of average;
 		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
 		componentColors.push_back(ofFloatColor(.6, 1, .2, 1.));	// light green
 		componentColors.push_back(ofFloatColor(.4, .8, 1, 1.));	// blue
@@ -41,13 +44,20 @@ namespace flowTools {
 		outputFbo.allocate(16, 16);
 		overlayFbo.allocate(16, 16);
 		bUpdateVisualizer = false;
+		// move draw graph out of average;
+		
+		setupParameters();
+		
+	}
+	
+	void ftAverageFlow::setupParameters() {
 		
 		string name = "average " + ftFlowForceNames[type];
-		if (areaCount > 1) name += " " + ofToString(areaCount - 1);
+		if (averageFlowCount > 1) name += " " + ofToString(averageFlowCount - 1);
 		parameters.setName(name);
 		parameters.add(pNormalizationMax.set("normalization", .025, .01, .1));
 		parameters.add(pNormalizedMagnitude.set("magnitude", 0, 0, 1));
-//		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
+		//		parameters.add(pStdevMagnitude.set("stdev mag", 0, 0, 1));
 		
 		if (type == FT_VELOCITY_SPLIT) {
 			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
@@ -87,27 +97,32 @@ namespace flowTools {
 		}
 		parameters.add(roiParameters);
 	}
-
+	
 	//--------------------------------------------------------------
 	void ftAverageFlow::update() {
-		ftUtil::toPixels(inputFbo, inputPixels);
-		compute(inputPixels);
-	}
-	
-	void ftAverageFlow::compute(ofFloatPixels _pix) {
-		float* floatPixelData = _pix.getData();
+		if (bInputChanged) {
+			ftUtil::toPixels(inputFbo, inputPixels);
+			bInputChanged = false;
+		}
+		
+		ofRectangle dnRoi = ofRectangle(roi.x * inputWidth, roi.y * inputHeight, roi.width * inputWidth, roi.height * inputHeight);
+
+		int numRoiPixels = dnRoi.width * dnRoi.height;
+
+		getRoiData(inputPixels, roiPixels, dnRoi);
+
+		float* pixelData = roiPixels.getData();
 		
 		vector<float> totalVelocity;
 		totalVelocity.resize(numChannels, 0);
 		vector<int> areaCounter;
 		areaCounter.resize(numChannels, 0);
-		
-		int numPixels = _pix.getWidth() * _pix.getHeight();
-		magnitudes.resize(numPixels);
-		for (int i=0; i<numPixels; i++) {
+
+		magnitudes.resize(numRoiPixels);
+		for (int i=0; i<numRoiPixels; i++) {
 			float mag = 0;
 			for (int j=0; j<numChannels; j++) {
-				float vel = floatPixelData[i * numChannels + j];
+				float vel = pixelData[i * numChannels + j];
 				if (vel > 0) {
 					areaCounter[j]++;
 				}
@@ -129,7 +144,7 @@ namespace flowTools {
 			if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
 			else { direction[i] = 0; }
 			components[i] = direction[i] * normalizedMagnitude;
-			areas[i] = areaCounter[i] / (float)numPixels;
+			areas[i] = areaCounter[i] / (float)numRoiPixels;
 		}
 		
 		// normalize to highest component and apply boost
@@ -161,23 +176,37 @@ namespace flowTools {
 		bUpdateVisualizer = true;
 	}
 	
+	void ftAverageFlow::getRoiData(ofFloatPixels &_pixels, ofFloatPixels& _subPixels, ofRectangle _section) {
+		
+		int x = _section.x;
+		int y = _section.y;
+		int w = _section.width;
+		int h = _section.height;
+		int c = numChannels;
+		float* srcPixelData = _pixels.getData();
+		float* subPixelData = _subPixels.getData();
+		
+		for (int iY=0; iY<h; iY++) {
+			for (int iX=0; iX<w; iX++) {
+				for (int iC=0; iC<c; iC++) {
+					int subI = ((iY * w) + iX) * c + iC;
+					int srcI = (((y+iY) * inputPixels.getWidth()) + (x+iX)) * c + iC;
+					subPixelData[subI] = srcPixelData[srcI];
+				}
+			}
+		}
+	}
+	
 	//--------------------------------------------------------------
 	void ftAverageFlow::setInput(ofTexture &_tex){
-		resetInput();
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::roi(inputFbo, _tex, roi);
-		ofPopStyle();
+		ftFlow::setInput(_tex);
+		bInputChanged = true;
 	}
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
-		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(roiFbo);
-		ftUtil::roi(roiFbo, _tex, roi);
-		ofPopStyle();
-		ftFlow::addInput(roiFbo.getTexture(), _strength);
+		ftFlow::addInput(_tex, _strength);
+		bInputChanged = true;
 	}
 	
 	//--------------------------------------------------------------
@@ -298,8 +327,8 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::setRoi(ofRectangle _rect) {
-		float x = _rect.x;
-		float y = _rect.y;
+		float x = ofClamp(_rect.x, 0, 1);
+		float y = ofClamp(_rect.y, 0, 1);
 		float maxW = 1.0 - x;
 		float maxH = 1.0 - y;
 		float w = min(_rect.width, maxW);
@@ -307,12 +336,12 @@ namespace flowTools {
 		
 		roi = ofRectangle(x, y, w, h);
 		
-		if (pRoi[0] != x) { pRoi[0].set(x); }
-		if (pRoi[1] != y) { pRoi[1].set(y); }
-		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].set(w); }
-		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].set(h); }
-		if (pRoi[2] != w) { pRoi[2].set(w); }
-		if (pRoi[3] != h) { pRoi[3].set(h); }
+		if (pRoi[0] != x) { pRoi[0].setWithoutEventNotifications(x); }
+		if (pRoi[1] != y) { pRoi[1].setWithoutEventNotifications(y); }
+		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].setWithoutEventNotifications(w); }
+		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].setWithoutEventNotifications(h); }
+		if (pRoi[2] != w) { pRoi[2].setWithoutEventNotifications(w); }
+		if (pRoi[3] != h) { pRoi[3].setWithoutEventNotifications(h); }
 	}
 	
 	//--------------------------------------------------------------
@@ -359,3 +388,4 @@ namespace flowTools {
 		
 	}
 }
+

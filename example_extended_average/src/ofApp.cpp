@@ -21,6 +21,8 @@ void ofApp::setup(){
 	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	averageFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	averageFlow.setRoi(.2, .2, .6, .6);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -29,6 +31,7 @@ void ofApp::setup(){
 	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
+	flows.push_back(&averageFlow);
 	
 	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }
 	
@@ -62,6 +65,7 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	gui.add(toggleParticleDraw.set("draw particles (P)", true));
+	gui.add(toggleAverageDraw.set("draw average (A)", true));
 	toggleParticleDraw.addListener(this, &ofApp::toggleParticleDrawListener);
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
@@ -153,6 +157,15 @@ void ofApp::update(){
 		particleFlow.setObstacle(fluidFlow.getObstacle());
 		particleFlow.update(dt);
 	}
+	
+	averageFlow.setInput(opticalFlow.getVelocity());
+	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { averageFlow.addInput(flow->getTexture()); } }
+	averageFlow.setRoi(0, 0, .1, .1);
+	averageFlow.update();
+	averageFlow.setRoi(0.3, 0.3, .1, .1);
+	averageFlow.update();
+	averageFlow.setRoi(0.6, 0.6, .1, .1);
+	averageFlow.update();
 }
 
 //--------------------------------------------------------------
@@ -199,6 +212,11 @@ void ofApp::draw(){
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	
+	if (toggleAverageDraw) {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+//		averageFlow.draw(0, 0, windowWidth, windowHeight);
+	}
 	
 	if (toggleGuiDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -254,6 +272,7 @@ void ofApp::keyPressed(int key){
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
 		case 'R': toggleReset.set(!toggleReset.get()); break;
 		case 'P': toggleParticleDraw.set(!toggleParticleDraw.get()); break;
+		case 'A': toggleAverageDraw.set(!toggleAverageDraw.get()); break;
 			break;
 	}
 }

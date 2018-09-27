@@ -4,8 +4,6 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 
-#define USE_PROGRAMMABLE_GL
-
 using namespace flowTools;
 
 enum visualizationTypes{ INPUT_FOR_DEN = 0, INPUT_FOR_VEL, FLOW_VEL, BRIDGE_VEL, BRIDGE_DEN, BRIDGE_TMP, BRIDGE_PRS, OBSTACLE, FLUID_BUOY, FLUID_VORT, FLUID_DIVE, FLUID_TMP, FLUID_PRS, FLUID_VEL, FLUID_DEN };

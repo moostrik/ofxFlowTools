@@ -39,8 +39,8 @@ namespace flowTools {
 			flag = !flag;
 			bind();
 			setActiveDrawBuffer(flag);
-			setDefaultTextureIndex(flag);
 			unbind();
+			setDefaultTextureIndex(flag);
 		}
 		
 		ofTexture& getBackTexture() { return ofFbo::getTexture(!flag); }

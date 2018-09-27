@@ -157,22 +157,6 @@ void ofApp::update(){
 	pixelFlow.update();
 	
 	for (auto& f : averageFlows) { f.update(pixelFlow.getPixels()); }
-	
-	
-//	for (int i=0; i<numRegios; i++) {
-//		averageFlow[i].update(pixelFlow.getPixels());
-//		regios[i].x = pRegios[i][0];
-//		regios[i].y = pRegios[i][1];
-//		regios[i].width = pRegios[i][2];
-//		regios[i].height = pRegios[i][3];
-		
-//		averageFlow.setRoi(regios[i]);
-//		averageFlow.update(pixelFlow.getPixels());
-		
-//		averageFlowWatchers[i].update(averageFlow.getMagnitude(), averageFlow.getComponents());
-		
-//		magnitudeParameters[i] = averageFlow.getMagnitude();
-//	}
 }
 
 //--------------------------------------------------------------
@@ -217,20 +201,6 @@ void ofApp::draw(){
 	
 	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-//		ofPushStyle();
-//		ofNoFill();
-//		int aX, aY, aW, aH;
-//		for (int i=0; i<numRegios; i++) {
-//			aX = regios[i].x * windowWidth;
-//			aY = regios[i].y * windowHeight;
-//			aW = regios[i].width * windowWidth;
-//			aH = regios[i].height * windowHeight;
-//			ofDrawRectangle(aX, aY, aW, aH);
-//			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + aH - 20);
-//			float aM = int(magnitudeParameters[i] * 100) / 100.;
-//			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + aH - 40);
-//		}
-//		ofPopStyle();
 		for (auto& f: averageFlows) { f.draw(0, 0, windowWidth, windowHeight); };
 	}
 	

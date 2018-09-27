@@ -3,6 +3,8 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
+#include "ftPixelflow.h"
+#include "ftAverageFlowWatcher.h"
 
 #define USE_PROGRAMMABLE_GL
 
@@ -30,13 +32,11 @@ public:
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
 	
+	ofFloatPixels			pixels;
 	int						numRegios;
 	vector<ofRectangle> 	regios;
-	ftAverageFlow			averageFlow;
-	vector<ofParameterGroup>				regioParameters;
-	vector< ofParameter<float> >			magnitudeParameters;
-	vector<ofParameterGroup>				roiParameters;
-	vector< vector< ofParameter<float> > >	pRegios;
+	ftPixelFlow				pixelFlow;
+	vector<ftAverageFlow>	averageFlows;
 	
 	ofImage					flowToolsLogo;
 	

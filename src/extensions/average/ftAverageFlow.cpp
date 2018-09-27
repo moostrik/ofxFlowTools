@@ -12,8 +12,6 @@ namespace flowTools {
 		ftFlow::allocate(_width, _height, internalFormat);
 		numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
 		
-		bInputChanged = false;
-		inputPixels.allocate(inputWidth, inputHeight, numChannels);
 		roiPixels.allocate(inputWidth, inputHeight, numChannels);
 		roi = ofRectangle(0,0,1,1);
 		
@@ -99,18 +97,17 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlow::update() {
-		if (bInputChanged) {
-			ftUtil::toPixels(inputFbo, inputPixels);
-			bInputChanged = false;
-		}
+	void ftAverageFlow::update(ofFloatPixels& _pixels) {
+		int dnW = _pixels.getWidth();
+		int dnH = _pixels.getHeight();
+		ofRectangle dnRoi = ofRectangle(roi.x * dnW, roi.y * dnH, roi.width * dnW, roi.height * dnH);
 		
-		ofRectangle dnRoi = ofRectangle(roi.x * inputWidth, roi.y * inputHeight, roi.width * inputWidth, roi.height * inputHeight);
-
 		int numRoiPixels = dnRoi.width * dnRoi.height;
-
-		getRoiData(inputPixels, roiPixels, dnRoi);
-
+		if (roiPixels.getWidth() < dnRoi.width || roiPixels.getHeight() < dnRoi.height) {
+			roiPixels.allocate(dnRoi.width, dnRoi.height, numChannels);
+		}
+		getRoiData(_pixels, roiPixels, dnRoi);
+		
 		float* pixelData = roiPixels.getData();
 		
 		vector<float> totalVelocity;
@@ -177,7 +174,6 @@ namespace flowTools {
 	}
 	
 	void ftAverageFlow::getRoiData(ofFloatPixels &_pixels, ofFloatPixels& _subPixels, ofRectangle _section) {
-		
 		int x = _section.x;
 		int y = _section.y;
 		int w = _section.width;
@@ -190,24 +186,13 @@ namespace flowTools {
 			for (int iX=0; iX<w; iX++) {
 				for (int iC=0; iC<c; iC++) {
 					int subI = ((iY * w) + iX) * c + iC;
-					int srcI = (((y+iY) * inputPixels.getWidth()) + (x+iX)) * c + iC;
+					int srcI = (((y+iY) * _pixels.getWidth()) + (x+iX)) * c + iC;
 					subPixelData[subI] = srcPixelData[srcI];
 				}
 			}
 		}
 	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::setInput(ofTexture &_tex){
-		ftFlow::setInput(_tex);
-		bInputChanged = true;
-	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::addInput(ofTexture &_tex, float _strength) {
-		ftFlow::addInput(_tex, _strength);
-		bInputChanged = true;
-	}
+
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {

@@ -320,6 +320,12 @@ namespace flowTools {
 				break;
 		}
 	}
+	
+	int ftUtil::getNumChannelFromType(flowTools::ftFlowForceType _type) {
+		GLint internalFormat = getInternalFormatFromType(_type);
+		int numChannels = getNumChannelsFromInternalFormat(internalFormat);
+		return numChannels;
+	}
 
 	bool ftUtil::hasNan(ofTexture& _tex) {
 		bool nanFound = false;
@@ -337,4 +343,36 @@ namespace flowTools {
 		}
 		return nanFound;
 	}
+	
+	string ftUtil::getComponentName(flowTools::ftFlowForceType _type, int _index) {
+		vector<string> componentNames;
+		switch (_type) {
+			case FT_VELOCITY:
+			case FT_VELOCITY_NORM:
+				componentNames = {"x", "y"};
+				break;
+			case FT_VELOCITY_SPLIT:
+				componentNames = {"right", "down", "left", "up"};
+				break;
+			case FT_DENSITY:
+				componentNames = {"red", "green", "blue", "alpha"};
+				break;
+			case FT_PRESSURE:
+				componentNames = {"pressure"};
+				break;
+			case FT_TEMPERATURE:
+				componentNames = {"temperature"};
+				break;
+			default:
+				componentNames = {"unknown 0", "unknown 1", "unknown 2", "unknown 3"};
+				break;
+		}
+		
+		if (_index < componentNames.size()) {
+			return componentNames[_index];
+		}
+		return "unknown";
+		
+	}
+	
 }

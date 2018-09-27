@@ -81,13 +81,18 @@ namespace flowTools {
 		
 		// get if internalFormat is a float;
 		static bool isFloat(GLint _format);
-
-		// get internatFormat from ftFlowForceType;
+		
+		// get internalFormat from ftFlowForceType;
 		static GLint getInternalFormatFromType(ftFlowForceType _type);
+		
+		// get numChannels from ftFlowForceType;
+		static int getNumChannelFromType(ftFlowForceType _type);
 
 		// returns one if texture has pixels with a value of Nan;
 		static bool hasNan(ofFbo& _fbo) { return hasNan(_fbo.getTexture()); }
 		static bool hasNan(ofTexture& _tex);
+		
+		static string getComponentName(ftFlowForceType _type, int _index);
 		
 	protected:
 	};

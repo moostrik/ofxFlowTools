@@ -23,7 +23,12 @@ void ofApp::setup(){
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
-	averageFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	pixelFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	averageFlows.resize(numRegios);
+	for (int i=0; i<numRegios; i++) {
+		averageFlows[i].setup(flowWidth, flowHeight, FT_VELOCITY);
+		averageFlows[i].setRoi(1.0 / (numRegios + 1.0) * (i + 0.5), .2, 1.0 / (numRegios + 2.0), .6);
+	}
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -31,7 +36,8 @@ void ofApp::setup(){
 	flows.push_back(&fluidFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
-	flows.push_back(&averageFlow);
+	flows.push_back(&pixelFlow);
+	for (auto& f : averageFlows) { flows.push_back(&f); }
 	
 	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }
 	
@@ -82,33 +88,6 @@ void ofApp::setupGui() {
 	for (auto flow : flows) {
 		switchGuiColor(s = !s);
 		gui.add(flow->getParameters());
-	}
-	
-	switchGuiColor(s = !s);
-	if (numRegios > 0) {
-		float rStep = 1.0 / (numRegios + 1.0);
-		float rI = rStep * .1;
-		float rW = rStep - rI - rI;
-		float rH = 0.6;
-		float rX = rStep * 0.5 + rI;
-		float rY = 0.2;
-		regioParameters.resize(numRegios);
-		magnitudeParameters.resize(numRegios);
-		roiParameters.resize(numRegios);
-		pRegios.resize(numRegios);
-		for (int i=0; i<numRegios; i++) {
-			regioParameters[i].setName("regio " + ofToString(i));
-			regioParameters[i].add(magnitudeParameters[i].set("magnitude", 0, 0, 1));
-			roiParameters[i].setName("roi");
-			pRegios[i].resize(4);
-			roiParameters[i].add(pRegios[i][0].set("x", rX, 0, 1));
-			roiParameters[i].add(pRegios[i][1].set("y", rY, 0, 1));
-			roiParameters[i].add(pRegios[i][2].set("width", rW, 0, 1));
-			roiParameters[i].add(pRegios[i][3].set("height", rH, 0, 1));
-			rX += rStep;
-			regioParameters[i].add(roiParameters[i]);
-			gui.add(regioParameters[i]);
-		}
 	}
 	
 	if (!ofFile("settings.xml")) { gui.saveToFile("settings.xml"); }
@@ -173,20 +152,27 @@ void ofApp::update(){
 	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	
-	averageFlow.setInput(opticalFlow.getVelocity());
-	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { averageFlow.addInput(flow->getTexture()); } }
+	pixelFlow.setInput(opticalFlow.getVelocity());
+	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { pixelFlow.addInput(flow->getTexture()); } }
+	pixelFlow.update();
 	
-	for (int i=0; i<numRegios; i++) {
-		regios[i].x = pRegios[i][0];
-		regios[i].y = pRegios[i][1];
-		regios[i].width = pRegios[i][2];
-		regios[i].height = pRegios[i][3];
+	for (auto& f : averageFlows) { f.update(pixelFlow.getPixels()); }
+	
+	
+//	for (int i=0; i<numRegios; i++) {
+//		averageFlow[i].update(pixelFlow.getPixels());
+//		regios[i].x = pRegios[i][0];
+//		regios[i].y = pRegios[i][1];
+//		regios[i].width = pRegios[i][2];
+//		regios[i].height = pRegios[i][3];
 		
-		averageFlow.setRoi(regios[i]);
-		averageFlow.update();
+//		averageFlow.setRoi(regios[i]);
+//		averageFlow.update(pixelFlow.getPixels());
 		
-		magnitudeParameters[i] = averageFlow.getMagnitude();
-	}
+//		averageFlowWatchers[i].update(averageFlow.getMagnitude(), averageFlow.getComponents());
+		
+//		magnitudeParameters[i] = averageFlow.getMagnitude();
+//	}
 }
 
 //--------------------------------------------------------------
@@ -231,21 +217,21 @@ void ofApp::draw(){
 	
 	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		ofPushStyle();
-		ofNoFill();
-		int aX, aY, aW, aH;
-		for (int i=0; i<numRegios; i++) {
-			aX = regios[i].x * windowWidth;
-			aY = regios[i].y * windowHeight;
-			aW = regios[i].width * windowWidth;
-			aH = regios[i].height * windowHeight;
-			ofDrawRectangle(aX, aY, aW, aH);
-			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + aH - 20);
-			float aM = int(magnitudeParameters[i] * 100) / 100.;
-			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + aH - 40);
-		}
-		ofPopStyle();
-		averageFlow.draw(0, 0, windowWidth, windowHeight);
+//		ofPushStyle();
+//		ofNoFill();
+//		int aX, aY, aW, aH;
+//		for (int i=0; i<numRegios; i++) {
+//			aX = regios[i].x * windowWidth;
+//			aY = regios[i].y * windowHeight;
+//			aW = regios[i].width * windowWidth;
+//			aH = regios[i].height * windowHeight;
+//			ofDrawRectangle(aX, aY, aW, aH);
+//			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + aH - 20);
+//			float aM = int(magnitudeParameters[i] * 100) / 100.;
+//			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + aH - 40);
+//		}
+//		ofPopStyle();
+		for (auto& f: averageFlows) { f.draw(0, 0, windowWidth, windowHeight); };
 	}
 	
 	if (toggleGuiDraw) {

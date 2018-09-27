@@ -10,10 +10,10 @@ namespace flowTools {
 	class ftAverageFlow : public ftFlow {
 	public:
 		void		setup(int _width, int _height, ftFlowForceType _type);
-		void		update();
+		void		update(ofFloatPixels& _pixels);
 		
-		void		setInput(ofTexture &_tex) override;
-		void		addInput(ofTexture &_tex, float _strength = 1.0) override;
+		void		setInput(ofTexture &_tex) override { ; }
+		void		addInput(ofTexture &_tex, float _strength = 1.0) override { ; }
 		
 		void		setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void		setRoi(ofRectangle _rect);
@@ -50,8 +50,6 @@ namespace flowTools {
 		ftFlowForceType	type;
 		int 			numChannels;
 		
-		bool 			bInputChanged;
-		ofFloatPixels	inputPixels;
 		ofFloatPixels	roiPixels;
 		ofRectangle		roi;
 		void			getRoiData(ofFloatPixels& _srcPixels, ofFloatPixels& _roiPixels, ofRectangle _rect);

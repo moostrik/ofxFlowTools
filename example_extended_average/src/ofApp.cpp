@@ -6,6 +6,9 @@ void ofApp::setup(){
 	// ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
+	numRegios = 4;
+	regios.resize(numRegios, ofRectangle(0,0,1,1));
+	
 	densityWidth = 1280;
 	densityHeight = 720;
 	// process all but the density on 16th resolution
@@ -18,17 +21,14 @@ void ofApp::setup(){
 	velocityBridgeFlow.setup(flowWidth, flowHeight);
 	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	particleFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
 	averageFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
-	averageFlow.setRoi(.2, .2, .6, .6);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
 	flows.push_back(&fluidFlow);
-	flows.push_back(&particleFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	flows.push_back(&averageFlow);
@@ -40,7 +40,6 @@ void ofApp::setup(){
 	
 	flowToolsLogo.load("flowtools.png");
 	fluidFlow.addObstacle(flowToolsLogo.getTexture());
-	particleFlow.addObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -64,9 +63,7 @@ void ofApp::setupGui() {
 	gui.add(toggleGuiDraw.set("show gui (G)", true));
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
-	gui.add(toggleParticleDraw.set("draw particles (P)", true));
 	gui.add(toggleAverageDraw.set("draw average (A)", true));
-	toggleParticleDraw.addListener(this, &ofApp::toggleParticleDrawListener);
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
 	
@@ -85,6 +82,33 @@ void ofApp::setupGui() {
 	for (auto flow : flows) {
 		switchGuiColor(s = !s);
 		gui.add(flow->getParameters());
+	}
+	
+	switchGuiColor(s = !s);
+	if (numRegios > 0) {
+		float rStep = 1.0 / (numRegios + 1.0);
+		float rI = rStep * .1;
+		float rW = rStep - rI - rI;
+		float rH = 0.6;
+		float rX = rStep * 0.5 + rI;
+		float rY = 0.2;
+		regioParameters.resize(numRegios);
+		magnitudeParameters.resize(numRegios);
+		roiParameters.resize(numRegios);
+		pRegios.resize(numRegios);
+		for (int i=0; i<numRegios; i++) {
+			regioParameters[i].setName("regio " + ofToString(i));
+			regioParameters[i].add(magnitudeParameters[i].set("magnitude", 0, 0, 1));
+			roiParameters[i].setName("roi");
+			pRegios[i].resize(4);
+			roiParameters[i].add(pRegios[i][0].set("x", rX, 0, 1));
+			roiParameters[i].add(pRegios[i][1].set("y", rY, 0, 1));
+			roiParameters[i].add(pRegios[i][2].set("width", rW, 0, 1));
+			roiParameters[i].add(pRegios[i][3].set("height", rH, 0, 1));
+			rX += rStep;
+			regioParameters[i].add(roiParameters[i]);
+			gui.add(regioParameters[i]);
+		}
 	}
 	
 	if (!ofFile("settings.xml")) { gui.saveToFile("settings.xml"); }
@@ -149,23 +173,20 @@ void ofApp::update(){
 	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	
-	if (toggleParticleDraw) {
-		particleFlow.setSpeed(fluidFlow.getSpeed());
-		particleFlow.setFlowVelocity(opticalFlow.getVelocity());
-		for (auto flow: mouseFlows) if (flow->didChange() && flow->getType() == FT_VELOCITY) { particleFlow.addFlowVelocity(flow->getTexture()); }
-		particleFlow.setFluidVelocity(fluidFlow.getVelocity());
-		particleFlow.setObstacle(fluidFlow.getObstacle());
-		particleFlow.update(dt);
-	}
-	
 	averageFlow.setInput(opticalFlow.getVelocity());
 	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { averageFlow.addInput(flow->getTexture()); } }
-	averageFlow.setRoi(0, 0, .1, .1);
-	averageFlow.update();
-	averageFlow.setRoi(0.3, 0.3, .1, .1);
-	averageFlow.update();
-	averageFlow.setRoi(0.6, 0.6, .1, .1);
-	averageFlow.update();
+	
+	for (int i=0; i<numRegios; i++) {
+		regios[i].x = pRegios[i][0];
+		regios[i].y = pRegios[i][1];
+		regios[i].width = pRegios[i][2];
+		regios[i].height = pRegios[i][3];
+		
+		averageFlow.setRoi(regios[i]);
+		averageFlow.update();
+		
+		magnitudeParameters[i] = averageFlow.getMagnitude();
+	}
 }
 
 //--------------------------------------------------------------
@@ -199,11 +220,6 @@ void ofApp::draw(){
 		default: break;
 	}
 	
-	if (toggleParticleDraw) {
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		particleFlow.draw(0, 0, windowWidth, windowHeight);
-	}
-	
 	if (toggleMouseDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		densityMouseFlow.draw(0, 0, windowWidth, windowHeight);
@@ -215,7 +231,20 @@ void ofApp::draw(){
 	
 	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-//		averageFlow.draw(0, 0, windowWidth, windowHeight);
+		ofPushStyle();
+		ofNoFill();
+		int aX, aY, aW, aH;
+		for (int i=0; i<numRegios; i++) {
+			aX = regios[i].x * windowWidth;
+			aY = regios[i].y * windowHeight;
+			aW = regios[i].width * windowWidth;
+			aH = regios[i].height * windowHeight;
+			ofDrawRectangle(aX, aY, aW, aH);
+			ofDrawBitmapStringHighlight("regio: " + ofToString(i), aX + 10, aY + 20);
+			float aM = int(magnitudeParameters[i] * 100) / 100.;
+			ofDrawBitmapStringHighlight("magnitude: " + ofToString(aM), aX + 10, aY + 40);
+		}
+		ofPopStyle();
 	}
 	
 	if (toggleGuiDraw) {
@@ -271,7 +300,6 @@ void ofApp::keyPressed(int key){
 		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
 		case 'R': toggleReset.set(!toggleReset.get()); break;
-		case 'P': toggleParticleDraw.set(!toggleParticleDraw.get()); break;
 		case 'A': toggleAverageDraw.set(!toggleAverageDraw.get()); break;
 			break;
 	}

@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
-//#include "ftAverageFlowSubSection.h"
 
 #define USE_PROGRAMMABLE_GL
 
@@ -30,8 +29,14 @@ public:
 	vector< ftMouseFlow* >	mouseFlows;
 	ftMouseFlow				densityMouseFlow;
 	ftMouseFlow				velocityMouseFlow;
-	ftParticleFlow			particleFlow;
+	
+	int						numRegios;
+	vector<ofRectangle> 	regios;
 	ftAverageFlow			averageFlow;
+	vector<ofParameterGroup>				regioParameters;
+	vector< ofParameter<float> >			magnitudeParameters;
+	vector<ofParameterGroup>				roiParameters;
+	vector< vector< ofParameter<float> > >	pRegios;
 	
 	ofImage					flowToolsLogo;
 	
@@ -56,14 +61,12 @@ public:
 	ofParameter<bool>	toggleFullScreen;
 	ofParameter<bool>	toggleGuiDraw;
 	ofParameter<bool>	toggleCameraDraw;
-	ofParameter<bool>	toggleParticleDraw;
 	ofParameter<bool>	toggleMouseDraw;
 	ofParameter<bool>	toggleAverageDraw;
 	ofParameter<bool>	toggleReset;
 	
 	void				toggleFullScreenListener(bool& _value) { ofSetFullscreen(_value);}
 	void				toggleResetListener(bool& _value);
-	void				toggleParticleDrawListener(bool& _value) { if (_value) { particleFlow.reset(); } }
 	void 				windowResized(ofResizeEventArgs & _resize){ windowWidth = _resize.width; windowHeight = _resize.height; }
 	
 	void				drawGui();

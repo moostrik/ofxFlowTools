@@ -9,8 +9,8 @@ namespace flowTools {
 	
 	class ftAverageFlow : public ftFlow {
 	public:
-		void		setup(int _width, int _height, ftFlowForceType _type);
-		void		update(ofFloatPixels& _pixels);
+		virtual void	setup(int _width, int _height, ftFlowForceType _type);
+		virtual void	update(ofFloatPixels& _pixels);
 		
 		void		setInput(ofTexture &_tex) override { ; }
 		void		addInput(ofTexture &_tex, float _strength = 1.0) override { ; }

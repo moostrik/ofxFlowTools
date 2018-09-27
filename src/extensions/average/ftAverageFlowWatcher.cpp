@@ -173,7 +173,7 @@ namespace flowTools {
 		
 		for (int i=0; i<numChannels; i++) {
 			ofSetColor(componentColors[i]);
-			ofDrawBitmapString(getComponentName(i), 5, yOffset);
+			ofDrawBitmapString(ftUtil::getComponentName(type, i), 5, yOffset);
 			yOffset += yStep;
 		}
 		

@@ -27,7 +27,7 @@ void ofApp::setup(){
 	averageFlows.resize(numRegios);
 	for (int i=0; i<numRegios; i++) {
 		averageFlows[i].setup(flowWidth, flowHeight, FT_VELOCITY);
-		averageFlows[i].setRoi(1.0 / (numRegios + 1.0) * (i + 0.5), .2, 1.0 / (numRegios + 2.0), .6);
+		averageFlows[i].setRoi(1.0 / (numRegios + 1.0) * (i + 1), .2, 1.0 / (numRegios + 2.0), .6);
 	}
 	
 	flows.push_back(&opticalFlow);
@@ -36,7 +36,6 @@ void ofApp::setup(){
 	flows.push_back(&fluidFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
-	flows.push_back(&pixelFlow);
 	for (auto& f : averageFlows) { flows.push_back(&f); }
 	
 	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }

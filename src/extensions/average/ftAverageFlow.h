@@ -79,9 +79,6 @@ namespace flowTools {
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		
 		
-		string	getComponentName(int _index);
-		
-		
 		
 		
 		

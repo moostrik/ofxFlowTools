@@ -4,7 +4,6 @@
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
 #include "ftPixelflow.h"
-#include "ftAverageFlowWatcher.h"
 
 #define USE_PROGRAMMABLE_GL
 

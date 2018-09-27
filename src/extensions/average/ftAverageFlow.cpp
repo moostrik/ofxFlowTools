@@ -65,23 +65,23 @@ namespace flowTools {
 		if (numChannels > 1) {
 			componentParameters.setName("components");
 			for (int i=0; i<numChannels; i++) {
-				componentParameters.add(pComponents[i].set(getComponentName(i), 0, -1, 1));
+				componentParameters.add(pComponents[i].set(ftUtil::getComponentName(type, i), 0, -1, 1));
 			}
 			parameters.add(componentParameters);
 		} else {
-			parameters.add(pComponents[0].set(getComponentName(0), 0, -1, 1));
-			parameters.add(pDirection[0].set(getComponentName(0), 0, -1, 1));
+			parameters.add(pComponents[0].set(ftUtil::getComponentName(type, 0), 0, -1, 1));
+			parameters.add(pDirection[0].set(ftUtil::getComponentName(type, 0), 0, -1, 1));
 		}
 		
 		pAreas.resize(numChannels);
 		if (numChannels > 1) {
 			areaParameters.setName("areas");
 			for (int i=0; i<numChannels; i++) {
-				areaParameters.add(pAreas[i].set(getComponentName(i), 0, 0, 1));
+				areaParameters.add(pAreas[i].set(ftUtil::getComponentName(type, i), 0, 0, 1));
 			}
 			parameters.add(areaParameters);
 		} else {
-			parameters.add(pAreas[0].set(getComponentName(0), 0, 0, 1));
+			parameters.add(pAreas[0].set(ftUtil::getComponentName(type, 0), 0, 0, 1));
 		}
 		
 		roiParameters.setName("region of interest");
@@ -193,7 +193,6 @@ namespace flowTools {
 		}
 	}
 
-	
 	//--------------------------------------------------------------
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
@@ -296,7 +295,7 @@ namespace flowTools {
 		
 		for (int i=0; i<numChannels; i++) {
 			ofSetColor(componentColors[i]);
-			ofDrawBitmapString(getComponentName(i), 5, yOffset);
+			ofDrawBitmapString(ftUtil::getComponentName(type, i), 5, yOffset);
 			yOffset += yStep;
 		}
 		
@@ -324,12 +323,12 @@ namespace flowTools {
 		
 		roi = ofRectangle(x, y, w, h);
 		
-		if (pRoi[0] != x) { pRoi[0].setWithoutEventNotifications(x); }
-		if (pRoi[1] != y) { pRoi[1].setWithoutEventNotifications(y); }
-		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].setWithoutEventNotifications(w); }
-		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].setWithoutEventNotifications(h); }
-		if (pRoi[2] != w) { pRoi[2].setWithoutEventNotifications(w); }
-		if (pRoi[3] != h) { pRoi[3].setWithoutEventNotifications(h); }
+		if (pRoi[0] != x) { pRoi[0].set(x); }
+		if (pRoi[1] != y) { pRoi[1].set(y); }
+		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].set(w); }
+		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].set(h); }
+		if (pRoi[2] != w) { pRoi[2].set(w); }
+		if (pRoi[3] != h) { pRoi[3].set(h); }
 	}
 	
 	//--------------------------------------------------------------
@@ -344,36 +343,5 @@ namespace flowTools {
 		_stDev = stDev;
 	}
 	
-	//--------------------------------------------------------------
-	string ftAverageFlow::getComponentName(int _index)  {
-		vector<string> componentNames;
-		switch (type) {
-			case FT_VELOCITY:
-			case FT_VELOCITY_NORM:
-				componentNames = {"x", "y"};
-				break;
-			case FT_VELOCITY_SPLIT:
-				componentNames = {"right", "down", "left", "up"};
-				break;
-			case FT_DENSITY:
-				componentNames = {"red", "green", "blue", "alpha"};
-				break;
-			case FT_PRESSURE:
-				componentNames = {"pressure"};
-				break;
-			case FT_TEMPERATURE:
-				componentNames = {"temperature"};
-				break;
-			default:
-				componentNames = {"unknown 0", "unknown 1", "unknown 2", "unknown 3"};
-				break;
-		}
-		
-		if (_index < componentNames.size()) {
-			return componentNames[_index];
-		}
-		return "unknown";
-		
-	}
 }
 

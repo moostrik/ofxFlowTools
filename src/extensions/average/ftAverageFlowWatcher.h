@@ -38,10 +38,11 @@ namespace flowTools {
 		ofParameter<bool>	pMagnitudeEvent;
 		vector< ofParameter<bool> >	pComponentEvents;
 		
+		ofMesh				baseMesh;
 		ofFloatColor		baseColor, thresholdColor;
 		
 		void	drawGraph(int _x, int _y, int _w, int _h) override;
-		void	createGraphOverlay(int _w, int _h);
+		void	createGraphOverlay(int _w, int _h) override;
 		
 	};
 }

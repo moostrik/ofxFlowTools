@@ -41,9 +41,9 @@ namespace flowTools {
 		ofRectangle	getRoi()			{ return roi; }
 		ofPoint		getRoiCentre()		{ return ofPoint(roi.x + roi.width / 2, roi.y + roi.height / 2); }
 		
-		void	drawOutput(int _x, int _y, int _w, int _h) override;
-		void	drawROI(int _x, int _y, int _w, int _h);
-		void	drawVisualizer(int _x, int _y, int _w, int _h);
+		void		drawOutput(int _x, int _y, int _w, int _h) override;
+		void		drawROI(int _x, int _y, int _w, int _h);
+		void		drawVisualizer(int _x, int _y, int _w, int _h);
 		
 	protected:
 		static int		averageFlowCount;
@@ -78,22 +78,20 @@ namespace flowTools {
 		vector< ofParameter<float> >		pDirection;
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		
-		
-		
-		
-		
-		
-		float			prevNormalizedMagnitude;
-		vector<float>	prevComponents;
+		// DRAW FUNCTIONS
+		int 					graphSize;
+		ofMesh					magnitudeMesh;
+		vector< ofMesh >		componentMeshes;
 		
 		ofFloatColor			magnitudeColor;
 		vector<ofFloatColor>	componentColors;
 		ofFbo					overlayFbo;
 		bool 					bUpdateVisualizer;
 		
-		virtual void	drawBackground(int _x, int _y, int _w, int _h);
-		virtual void	drawGraph(int _x, int _y, int _w, int _h);
-		void			createGraphOverlay(int _w, int _h);
+		void					setupDraw();
+		virtual void			drawBackground(int _x, int _y, int _w, int _h);
+		virtual void			drawGraph(int _x, int _y, int _w, int _h);
+		virtual void			createGraphOverlay(int _w, int _h);
 		
 	};
 }

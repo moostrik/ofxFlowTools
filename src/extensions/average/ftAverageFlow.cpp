@@ -25,12 +25,8 @@ namespace flowTools {
 		components.clear();
 		components.resize(numChannels, 0);
 		
-		prevComponents.clear();
-		prevComponents.resize(numChannels, 0);
-		
 		meanMagnitude = 0;
 		normalizedMagnitude = 0;
-		prevNormalizedMagnitude = 0;
 		stdevMagnitude = 0;
 		
 		// move draw graph out of average;
@@ -39,15 +35,15 @@ namespace flowTools {
 		componentColors.push_back(ofFloatColor(.4, .8, 1, 1.));	// blue
 		componentColors.push_back(ofFloatColor(.2, 1, .6, 1.));	// dark green
 		componentColors.push_back(ofFloatColor(.8, .4, 1, 1.));	// purple
-		outputFbo.allocate(16, 16);
-		overlayFbo.allocate(16, 16);
+		
+		outputFbo.allocate(_width, _height);
 		bUpdateVisualizer = false;
-		// move draw graph out of average;
 		
 		setupParameters();
-		
+		setupDraw();
 	}
 	
+	//--------------------------------------------------------------
 	void ftAverageFlow::setupParameters() {
 		
 		string name = "average " + ftFlowForceNames[type];
@@ -94,6 +90,37 @@ namespace flowTools {
 			pRoi[i].addListener(this, &ftAverageFlow::pRoiListener);
 		}
 		parameters.add(roiParameters);
+	}
+	
+	//--------------------------------------------------------------
+	void ftAverageFlow::setupDraw() {
+		graphSize = 120; //
+		vector<ofIndexType> indices;
+		vector<glm::vec3> vertices;
+		vector<ofFloatColor> colors;
+		indices.resize(graphSize);
+		vertices.resize(graphSize);
+		colors.resize(graphSize, magnitudeColor);
+		for (int i=0; i<graphSize; i++) {
+			indices[i] = i;
+			vertices[i] = glm::vec3((1.0 / graphSize) * float(i), 0, 0);
+		}
+		magnitudeMesh.setMode(OF_PRIMITIVE_LINE_STRIP);
+		magnitudeMesh.addIndices(indices);
+		magnitudeMesh.addVertices(vertices);
+		magnitudeMesh.addColors(colors);
+		
+		componentMeshes.resize(numChannels);
+		for (int i=0; i<numChannels; i++) {
+			componentMeshes[i].setMode(OF_PRIMITIVE_LINE_STRIP);
+			componentMeshes[i].addIndices(indices);
+			componentMeshes[i].addVertices(vertices);
+			colors.clear();
+			colors.resize(graphSize, componentColors[i]);
+			componentMeshes[i].addColors(colors);
+		}
+		
+		createGraphOverlay(16, 16);
 	}
 	
 	//--------------------------------------------------------------
@@ -234,41 +261,36 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftAverageFlow::drawGraph(int _x, int _y, int _w, int _h) {
 		if (bUpdateVisualizer) {
+			
+			for (int i=0; i<graphSize-1; i++) {
+				magnitudeMesh.setVertex(i, glm::vec3(magnitudeMesh.getVertex(i).x, magnitudeMesh.getVertex(i+1).y, 0));
+				for (int j=0; j<numChannels; j++) {
+					componentMeshes[j].setVertex(i, glm::vec3(componentMeshes[j].getVertex(i).x, componentMeshes[j].getVertex(i+1).y, 0));
+				}
+			}
+			float m = (type == FT_VELOCITY_SPLIT)? 1.0 - normalizedMagnitude : 0.5 + normalizedMagnitude * -.5;
+			magnitudeMesh.setVertex(graphSize-1, glm::vec3(magnitudeMesh.getVertex(graphSize-1).x, m, 0));
+			for (int i=0; i<numChannels; i++) {
+				float c = (type == FT_VELOCITY_SPLIT)? 1.0 - components[i] : 0.5 + components[i] * -.5;
+				componentMeshes[i].setVertex(graphSize-1, glm::vec3(componentMeshes[i].getVertex(graphSize-1).x, c, 0));
+			}
+			
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+			ofPushView();
+			ofTranslate(_x, _y);
+			ofScale(_w, _h);
+			magnitudeMesh.draw();
+			for (int c=0; c<numChannels; c++) {
+				componentMeshes[c].draw();
+			}
+			ofPopView();
+			
+			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 			if (outputFbo.getWidth() != _w || outputFbo.getHeight() != _h) {
-				outputFbo.allocate(_w, _h);
-				ftUtil::zero(outputFbo);
 				createGraphOverlay(_w, _h);
 			}
-			
-			// graph
-			ofPushStyle();
-			outputFbo.swap();
-			outputFbo.begin();
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			ofClear(0, 0, 0, 0);
-			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			ofSetColor(255, 255, 255, 255);
-			outputFbo.getBackTexture().draw(-4, 0);
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			
-			int halfH = _h * .5;
-			if (type == FT_VELOCITY_SPLIT) { halfH = (_h); }
-			
-			ofSetColor(magnitudeColor);
-			ofDrawLine(_w - 4, (1 - prevNormalizedMagnitude) * halfH, _w, (1 - normalizedMagnitude) * halfH);
-			ofDrawLine(_w - 4, 1 + (1 - prevNormalizedMagnitude) * halfH, _w, 1 + (1 - normalizedMagnitude) * halfH);
-			prevNormalizedMagnitude = normalizedMagnitude;
-			for (int i=0; i<numChannels; i++) {
-				ofSetColor(componentColors[i]);
-				ofDrawLine(_w - 4, (1 - prevComponents[i]) * halfH, _w, (1 - getComponent(i)) * halfH);
-				prevComponents[i] = getComponent(i);
-			}
-			outputFbo.end();
-			outputFbo.draw(_x, _y, _w, _h);
-			
-			// overlay
 			overlayFbo.draw(_x, _y, _w, _h);
-			
 			ofPopStyle();
 		}
 		bUpdateVisualizer = false;
@@ -276,6 +298,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::createGraphOverlay(int _w, int _h) {
+		// replace with drawOverlay()
 		overlayFbo.allocate(_w, _h);
 		ftUtil::zero(overlayFbo);
 		
@@ -285,7 +308,6 @@ namespace flowTools {
 		ofSetColor(255, 255, 255, 255);
 		
 		int yStep = 16;
-		
 		int yOffset = yStep;
 		ofDrawBitmapStringHighlight(parameters.getName(), 5, yOffset);
 		yOffset += yStep * 1.5;
@@ -299,16 +321,18 @@ namespace flowTools {
 			yOffset += yStep;
 		}
 		
+		ofSetColor(255,255,255,255);
 		if (type != FT_VELOCITY_SPLIT) {
 			ofDrawBitmapString("1",  _w - 10, yStep);
 			ofDrawBitmapString("0",  _w - 10, (_h * 0.5) + yStep);
 			ofDrawBitmapString("-1", _w - 18, _h - yStep * .5);
+			ofSetColor(255,255,255,195);
+			ofDrawLine(0, 0.5 * _h, _w, 0.5 * _h);
 		} else {
 			ofDrawBitmapString("1", _w - 10, yStep);
 			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
 		}
 		ofPopStyle();
-		
 		overlayFbo.end();
 	}
 	

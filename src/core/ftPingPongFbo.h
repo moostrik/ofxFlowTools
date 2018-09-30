@@ -31,6 +31,10 @@ namespace flowTools {
 				ofLogWarning("ftPingPongFbo") << "needs to be allocated with 2 color buffers";
 				_settings.numColorbuffers = 2;
 			}
+			if (_settings.numSamples != 0) {
+				ofLogWarning("ftPingPongFbo") << "does not work with multisampling";
+				_settings.numSamples = 0;
+			}
 			ofFbo::allocate(_settings);
 			flag = false;
 		}

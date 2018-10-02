@@ -85,13 +85,12 @@ namespace flowTools {
 		
 		ofFloatColor			magnitudeColor;
 		vector<ofFloatColor>	componentColors;
-		ofFbo					overlayFbo;
 		bool 					bUpdateVisualizer;
 		
 		void					setupDraw();
 		virtual void			drawBackground(int _x, int _y, int _w, int _h);
 		virtual void			drawGraph(int _x, int _y, int _w, int _h);
-		virtual void			createGraphOverlay(int _w, int _h);
+		virtual void			drawGraphOverlay(int _x, int _y, int _w, int _h);
 		
 	};
 }

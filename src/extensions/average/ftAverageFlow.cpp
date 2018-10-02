@@ -119,8 +119,6 @@ namespace flowTools {
 			colors.resize(graphSize, componentColors[i]);
 			componentMeshes[i].addColors(colors);
 		}
-		
-		createGraphOverlay(16, 16);
 	}
 	
 	//--------------------------------------------------------------
@@ -287,25 +285,17 @@ namespace flowTools {
 			ofPopView();
 			
 			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			if (outputFbo.getWidth() != _w || outputFbo.getHeight() != _h) {
-				createGraphOverlay(_w, _h);
-			}
-			overlayFbo.draw(_x, _y, _w, _h);
+			drawGraphOverlay(_x, _y, _w, _h);
 			ofPopStyle();
 		}
 		bUpdateVisualizer = false;
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlow::createGraphOverlay(int _w, int _h) {
-		// replace with drawOverlay()
-		overlayFbo.allocate(_w, _h);
-		ftUtil::zero(overlayFbo);
-		
-		overlayFbo.begin();
+	void ftAverageFlow::drawGraphOverlay(int _x, int _y, int _w, int _h) {
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		ofSetColor(255, 255, 255, 255);
+		ofPushView();
+		ofTranslate(_x, _y);
 		
 		int yStep = 16;
 		int yOffset = yStep;
@@ -332,8 +322,8 @@ namespace flowTools {
 			ofDrawBitmapString("1", _w - 10, yStep);
 			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
 		}
+		ofPopView();
 		ofPopStyle();
-		overlayFbo.end();
 	}
 	
 	//--------------------------------------------------------------

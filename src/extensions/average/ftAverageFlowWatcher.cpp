@@ -156,16 +156,10 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlowWatcher::createGraphOverlay(int _w, int _h) {
-		// replace with drawOverlay()
-		
-		overlayFbo.allocate(_w, _h);
-		ftUtil::zero(overlayFbo);
-		
-		overlayFbo.begin();
+	void ftAverageFlowWatcher::drawGraphOverlay(int _x, int _y, int _w, int _h) {
 		ofPushStyle();
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-		ofSetColor(255, 255, 255, 255);
+		ofPushView();
+		ofTranslate(_x, _y);
 		
 		int yStep = 16;
 		int yOffset = yStep;
@@ -200,8 +194,8 @@ namespace flowTools {
 			ofDrawBitmapString("0", _w - 10, _h - yStep * .5);
 		}
 		
+		ofPopView();
 		ofPopStyle();
-		overlayFbo.end();
 	}
 	
 };

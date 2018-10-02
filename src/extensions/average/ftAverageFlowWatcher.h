@@ -42,7 +42,7 @@ namespace flowTools {
 		ofFloatColor		baseColor, thresholdColor;
 		
 		void	drawGraph(int _x, int _y, int _w, int _h) override;
-		void	createGraphOverlay(int _w, int _h) override;
+		void	drawGraphOverlay(int _x, int _y, int _w, int _h) override;
 		
 	};
 }

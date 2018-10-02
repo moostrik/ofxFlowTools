@@ -50,8 +50,6 @@ void ofApp::setup(){
 	cameraFbo.allocate(densityWidth, densityHeight);
 	ftUtil::zero(cameraFbo);
 	
-	lastTime = ofGetElapsedTimef();
-	
 	setupGui();
 }
 
@@ -96,6 +94,7 @@ void ofApp::setupGui() {
 	minimizeGui(&gui);
 	
 	toggleGuiDraw = true;
+	lastTime = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------

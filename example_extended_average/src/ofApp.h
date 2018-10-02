@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxFlowTools.h"
-#include "ftPixelflow.h"
 
 #define USE_PROGRAMMABLE_GL
 

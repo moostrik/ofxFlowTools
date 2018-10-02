@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftColorizeLuminanceShader : public ftShader {
+	class ftColorizeGradientShader : public ftShader {
 	public:
 		ftColorizeLuminanceShader() {
             bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftColorizeLuminanceShader";
+			string shaderName = "ftColorizeGradientShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
@@ -37,9 +37,9 @@ namespace flowTools {
 			
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect SourceTexture;
+									 uniform sampler2DRect RampTexture;
 									 uniform vec2	TextureScale;
-									 uniform vec4	lowColor;
-									 uniform vec4	highColor;
+									 uniform float	RampSize;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -48,9 +48,12 @@ namespace flowTools {
 										 vec2 st = texCoordVarying;
 										 
 										 vec2 stTexture = st * TextureScale;
-										 float l = texture(SourceTexture, stTexture).x;
+										 vec4 srcColor = texture(SourceTexture, stTexture);
 										 
-										 fragColor = mix(lowColor, highColor, l);
+										 vec2 stRamp = vec2(srcColor.x * RampSize, 0.5);
+										 vec4 rampColor = texture(RampTexture, stRamp);
+										 
+										 fragColor = rampColor;
 									 }
 									 );
 			
@@ -61,18 +64,13 @@ namespace flowTools {
 		}
 		
 	public:
-		
-		void update(ofFbo& _fbo, ofTexture _srcTex, ofFloatColor _color) {
-			update(_fbo, _srcTex, _color, _color);
-		}
-		
-		void update(ofFbo& _fbo, ofTexture _srcTex, ofFloatColor _lowColor, ofFloatColor _highColor){
+		void update(ofFbo& _fbo, ofTexture _srcTex, ofTexture _rampTexture){
 			_fbo.begin();
 			begin();
 			setUniformTexture("SourceTexture", _srcTex, 0);
+			setUniformTexture("RampTexture", _rampTexture, 1);
 			setUniform2f("TextureScale", _srcTex.getWidth() / _fbo.getWidth(), _srcTex.getHeight()/ _fbo.getHeight());
-			setUniform4f("lowColor", glm::vec4(_lowColor.r, _lowColor.g, _lowColor.b, _lowColor.a));
-			setUniform4f("highColor", glm::vec4(_highColor.r, _highColor.g, _highColor.b, _highColor.a));
+			setUniform1f("RampSize", _rampTexture.getWidth());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

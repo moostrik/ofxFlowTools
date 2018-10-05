@@ -248,8 +248,6 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftAverageFlow::reset() {
-		ftFlow:reset();
-		
 		meanMagnitude = 0;
 		normalizedMagnitude = 0;
 		stdevMagnitude = 0;

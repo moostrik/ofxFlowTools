@@ -89,39 +89,10 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlow::setupDraw() {
-		graphSize = 120; //
-		vector<ofIndexType> indices;
-		vector<glm::vec3> vertices;
-		vector<ofFloatColor> colors;
-		indices.resize(graphSize);
-		vertices.resize(graphSize);
-		colors.resize(graphSize, magnitudeColor);
-		for (int i=0; i<graphSize; i++) {
-			indices[i] = i;
-			vertices[i] = glm::vec3((1.0 / graphSize) * float(i), 0, 0);
-		}
-		magnitudeMesh.setMode(OF_PRIMITIVE_LINE_STRIP);
-		magnitudeMesh.addIndices(indices);
-		magnitudeMesh.addVertices(vertices);
-		magnitudeMesh.addColors(colors);
-		
-		componentMeshes.resize(numChannels);
-		for (int i=0; i<numChannels; i++) {
-			componentMeshes[i].setMode(OF_PRIMITIVE_LINE_STRIP);
-			componentMeshes[i].addIndices(indices);
-			componentMeshes[i].addVertices(vertices);
-			colors.clear();
-			colors.resize(graphSize, componentColors[i]);
-			componentMeshes[i].addColors(colors);
-		}
-	}
-	
-	//--------------------------------------------------------------
 	void ftAverageFlow::update(ofFloatPixels& _pixels) {
 		int dnW = _pixels.getWidth();
 		int dnH = _pixels.getHeight();
-		ofRectangle dnRoi = ofRectangle(roi.x * dnW, roi.y * dnH, roi.width * dnW, roi.height * dnH);
+		ofRectangle dnRoi = ofRectangle(roi.x * dnW, roi.y * dnH, int(roi.width * dnW), int(roi.height * dnH));
 		
 		int numRoiPixels = dnRoi.width * dnRoi.height;
 		if (roiPixels.getWidth() < dnRoi.width || roiPixels.getHeight() < dnRoi.height) {
@@ -265,6 +236,35 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+	void ftAverageFlow::setupDraw() {
+		graphSize = 120; //
+		vector<ofIndexType> indices;
+		vector<glm::vec3> vertices;
+		vector<ofFloatColor> colors;
+		indices.resize(graphSize);
+		vertices.resize(graphSize);
+		colors.resize(graphSize, magnitudeColor);
+		for (int i=0; i<graphSize; i++) {
+			indices[i] = i;
+			vertices[i] = glm::vec3((1.0 / graphSize) * float(i), 0.5, 0);
+		}
+		magnitudeMesh.setMode(OF_PRIMITIVE_LINE_STRIP);
+		magnitudeMesh.addIndices(indices);
+		magnitudeMesh.addVertices(vertices);
+		magnitudeMesh.addColors(colors);
+		
+		componentMeshes.resize(numChannels);
+		for (int i=0; i<numChannels; i++) {
+			componentMeshes[i].setMode(OF_PRIMITIVE_LINE_STRIP);
+			componentMeshes[i].addIndices(indices);
+			componentMeshes[i].addVertices(vertices);
+			colors.clear();
+			colors.resize(graphSize, componentColors[i]);
+			componentMeshes[i].addColors(colors);
+		}
+	}
+	
+	//--------------------------------------------------------------
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;
@@ -318,23 +318,23 @@ namespace flowTools {
 				float c = (type == FT_VELOCITY_SPLIT)? 1.0 - components[i] : 0.5 + components[i] * -.5;
 				componentMeshes[i].setVertex(graphSize-1, glm::vec3(componentMeshes[i].getVertex(graphSize-1).x, c, 0));
 			}
-			
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			ofPushView();
-			ofTranslate(_x, _y);
-			ofScale(_w, _h);
-			magnitudeMesh.draw();
-			for (int c=0; c<numChannels; c++) {
-				componentMeshes[c].draw();
-			}
-			ofPopView();
-			
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			drawGraphOverlay(_x, _y, _w, _h);
-			ofPopStyle();
 		}
 		bUpdateVisualizer = false;
+		
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofPushView();
+		ofTranslate(_x, _y);
+		ofScale(_w, _h);
+		magnitudeMesh.draw();
+		for (int c=0; c<numChannels; c++) {
+			componentMeshes[c].draw();
+		}
+		ofPopView();
+		
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		drawGraphOverlay(_x, _y, _w, _h);
+		ofPopStyle();
 	}
 	
 	//--------------------------------------------------------------

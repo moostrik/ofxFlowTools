@@ -92,29 +92,28 @@ namespace flowTools {
 			}
 			float b = (type == FT_VELOCITY_SPLIT)? 1.0 - normalizedMagnitude * pBase.get() : 0.5 + normalizedMagnitude * pBase.get() * -.5;
 			baseMesh.setVertex(graphSize-1, glm::vec3(baseMesh.getVertex(graphSize-1).x, b, 0));
-			
 			// DRAW EVENTS HERE
-			
-			ofPushStyle();
-			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-			ofPushView();
-			ofTranslate(_x, _y);
-			ofScale(_w, _h);
-			ofSetColor(thresholdColor);
-			if (type != FT_VELOCITY_SPLIT) {
-				float t = 0.5 + pThreshold.get() * .5;
-				ofDrawLine(0, t, 1, t);
-				t = 0.5 + pThreshold.get() * -.5;
-				ofDrawLine(0, t, 1, t);
-			}
-			else {
-				float t = 1.0 - pThreshold.get();
-				ofDrawLine(0, t, 1, t);
-			}
-			baseMesh.draw();
-			ofPopView();
-			ofPopStyle();
 		}
+		
+		ofPushStyle();
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+		ofPushView();
+		ofTranslate(_x, _y);
+		ofScale(_w, _h);
+		ofSetColor(thresholdColor);
+		if (type != FT_VELOCITY_SPLIT) {
+			float t = 0.5 + pThreshold.get() * .5;
+			ofDrawLine(0, t, 1, t);
+			t = 0.5 + pThreshold.get() * -.5;
+			ofDrawLine(0, t, 1, t);
+		}
+		else {
+			float t = 1.0 - pThreshold.get();
+			ofDrawLine(0, t, 1, t);
+		}
+		baseMesh.draw();
+		ofPopView();
+		ofPopStyle();
 		
 		ftAverageFlow::drawGraph(_x, _y, _w, _h);
 		

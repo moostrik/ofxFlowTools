@@ -180,7 +180,6 @@ namespace flowTools {
 		yOffset += yStep;
 		ofSetColor(baseColor);
 		ofDrawBitmapString("event base", 5, yOffset);
-		yOffset += yStep;
 		
 		ofSetColor(255,255,255,255);
 		if (type != FT_VELOCITY_SPLIT) {

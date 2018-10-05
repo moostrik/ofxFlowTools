@@ -135,7 +135,7 @@ namespace flowTools {
 				addInput(inputFbo.getBackTexture());
 			} else {
 				resetOutput();
-				addOutput(inputFbo.getTexture(), pSpeed.get() * _deltaTime * ofGetFrameRate());
+				add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime * ofGetFrameRate());
 			}
 			
 			ofPopStyle();
@@ -145,7 +145,7 @@ namespace flowTools {
 		}
 		if (pPersistent) {
 			resetOutput();
-			addOutput(inputFbo.getTexture(), pSpeed.get() * _deltaTime);
+			add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime);
 			bFlowChanged = true;
 		}
 	}

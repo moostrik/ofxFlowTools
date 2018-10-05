@@ -14,8 +14,8 @@ namespace flowTools {
 		virtual void setInput(ofTexture &_tex)							{ set(inputFbo, _tex); }
 		virtual void addInput(ofTexture &_tex, float _strength = 1.0)	{ add(inputFbo, _tex, _strength); }
 		
-		virtual void setOutput(ofTexture &_tex)							{ set(outputFbo, _tex); }
-		virtual void addOutput(ofTexture &_tex, float _strength = 1.0)	{ add(outputFbo, _tex, _strength); }
+//		virtual void setOutput(ofTexture &_tex)							{ set(outputFbo, _tex); }
+//		virtual void addOutput(ofTexture &_tex, float _strength = 1.0)	{ add(outputFbo, _tex, _strength); }
 		
 		virtual ofTexture& getInput()	{ return inputFbo.getTexture(); }
 		virtual ofTexture& getOutput()	{ return outputFbo.getTexture(); }

@@ -76,6 +76,7 @@ namespace flowTools {
 		ftUtil::zero(obstacleFbo);
 		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
 		ftUtil::zero(obstacleOffsetFbo);
+		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);

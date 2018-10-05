@@ -15,14 +15,10 @@ namespace flowTools {
 		roiPixels.allocate(inputWidth, inputHeight, numChannels);
 		roi = ofRectangle(0,0,1,1);
 		
-		magnitudes.clear();
 		magnitudes.reserve(inputWidth * inputHeight);
 		magnitudes.resize(inputWidth * inputHeight, 0);
-		direction.clear();
 		direction.resize(numChannels, 0);
-		areas.clear();
 		areas.resize(numChannels, 0);
-		components.clear();
 		components.resize(numChannels, 0);
 		
 		meanMagnitude = 0;
@@ -198,6 +194,19 @@ namespace flowTools {
 		bUpdateVisualizer = true;
 	}
 	
+	//--------------------------------------------------------------
+	void ftAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
+		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
+		std::vector<float> diff(_v.size());
+		std::transform(_v.begin(), _v.end(), diff.begin(), std::bind2nd(std::minus<float>(), mean));
+		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+		float stDev = std::sqrt(sq_sum / _v.size());
+		
+		_mean = mean;
+		_stDev = stDev;
+	}
+	
+	//--------------------------------------------------------------
 	void ftAverageFlow::getRoiData(ofFloatPixels &_pixels, ofFloatPixels& _subPixels, ofRectangle _section) {
 		int x = _section.x;
 		int y = _section.y;
@@ -218,6 +227,25 @@ namespace flowTools {
 		}
 	}
 
+	//--------------------------------------------------------------
+	void ftAverageFlow::setRoi(ofRectangle _rect) {
+		float x = ofClamp(_rect.x, 0, 1);
+		float y = ofClamp(_rect.y, 0, 1);
+		float maxW = 1.0 - x;
+		float maxH = 1.0 - y;
+		float w = min(_rect.width, maxW);
+		float h = min(_rect.height, maxH);
+		
+		roi = ofRectangle(x, y, w, h);
+		
+		if (pRoi[0] != x) { pRoi[0].set(x); }
+		if (pRoi[1] != y) { pRoi[1].set(y); }
+		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].set(w); }
+		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].set(h); }
+		if (pRoi[2] != w) { pRoi[2].set(w); }
+		if (pRoi[3] != h) { pRoi[3].set(h); }
+	}
+	
 	//--------------------------------------------------------------
 	void ftAverageFlow::reset() {
 		ftFlow:reset();
@@ -344,37 +372,6 @@ namespace flowTools {
 		}
 		ofPopView();
 		ofPopStyle();
-	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::setRoi(ofRectangle _rect) {
-		float x = ofClamp(_rect.x, 0, 1);
-		float y = ofClamp(_rect.y, 0, 1);
-		float maxW = 1.0 - x;
-		float maxH = 1.0 - y;
-		float w = min(_rect.width, maxW);
-		float h = min(_rect.height, maxH);
-		
-		roi = ofRectangle(x, y, w, h);
-		
-		if (pRoi[0] != x) { pRoi[0].set(x); }
-		if (pRoi[1] != y) { pRoi[1].set(y); }
-		if (pRoi[2].getMax() != maxW) { pRoi[2].setMax(maxW); pRoi[2].set(w); }
-		if (pRoi[3].getMax() != maxH) { pRoi[3].setMax(maxH); pRoi[3].set(h); }
-		if (pRoi[2] != w) { pRoi[2].set(w); }
-		if (pRoi[3] != h) { pRoi[3].set(h); }
-	}
-	
-	//--------------------------------------------------------------
-	void ftAverageFlow::getMeanStDev(vector<float> &_v, float &_mean, float &_stDev) {
-		float mean = accumulate(_v.begin(), _v.end(), 0.0) / (float)_v.size();
-		std::vector<float> diff(_v.size());
-		std::transform(_v.begin(), _v.end(), diff.begin(), std::bind2nd(std::minus<float>(), mean));
-		float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-		float stDev = std::sqrt(sq_sum / _v.size());
-		
-		_mean = mean;
-		_stDev = stDev;
 	}
 	
 }

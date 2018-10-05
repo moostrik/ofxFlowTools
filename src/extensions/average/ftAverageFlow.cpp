@@ -219,6 +219,26 @@ namespace flowTools {
 	}
 
 	//--------------------------------------------------------------
+	void ftAverageFlow::reset() {
+		ftFlow:reset();
+		
+		meanMagnitude = 0;
+		normalizedMagnitude = 0;
+		stdevMagnitude = 0;
+		pNormalizedMagnitude.set(0);
+		pStdevMagnitude.set(0);
+		for (int i=0; i<numChannels; i++) {
+			components[i] = 0;
+			direction[i] = 0;
+			areas[i] = 0;
+			pComponents[i] = 0;
+			pDirection[i] = 0;
+			pAreas[i] = 0;
+		}
+		bUpdateVisualizer = true;
+	}
+	
+	//--------------------------------------------------------------
 	void ftAverageFlow::drawOutput(int _x, int _y, int _w, int _h) {
 		int x = _x + roi.x * _w;
 		int y = _y + roi.y * _h;

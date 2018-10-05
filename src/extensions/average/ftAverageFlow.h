@@ -15,6 +15,8 @@ namespace flowTools {
 		void		setInput(ofTexture &_tex) override { ; }
 		void		addInput(ofTexture &_tex, float _strength = 1.0) override { ; }
 		
+		void		reset() override;
+		
 		void		setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void		setRoi(ofRectangle _rect);
 		

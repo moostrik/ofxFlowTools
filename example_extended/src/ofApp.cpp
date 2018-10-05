@@ -9,8 +9,8 @@ void ofApp::setup(){
 	densityWidth = 1280;
 	densityHeight = 720;
 	// process all but the density on 16th resolution
-	flowWidth = densityWidth / 4;
-	flowHeight = densityHeight / 4;
+	flowWidth = densityWidth;
+	flowHeight = densityHeight;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	

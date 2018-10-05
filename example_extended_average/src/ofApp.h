@@ -19,7 +19,7 @@ public:
 	void	draw();
 	void	keyPressed(int key);
 	
-	int		densityWidth, densityHeight, flowWidth, flowHeight, windowWidth, windowHeight;
+	int		densityWidth, densityHeight, flowWidth, flowHeight, avgWidth, avgHeight, windowWidth, windowHeight;
 	
 	vector< ftFlow* >		flows;
 	ftOpticalFlow			opticalFlow;
@@ -35,8 +35,6 @@ public:
 	vector<ofRectangle> 	regios;
 	ftPixelFlow				pixelFlow;
 	vector<ftAverageFlow>	averageFlows;
-	
-	ofImage					flowToolsLogo;
 	
 	ofParameterGroup		visualizationParameters;
 	ofParameter<int>		visualizationMode;

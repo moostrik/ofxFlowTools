@@ -11,9 +11,11 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	// process all but the density on 16th resolution
-	flowWidth = densityWidth / 4;
-	flowHeight = densityHeight / 4;
+	flowWidth = densityWidth;
+	flowHeight = densityHeight;
+	// process the average on 16th resolution
+	avgWidth = densityWidth / 4;
+	avgHeight = densityHeight / 4;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -23,10 +25,10 @@ void ofApp::setup(){
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
 	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
-	pixelFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	pixelFlow.setup(avgWidth, avgHeight, FT_VELOCITY);
 	averageFlows.resize(numRegios);
 	for (int i=0; i<numRegios; i++) {
-		averageFlows[i].setup(flowWidth, flowHeight, FT_VELOCITY);
+		averageFlows[i].setup(avgWidth, avgHeight, FT_VELOCITY);
 		averageFlows[i].setRoi(1.0 / (numRegios + 1.0) * (i + 1), .2, 1.0 / (numRegios + 2.0), .6);
 	}
 	
@@ -42,9 +44,6 @@ void ofApp::setup(){
 	
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
-	
-	flowToolsLogo.load("flowtools.png");
-	fluidFlow.addObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -194,9 +193,6 @@ void ofApp::draw(){
 		velocityMouseFlow.draw(0, 0, windowWidth, windowHeight);
 	}
 	
-	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
-	
 	if (toggleAverageDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		for (auto& f: averageFlows) { f.draw(0, 0, windowWidth, windowHeight); };
@@ -264,7 +260,6 @@ void ofApp::keyPressed(int key){
 void ofApp::toggleResetListener(bool& _value) {
 	if (_value) {
 		for (auto flow : flows) { flow->reset(); }
-		fluidFlow.addObstacle(flowToolsLogo.getTexture());
 	}
 	_value = false;
 }

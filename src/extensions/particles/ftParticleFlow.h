@@ -77,6 +77,7 @@ namespace flowTools {
 		ofParameter<glm::vec2>	gravity;
 		
 		int						numParticlesX, numParticlesY, numParticles;
+		int 					simulationWidth;
 		
 		ofVboMesh				particleMesh;
 		

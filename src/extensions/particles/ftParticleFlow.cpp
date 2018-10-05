@@ -55,6 +55,7 @@ namespace flowTools {
 		numParticlesX = _numParticlesX;
 		numParticlesY = _numParticlesY;
 		numParticles = (numParticlesX * numParticlesY);
+		simulationWidth = _simulationWidth;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);  // Why?
@@ -97,7 +98,7 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::update(float _deltaTime) {
-		float timeStep = _deltaTime * speed.get();
+		float timeStep = _deltaTime * speed.get() * simulationWidth;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

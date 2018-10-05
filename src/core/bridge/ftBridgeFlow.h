@@ -17,7 +17,7 @@ namespace flowTools {
 			parameters.setName("bridge");
 			parameters.add(trailWeight.set("trail", .25, 0, .99));
 			parameters.add(blurRadius.set("blur", 2.5, 0, 10));
-			parameters.add(speed.set("speed", .1, 0, 1));
+			parameters.add(speed.set("speed", .25, 0, 1));
 		}
 		
 		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex);}

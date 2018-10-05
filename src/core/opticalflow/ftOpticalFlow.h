@@ -23,7 +23,7 @@ namespace flowTools {
 			
 			parameters.setName("optical flow");
 			offset.set("offset", 3, 1, 10);
-			threshold.set("threshold", 0.05, 0, 0.2);
+			threshold.set("threshold", 0.1, 0, 0.2);
 			strength.set("force", 3, .1, 10);			// 3 is best for normalization
 			boost.set("boost", 0.0, 0.0, .9);			//
 			doInverseX.set("inverse x", true); 			// flow velocity is inverse to fluid velocity

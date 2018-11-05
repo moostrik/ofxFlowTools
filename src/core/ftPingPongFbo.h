@@ -54,7 +54,7 @@ namespace flowTools {
         // forward draw arguments to front fbo
         template<typename... Args>
         void draw(Args&&... args) {
-            draw(std::forward<Args>(args)...);
+            fbos[flag].draw(std::forward<Args>(args)...);
         }
 
     private:

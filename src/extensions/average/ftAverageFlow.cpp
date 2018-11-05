@@ -80,7 +80,7 @@ namespace flowTools {
 		resetInput();
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::roi(inputFbo, _tex, roi);
+		ftUtil::roi(inputFbo.get(), _tex, roi);
 		ofPopStyle();
 	}
 	
@@ -96,7 +96,7 @@ namespace flowTools {
 
 	//--------------------------------------------------------------
 	void ftAverageFlow::update() {
-		ftUtil::toPixels(inputFbo, inputPixels);
+		ftUtil::toPixels(inputFbo.get(), inputPixels);
 		float* floatPixelData = inputPixels.getData();
 		
 		vector<float> totalVelocity;

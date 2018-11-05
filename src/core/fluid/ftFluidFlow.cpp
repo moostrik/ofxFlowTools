@@ -113,7 +113,7 @@ namespace flowTools {
 		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo,
+		advectShader.update(velocityFbo.get(),
 							velocityFbo.getBackTexture(),
 							velocityFbo.getBackTexture(),
 							obstacleFbo.getTexture(),
@@ -122,7 +122,7 @@ namespace flowTools {
 							cellSize.get());
 		
 		densityFbo.swap();
-		advectShader.update(densityFbo,
+		advectShader.update(densityFbo.get(),
 							densityFbo.getBackTexture(),
 							velocityFbo.getTexture(),
 							obstacleFbo.getTexture(),
@@ -134,7 +134,7 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				velocityFbo.swap();
-				diffuseShader.update(velocityFbo,
+				diffuseShader.update(velocityFbo.get(),
 									 velocityFbo.getBackTexture(),
 									 obstacleFbo.getTexture(),
 //									 viscosity.get() * deltaTime); // works better than timeStep
@@ -180,7 +180,7 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
-			jacobiShader.update(pressureFbo,
+			jacobiShader.update(pressureFbo.get(),
 								pressureFbo.getBackTexture(),
 								divergenceFbo.getTexture(),
 								obstacleFbo.getTexture(),
@@ -188,7 +188,7 @@ namespace flowTools {
 		}
 		
 		velocityFbo.swap();
-		substractGradientShader.update(velocityFbo,
+		substractGradientShader.update(velocityFbo.get(),
 									   velocityFbo.getBackTexture(),
 									   pressureFbo.getTexture(),
 									   obstacleFbo.getTexture(),

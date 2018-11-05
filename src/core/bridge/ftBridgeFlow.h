@@ -31,8 +31,8 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			
 			velocityTrailFbo.swap();
-			bridgeShader.update(velocityTrailFbo, velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
-			if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo, 1, blurRadius.get()); }
+			bridgeShader.update(velocityTrailFbo.get(), velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
+			if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo.get(), 1, blurRadius.get()); }
 			ftUtil::zero(velocityInputFbo);
 			ofPopStyle();
 		}

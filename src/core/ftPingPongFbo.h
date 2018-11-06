@@ -51,11 +51,10 @@ namespace flowTools {
         float getWidth() { return fbos[flag].getWidth(); }
         float getHeight() { return fbos[flag].getHeight(); }
         
-        // forward draw arguments to front fbo
-        template<typename... Args>
-        void draw(Args&&... args) {
-            fbos[flag].draw(std::forward<Args>(args)...);
-        }
+        void draw(float x, float y, float w, float h) const     { fbos[flag].draw(x,y,w,h); }
+        void drawBack(float x, float y, float w, float h) const { fbos[!flag].draw(x,y,w,h); }
+        void draw(float x, float y)                             { fbos[flag].draw(x,y); }
+        void drawBack(float x, float y)                         { fbos[!flag].draw(x,y); }
 
     private:
         ofFbo fbos [2];

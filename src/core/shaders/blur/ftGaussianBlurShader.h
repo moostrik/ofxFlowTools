@@ -151,12 +151,12 @@ namespace flowTools {
 		void update(ofFbo& _fbo, int _passes, int _radius){
 			if (pingPong.getWidth() != _fbo.getWidth() ||
 				pingPong.getHeight() != _fbo.getHeight() ||
-				ftUtil::getInternalFormat(pingPong) != ftUtil::getInternalFormat(_fbo)) {
+				ftUtil::getInternalFormat(pingPong.get()) != ftUtil::getInternalFormat(_fbo)) {
 				allocate(_fbo.getWidth(),  _fbo.getHeight(), ftUtil::getInternalFormat(_fbo) );
 			}
 			
 			ftUtil::zero(pingPong);
-			ftUtil::stretch(pingPong, _fbo);
+			ftUtil::stretch(pingPong.get(), _fbo);
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {

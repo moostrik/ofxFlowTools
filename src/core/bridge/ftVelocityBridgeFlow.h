@@ -24,7 +24,9 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			resetOutput();
-			multiplyShader.update(outputFbo, velocityTrailFbo.getTexture(), speed.get() * _deltaTime * outputFbo.getWidth() * .1);
+
+			multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), speed.get() * _deltaTime * outputFbo.getWidth() * .1);
+
 			ofPopStyle();
 		}
 		

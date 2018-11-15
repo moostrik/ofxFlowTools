@@ -32,8 +32,8 @@ namespace flowTools {
 		}
 		
 		void update() {
-			ftUtil::roi(outputFbo, inputFbo, roi);
-			ftUtil::toPixels(outputFbo, floatPixels);
+			ftUtil::roi(outputFbo.get(), inputFbo.getTexture(), roi);
+			ftUtil::toPixels(outputFbo.get(), floatPixels);
 		}
 		
 		ofFloatPixels& getPixels() { return floatPixels; }

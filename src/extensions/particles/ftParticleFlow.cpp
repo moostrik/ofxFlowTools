@@ -105,7 +105,7 @@ namespace flowTools {
 		
 		
 		particleAgeLifespanMassSizeFbo.swap();
-		ALMSParticleShader.update(particleAgeLifespanMassSizeFbo,
+		ALMSParticleShader.update(particleAgeLifespanMassSizeFbo.get(),
 								  particleAgeLifespanMassSizeFbo.getBackTexture(),
 								  particlePositionFbo.getTexture(),
 								  flowVelocityFbo.getTexture(),
@@ -119,7 +119,7 @@ namespace flowTools {
 								  size.get(), sizeSpread.get());
 		
 		particlePositionFbo.swap();
-		moveParticleShader.update(particlePositionFbo,
+		moveParticleShader.update(particlePositionFbo.get(),
 								  particlePositionFbo.getBackTexture(),
 								  particleAgeLifespanMassSizeFbo.getTexture(),
 								  inputFbo.getTexture(),

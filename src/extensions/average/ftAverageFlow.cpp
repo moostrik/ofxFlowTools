@@ -89,6 +89,7 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+
 	void ftAverageFlow::update(ofFloatPixels& _pixels) {
 		int dnW = _pixels.getWidth();
 		int dnH = _pixels.getHeight();

@@ -125,7 +125,7 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			inputFbo.swap();
-			mouseShader.update(inputFbo,
+			mouseShader.update(inputFbo.get(),
 							   force,
 							   endPosition,
 							   radius,

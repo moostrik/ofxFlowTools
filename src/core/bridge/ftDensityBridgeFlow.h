@@ -36,9 +36,11 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			resetOutput();
-			densityBridgeShader.update(outputFbo, inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * 10);
+
+			densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * 10);
+
 			outputFbo.swap();
-			HSVShader.update(outputFbo, outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
+			HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
 			
 			RGB2LuminanceShader.update(luminanceFbo, outputFbo.getTexture());
 			ofPopStyle();

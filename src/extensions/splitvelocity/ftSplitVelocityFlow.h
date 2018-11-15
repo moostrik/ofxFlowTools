@@ -51,7 +51,7 @@ namespace flowTools {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftFlow::resetOutput();
-			splitVelocityShader.update(outputFbo, inputFbo.getTexture(), 1.0);
+			splitVelocityShader.update(outputFbo.get(), inputFbo.getTexture(), 1.0);
 			ofPopStyle();
 		}
 		

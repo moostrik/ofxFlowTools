@@ -30,7 +30,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		_dstFbo.swap();
-		addMultipliedShader.update(_dstFbo, _dstFbo.getBackTexture(), _srcTex, 1.0, _strength);
+		addMultipliedShader.update(_dstFbo.get(), _dstFbo.getBackTexture(), _srcTex, 1.0, _strength);
 		ofPopStyle();
 	}
 	
@@ -38,7 +38,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		ftUtil::zero(_dstFbo);
-		ftUtil::stretch(_dstFbo, _srcTex);
+		ftUtil::stretch(_dstFbo.get(), _srcTex);
 		ofPopStyle();
 	}
 };

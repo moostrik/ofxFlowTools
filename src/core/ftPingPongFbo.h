@@ -41,15 +41,11 @@ namespace flowTools {
 		
 		void swap(){
 			flag = !flag;
-			bind();
-			setActiveDrawBuffer(flag);
-			unbind();
 			setDefaultTextureIndex(flag);
 		}
 		
 		ofTexture& getBackTexture() { return ofFbo::getTexture(!flag); }
 		
-		private:
 		bool flag;
 	};
 }

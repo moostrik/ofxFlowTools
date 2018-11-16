@@ -15,8 +15,8 @@ namespace flowTools {
 		componentActiveHighs.resize(numChannels, 0);
 		componentInActiveLows.resize(numChannels, 0);
 		
-		baseColor =			ofFloatColor(1., .0, .4, .85);	// orangeish
-		thresholdColor =	ofFloatColor(1., .4, .0, .85);	// pinkish
+		baseColor =			ofFloatColor(0.5, 0.5, 0.5, 0.8);
+		thresholdColor =	ofFloatColor(1.0, 0.0, 0.0, 1.0);
 		
 		eventParameters.setName("events");
 		eventParameters.add(pThreshold.set("threshold", .25, .0, .3));

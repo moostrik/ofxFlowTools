@@ -32,8 +32,11 @@ namespace flowTools {
 		}
 		
 		void update() {
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftUtil::roi(outputFbo.get(), inputFbo.getTexture(), roi);
 			ftUtil::toPixels(outputFbo.get(), floatPixels);
+			ofPopStyle();
 		}
 		
 		ofFloatPixels& getPixels() { return floatPixels; }

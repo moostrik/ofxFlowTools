@@ -23,10 +23,10 @@ namespace flowTools {
 		
 		// move draw graph out of average;
 		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
-		componentColors.push_back(ofFloatColor(.6, 1, .2, 1.));	// light green
-		componentColors.push_back(ofFloatColor(.4, .8, 1, 1.));	// blue
-		componentColors.push_back(ofFloatColor(.2, 1, .6, 1.));	// dark green
-		componentColors.push_back(ofFloatColor(.8, .4, 1, 1.));	// purple
+		componentColors.push_back(ofFloatColor(1.0, 0.0, 1.0, 1.));
+		componentColors.push_back(ofFloatColor(0.0, 1.0, 1.0, 1.));
+		componentColors.push_back(ofFloatColor(0.5, 1.0, 0.0, 1.));
+		componentColors.push_back(ofFloatColor(1.0, 0.5, 0.0, 1.));
 		
 		outputFbo.allocate(_width, _height);
 		bUpdateVisualizer = false;

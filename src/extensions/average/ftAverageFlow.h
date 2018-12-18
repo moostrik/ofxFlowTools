@@ -20,24 +20,19 @@ namespace flowTools {
 		void		setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void		setRoi(ofRectangle _rect);
 		
-		float		setNormalizationMax(float _value)	{ pNormalizationMax.set(_value); }
+		float		setNormalization(float _value)	{ pMagnitudeNormalization.set(_value); }
 		void		setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
-		float		getComponent(int _index)	{ if (_index < numChannels) { return components[_index];  } else { return 0; } }
-		float		getDirection(int _index)	{ if (_index < numChannels) { return direction[_index];  } else { return 0; } }
-		float		getMagnitude()				{ return getNormalizedMagnitude(); }
-		float		getNormalizedMagnitude()	{ return normalizedMagnitude; }
-		float		getMeanMagnitude()			{ return meanMagnitude; }		// not normalized
-		float		getStDevMagnitude()			{ return stdevMagnitude; }		// not normalized
-		float		getArea(int _index)			{ if (_index < numChannels) { return areas[_index]; } else { return 0; } }
-		vector<float>	getComponents()			{ return components; }
-		vector<float>	getAreas()				{ return areas; }
+		float		getMagnitude()				{ return magnitude; }
+		float		getMagnitudeArea()			{ return magnitudeArea; }
+		vector<float>	getVelocity()			{ return velocity; }
+		vector<float>	getVelocityArea()		{ return velocityArea; }
 
 		int			getNumChannels()			{ return numChannels; }
 		int			getWidth()					{ return inputWidth; }
 		int			getHeight()					{ return inputHeight; }
 		
-		float		getNormalizationMax()		{ return pNormalizationMax.get(); }
+		float		getNormalization()			{ return pMagnitudeNormalization.get(); }
 		float		getHighComponentBoost()		{ return pHighComponentBoost.get(); }
 		
 		ofRectangle	getRoi()			{ return roi; }
@@ -56,28 +51,30 @@ namespace flowTools {
 		ofRectangle		roi;
 		void			getRoiData(ofFloatPixels& _srcPixels, ofFloatPixels& _roiPixels, ofRectangle _rect);
 		
-		vector<float>	magnitudes;
-		float			meanMagnitude;
-		float			normalizedMagnitude;
-		float			stdevMagnitude;
-		vector<float>	direction;
-		vector<float>	components;
-		vector<float>	areas;
+		vector<float>	pixelMagnitudes;
+		
+		float			magnitude;
+		float			magnitudeArea;
+		
+		vector<float>	velocity;
+		vector<float>	velocityArea;
+		
 		void			getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		
 		void								setupParameters();
-		ofParameterGroup					roiParameters;
-		ofParameterGroup					componentParameters;
-		ofParameterGroup					areaParameters;
-		ofParameter<float>					pNormalizedMagnitude;
-		ofParameter<float>					pStdevMagnitude;
-		ofParameter<float>					pNormalizationMax;
+		ofParameter<float>					pMagnitudeNormalization;
+		ofParameter<float>					pAreaNormalization;
 		ofParameter<float>					pHighComponentBoost;
 		ofParameter<bool>					pPauze;
-		vector< ofParameter<float> >		pAreas;
+		ofParameterGroup					roiParameters;
 		vector< ofParameter<float> >		pRoi;
-		vector< ofParameter<float> >		pComponents;
-		vector< ofParameter<float> >		pDirection;
+		ofParameter<float>					pMagnitude;
+		ofParameter<float>					pMagnitudeArea;
+		ofParameterGroup					velocityParameters;
+		vector< ofParameter<float> >		pVelocity;
+		ofParameterGroup					velocityAreaParameters;
+		vector< ofParameter<float> >		pVelocityArea;
+		
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		
 		// DRAW FUNCTIONS

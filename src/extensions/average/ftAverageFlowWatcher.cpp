@@ -40,7 +40,7 @@ namespace flowTools {
 	void ftAverageFlowWatcher::update(ofFloatPixels& _pixels)  {
 		ftAverageFlow::update(_pixels);
 		
-		float eV = normalizedMagnitude;
+		float eV = magnitude;
 		if (!magnitudeEvent) {
 			if (eV < magnitudeInActiveLow) { magnitudeInActiveLow = eV; }
 			
@@ -61,13 +61,13 @@ namespace flowTools {
 		pMagnitudeEvent = magnitudeEvent;
 		
 		for (int i=0; i<numChannels; i++) {
-			eV = fabs(components[i]);
+			eV = fabs(velocity[i]);
 			if (componentEvents[i] == 0) {
 				if (eV < componentInActiveLows[i]) { componentInActiveLows[i] = eV; }
 				
-				if (eV > componentInActiveLows [i] + pThreshold.get() && eV > normalizedMagnitude * pBase.get()) {
+				if (eV > componentInActiveLows [i] + pThreshold.get() && eV > magnitude * pBase.get()) {
 					
-					componentEvents[i] = (components[i] > 0)? 1 : -1;
+					componentEvents[i] = (velocity[i] > 0)? 1 : -1;
 					componentActiveHighs[i] = eV;
 				}
 			}
@@ -90,7 +90,7 @@ namespace flowTools {
 			for (int i=0; i<graphSize-1; i++) {
 				baseMesh.setVertex(i, glm::vec3(baseMesh.getVertex(i).x, baseMesh.getVertex(i+1).y, 0));
 			}
-			float b = (type == FT_VELOCITY_SPLIT)? 1.0 - normalizedMagnitude * pBase.get() : 0.5 + normalizedMagnitude * pBase.get() * -.5;
+			float b = (type == FT_VELOCITY_SPLIT)? 1.0 - magnitude * pBase.get() : 0.5 + magnitude * pBase.get() * -.5;
 			baseMesh.setVertex(graphSize-1, glm::vec3(baseMesh.getVertex(graphSize-1).x, b, 0));
 			// DRAW EVENTS HERE
 		}
@@ -119,9 +119,9 @@ namespace flowTools {
 		
 //
 //			ofSetColor(magnitudeColor);
-//			ofDrawLine(_w - 4, (1 - prevNormalizedMagnitude) * halfH, _w, (1 - normalizedMagnitude) * halfH);
-//			ofDrawLine(_w - 4, 1 + (1 - prevNormalizedMagnitude) * halfH, _w, 1 + (1 - normalizedMagnitude) * halfH);
-//			prevNormalizedMagnitude = normalizedMagnitude;
+//			ofDrawLine(_w - 4, (1 - prevnormalizedMeanMagnitude) * halfH, _w, (1 - normalizedMeanMagnitude) * halfH);
+//			ofDrawLine(_w - 4, 1 + (1 - prevnormalizedMeanMagnitude) * halfH, _w, 1 + (1 - normalizedMeanMagnitude) * halfH);
+//			prevnormalizedMeanMagnitude = normalizedMeanMagnitude;
 //			if (getMagnitudeEvent()) {
 //				ofSetColor(ofFloatColor(magnitudeColor.r, magnitudeColor.g, magnitudeColor.b, .75));
 //				if (type != FT_VELOCITY_SPLIT) {

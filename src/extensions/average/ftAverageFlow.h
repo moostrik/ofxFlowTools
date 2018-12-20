@@ -80,13 +80,13 @@ namespace flowTools {
 		// DRAW FUNCTIONS
 		int 					graphSize;
 		ofMesh					magnitudeMesh;
-		vector< ofMesh >		componentMeshes;
+		vector< ofMesh >		velocityMeshes;
 		
 		ofFloatColor			magnitudeColor;
-		vector<ofFloatColor>	componentColors;
+		vector<ofFloatColor>	velocityColors;
 		bool 					bUpdateVisualizer;
 		
-		void					setupDraw();
+		virtual void			setupDraw();
 		virtual void			drawBackground(int _x, int _y, int _w, int _h);
 		virtual void			drawGraph(int _x, int _y, int _w, int _h);
 		virtual void			drawGraphOverlay(int _x, int _y, int _w, int _h);

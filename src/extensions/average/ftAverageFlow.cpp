@@ -23,10 +23,10 @@ namespace flowTools {
 		
 		// move draw graph out of average;
 		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
-		componentColors.push_back(ofFloatColor(1.0, 0.0, 1.0, 1.));
-		componentColors.push_back(ofFloatColor(0.0, 1.0, 1.0, 1.));
-		componentColors.push_back(ofFloatColor(0.5, 1.0, 0.0, 1.));
-		componentColors.push_back(ofFloatColor(1.0, 0.5, 0.0, 1.));
+		velocityColors.push_back(ofFloatColor(1.0, 0.0, 1.0, 1.));
+		velocityColors.push_back(ofFloatColor(0.0, 1.0, 1.0, 1.));
+		velocityColors.push_back(ofFloatColor(0.5, 1.0, 0.0, 1.));
+		velocityColors.push_back(ofFloatColor(1.0, 0.5, 0.0, 1.));
 		
 		outputFbo.allocate(_width, _height);
 		bUpdateVisualizer = false;
@@ -41,7 +41,7 @@ namespace flowTools {
 		string name = "average " + ftFlowForceNames[type];
 		if (averageFlowCount > 1) name += " " + ofToString(averageFlowCount - 1);
 		parameters.setName(name);
-		parameters.add(pMagnitudeNormalization.set("mag normalization", .025, .01, .1));
+		parameters.add(pMagnitudeNormalization.set("mag normalization", .025, .01, 1));
 		parameters.add(pAreaNormalization.set("area normalization", .1, .01, 1));
 		if (type == FT_VELOCITY_SPLIT) {
 			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
@@ -126,6 +126,7 @@ namespace flowTools {
 		}
 		
 		magnitude = accumulate(pixelMagnitudes.begin(), pixelMagnitudes.end(), 0.0) / (float)pixelMagnitudes.size();
+		magnitude *= 4.0; // magnitude / 255 * 1000
 		magnitude /= pMagnitudeNormalization.get();
 		magnitude = ofClamp(magnitude, 0, 1);
 		
@@ -266,14 +267,14 @@ namespace flowTools {
 		magnitudeMesh.addVertices(vertices);
 		magnitudeMesh.addColors(colors);
 		
-		componentMeshes.resize(numChannels);
+		velocityMeshes.resize(numChannels);
 		for (int i=0; i<numChannels; i++) {
-			componentMeshes[i].setMode(OF_PRIMITIVE_LINE_STRIP);
-			componentMeshes[i].addIndices(indices);
-			componentMeshes[i].addVertices(vertices);
+			velocityMeshes[i].setMode(OF_PRIMITIVE_LINE_STRIP);
+			velocityMeshes[i].addIndices(indices);
+			velocityMeshes[i].addVertices(vertices);
 			colors.clear();
-			colors.resize(graphSize, componentColors[i]);
-			componentMeshes[i].addColors(colors);
+			colors.resize(graphSize, velocityColors[i]);
+			velocityMeshes[i].addColors(colors);
 		}
 	}
 	
@@ -318,21 +319,21 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftAverageFlow::drawGraph(int _x, int _y, int _w, int _h) {
 		if (bUpdateVisualizer) {
+			bUpdateVisualizer = false;
 			
 			for (int i=0; i<graphSize-1; i++) {
 				magnitudeMesh.setVertex(i, glm::vec3(magnitudeMesh.getVertex(i).x, magnitudeMesh.getVertex(i+1).y, 0));
 				for (int j=0; j<numChannels; j++) {
-					componentMeshes[j].setVertex(i, glm::vec3(componentMeshes[j].getVertex(i).x, componentMeshes[j].getVertex(i+1).y, 0));
+					velocityMeshes[j].setVertex(i, glm::vec3(velocityMeshes[j].getVertex(i).x, velocityMeshes[j].getVertex(i+1).y, 0));
 				}
 			}
 			float m = (type == FT_VELOCITY_SPLIT)? 1.0 - magnitude : 0.5 + magnitude * -.5;
 			magnitudeMesh.setVertex(graphSize-1, glm::vec3(magnitudeMesh.getVertex(graphSize-1).x, m, 0));
 			for (int i=0; i<numChannels; i++) {
 				float c = (type == FT_VELOCITY_SPLIT)? 1.0 - velocity[i] : 0.5 + velocity[i] * -.5;
-				componentMeshes[i].setVertex(graphSize-1, glm::vec3(componentMeshes[i].getVertex(graphSize-1).x, c, 0));
+				velocityMeshes[i].setVertex(graphSize-1, glm::vec3(velocityMeshes[i].getVertex(graphSize-1).x, c, 0));
 			}
 		}
-		bUpdateVisualizer = false;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -341,7 +342,7 @@ namespace flowTools {
 		ofScale(_w, _h);
 		magnitudeMesh.draw();
 		for (int c=0; c<numChannels; c++) {
-			componentMeshes[c].draw();
+			velocityMeshes[c].draw();
 		}
 		ofPopView();
 		
@@ -365,7 +366,7 @@ namespace flowTools {
 		yOffset += yStep;
 		
 		for (int i=0; i<numChannels; i++) {
-			ofSetColor(componentColors[i]);
+			ofSetColor(velocityColors[i]);
 			ofDrawBitmapString(ftUtil::getComponentName(type, i), 5, yOffset);
 			yOffset += yStep;
 		}

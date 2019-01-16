@@ -24,9 +24,9 @@ namespace flowTools {
 		void		setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
 		float		getMagnitude()				{ return magnitude; }
-		float		getMagnitudeArea()			{ return magnitudeArea; }
+//		float		getMagnitudeArea()			{ return magnitudeArea; }
 		vector<float>	getVelocity()			{ return velocity; }
-		vector<float>	getVelocityArea()		{ return velocityArea; }
+//		vector<float>	getVelocityArea()		{ return velocityArea; }
 
 		int			getNumChannels()			{ return numChannels; }
 		int			getWidth()					{ return inputWidth; }
@@ -54,10 +54,10 @@ namespace flowTools {
 		vector<float>	pixelMagnitudes;
 		
 		float			magnitude;
-		float			magnitudeArea;
+//		float			magnitudeArea;
 		
 		vector<float>	velocity;
-		vector<float>	velocityArea;
+//		vector<float>	velocityArea;
 		
 		void			getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		
@@ -69,11 +69,11 @@ namespace flowTools {
 		ofParameterGroup					roiParameters;
 		vector< ofParameter<float> >		pRoi;
 		ofParameter<float>					pMagnitude;
-		ofParameter<float>					pMagnitudeArea;
+//		ofParameter<float>					pMagnitudeArea;
 		ofParameterGroup					velocityParameters;
 		vector< ofParameter<float> >		pVelocity;
-		ofParameterGroup					velocityAreaParameters;
-		vector< ofParameter<float> >		pVelocityArea;
+//		ofParameterGroup					velocityAreaParameters;
+//		vector< ofParameter<float> >		pVelocityArea;
 		
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
 		

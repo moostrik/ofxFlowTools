@@ -19,7 +19,7 @@ namespace flowTools {
 		pixelMagnitudes.resize(inputWidth * inputHeight, 0);
 		magnitude = 0;
 		velocity.resize(numChannels, 0);
-		velocityArea.resize(numChannels, 0);
+//		velocityArea.resize(numChannels, 0);
 		
 		// move draw graph out of average;
 		magnitudeColor = ofFloatColor(1, 1, 1, 1.);
@@ -61,10 +61,10 @@ namespace flowTools {
 		
 		
 		parameters.add(pMagnitude.set("magnitude", 0, 0, 1));
-		parameters.add(pMagnitudeArea.set("magnitude area", 0, 0, 1));
+//		parameters.add(pMagnitudeArea.set("magnitude area", 0, 0, 1));
 		
 		pVelocity.resize(numChannels);
-		pVelocityArea.resize(numChannels);
+//		pVelocityArea.resize(numChannels);
 		if (numChannels > 1) {
 			velocityParameters.setName("velocity");
 			for (int i=0; i<numChannels; i++) {
@@ -75,16 +75,16 @@ namespace flowTools {
 			parameters.add(pVelocity[0].set(ftUtil::getComponentName(type, 0), 0, -1, 1));
 		}
 		
-		pVelocityArea.resize(numChannels);
-		if (numChannels > 1) {
-			velocityAreaParameters.setName("velocity area");
-			for (int i=0; i<numChannels; i++) {
-				velocityAreaParameters.add(pVelocityArea[i].set(ftUtil::getComponentName(type, i), 0, 0, 1));
-			}
-			parameters.add(velocityAreaParameters);
-		} else {
-			parameters.add(pVelocityArea[0].set(ftUtil::getComponentName(type, 0) + " area", 0, 0, 1));
-		}
+//		pVelocityArea.resize(numChannels);
+//		if (numChannels > 1) {
+//			velocityAreaParameters.setName("velocity area");
+//			for (int i=0; i<numChannels; i++) {
+//				velocityAreaParameters.add(pVelocityArea[i].set(ftUtil::getComponentName(type, i), 0, 0, 1));
+//			}
+//			parameters.add(velocityAreaParameters);
+//		} else {
+//			parameters.add(pVelocityArea[0].set(ftUtil::getComponentName(type, 0) + " area", 0, 0, 1));
+//		}
 	}
 	
 	//--------------------------------------------------------------
@@ -130,7 +130,7 @@ namespace flowTools {
 		magnitude /= pMagnitudeNormalization.get();
 		magnitude = ofClamp(magnitude, 0, 1);
 		
-		magnitudeArea = magnitudeAreaCounter / (float)numRoiPixels / pAreaNormalization;
+//		magnitudeArea = magnitudeAreaCounter / (float)numRoiPixels / pAreaNormalization;
 		
 		
 		float totalMagnitude = 0;
@@ -144,7 +144,7 @@ namespace flowTools {
 			if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
 			else { direction[i] = 0; }
 			velocity[i] = direction[i] * magnitude;
-			velocityArea[i] = componentAreaCounter[i] / (float)numRoiPixels  / pAreaNormalization;
+//			velocityArea[i] = componentAreaCounter[i] / (float)numRoiPixels  / pAreaNormalization;
 		}
 		
 		// normalize to highest component and apply boost
@@ -167,11 +167,11 @@ namespace flowTools {
 		// use only 2 decimals
 		
 		pMagnitude.set(int(magnitude * 100) / 100.0);
-		pMagnitudeArea.set(int(magnitudeArea * 100) / 100.0);
+//		pMagnitudeArea.set(int(magnitudeArea * 100) / 100.0);
 		
 		for (int i=0; i<numChannels; i++) {
 			pVelocity[i] = int(velocity[i] * 100) / 100.0;
-			pVelocityArea[i] = int(velocityArea[i] * 100) / 100.0;
+//			pVelocityArea[i] = int(velocityArea[i] * 100) / 100.0;
 		}
 		
 		bUpdateVisualizer = true;
@@ -232,18 +232,17 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftAverageFlow::reset() {
 		magnitude = 0;
-		magnitudeArea = 0;
+//		magnitudeArea = 0;
 		
 		pMagnitude.set(0);
-		pMagnitudeArea.set(0);
+//		pMagnitudeArea.set(0);
 		
 		for (int i=0; i<numChannels; i++) {
 			velocity[i] = 0;
-			velocityArea[i] = 0;
-			velocityArea[i] = 0;
+//			velocityArea[i] = 0;
 			
 			pVelocity[i] = 0;
-			pVelocityArea[i] = 0;
+//			pVelocityArea[i] = 0;
 		}
 		
 		bUpdateVisualizer = true;

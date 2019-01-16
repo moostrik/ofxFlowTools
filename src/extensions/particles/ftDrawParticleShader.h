@@ -121,7 +121,6 @@ namespace flowTools {
 			setUniformTexture("ALMSTexture", _ALMSTex, 1);
 			setUniform1f("TwinkleSpeed", _twinkleSpeed);
 			
-			bool dinges = true;
 			//glEnable(GL_POINT_SMOOTH);
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 			

@@ -20,7 +20,7 @@ namespace flowTools {
 		void		setRoi(float _x, float _y, float _width, float _height) { setRoi(ofRectangle(_x, _y, _width, _height)); }
 		void		setRoi(ofRectangle _rect);
 		
-		float		setNormalization(float _value)	{ pMagnitudeNormalization.set(_value); }
+		void		setNormalization(float _value)	{ pMagnitudeNormalization.set(_value); }
 		void		setHighComponentBoost(float _value)	{ pHighComponentBoost.set(_value); }
 
 		float		getMagnitude()				{ return magnitude; }

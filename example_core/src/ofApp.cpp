@@ -169,7 +169,7 @@ void ofApp::drawGui() {
 		deltaTimeDeque.pop_front();
 	
 	float longestTime = 0;
-	for (int i=0; i<deltaTimeDeque.size(); i++){
+	for (int i=0; i<(int)deltaTimeDeque.size(); i++){
 		if (deltaTimeDeque[i] > longestTime)
 			longestTime = deltaTimeDeque[i];
 	}

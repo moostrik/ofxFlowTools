@@ -66,7 +66,7 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	gui.add(toggleAverageDraw.set("draw average (A)", true));
-	gui.add(toggleAveragePauze.set("pauze average (P)", true));
+	gui.add(toggleAveragePauze.set("pauze average (P)", false));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
 	

@@ -8,9 +8,8 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	// on older graphics cards process all but the density on 16th resolution
-	flowWidth = densityWidth / 4;
-	flowHeight = densityHeight / 4;
+	flowWidth = densityWidth;
+	flowHeight = densityHeight;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -36,6 +35,17 @@ void ofApp::setup(){
 	setupGui();
 }
 
+void ofApp::simulationResolutionListener(int &_value){
+	densityWidth = simulationWidth;
+	densityHeight = simulationHeight;
+	flowWidth = densityWidth;
+	flowHeight = densityHeight;
+	
+	for(auto flow : flows) {
+		flow->resize(flowWidth, flowHeight, densityWidth, densityHeight);
+	}
+}
+
 //--------------------------------------------------------------
 void ofApp::setupGui() {
 	
@@ -50,6 +60,10 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
+	gui.add(simulationWidth.set("simulation width", 1280, 128, 1920));
+	gui.add(simulationHeight.set("simulation height", 720, 72, 1080));
+	simulationWidth.addListener(this, &ofApp::simulationResolutionListener);
+	simulationHeight.addListener(this, &ofApp::simulationResolutionListener);
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));

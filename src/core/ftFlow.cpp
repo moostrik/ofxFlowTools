@@ -26,6 +26,10 @@ namespace flowTools {
 		visualizationField.setup(outputWidth, outputHeight);
 	}
 	
+	void ftFlow::resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight) {
+		allocate(_inputWidth, _inputHeight, inputInternalFormat, _outputWidth, _outputHeight, outputInternalFormat);
+	}
+	
 	void ftFlow::add(ftPingPongFbo &_dstFbo, ofTexture &_srcTex, float _strength) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

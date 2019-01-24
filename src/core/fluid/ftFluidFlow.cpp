@@ -58,26 +58,29 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidFlow::setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight) {		
-		simulationWidth = _flowWidth;
-		simulationHeight = _flowHeight;
+	void ftFluidFlow::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
+		allocate(_simulationWidth, _simulationHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
+	}
+	
+	void ftFluidFlow::allocate(int _simulationWidth, int _simulationHeight, GLint _simulationInternalFormat, int _densityWidth, int _densityHeight, GLint _densityInternalFormat) {
+		simulationWidth = _simulationWidth;
+		simulationHeight = _simulationHeight;
 		densityWidth = _densityWidth;
 		densityHeight = _densityHeight;
 		
-		ftFlow::allocate(simulationWidth, simulationHeight, GL_RG32F, densityWidth, densityHeight, GL_RGBA32F);
+		ftFlow::allocate(simulationWidth, simulationHeight, _simulationInternalFormat, densityWidth, densityHeight, _densityInternalFormat);
+		
 		visualizationField.setup(simulationWidth, simulationHeight);
 		
 		temperatureFbo.allocate(simulationWidth,simulationHeight,GL_R32F);
 		ftUtil::zero(temperatureFbo);
 		pressureFbo.allocate(simulationWidth,simulationHeight,GL_R32F);
 		ftUtil::zero(pressureFbo);
-		
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
 		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
 		ftUtil::zero(obstacleOffsetFbo);
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
-		
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
 		smokeBuoyancyFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
@@ -168,10 +171,10 @@ namespace flowTools {
 		// DENSITY:
 		densityFbo.swap();
 		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
-		densityFbo.swap();
-		clampLengthShader.update(densityFbo.get(), densityFbo.getBackTexture(), sqrt(3), 1.0);
-		densityFbo.swap();
-		applyObstacleShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+//		densityFbo.swap();
+//		clampLengthShader.update(densityFbo.get(), densityFbo.getBackTexture(), sqrt(3), 1.0);
+//		densityFbo.swap();
+//		applyObstacleDensityShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture());
 		
 		ofPopStyle();
 	}
@@ -230,7 +233,12 @@ namespace flowTools {
 		ftFlow::reset();
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);
+		ftUtil::zero(divergenceFbo);
+		ftUtil::zero(vorticityVelocityFbo);
+		ftUtil::zero(vorticityConfinementFbo);
+		ftUtil::zero(smokeBuoyancyFbo);
 		ftUtil::zero(obstacleFbo);
+		ftUtil::zero(obstacleOffsetFbo);
 		
 		advectShader = ftAdvectShader();
 		diffuseShader = ftDiffuseShader();

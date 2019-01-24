@@ -22,12 +22,7 @@ namespace flowTools {
 		void setup(int _flowWidth, int _flowHeight)	{ setup(_flowWidth, _flowHeight, _flowWidth, _flowHeight); }
 			
 		void setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight){
-			ftBridgeFlow::allocate(_flowWidth, _flowHeight, _densityWidth, _densityHeight, GL_RGBA32F);
-			visibleFbo.allocate(_densityWidth, _densityHeight, GL_RGBA);
-			ftUtil::zero(visibleFbo);
-			
-			luminanceFbo.allocate(_densityWidth, _densityHeight, GL_R32F);  // should go to temperatureBridge
-			ftUtil::zero(luminanceFbo);
+			allocate(_flowWidth, _flowHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
 		};
 		
 		void update(float _deltaTime) override {
@@ -85,6 +80,15 @@ namespace flowTools {
 		ftRGB2LuminanceShader	RGB2LuminanceShader;
 		
 		ofFbo					luminanceFbo;  // should go to temperatureBridge
+		
+		void allocate(int _velocityWidth, int _velocityHeight, GLint _velocityInternalFormat, int _inOutputWidth, int _inOutputHeight, GLint _inOutputInternalFormat) override {
+			ftBridgeFlow::allocate(_velocityWidth, _velocityHeight, _velocityInternalFormat, _inOutputWidth, _inOutputHeight, _inOutputInternalFormat);
+			
+			visibleFbo.allocate(_inOutputHeight, _inOutputHeight, GL_RGBA);
+			ftUtil::zero(visibleFbo);
+			luminanceFbo.allocate(_inOutputHeight, _inOutputHeight, GL_R32F);  // should go to temperatureBridge
+			ftUtil::zero(luminanceFbo);
+		}
 	};
 }
 

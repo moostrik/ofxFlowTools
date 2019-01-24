@@ -13,11 +13,7 @@ namespace flowTools {
 	class ftOpticalFlow : public ftFlow {
 	public:
 		void setup(int _width, int _height) {
-			ftFlow::allocate(_width, _height, GL_R8, _width, _height, GL_RG32F);
-			opticalFlowFbo.allocate(_width, _height, GL_R8);
-			ftUtil::zero(opticalFlowFbo);
-			RGB2LumFbo.allocate(_width, _height, GL_R8);
-			ftUtil::zero(RGB2LumFbo);
+			allocate(_width, _height, GL_R8, _width, _height, GL_RG32F);
 			
 			bFirstFrame = true;
 			
@@ -118,5 +114,13 @@ namespace flowTools {
 		
 		ofFbo						RGB2LumFbo;
 		ftPingPongFbo				opticalFlowFbo;
+		
+		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override{
+			ftFlow::allocate(_inputWidth, _inputHeight, GL_R8, _outputWidth, _outputHeight, GL_RG32F);
+			opticalFlowFbo.allocate(_inputWidth, _inputHeight, GL_R8);
+			ftUtil::zero(opticalFlowFbo);
+			RGB2LumFbo.allocate(_inputWidth, _inputHeight, GL_R8);
+			ftUtil::zero(RGB2LumFbo);
+		}
 	};
 }

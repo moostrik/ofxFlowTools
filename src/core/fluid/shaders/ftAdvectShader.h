@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftAdvectShader : public ftShader {
 	public:
 		ftAdvectShader() {
-            bInitialized = 1;
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftAdvectShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }

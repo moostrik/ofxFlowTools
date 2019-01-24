@@ -31,7 +31,7 @@ namespace flowTools {
 										 vec2 off_x = vec2(off, 0.0);
 										 vec2 off_y = vec2(0.0, off);
 										 
-										 //calculate the gradient
+										 // calculate the gradient
 										 float gradx; float grady; float gradmag;
 										 gradx = texture2DRect(tex0, st - off_x).x - texture2DRect(tex0, st + off_x).x;
 										 grady = texture2DRect(tex0, st - off_y).x - texture2DRect(tex0, st + off_y).x;
@@ -41,7 +41,8 @@ namespace flowTools {
 										 float scr = 1.0 - texture2DRect(tex0, st).x;
 										 offset.x = scr * floor(gradx/gradmag + 0.5);
 										 offset.y = scr * floor(grady/gradmag + 0.5);
-//
+										
+										 // apply border
 										 if (st.x < 1) { offset.x = 1; }
 										 if (st.x > Width - 1.0) { offset.x = -1; }
 										 if (st.y < 1) { offset.y = 1; }

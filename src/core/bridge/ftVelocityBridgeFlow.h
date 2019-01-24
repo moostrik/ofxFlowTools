@@ -15,7 +15,7 @@ namespace flowTools {
 		}
 		
 		void setup(int _width, int _height){
-			ftBridgeFlow::allocate(_width, _height, _width, _height, GL_RG32F);
+			ftBridgeFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RG32F);
 		};
 		
 		void update(float _deltaTime) override {

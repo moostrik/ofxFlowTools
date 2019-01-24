@@ -117,7 +117,9 @@ namespace flowTools {
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
-			vorticityVelocityShader.update(vorticityVelocityFbo, velocityFbo.getTexture());
+			vorticityVelocityShader.update(vorticityVelocityFbo.get(), velocityFbo.getTexture());
+			vorticityVelocityFbo.swap();
+			applyObstacleShader.update(vorticityVelocityFbo.get(), vorticityVelocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 0.0);
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();

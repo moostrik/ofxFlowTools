@@ -33,11 +33,11 @@ namespace flowTools {
 			velocityTrailFbo.swap();
 			bridgeShader.update(velocityTrailFbo.get(), velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
 			if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo.get(), 1, blurRadius.get()); }
-			ftUtil::zero(velocityInputFbo);
+//			ftUtil::zero(velocityInputFbo);
 			ofPopStyle();
 		}
 		
-		virtual void reset() { ftFlow::reset(); ftUtil::zero(velocityTrailFbo); }
+		virtual void reset() { ftFlow::reset(); ftUtil::zero(velocityInputFbo); ftUtil::zero(velocityTrailFbo); }
 		
 		void	setTrailWeight(float value)		{ trailWeight.set(value); }
 		void	setBlurRadius(float value)		{ blurRadius.set(value); }

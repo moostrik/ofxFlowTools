@@ -143,7 +143,7 @@ namespace flowTools {
 //		}
 		
 		// PRESSURE: DIVERGENCE
-		ftUtil::zero(divergenceFbo);
+//		ftUtil::zero(divergenceFbo);
 		divergenceShader.update(divergenceFbo, velocityFbo.getTexture());
 		
 		// PRESSURE: JACOBI

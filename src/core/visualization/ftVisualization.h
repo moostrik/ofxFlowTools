@@ -29,7 +29,7 @@ namespace flowTools {
 		}
 		
 		virtual void drawScalar(ofTexture _tex, int _x, int _y, int _width, int _height) {
-			ftUtil::zero(scalarFbo);
+//			ftUtil::zero(scalarFbo);
 			toScalarShader.update(scalarFbo, _tex, pScale.get());
 			scalarFbo.draw(_x, _y, _width, _height);
 		}

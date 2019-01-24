@@ -84,9 +84,9 @@ namespace flowTools {
 		void allocate(int _velocityWidth, int _velocityHeight, GLint _velocityInternalFormat, int _inOutputWidth, int _inOutputHeight, GLint _inOutputInternalFormat) override {
 			ftBridgeFlow::allocate(_velocityWidth, _velocityHeight, _velocityInternalFormat, _inOutputWidth, _inOutputHeight, _inOutputInternalFormat);
 			
-			visibleFbo.allocate(_inOutputHeight, _inOutputHeight, GL_RGBA);
+			visibleFbo.allocate(_inOutputWidth, _inOutputHeight, GL_RGBA);
 			ftUtil::zero(visibleFbo);
-			luminanceFbo.allocate(_inOutputHeight, _inOutputHeight, GL_R32F);  // should go to temperatureBridge
+			luminanceFbo.allocate(_inOutputWidth, _inOutputHeight, GL_R32F);  // should go to temperatureBridge
 			ftUtil::zero(luminanceFbo);
 		}
 	};

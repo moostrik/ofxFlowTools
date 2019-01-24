@@ -238,7 +238,7 @@ namespace flowTools {
 		ftUtil::zero(vorticityConfinementFbo);
 		ftUtil::zero(smokeBuoyancyFbo);
 		ftUtil::zero(obstacleFbo);
-		ftUtil::zero(obstacleOffsetFbo);
+		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		
 		advectShader = ftAdvectShader();
 		diffuseShader = ftDiffuseShader();

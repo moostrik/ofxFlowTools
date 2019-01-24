@@ -16,6 +16,7 @@ namespace flowTools {
 			allocate(_width, _height, GL_R8, _width, _height, GL_RG32F);
 			
 			bFirstFrame = true;
+			bInputSet = false;
 			
 			parameters.setName("optical flow");
 			offset.set("offset", 3, 1, 10);
@@ -121,6 +122,8 @@ namespace flowTools {
 			ftUtil::zero(opticalFlowFbo);
 			RGB2LumFbo.allocate(_inputWidth, _inputHeight, GL_R8);
 			ftUtil::zero(RGB2LumFbo);
+			bFirstFrame = true;
+			bInputSet = false;
 		}
 	};
 }

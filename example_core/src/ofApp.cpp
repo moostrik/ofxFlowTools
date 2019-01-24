@@ -43,6 +43,8 @@ void ofApp::simulationResolutionListener(int &_value){
 	
 	for(auto flow : flows) {
 		flow->resize(flowWidth, flowHeight, densityWidth, densityHeight);
+		flow->setVisualizationFieldSize(128, 72);
+		flow->reset();
 	}
 }
 

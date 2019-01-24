@@ -42,7 +42,7 @@ namespace flowTools {
 		if (averageFlowCount > 1) name += " " + ofToString(averageFlowCount - 1);
 		parameters.setName(name);
 		parameters.add(pMagnitudeNormalization.set("mag normalization", .025, .01, 1));
-		parameters.add(pAreaNormalization.set("area normalization", .1, .01, 1));
+		parameters.add(pAreaNormalization.set("area normalization", .1, .001, .02));
 		if (type == FT_VELOCITY_SPLIT) {
 			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
 		}	else { pHighComponentBoost.set(0); }

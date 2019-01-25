@@ -61,16 +61,12 @@ namespace flowTools {
 									 {
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
-										 vec3 obs = texture(ObstacleOffsetTex, st2).xyz;
+										 vec4 obs = texture(ObstacleOffsetTex, st2);
 										 vec2 offset = obs.xy;// / Scale;
 										 float obstacle = obs.z;
-										 vec4 src = texture(SrcTex, st + offset);
-										 if (length(offset) > 0) {
-											 fragColor = src * vec4(obstacle * Weight);
-										 }
-										 else {
-											 fragColor = src * vec4(obstacle);
-										 }
+										 bool hasOffset = bool(obs.w);
+										 float w = mix(1, Weight, hasOffset);
+										 fragColor = texture(SrcTex, st + offset) * vec4(obstacle * w);
 									 }
 									 );
 			

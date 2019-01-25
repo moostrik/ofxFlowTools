@@ -55,13 +55,16 @@ namespace flowTools {
 //		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.75, 0.0, 1.0));
 //		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., -0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
 //		parameters.add(smokeBuoyancyParameters);
-		parameters.add(wrap.set("wrap", false));
-		wrap.addListener(this, &ftFluidFlow::wrapListener);
+//		parameters.add(wrap.set("wrap", false));
+//		wrap.addListener(this, &ftFluidFlow::wrapListener);
+		
 	}
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight) {
 		allocate(_simulationWidth, _simulationHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
+//		if(wrap.get()) { advectShader = &advectWrapShader; } else { advectShader = &advectNoWrapShader; }
+		advectShader = &advectNoWrapShader;
 	}
 	
 	void ftFluidFlow::allocate(int _simulationWidth, int _simulationHeight, GLint _simulationInternalFormat, int _densityWidth, int _densityHeight, GLint _densityInternalFormat) {
@@ -80,7 +83,7 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
-		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
+		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
 		ftUtil::zero(obstacleOffsetFbo);
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
@@ -177,8 +180,8 @@ namespace flowTools {
 		advectShader->update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
 //		densityFbo.swap();
 //		clampLengthShader.update(densityFbo.get(), densityFbo.getBackTexture(), sqrt(3), 1.0);
-//		densityFbo.swap();
-//		applyObstacleDensityShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture());
+		densityFbo.swap();
+		applyObstacleDensityShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture());
 		
 		ofPopStyle();
 	}
@@ -213,19 +216,20 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::initObstacle(){
-		if (wrap.get()) {
-			ftUtil::zero(obstacleFbo);
-		}
-		else { // create edge
+//		if (wrap.get()) {
+//			ftUtil::zero(obstacleFbo);
+//		}
+//		else { // create edge
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftUtil::one(obstacleFbo);
 			obstacleFbo.begin();
 			ofSetColor(0,0,0,255);
-			ofDrawRectangle(1, 1, obstacleFbo.getWidth()-2, obstacleFbo.getHeight()-2);
+			int borderSize = 2;
+			ofDrawRectangle(borderSize, borderSize, obstacleFbo.getWidth()-borderSize*2, obstacleFbo.getHeight()-borderSize*2);
 			obstacleFbo.end();
 			ofPopStyle();
-		}
+//		}
 		
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 	}
@@ -264,11 +268,6 @@ namespace flowTools {
 		
 		initObstacle();
 		
-		diffuseShader = ftDiffuseShader();
-		divergenceShader = ftDivergenceShader();
 		jacobiShader = ftJacobiShader();
-		substractGradientShader = ftSubstractGradientShader();
-		obstacleOffsetShader = ftObstacleOffsetShader();
-		applyObstacleShader = ftApplyObstacleShader();
 	}
 }

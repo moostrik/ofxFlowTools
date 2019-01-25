@@ -18,7 +18,7 @@ namespace flowTools {
 		}
 		
 	protected:
-		void glTwo() override {
+		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Backbuffer;
 									 uniform sampler2DRect Velocity;
@@ -41,7 +41,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-		void glThree() override {
+		void glThree() {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect Backbuffer;
 									 uniform sampler2DRect Velocity;
@@ -70,7 +70,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, float _timeStep, float _dissipation) override {
+		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, float _timeStep, float _dissipation) {
 			_fbo.begin();
 			begin();
 			setUniform1f("TimeStep", _timeStep);

@@ -17,7 +17,7 @@
 #include "ftAddBooleanShader.h"
 #include "ftObstacleOffsetShader.h"
 #include "ftApplyObstacleShader.h"
-//#include "ftApplyObstacleDensityShader.h"
+#include "ftApplyObstacleDensityShader.h"
 
 #include "ftMultiplyForceShader.h"
 #include "ftClampLengthShader.h"
@@ -112,8 +112,8 @@ namespace flowTools {
 		ofParameter<float>			smokeWeight;
 		ofParameter<float>			ambientTemperature;
 		ofParameter<glm::vec2>		gravity;
-		ofParameter<bool>			wrap;
-		void wrapListener(bool &_value) { if(_value) { advectShader = &advectWrapShader; } else { advectShader = &advectNoWrapShader; } initObstacle(); }
+//		ofParameter<bool>			wrap;
+//		void wrapListener(bool &_value) { if(_value) { advectShader = &advectWrapShader; } else { advectShader = &advectNoWrapShader; } initObstacle(); }
 		
 		ftAdvectShader				advectNoWrapShader;
 		ftAdvectWrapShader			advectWrapShader;
@@ -129,7 +129,7 @@ namespace flowTools {
 		ftAddBooleanShader			addBooleanShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
 		ftApplyObstacleShader		applyObstacleShader;
-//		ftApplyObstacleDensityShader		applyObstacleDensityShader;
+		ftApplyObstacleDensityShader applyObstacleDensityShader;
 		
 		ftMultiplyForceShader		multiplyForceShader;
 		ftClampLengthShader			clampLengthShader;

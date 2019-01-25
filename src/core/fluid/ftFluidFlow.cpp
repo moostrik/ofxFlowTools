@@ -164,10 +164,10 @@ namespace flowTools {
 		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), 1.0 - dissipationPrs.get());
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
-			jacobiShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture());
-			pressureFbo.swap();
-			applyObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+			jacobiObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleOffsetFbo.getTexture());
 		}
+		pressureFbo.swap();
+		applyObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
@@ -268,6 +268,6 @@ namespace flowTools {
 		
 		initObstacle();
 		
-		jacobiShader = ftJacobiShader();
+		jacobiObstacleShader = ftJacobiObstacleShader();
 	}
 }

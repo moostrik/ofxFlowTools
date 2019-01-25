@@ -3,13 +3,13 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-//	ofSetVerticalSync(false);
+	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-	densityWidth = 1280;
-	densityHeight = 720;
-	flowWidth = densityWidth;
-	flowHeight = densityHeight;
+	densityWidth = 1920;
+	densityHeight = 1080;
+	flowWidth = densityWidth;// / 4;
+	flowHeight = densityHeight;// / 4;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -49,10 +49,12 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
-	gui.add(simulationWidth.set("simulation width", 1280, 128, 1920));
-	gui.add(simulationHeight.set("simulation height", 720, 72, 1080));
-	simulationWidth.addListener(this, &ofApp::simulationResolutionListener);
-	simulationHeight.addListener(this, &ofApp::simulationResolutionListener);
+	gui.add(outputWidth.set("output width", 1280, 128, 1920));
+	gui.add(outputHeight.set("output height", 720, 72, 1080));
+	gui.add(simulationScale.set("simulation scale", 4, 1, 8));
+	outputWidth.addListener(this, &ofApp::simulationResolutionListener);
+	outputHeight.addListener(this, &ofApp::simulationResolutionListener);
+	simulationScale.addListener(this, &ofApp::simulationResolutionListener);
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
@@ -139,7 +141,7 @@ void ofApp::draw(){
 		case BRIDGE_TMP:	break;
 		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
-		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluidFlow.drawObstacleOffset(0, 0, windowWidth, windowHeight); break;
 		case FLUID_VORT:	fluidFlow.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
 		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
 		case FLUID_TMP:		fluidFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
@@ -216,15 +218,16 @@ void ofApp::toggleResetListener(bool& _value) {
 }
 
 void ofApp::simulationResolutionListener(int &_value){
-	densityWidth = simulationWidth;
-	densityHeight = simulationHeight;
-	flowWidth = densityWidth;
-	flowHeight = densityHeight;
+	densityWidth = outputWidth;
+	densityHeight = outputHeight;
+	flowWidth = densityWidth / simulationScale;
+	flowHeight = densityHeight / simulationScale;
 	
-	for(auto flow : flows) {
-		flow->resize(flowWidth, flowHeight, densityWidth, densityHeight);
-		flow->setVisualizationFieldSize(128, 72);
-	}
-	toggleReset.set(true);
+	opticalFlow.resize(flowWidth, flowHeight);
+	velocityBridgeFlow.resize(flowWidth, flowHeight);
+	densityBridgeFlow.resize(flowWidth, flowHeight);
+	
+	fluidFlow.resize(flowWidth, flowHeight, densityWidth, densityHeight);
+	fluidFlow.addObstacle(flowToolsLogo.getTexture());
 }
 

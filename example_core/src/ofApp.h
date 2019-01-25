@@ -27,8 +27,9 @@ public:
 	
 	ofImage					flowToolsLogo;
 	
-	ofParameter<int>		simulationWidth;
-	ofParameter<int>		simulationHeight;
+	ofParameter<int>		outputWidth;
+	ofParameter<int>		outputHeight;
+	ofParameter<int>		simulationScale;
 	void simulationResolutionListener(int &_value);
 	
 	ofParameterGroup		visualizationParameters;

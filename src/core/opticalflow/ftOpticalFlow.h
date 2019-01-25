@@ -117,7 +117,7 @@ namespace flowTools {
 		ftPingPongFbo				opticalFlowFbo;
 		
 		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override{
-			ftFlow::allocate(_inputWidth, _inputHeight, GL_R8, _outputWidth, _outputHeight, GL_RG32F);
+			ftFlow::allocate(_inputWidth, _inputHeight, GL_R8, _inputWidth, _inputHeight, GL_RG32F);
 			opticalFlowFbo.allocate(_inputWidth, _inputHeight, GL_R8);
 			ftUtil::zero(opticalFlowFbo);
 			RGB2LumFbo.allocate(_inputWidth, _inputHeight, GL_R8);

@@ -11,20 +11,21 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	flowWidth = densityWidth;
-	flowHeight = densityHeight;
+	simulationWidth = densityWidth;
+	simulationHeight = densityHeight;
 	// process the average on 16th resolution
 	avgWidth = densityWidth / 4;
 	avgHeight = densityHeight / 4;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
-	opticalFlow.setup(flowWidth, flowHeight);
-	velocityBridgeFlow.setup(flowWidth, flowHeight);
-	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	opticalFlow.setup(simulationWidth, simulationHeight);
+	velocityBridgeFlow.setup(simulationWidth, simulationHeight);
+	densityBridgeFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
+	temperatureBridgeFlow.setup(simulationWidth, simulationHeight);
+	fluidFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
-	velocityMouseFlow.setup(flowWidth, flowHeight, FT_VELOCITY);
+	velocityMouseFlow.setup(simulationWidth, simulationHeight, FT_VELOCITY);
 	pixelFlow.setup(avgWidth, avgHeight, FT_VELOCITY);
 	averageFlows.resize(numRegios);
 	for (int i=0; i<numRegios; i++) {
@@ -35,12 +36,13 @@ void ofApp::setup(){
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
+	flows.push_back(&temperatureBridgeFlow);
 	flows.push_back(&fluidFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
 	for (auto& f : averageFlows) { flows.push_back(&f); }
 	
-	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(flowWidth / 2, flowHeight / 2)); }
+	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(simulationWidth / 2, simulationHeight / 2)); }
 	
 	mouseFlows.push_back(&densityMouseFlow);
 	mouseFlows.push_back(&velocityMouseFlow);
@@ -143,10 +145,13 @@ void ofApp::update(){
 	densityBridgeFlow.setDensity(cameraFbo.getTexture());
 	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
 	densityBridgeFlow.update(dt);
+	temperatureBridgeFlow.setDensity(cameraFbo.getTexture());
+	temperatureBridgeFlow.setVelocity(opticalFlow.getVelocity());
+	temperatureBridgeFlow.update(dt);
 	
 	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
-	fluidFlow.addTemperature(densityBridgeFlow.getTemperature());
+	fluidFlow.addTemperature(temperatureBridgeFlow.getTemperature());
 	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	
@@ -176,7 +181,7 @@ void ofApp::draw(){
 		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_VEL:	velocityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_DEN:	densityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_TMP:	break;
+		case BRIDGE_TMP:	temperatureBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacleOffset(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;

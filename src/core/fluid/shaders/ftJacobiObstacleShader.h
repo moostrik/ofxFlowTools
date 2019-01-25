@@ -10,6 +10,7 @@ namespace flowTools {
 	public:
 		ftJacobiObstacleShader() {
 			bInitialized = 1;
+			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftJacobiObstacleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -17,7 +18,7 @@ namespace flowTools {
 		}
 		
 	protected:
-        void glTwo() {
+		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Pressure;
 									 uniform sampler2DRect Divergence;
@@ -40,7 +41,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-        void glFour() {
+		void glThree() {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect Pressure;
 									 uniform sampler2DRect Divergence;
@@ -51,14 +52,16 @@ namespace flowTools {
 									 
 									 void main() {
 										 vec2 st = texCoordVarying;
-										 float pC = texture(Divergence, st ).x;
+										 vec2 offset = texture(Obstacle, st).xy;
+										 st+= offset;
+										 float D = texture(Divergence, st ).x;
 										 float pL = texture(Pressure, st - vec2(1, 0)).x;
 										 float pR = texture(Pressure, st + vec2(1, 0)).x;
 										 float pB = texture(Pressure, st - vec2(0, 1)).x;
 										 float pT = texture(Pressure, st + vec2(0, 1)).x;
 										 float alpha = -1;
 										 float beta = 0.25;
-										 float pres = (alpha * pC + pL + pR + pB + pT) * beta;
+										 float pres = (alpha * D + pL + pR + pB + pT) * beta;
 										 fragColor = vec4(pres, 0.0, 0.0, 0.0);
 									 }
 									 );

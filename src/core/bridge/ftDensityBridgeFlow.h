@@ -32,7 +32,8 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			resetOutput();
 
-			densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), _deltaTime * speed.get() * 10);
+			float timeStep = _deltaTime * speed.get() * 10;
+			densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), timeStep);
 
 			outputFbo.swap();
 			HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, saturation.get(), 1.0);

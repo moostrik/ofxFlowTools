@@ -26,7 +26,6 @@ namespace flowTools {
 			resetOutput();
 			
 			float timeStep = _deltaTime * speed.get() * 100;
-
 			multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), timeStep);
 
 			ofPopStyle();

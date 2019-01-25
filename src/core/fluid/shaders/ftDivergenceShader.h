@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftDivergenceShader : public ftShader {
 	public:
 		ftDivergenceShader() {
-            bInitialized = 1;
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftDivergenceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }

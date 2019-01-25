@@ -60,26 +60,27 @@ namespace flowTools {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect	tex0;
 									 
-									 uniform int Width;
-									 uniform int Height;
+									 uniform vec2 Scale;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
 									 void main() {
 										 vec2 st = texCoordVarying;
+										 vec2 st2 = st * Scale;
+										 
 										 float off = 1;
 										 vec2 off_x = vec2(off, 0.0);
 										 vec2 off_y = vec2(0.0, off);
 										 
 										 //calculate the gradient
 										 float gradx; float grady; float gradmag;
-										 gradx = texture(tex0, st - off_x).x - texture(tex0, st + off_x).x;
-										 grady = texture(tex0, st - off_y).x - texture(tex0, st + off_y).x;
+										 gradx = texture(tex0, st2 - off_x).x - texture(tex0, st2 + off_x).x;
+										 grady = texture(tex0, st2 - off_y).x - texture(tex0, st2 + off_y).x;
 										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
 										 
 										 vec2 offset;
-										 float invSolid = 1.0 - texture(tex0, st).x;
+										 float invSolid = 1.0 - texture(tex0, st2).x;
 										 offset.x = invSolid * round(gradx/gradmag);
 										 offset.y = invSolid * round(grady/gradmag);
 										 float hasOffset = ceil(length(offset));
@@ -105,8 +106,7 @@ namespace flowTools {
 			_fbo.begin();
 			begin();
 			setUniformTexture("tex0", _tex, 0);
-			setUniform1i("Width", _fbo.getWidth());
-			setUniform1i("Height", _fbo.getHeight());
+			setUniform2f("Scale", _tex.getWidth() / _fbo.getWidth(), _tex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

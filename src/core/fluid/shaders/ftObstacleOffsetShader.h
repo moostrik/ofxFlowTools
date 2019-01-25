@@ -43,10 +43,10 @@ namespace flowTools {
 										 offset.y = scr * floor(grady/gradmag + 0.5);
 										
 										 // apply border
-										 if (st.x < 1) { offset.x = 1; }
-										 if (st.x > Width - 1.0) { offset.x = -1; }
-										 if (st.y < 1) { offset.y = 1; }
-										 if (st.y > Height - 1.0) { offset.y = -1; }
+//										 if (st.x < 1) { offset.x = 1; }
+//										 if (st.x > Width - 1.0) { offset.x = -1; }
+//										 if (st.y < 1) { offset.y = 1; }
+//										 if (st.y > Height - 1.0) { offset.y = -1; }
 
 										 gl_FragColor = vec4(offset, scr, 0.0);
 									 }
@@ -83,10 +83,11 @@ namespace flowTools {
 										 offset.x = scr * round(gradx/gradmag);
 										 offset.y = scr * round(grady/gradmag);
 										 
-										 if (st.x < 1) { offset.x = 1; }
-										 if (st.x > Width - 1.0) { offset.x = -1; }
-										 if (st.y < 1) { offset.y = 1; }
-										 if (st.y > Height - 1.0) { offset.y = -1; }
+										 // apply border
+//										 if (st.x < 1) { offset.x = 1; }
+//										 if (st.x > Width - 1.0) { offset.x = -1; }
+//										 if (st.y < 1) { offset.y = 1; }
+//										 if (st.y > Height - 1.0) { offset.y = -1; }
 										 
 										 fragColor = vec4(offset, scr, 0.0);
 									 }

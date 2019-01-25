@@ -141,7 +141,7 @@ namespace flowTools {
 		int simulationWidth, simulationHeight, densityWidth, densityHeight;
 		
 		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override ;
-		
+		void initObstacle();
 		
 	};
 }

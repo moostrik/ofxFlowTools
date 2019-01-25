@@ -90,6 +90,8 @@ namespace flowTools {
 		vorticityConfinementFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
 		ftUtil::zero(pressureFbo);
 		
+		initObstacle();
+		
 	}
 	
 	//--------------------------------------------------------------
@@ -208,10 +210,24 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
+	void ftFluidFlow::initObstacle(){
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			ftUtil::one(obstacleFbo);
+			obstacleFbo.begin();
+			ofSetColor(0,0,0,255);
+			ofDrawRectangle(1, 1, obstacleFbo.getWidth()-2, obstacleFbo.getHeight()-2);
+			obstacleFbo.end();
+			ofPopStyle();
+		
+		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+	}
+	
+	//--------------------------------------------------------------
 	void ftFluidFlow::setObstacle(ofTexture & _tex){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-		ftUtil::zero(obstacleFbo);
+		initObstacle();
 		addBooleanShader.update(obstacleFbo.get(), obstacleFbo.getBackTexture(), _tex);
 		ftUtil::zero(obstacleOffsetFbo);
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
@@ -237,10 +253,9 @@ namespace flowTools {
 		ftUtil::zero(vorticityVelocityFbo);
 		ftUtil::zero(vorticityConfinementFbo);
 		ftUtil::zero(smokeBuoyancyFbo);
-		ftUtil::zero(obstacleFbo);
-		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		
-		advectShader = ftAdvectShader();
+		initObstacle();
+		
 		diffuseShader = ftDiffuseShader();
 		divergenceShader = ftDivergenceShader();
 		jacobiShader = ftJacobiShader();

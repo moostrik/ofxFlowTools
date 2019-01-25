@@ -35,19 +35,6 @@ void ofApp::setup(){
 	setupGui();
 }
 
-void ofApp::simulationResolutionListener(int &_value){
-	densityWidth = simulationWidth;
-	densityHeight = simulationHeight;
-	flowWidth = densityWidth;
-	flowHeight = densityHeight;
-	
-	for(auto flow : flows) {
-		flow->resize(flowWidth, flowHeight, densityWidth, densityHeight);
-		flow->setVisualizationFieldSize(128, 72);
-		flow->reset();
-	}
-}
-
 //--------------------------------------------------------------
 void ofApp::setupGui() {
 	
@@ -226,5 +213,18 @@ void ofApp::toggleResetListener(bool& _value) {
 		fluidFlow.addObstacle(flowToolsLogo.getTexture());
 	}
 	_value = false;
+}
+
+void ofApp::simulationResolutionListener(int &_value){
+	densityWidth = simulationWidth;
+	densityHeight = simulationHeight;
+	flowWidth = densityWidth;
+	flowHeight = densityHeight;
+	
+	for(auto flow : flows) {
+		flow->resize(flowWidth, flowHeight, densityWidth, densityHeight);
+		flow->setVisualizationFieldSize(128, 72);
+	}
+	toggleReset.set(true);
 }
 

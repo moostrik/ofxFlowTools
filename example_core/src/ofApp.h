@@ -17,7 +17,7 @@ public:
 	void	draw();
 	void	keyPressed(int key);
 	
-	int		densityWidth, densityHeight, flowWidth, flowHeight, windowWidth, windowHeight;
+	int		densityWidth, densityHeight, simulationWidth, simulationHeight, windowWidth, windowHeight;
 	
 	vector< ftFlow* >		flows;
 	ftOpticalFlow			opticalFlow;

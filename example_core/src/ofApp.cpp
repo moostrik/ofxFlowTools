@@ -8,16 +8,16 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	flowWidth = densityWidth / 2;
-	flowHeight = densityHeight / 2;
+	simulationWidth = densityWidth / 2;
+	simulationHeight = densityHeight / 2;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
-	opticalFlow.setup(flowWidth, flowHeight);
-	velocityBridgeFlow.setup(flowWidth, flowHeight);
-	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
-	temperatureBridgeFlow.setup(flowWidth, flowHeight);
-	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	opticalFlow.setup(simulationWidth, simulationHeight);
+	velocityBridgeFlow.setup(simulationWidth, simulationHeight);
+	densityBridgeFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
+	temperatureBridgeFlow.setup(simulationWidth, simulationHeight);
+	fluidFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
@@ -225,15 +225,15 @@ void ofApp::toggleResetListener(bool& _value) {
 void ofApp::simulationResolutionListener(int &_value){
 	densityWidth = outputWidth;
 	densityHeight = outputHeight;
-	flowWidth = densityWidth / simulationScale;
-	flowHeight = densityHeight / simulationScale;
+	simulationWidth = densityWidth / simulationScale;
+	simulationHeight = densityHeight / simulationScale;
 	
-	opticalFlow.resize(flowWidth, flowHeight);
-	velocityBridgeFlow.resize(flowWidth, flowHeight);
-	densityBridgeFlow.resize(flowWidth, flowHeight, densityWidth, densityHeight);
-	temperatureBridgeFlow.resize(flowWidth, flowHeight);
+	opticalFlow.resize(simulationWidth, simulationHeight);
+	velocityBridgeFlow.resize(simulationWidth, simulationHeight);
+	densityBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+	temperatureBridgeFlow.resize(simulationWidth, simulationHeight);
 	
-	fluidFlow.resize(flowWidth, flowHeight, densityWidth, densityHeight);
+	fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	fluidFlow.addObstacle(flowToolsLogo.getTexture());
 }
 

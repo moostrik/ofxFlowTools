@@ -19,10 +19,10 @@ namespace flowTools {
 			//		parameters.add(hue.set("hue", 0, -.5, .5));
 		}
 		
-		void setup(int _flowWidth, int _flowHeight)	{ setup(_flowWidth, _flowHeight, _flowWidth, _flowHeight); }
+		void setup(int _simulationWidth, int _simulationHeight)	{ setup(_simulationWidth, _simulationHeight, _simulationWidth, _simulationHeight); }
 			
-		void setup(int _flowWidth, int _flowHeight, int _densityWidth, int _densityHeight){
-			allocate(_flowWidth, _flowHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
+		void setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight){
+			allocate(_simulationWidth, _simulationHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
 		};
 		
 		void update(float _deltaTime) override {

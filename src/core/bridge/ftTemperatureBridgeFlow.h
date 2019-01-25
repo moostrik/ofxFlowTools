@@ -16,8 +16,8 @@ namespace flowTools {
 			speed.setMin(-1);
 		}
 		
-		void setup(int _flowWidth, int _flowHeight)	{
-			allocate(_flowWidth, _flowHeight, GL_RG32F, _flowWidth, _flowHeight, GL_R32F);
+		void setup(int _simulationWidth, int _simulationHeight)	{
+			allocate(_simulationWidth, _simulationHeight, GL_RG32F, _simulationWidth, _simulationHeight, GL_R32F);
 		};
 		
 		void update(float _deltaTime) override {

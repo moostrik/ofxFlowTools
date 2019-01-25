@@ -160,9 +160,9 @@ namespace flowTools {
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
 			jacobiShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture());
+			pressureFbo.swap();
+			applyObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		}
-		pressureFbo.swap();
-		applyObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();

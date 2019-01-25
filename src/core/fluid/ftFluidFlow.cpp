@@ -55,6 +55,8 @@ namespace flowTools {
 //		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.75, 0.0, 1.0));
 //		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., -0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
 //		parameters.add(smokeBuoyancyParameters);
+		parameters.add(wrap.set("wrap", false));
+		wrap.addListener(this, &ftFluidFlow::wrapListener);
 	}
 	
 	//--------------------------------------------------------------
@@ -106,7 +108,7 @@ namespace flowTools {
 		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), timeStep, 1.0 - dissipationVel.get());
+		advectShader->update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), timeStep, 1.0 - dissipationVel.get());
 		velocityFbo.swap();
 		applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
 		
@@ -172,7 +174,7 @@ namespace flowTools {
 		
 		// DENSITY:
 		densityFbo.swap();
-		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
+		advectShader->update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), timeStep, 1.0 - dissipationDen.get());
 //		densityFbo.swap();
 //		clampLengthShader.update(densityFbo.get(), densityFbo.getBackTexture(), sqrt(3), 1.0);
 //		densityFbo.swap();
@@ -211,6 +213,10 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::initObstacle(){
+		if (wrap.get()) {
+			ftUtil::zero(obstacleFbo);
+		}
+		else { // create edge
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			ftUtil::one(obstacleFbo);
@@ -219,6 +225,7 @@ namespace flowTools {
 			ofDrawRectangle(1, 1, obstacleFbo.getWidth()-2, obstacleFbo.getHeight()-2);
 			obstacleFbo.end();
 			ofPopStyle();
+		}
 		
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 	}
@@ -246,6 +253,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::reset() {
+		
 		ftFlow::reset();
 		ftUtil::zero(pressureFbo);
 		ftUtil::zero(temperatureFbo);

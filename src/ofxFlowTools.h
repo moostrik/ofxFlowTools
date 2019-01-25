@@ -38,6 +38,7 @@
 #include "ftOpticalFlow.h"
 #include "ftVelocityBridgeFlow.h"
 #include "ftDensityBridgeFlow.h"
+#include "ftTemperatureBridgeFlow.h"
 #include "ftFluidFlow.h"
 
 // EXTENTION

@@ -23,6 +23,7 @@ public:
 	ftOpticalFlow			opticalFlow;
 	ftVelocityBridgeFlow	velocityBridgeFlow;
 	ftDensityBridgeFlow		densityBridgeFlow;
+	ftTemperatureBridgeFlow temperatureBridgeFlow;
 	ftFluidFlow				fluidFlow;
 	
 	ofImage					flowToolsLogo;

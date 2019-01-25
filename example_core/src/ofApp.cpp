@@ -6,21 +6,23 @@ void ofApp::setup(){
 	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
-	densityWidth = 1920;
-	densityHeight = 1080;
-	flowWidth = densityWidth;// / 4;
-	flowHeight = densityHeight;// / 4;
+	densityWidth = 1280;
+	densityHeight = 720;
+	flowWidth = densityWidth / 2;
+	flowHeight = densityHeight / 2;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
 	opticalFlow.setup(flowWidth, flowHeight);
 	velocityBridgeFlow.setup(flowWidth, flowHeight);
 	densityBridgeFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
+	temperatureBridgeFlow.setup(flowWidth, flowHeight);
 	fluidFlow.setup(flowWidth, flowHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&velocityBridgeFlow);
 	flows.push_back(&densityBridgeFlow);
+	flows.push_back(&temperatureBridgeFlow);
 	flows.push_back(&fluidFlow);
 	
 	flowToolsLogo.load("flowtools.png");
@@ -51,7 +53,7 @@ void ofApp::setupGui() {
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
 	gui.add(outputWidth.set("output width", 1280, 128, 1920));
 	gui.add(outputHeight.set("output height", 720, 72, 1080));
-	gui.add(simulationScale.set("simulation scale", 4, 1, 8));
+	gui.add(simulationScale.set("simulation scale", 2, 1, 8));
 	outputWidth.addListener(this, &ofApp::simulationResolutionListener);
 	outputHeight.addListener(this, &ofApp::simulationResolutionListener);
 	simulationScale.addListener(this, &ofApp::simulationResolutionListener);
@@ -113,10 +115,13 @@ void ofApp::update(){
 	densityBridgeFlow.setDensity(cameraFbo.getTexture());
 	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
 	densityBridgeFlow.update(dt);
+	temperatureBridgeFlow.setDensity(cameraFbo.getTexture());
+	temperatureBridgeFlow.setVelocity(opticalFlow.getVelocity());
+	temperatureBridgeFlow.update(dt);
 	
 	fluidFlow.addVelocity(velocityBridgeFlow.getVelocity());
 	fluidFlow.addDensity(densityBridgeFlow.getDensity());
-	fluidFlow.addTemperature(densityBridgeFlow.getLuminance());
+	fluidFlow.addTemperature(temperatureBridgeFlow.getTemperature());
 	fluidFlow.update(dt);
 }
 
@@ -138,7 +143,7 @@ void ofApp::draw(){
 		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_VEL:	velocityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_DEN:	densityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_TMP:	break;
+		case BRIDGE_TMP:	temperatureBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawObstacleOffset(0, 0, windowWidth, windowHeight); break;
@@ -225,7 +230,8 @@ void ofApp::simulationResolutionListener(int &_value){
 	
 	opticalFlow.resize(flowWidth, flowHeight);
 	velocityBridgeFlow.resize(flowWidth, flowHeight);
-	densityBridgeFlow.resize(flowWidth, flowHeight);
+	densityBridgeFlow.resize(flowWidth, flowHeight, densityWidth, densityHeight);
+	temperatureBridgeFlow.resize(flowWidth, flowHeight);
 	
 	fluidFlow.resize(flowWidth, flowHeight, densityWidth, densityHeight);
 	fluidFlow.addObstacle(flowToolsLogo.getTexture());

@@ -225,7 +225,7 @@ namespace flowTools {
 			ftUtil::one(obstacleFbo);
 			obstacleFbo.begin();
 			ofSetColor(0,0,0,255);
-			int borderSize = 2;
+			int borderSize = 1;
 			ofDrawRectangle(borderSize, borderSize, obstacleFbo.getWidth()-borderSize*2, obstacleFbo.getHeight()-borderSize*2);
 			obstacleFbo.end();
 			ofPopStyle();

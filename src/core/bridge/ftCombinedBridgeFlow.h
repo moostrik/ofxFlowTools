@@ -38,9 +38,9 @@ namespace flowTools {
 			multiplyShader.update(velocityFbo, velocityTrailFbo.getTexture(), velocityTimeStep);
 			
 			float densityTimeStep = _deltaTime * densitySpeed.get() * 10;
-			densityBridgeShader.update(densityFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), densityTimeStep);
-			densityFbo.swap();
-			HSVShader.update(densityFbo.get(), densityFbo.getBackTexture(), 0, densitySaturation.get(), 1.0);
+			densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), densityTimeStep);
+			outputFbo.swap();
+			HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, densitySaturation.get(), 1.0);
 			
 			float temperatureTimeStep = _deltaTime * temperatureSpeed.get() * 100;
 			temperatureBridgeShader.update(temperatureFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), temperatureTimeStep);
@@ -56,7 +56,7 @@ namespace flowTools {
 		ofTexture&	getVisible() {
 			ofPushStyle();
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-			multiplyShader.update(densityVisibleFbo, densityFbo.getTexture(), ofGetFrameRate());
+			multiplyShader.update(densityVisibleFbo, outputFbo.getTexture(), ofGetFrameRate());
 			ofPopStyle();
 			return densityVisibleFbo.getTexture();
 		}
@@ -71,7 +71,7 @@ namespace flowTools {
 		float	getSaturation()				{ return densitySaturation.get(); }
 		
 		ofTexture& getVelocity() override	{ return velocityFbo.getTexture(); }
-		ofTexture& getDensity() 			{ return densityFbo.getTexture(); }
+		ofTexture& getDensity() 			{ return getOutput(); }
 		ofTexture& getTemperature() 		{ return temperatureFbo.getTexture(); }
 		
 		void	drawVelocity(int _x, int _y, int _w, int _h) 	{ visualizationField.draw(velocityFbo.getTexture(), _x, _y, _w, _h); }
@@ -88,7 +88,7 @@ namespace flowTools {
 		ftHSVShader					HSVShader;
 		
 		ofFbo						velocityFbo;
-		ftPingPongFbo				densityFbo;
+//		ftPingPongFbo				densityFbo;
 		ofFbo						densityVisibleFbo;
 		ftPingPongFbo				temperatureFbo;
 		
@@ -96,11 +96,11 @@ namespace flowTools {
 		void allocate(int _velocityWidth, int _velocityHeight, GLint _velocityInternalFormat, int _inOutputWidth, int _inOutputHeight, GLint _inOutputInternalFormat) override {
 			ftBridgeFlow::allocate(_velocityWidth, _velocityHeight, _velocityInternalFormat, _inOutputWidth, _inOutputHeight, _inOutputInternalFormat);
 			velocityFbo.allocate(_velocityWidth, _velocityHeight, GL_RG32F);
-			densityFbo.allocate(_inOutputWidth, _inOutputHeight, GL_RGBA32F);
+//			densityFbo.allocate(_inOutputWidth, _inOutputHeight, GL_RGBA32F);
 			densityVisibleFbo.allocate(_inOutputWidth, _inOutputHeight, GL_RGBA);
 			temperatureFbo.allocate(_velocityWidth, _velocityHeight, GL_R32F);
 			ftUtil::zero(velocityFbo);
-			ftUtil::zero(densityFbo);
+//			ftUtil::zero(densityFbo);
 			ftUtil::zero(densityVisibleFbo);
 			ftUtil::zero(temperatureFbo);
 			

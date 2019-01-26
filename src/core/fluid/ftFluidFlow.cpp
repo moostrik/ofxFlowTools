@@ -83,7 +83,7 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		obstacleFbo.allocate(simulationWidth, simulationHeight, GL_R8);
 		ftUtil::zero(obstacleFbo);
-		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGBA32F);
+		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
 		ftUtil::zero(obstacleOffsetFbo);
 		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);

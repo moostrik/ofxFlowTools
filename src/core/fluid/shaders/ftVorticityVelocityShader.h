@@ -21,7 +21,7 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Velocity;
-									 uniform sampler2DRect Obstacle;
+									 uniform sampler2DRect Edge;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
@@ -30,7 +30,8 @@ namespace flowTools {
 										 vec2 vB = texture2DRect(Velocity, st - vec2(0, 1)).xy;
 										 vec2 vT = texture2DRect(Velocity, st + vec2(0, 1)).xy;
 										 float vorticity = 0.5 * ((vR.y - vL.y) - (vT.x - vB.x));
-										 gl_FragColor = vec4(vorticity, 0.0, 0.0, 0.0);
+										 float posOrZero = max(0.0, texture2DRect(Edge, st).z);
+										 gl_FragColor = vec4(vorticity * posOrZero, 0.0, 0.0, 0.0);
 									 }
 									 );
 			
@@ -41,6 +42,7 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect Velocity;
+									 uniform sampler2DRect Edge;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
@@ -52,7 +54,8 @@ namespace flowTools {
 										 vec2 vB = texture(Velocity, st - vec2(0, 1)).xy;
 										 vec2 vT = texture(Velocity, st + vec2(0, 1)).xy;
 										 float vorticity = 0.5 * ((vR.y - vL.y) - (vT.x - vB.x));
-										 fragColor = vec4(vorticity, 0.0, 0.0, 0.0);
+										 float posOrZero = max(0.0, texture(Edge, st).z);
+										 fragColor = vec4(vorticity * posOrZero, 0.0, 0.0, 0.0);
 									 }
 									 );
 			
@@ -63,10 +66,11 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _edgTex){
 			_fbo.begin();
 			begin();
 			setUniformTexture("Velocity", _velTex, 0);
+			setUniformTexture("Edge", _edgTex, 1);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

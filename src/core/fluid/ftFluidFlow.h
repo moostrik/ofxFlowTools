@@ -55,7 +55,7 @@ namespace flowTools {
 		ofTexture&	getTemperature()			{ return temperatureFbo.getTexture(); }
 		ofTexture&	getDivergence()				{ return divergenceFbo.getTexture(); }
 		ofTexture&	getObstacle()				{ return obstacleFbo.getTexture(); }
-		ofTexture&	getObstacleOffset()			{ return obstacleOffsetFbo.getTexture(); }
+		ofTexture&	getObstacleEdges()			{ return edgeFbo.getTexture(); }
 		ofTexture&	getVorticityVelocity()		{ return vorticityVelocityFbo.getTexture(); }
 		ofTexture&	getVorticityConfinement()	{ return vorticityConfinementFbo.getTexture(); }
 		ofTexture&	getBuoyancy()				{ return smokeBuoyancyFbo.getTexture(); }
@@ -67,7 +67,7 @@ namespace flowTools {
 		void	drawTemperature(int _x, int _y, int _w, int _h)			{ visualizationField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawDivergence(int _x, int _y, int _w, int _h)			{ visualizationField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawObstacle(int _x, int _y, int _w, int _h)			{ obstacleFbo.draw(_x, _y, _w, _h); }
-		void	drawObstacleOffset(int _x, int _y, int _w, int _h)		{ visualizationField.draw(obstacleOffsetFbo.getTexture(), _x, _y, _w, _h); }
+		void	drawObstacleEdges(int _x, int _y, int _w, int _h)		{ visualizationField.draw(edgeFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawVorticityVelocity(int _x, int _y, int _w, int _h)	{ visualizationField.draw(vorticityVelocityFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawVorticityConfinement(int _x, int _y, int _w, int _h){ visualizationField.draw(vorticityConfinementFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawBuoyancy(int _x, int _y, int _w, int _h)			{ visualizationField.draw(smokeBuoyancyFbo.getTexture(), _x, _y, _w, _h); }
@@ -146,7 +146,7 @@ namespace flowTools {
 		ofFbo			vorticityConfinementFbo;
 		ofFbo			smokeBuoyancyFbo;
 		ftPingPongFbo	obstacleFbo;
-		ofFbo			obstacleOffsetFbo;
+		ofFbo			edgeFbo;
 		
 		int simulationWidth, simulationHeight, densityWidth, densityHeight;
 		

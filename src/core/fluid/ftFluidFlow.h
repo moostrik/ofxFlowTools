@@ -17,7 +17,6 @@
 
 #include "ftAddBooleanShader.h"
 #include "ftObstacleOffsetShader.h"
-#include "ftApplyObstacleShader.h"
 #include "ftApplyObstaclePosShader.h"
 #include "ftApplyObstacleNegShader.h"
 #include "ftApplyObstacleZeroShader.h"

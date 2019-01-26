@@ -20,35 +20,29 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect tex0;
-									 
-									 uniform int Width;
-									 uniform int Height;
+									 uniform sampler2DRect Obstacle;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
+
 										 float off = 1;
 										 vec2 off_x = vec2(off, 0.0);
 										 vec2 off_y = vec2(0.0, off);
 										 
-										 // calculate the gradient
+										// calculate the gradient
 										 float gradx; float grady; float gradmag;
-										 gradx = texture2DRect(tex0, st - off_x).x - texture2DRect(tex0, st + off_x).x;
-										 grady = texture2DRect(tex0, st - off_y).x - texture2DRect(tex0, st + off_y).x;
+										 gradx = texture2DRect(Obstacle, st - off_x).x - texture2DRect(Obstacle, st + off_x).x;
+										 grady = texture2DRect(Obstacle, st - off_y).x - texture2DRect(Obstacle, st + off_y).x;
 										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
 										 
-										 vec2 offset;
-										 float scr = 1.0 - texture2DRect(tex0, st).x;
-										 offset.x = scr * floor(gradx/gradmag + 0.5);
-										 offset.y = scr * floor(grady/gradmag + 0.5);
-										
-										 // apply border
-//										 if (st.x < 1) { offset.x = 1; }
-//										 if (st.x > Width - 1.0) { offset.x = -1; }
-//										 if (st.y < 1) { offset.y = 1; }
-//										 if (st.y > Height - 1.0) { offset.y = -1; }
-
-										 gl_FragColor = vec4(offset, scr, 0.0);
+										 vec2 edgeOffset;
+										 float invObs = floor(1.0 - texture2DRect(Obstacle, st).x + 0.5);
+										 edgeOffset.x = invObs * floor(gradx/gradmag + 0.5);
+										 edgeOffset.y = invObs * floor(grady/gradmag + 0.5);
+										 float hasOffset = max(abs(edgeOffset.x), abs(edgeOffset.y));
+										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
+										 
+										 gl_FragColor = vec4(edgeOffset, posNegOrZero, 0);
 									 }
 									 );
 			
@@ -58,7 +52,7 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL410(
-									 uniform sampler2DRect	tex0;
+									 uniform sampler2DRect	Obstacle;
 									 
 									 uniform vec2 Scale;
 									 
@@ -75,18 +69,18 @@ namespace flowTools {
 										 
 										 //calculate the gradient
 										 float gradx; float grady; float gradmag;
-										 gradx = texture(tex0, st2 - off_x).x - texture(tex0, st2 + off_x).x;
-										 grady = texture(tex0, st2 - off_y).x - texture(tex0, st2 + off_y).x;
+										 gradx = texture(Obstacle, st2 - off_x).x - texture(Obstacle, st2 + off_x).x;
+										 grady = texture(Obstacle, st2 - off_y).x - texture(Obstacle, st2 + off_y).x;
 										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
 										 
-										 vec2 offset;
-										 float invSolid = round(1.0 - texture(tex0, st2).x);
-										 offset.x = invSolid * round(gradx/gradmag);
-										 offset.y = invSolid * round(grady/gradmag);
-										 bool hasOffset = bool(max(abs(offset.x), abs(offset.y)));
-										 float posNegOrZero = mix(invSolid, -1.0, hasOffset);
+										 vec2 edgeOffset;
+										 float invObs = round(1.0 - texture(Obstacle, st2).x);
+										 edgeOffset.x = invObs * round(gradx/gradmag);
+										 edgeOffset.y = invObs * round(grady/gradmag);
+										 bool hasOffset = bool(max(abs(edgeOffset.x), abs(edgeOffset.y)));
+										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
 										 
-										 fragColor = vec4(offset, posNegOrZero, 0);
+										 fragColor = vec4(edgeOffset, posNegOrZero, 0);
 									 }
 									 );
 			
@@ -97,11 +91,11 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _tex){
+		void update(ofFbo& _fbo, ofTexture& _obsTex){
 			_fbo.begin();
 			begin();
-			setUniformTexture("tex0", _tex, 0);
-			setUniform2f("Scale", _tex.getWidth() / _fbo.getWidth(), _tex.getHeight()/ _fbo.getHeight());
+			setUniformTexture("Obstacle", _obsTex, 0);
+			setUniform2f("Scale", _obsTex.getWidth() / _fbo.getWidth(), _obsTex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

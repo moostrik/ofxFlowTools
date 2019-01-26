@@ -26,19 +26,13 @@ namespace flowTools {
 									 uniform float	Weight;
 									 uniform vec2	Scale;
 									 
-									 void main(){
+									 void main() {
 										 vec2 st = gl_TexCoord[0].st;
 										 vec2 st2 = st * Scale;
 										 vec3 obs = texture2DRect(ObstacleOffsetTex, st2).xyz;
 										 vec2 offset = obs.xy;
-										 float obstacle = obs.z;
-										 vec4 src = texture2DRect(SrcTex, st + offset);
-										 if (length(offset) > 0) {
-											 gl_FragColor = src * vec4(obstacle * Weight);
-										 }
-										 else {
-											 gl_FragColor = src * vec4(obstacle);
-										 }
+										 float posOrZero = abs(obs.z);
+										 gl_FragColor = texture2DRect(SrcTex, st + offset) * vec4(posOrZero);
 									 }
 									 );
 			
@@ -56,8 +50,7 @@ namespace flowTools {
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
-									 void main()
-									 {
+									 void main() {
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
 										 vec4 obs = texture(ObstacleOffsetTex, st2);

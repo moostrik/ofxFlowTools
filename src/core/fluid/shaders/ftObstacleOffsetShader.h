@@ -80,18 +80,13 @@ namespace flowTools {
 										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
 										 
 										 vec2 offset;
-										 float invSolid = 1.0 - texture(tex0, st2).x;
+										 float invSolid = round(1.0 - texture(tex0, st2).x);
 										 offset.x = invSolid * round(gradx/gradmag);
 										 offset.y = invSolid * round(grady/gradmag);
-										 float hasOffset = ceil(length(offset));
+										 bool hasOffset = bool(max(abs(offset.x), abs(offset.y)));
+										 float posNegOrZero = mix(invSolid, -1.0, hasOffset);
 										 
-										 // apply border
-//										 if (st.x < 1) { offset.x = 1; }
-//										 if (st.x > Width - 1.0) { offset.x = -1; }
-//										 if (st.y < 1) { offset.y = 1; }
-//										 if (st.y > Height - 1.0) { offset.y = -1; }
-										 
-										 fragColor = vec4(offset, invSolid, hasOffset);
+										 fragColor = vec4(offset, posNegOrZero, 0);
 									 }
 									 );
 			

@@ -18,6 +18,9 @@
 #include "ftAddBooleanShader.h"
 #include "ftObstacleOffsetShader.h"
 #include "ftApplyObstacleShader.h"
+#include "ftApplyObstaclePosShader.h"
+#include "ftApplyObstacleNegShader.h"
+#include "ftApplyObstacleZeroShader.h"
 #include "ftApplyObstacleDensityShader.h"
 
 #include "ftMultiplyForceShader.h"
@@ -130,7 +133,10 @@ namespace flowTools {
 		
 		ftAddBooleanShader			addBooleanShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
-		ftApplyObstacleShader		applyObstacleShader;
+//		ftApplyObstacleShader		applyObstacleShader;
+		ftApplyObstaclePosShader	applyObstaclePosShader;
+		ftApplyObstacleNegShader	applyObstacleNegShader;
+		ftApplyObstacleZeroShader	applyObstacleZeroShader;
 		ftApplyObstacleDensityShader applyObstacleDensityShader;
 		
 		ftMultiplyForceShader		multiplyForceShader;

@@ -113,7 +113,7 @@ namespace flowTools {
 		velocityFbo.swap();
 		advectShader->update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), timeStep, 1.0 - dissipationVel.get());
 		velocityFbo.swap();
-		applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+		applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// ADD FORCES: DIFFUSE
 		if (viscosity.get() > 0.0) {
@@ -122,18 +122,18 @@ namespace flowTools {
 				diffuseShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), viscosity.get());
 			}
 			velocityFbo.swap();
-			applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityVelocityShader.update(vorticityVelocityFbo.get(), velocityFbo.getTexture());
 			vorticityVelocityFbo.swap();
-			applyObstacleShader.update(vorticityVelocityFbo.get(), vorticityVelocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 0.0);
+			applyObstacleZeroShader.update(vorticityVelocityFbo.get(), vorticityVelocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();
-			applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY
@@ -143,12 +143,12 @@ namespace flowTools {
 //			temperatureFbo.swap();
 //			clampLengthShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), 2.0, 1.0);
 			temperatureFbo.swap();
-			applyObstacleShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleNegShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 			ftUtil::zero(smokeBuoyancyFbo);
 			smokeBuoyancyShader.update(smokeBuoyancyFbo, temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get());
 			addVelocity(smokeBuoyancyFbo.getTexture());
 			velocityFbo.swap();
-			applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		else {
 			ftUtil::zero(temperatureFbo);
@@ -167,13 +167,13 @@ namespace flowTools {
 			jacobiObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleOffsetFbo.getTexture());
 		}
 		pressureFbo.swap();
-		applyObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), 1.0);
+		applyObstaclePosShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
 		substractGradientShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), pressureFbo.getTexture());
 		velocityFbo.swap();
-		applyObstacleShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture(), -1.0);
+		applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// DENSITY:
 		densityFbo.swap();

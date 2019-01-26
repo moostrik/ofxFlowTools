@@ -47,8 +47,10 @@ namespace flowTools {
 		}
 		
 		ofTexture&	getVisible() {
-			ftUtil::zero(visibleFbo);
+			ofPushStyle();
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			multiplyShader.update(visibleFbo, outputFbo.getTexture(), ofGetFrameRate());
+			ofPopStyle();
 			return visibleFbo.getTexture();
 		}
 		

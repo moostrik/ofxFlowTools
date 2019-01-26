@@ -21,16 +21,16 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect SrcTex;
-									 uniform sampler2DRect ObstacleOffsetTex;
+									 uniform sampler2DRect EdgeTex;
 									 
 									 uniform vec2	Scale;
 									 
 									 void main() {
 										 vec2 st = gl_TexCoord[0].st;
 										 vec2 st2 = st * Scale;
-										 vec3 obs = texture2DRect(ObstacleOffsetTex, st2).xyz;
-										 vec2 offset = obs.xy;
-										 float posNegOrZero = obs.z;
+										 vec3 edg = texture2DRect(EdgeTex, st2).xyz;
+										 vec2 offset = edg.xy;
+										 float posNegOrZero = edg.z;
 										 gl_FragColor = texture2DRect(SrcTex, st + offset) * vec4(posNegOrZero);
 									 }
 									 );
@@ -42,7 +42,7 @@ namespace flowTools {
 		void glThree() {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect	SrcTex;
-									 uniform sampler2DRect	ObstacleOffsetTex;
+									 uniform sampler2DRect	EdgeTex;
 									 
 									 uniform vec2	Scale;
 									 
@@ -52,9 +52,9 @@ namespace flowTools {
 									 void main() {
 										 vec2 st = texCoordVarying;
 										 vec2 st2 = st * Scale;
-										 vec4 obs = texture(ObstacleOffsetTex, st2);
-										 vec2 offset = obs.xy;
-										 float posNegOrZero = obs.z;
+										 vec4 edg = texture(EdgeTex, st2);
+										 vec2 offset = edg.xy;
+										 float posNegOrZero = edg.z;
 										 fragColor = texture(SrcTex, st + offset) * vec4(posNegOrZero);
 									 }
 									 );
@@ -66,12 +66,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _obstacleOffsetTex){
+		void update(ofFbo& _fbo, ofTexture& _srcTex, ofTexture& _edgTex){
 			_fbo.begin();
 			begin();
 			setUniformTexture("ScrTex", _srcTex, 0);
-			setUniformTexture("ObstacleOffsetTex", _obstacleOffsetTex, 1);
-			setUniform2f("Scale", _obstacleOffsetTex.getWidth() / _fbo.getWidth(), _obstacleOffsetTex.getHeight()/ _fbo.getHeight());
+			setUniformTexture("EdgeTex", _edgTex, 1);
+			setUniform2f("Scale", _edgTex.getWidth() / _fbo.getWidth(), _edgTex.getHeight()/ _fbo.getHeight());
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

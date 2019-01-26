@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftApplyObstacleDensityShader : public ftShader {
+	class ftObstacleShader : public ftShader {
 	public:
-		ftApplyObstacleDensityShader() {
+		ftObstacleShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftApplyObstacleDensityShader";
+			string shaderName = "ftObstacleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");

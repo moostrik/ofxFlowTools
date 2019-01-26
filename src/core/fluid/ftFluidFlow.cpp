@@ -85,7 +85,7 @@ namespace flowTools {
 		ftUtil::zero(obstacleFbo);
 		obstacleOffsetFbo.allocate(simulationWidth, simulationHeight, GL_RGB32F);
 		ftUtil::zero(obstacleOffsetFbo);
-		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+		edgesFromObstacleShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
 		smokeBuoyancyFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
@@ -113,7 +113,7 @@ namespace flowTools {
 		velocityFbo.swap();
 		advectShader->update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), timeStep, 1.0 - dissipationVel.get());
 		velocityFbo.swap();
-		applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+		edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// ADD FORCES: DIFFUSE
 		if (viscosity.get() > 0.0) {
@@ -122,18 +122,18 @@ namespace flowTools {
 				diffuseShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), viscosity.get());
 			}
 			velocityFbo.swap();
-			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityVelocityShader.update(vorticityVelocityFbo.get(), velocityFbo.getTexture());
 			vorticityVelocityFbo.swap();
-			applyObstacleZeroShader.update(vorticityVelocityFbo.get(), vorticityVelocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+			edgesZeroShader.update(vorticityVelocityFbo.get(), vorticityVelocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get());
 			addVelocity(vorticityConfinementFbo.getTexture());
 			velocityFbo.swap();
-			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY
@@ -143,12 +143,12 @@ namespace flowTools {
 //			temperatureFbo.swap();
 //			clampLengthShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), 2.0, 1.0);
 			temperatureFbo.swap();
-			applyObstacleNegShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+			edgesNegativeShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 			ftUtil::zero(smokeBuoyancyFbo);
 			smokeBuoyancyShader.update(smokeBuoyancyFbo, temperatureFbo.getTexture(), densityFbo.getTexture(), ambientTemperature.get(), timeStep, smokeSigma.get(), smokeWeight.get(), gravity.get());
 			addVelocity(smokeBuoyancyFbo.getTexture());
 			velocityFbo.swap();
-			applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		}
 		else {
 			ftUtil::zero(temperatureFbo);
@@ -164,16 +164,16 @@ namespace flowTools {
 		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), 1.0 - dissipationPrs.get());
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			pressureFbo.swap();
-			jacobiObstacleShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleOffsetFbo.getTexture());
+			jacobiEdgeShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), divergenceFbo.getTexture(), obstacleOffsetFbo.getTexture());
 		}
 		pressureFbo.swap();
-		applyObstaclePosShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+		edgesPositiveShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// PRESSURE: SUBSTRACT GRADIENT
 		velocityFbo.swap();
 		substractGradientShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), pressureFbo.getTexture());
 		velocityFbo.swap();
-		applyObstacleNegShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
+		edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleOffsetFbo.getTexture());
 		
 		// DENSITY:
 		densityFbo.swap();
@@ -181,7 +181,7 @@ namespace flowTools {
 //		densityFbo.swap();
 //		clampLengthShader.update(densityFbo.get(), densityFbo.getBackTexture(), sqrt(3), 1.0);
 		densityFbo.swap();
-		applyObstacleDensityShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture());
+		obstacleShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture());
 		
 		ofPopStyle();
 	}
@@ -231,7 +231,7 @@ namespace flowTools {
 			ofPopStyle();
 //		}
 		
-		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+		edgesFromObstacleShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 	}
 	
 	//--------------------------------------------------------------
@@ -241,7 +241,7 @@ namespace flowTools {
 		initObstacle();
 		addBooleanShader.update(obstacleFbo.get(), obstacleFbo.getBackTexture(), _tex);
 		ftUtil::zero(obstacleOffsetFbo);
-		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+		edgesFromObstacleShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		ofPopStyle();
 	}
 	
@@ -251,7 +251,7 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		obstacleFbo.swap();
 		addBooleanShader.update(obstacleFbo.get(), obstacleFbo.getBackTexture(), _tex);
-		obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
+		edgesFromObstacleShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
 		ofPopStyle();
 	}
 	
@@ -268,6 +268,6 @@ namespace flowTools {
 		
 		initObstacle();
 		
-		jacobiObstacleShader = ftJacobiObstacleShader();
+		jacobiEdgeShader = ftJacobiEdgeShader();
 	}
 }

@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftJacobiObstacleShader : public ftShader {
+	class ftJacobiEdgeShader : public ftShader {
 	public:
-		ftJacobiObstacleShader() {
+		ftJacobiEdgeShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftJacobiObstacleShader";
+			string shaderName = "ftJacobiEdgeShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");

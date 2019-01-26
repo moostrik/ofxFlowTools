@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftApplyObstacleNegShader : public ftShader {
+	class ftEdgesNegativeShader : public ftShader {
 	public:
-		ftApplyObstacleNegShader() {
+		ftEdgesNegativeShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftApplyObstacleNegShader";
+			string shaderName = "ftEdgesNegativeShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");

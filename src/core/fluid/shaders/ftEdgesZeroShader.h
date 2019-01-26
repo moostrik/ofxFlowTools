@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftApplyObstaclePosShader : public ftShader {
+	class ftEdgesZeroShader : public ftShader {
 	public:
-		ftApplyObstaclePosShader() {
+		ftEdgesZeroShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftApplyObstaclePosShader";
+			string shaderName = "ftEdgesZeroShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
@@ -31,7 +31,7 @@ namespace flowTools {
 										 vec2 st2 = st * Scale;
 										 vec3 obs = texture2DRect(ObstacleOffsetTex, st2).xyz;
 										 vec2 offset = obs.xy;
-										 float posOrZero = abs(obs.z);
+										 float posOrZero = max(0.0, obs.z);
 										 gl_FragColor = texture2DRect(SrcTex, st + offset) * vec4(posOrZero);
 									 }
 									 );
@@ -55,7 +55,7 @@ namespace flowTools {
 										 vec2 st2 = st * Scale;
 										 vec4 obs = texture(ObstacleOffsetTex, st2);
 										 vec2 offset = obs.xy;
-										 float posOrZero = abs(obs.z);
+										 float posOrZero = max(0.0, obs.z);
 										 fragColor = texture(SrcTex, st + offset) * vec4(posOrZero);
 									 }
 									 );

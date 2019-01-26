@@ -9,21 +9,21 @@
 #include "ftDiffuseShader.h"
 #include "ftDivergenceShader.h"
 #include "ftJacobiShader.h"
-#include "ftJacobiObstacleShader.h"
+#include "ftJacobiEdgeShader.h"
 #include "ftSubstractGradientShader.h"
 #include "ftSmokeBuoyancyShader.h"
 #include "ftVorticityVelocityShader.h"
 #include "ftVorticityConfinementShader.h"
 
-#include "ftAddBooleanShader.h"
-#include "ftObstacleOffsetShader.h"
-#include "ftApplyObstaclePosShader.h"
-#include "ftApplyObstacleNegShader.h"
-#include "ftApplyObstacleZeroShader.h"
-#include "ftApplyObstacleDensityShader.h"
+#include "ftObstacleShader.h"
+#include "ftEdgesFromObstacleShader.h"
+#include "ftEdgesPositiveShader.h"
+#include "ftEdgesNegativeShader.h"
+#include "ftEdgesZeroShader.h"
+#include "ftObstacleShader.h"
 
+#include "ftAddBooleanShader.h"
 #include "ftMultiplyForceShader.h"
-#include "ftClampLengthShader.h"
 
 namespace flowTools {
 	class ftFluidFlow : public ftFlow{
@@ -124,22 +124,20 @@ namespace flowTools {
 		ftDiffuseShader				diffuseShader;
 		ftDivergenceShader			divergenceShader;
 		ftJacobiShader				jacobiShader;
-		ftJacobiObstacleShader		jacobiObstacleShader;
+		ftJacobiEdgeShader			jacobiEdgeShader;
 		ftSubstractGradientShader	substractGradientShader;
 		ftSmokeBuoyancyShader		smokeBuoyancyShader;
 		ftVorticityVelocityShader	vorticityVelocityShader;
 		ftVorticityConfinementShader vorticityConfinementShader;
 		
-		ftAddBooleanShader			addBooleanShader;
-		ftObstacleOffsetShader		obstacleOffsetShader;
-//		ftApplyObstacleShader		applyObstacleShader;
-		ftApplyObstaclePosShader	applyObstaclePosShader;
-		ftApplyObstacleNegShader	applyObstacleNegShader;
-		ftApplyObstacleZeroShader	applyObstacleZeroShader;
-		ftApplyObstacleDensityShader applyObstacleDensityShader;
+		ftObstacleShader 			obstacleShader;
+		ftEdgesFromObstacleShader	edgesFromObstacleShader;
+		ftEdgesNegativeShader		edgesNegativeShader;
+		ftEdgesPositiveShader		edgesPositiveShader;
+		ftEdgesZeroShader			edgesZeroShader;
 		
+		ftAddBooleanShader			addBooleanShader;
 		ftMultiplyForceShader		multiplyForceShader;
-		ftClampLengthShader			clampLengthShader;
 		
 		ftPingPongFbo	temperatureFbo;
 		ftPingPongFbo	pressureFbo;

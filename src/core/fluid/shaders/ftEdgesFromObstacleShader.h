@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftObstacleOffsetShader : public ftShader {
+	class ftEdgesFromObstacleShader : public ftShader {
 	public:
-		ftObstacleOffsetShader() {
-            bInitialized = 1;
+		ftEdgesFromObstacleShader() {
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftObstacleOffsetShader";
+			string shaderName = "ftEdgesFromObstacleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
@@ -24,7 +24,7 @@ namespace flowTools {
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
-
+										 
 										 float off = 1;
 										 vec2 off_x = vec2(off, 0.0);
 										 vec2 off_y = vec2(0.0, off);

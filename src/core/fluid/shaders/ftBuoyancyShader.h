@@ -80,7 +80,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _smokeBuoyancy, float _smokeWeight, glm::vec2 _gForce){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _smokeBuoyancy, float _smokeWeight){
 			_fbo.begin();
 			begin();
 			setUniform1f		("temperature_ambient", _ambientTemperature);

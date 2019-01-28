@@ -69,8 +69,7 @@ namespace flowTools {
 		int		getDensityHeight()					{ return densityHeight; }
 		
 		float	getSpeed()							{ return speed.get(); }
-//		float	getNumJacobiIterations()			{ return numJacobiIterations.get(); }
-		float	getViscosity()						{ return viscosity.get(); }
+//		float	getViscosity()						{ return viscosity.get(); }
 		float	getVorticity()						{ return vorticity.get(); }
 		float	getDissipationVel()					{ return dissipationVel.get(); }
 		float	getDissipationDen()					{ return dissipationDen.get(); }
@@ -78,11 +77,9 @@ namespace flowTools {
 		float	getSmokeSigma()						{ return smokeSigma.get(); }
 		float	getSmokeWeight()					{ return smokeWeight.get(); }
 		float	getAmbientTemperature()				{ return ambientTemperature.get(); }
-		glm::vec2 getGravity()						{ return gravity.get(); }
 		
 		void	setSpeed(float value)				{speed.set(value);}
-//		void	setNumJacobiIterations(float value)	{numJacobiIterations.set(value);}
-		void	setViscosity(float value)			{viscosity.set(value);}
+//		void	setViscosity(float value)			{viscosity.set(value);}
 		void	setVorticity(float value)			{vorticity.set(value);}
 		void	setDissipationVel(float value)		{dissipationVel.set(value);}
 		void	setDissipationDen(float value)		{dissipationDen.set(value);}
@@ -95,12 +92,16 @@ namespace flowTools {
 	protected:
 		ofParameter<float>			speed;
 		ofParameter<float>			gridScale;
-		ofParameter<float>			viscosity;
 		ofParameter<float>			vorticity;
 		ofParameterGroup			dissipationParameters;
 		ofParameter<float>			dissipationVel;
 		ofParameter<float>			dissipationDen;
 		ofParameter<float>			dissipationTmp;
+		ofParameter<float>			dissipationPrs;
+		ofParameterGroup			viscosityParameters;
+		ofParameter<float>			viscosityVel;
+		ofParameter<float>			viscosityDen;
+		ofParameter<float>			viscosityTmp;
 		ofParameterGroup			smokeBuoyancyParameters;
 		ofParameter<float>			smokeSigma;
 		ofParameter<float>			smokeWeight;

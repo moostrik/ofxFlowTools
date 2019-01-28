@@ -43,18 +43,22 @@ namespace flowTools {
 		parameters.add(speed.set("speed", .5, 0, 1));
 		parameters.add(gridScale.set("gridScale", 1, 0, 10));
 //		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.0, 0, 1));
-		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
 		dissipationParameters.setName("dissipation");
-		dissipationParameters.add(dissipationVel.set("velocity",0.0015, 0, 0.01));
-		dissipationParameters.add(dissipationDen.set("density", 0.0015, 0, 0.01));
-		dissipationParameters.add(dissipationTmp.set("temperature",0.025, 0, 0.1));
+		dissipationParameters.add(dissipationVel.set("velocity"		, 0, 0, 1));
+		dissipationParameters.add(dissipationDen.set("density"		, 0, 0, 1));
+		dissipationParameters.add(dissipationTmp.set("temperature"	, 0, 0, 1));
+		dissipationParameters.add(dissipationPrs.set("pressure"		, 0, 0, 1));
 		parameters.add(dissipationParameters);
+		viscosityParameters.setName("viscosity");
+		viscosityParameters.add(viscosityVel.set("velocity"		, 0, 0, 1));
+		viscosityParameters.add(viscosityDen.set("density"		, 0, 0, 1));
+		viscosityParameters.add(viscosityTmp.set("temperature"	, 0, 0, 1));
+		parameters.add(viscosityParameters);
+		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
 		smokeBuoyancyParameters.setName("smoke buoyancy");
 		smokeBuoyancyParameters.add(smokeSigma.set("buoyancy", 0.5, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.75, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofDefaultVec2(0., -0.980665), ofDefaultVec2(-1, -1), ofDefaultVec2(1, 1)));
 		parameters.add(smokeBuoyancyParameters);
 //		parameters.add(wrap.set("wrap", false));
 //		wrap.addListener(this, &ftFluidFlow::wrapListener);
@@ -111,21 +115,37 @@ namespace flowTools {
 		
 		// ADVECT
 		velocityFbo.swap();
-		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - dissipationVel.get());
+		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - _deltaTime * dissipationVel.get());
 		
 		densityFbo.swap();
-		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - dissipationDen.get());
+		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - _deltaTime * dissipationDen.get());
 		
 		temperatureFbo.swap();
-		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - dissipationTmp.get());
+		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, 1.0 - _deltaTime * dissipationTmp.get());
 		
 		// DIFFUSE
-		if (viscosity.get() > 0.0) {
-			float alpha = (gridScale * gridScale) / (timeStep * viscosity.get());
+		if (viscosityVel.get() > 0.0) {
+			float alpha = (gridScale * gridScale) / (timeStep * viscosityVel.get());
 			float rBeta = 1.0f / (4.0f + alpha);
 			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
 				velocityFbo.swap();
 				jacobiShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleCFbo.getTexture(), obstacleNFbo.getTexture(), alpha, rBeta);
+			}
+		}
+		if (viscosityDen.get() > 0.0) {
+			float alpha = (gridScale * gridScale) / (timeStep * viscosityDen.get());
+			float rBeta = 1.0f / (4.0f + alpha);
+			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
+				densityFbo.swap();
+				jacobiShader.update(densityFbo.get(), densityFbo.getBackTexture(), densityFbo.getBackTexture(), obstacleCFbo.getTexture(), obstacleNFbo.getTexture(), alpha, rBeta);
+			}
+		}
+		if (viscosityTmp.get() > 0.0) {
+			float alpha = (gridScale * gridScale) / (timeStep * viscosityTmp.get());
+			float rBeta = 1.0f / (4.0f + alpha);
+			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
+				temperatureFbo.swap();
+				jacobiShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), temperatureFbo.getBackTexture(), obstacleCFbo.getTexture(), obstacleNFbo.getTexture(), alpha, rBeta);
 			}
 		}
 		
@@ -138,7 +158,7 @@ namespace flowTools {
 		
 		// BUOYANCY
 		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
-			buoyancyShader.update(buoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), timeStep, ambientTemperature, smokeSigma.get(), smokeWeight.get(), gravity.get());
+			buoyancyShader.update(buoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), timeStep, ambientTemperature, smokeSigma.get(), smokeWeight.get());
 			addVelocity(buoyancyFbo.getTexture());
 		}
 		

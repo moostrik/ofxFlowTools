@@ -67,20 +67,30 @@ namespace flowTools {
 										 vec2 off_x = vec2(off, 0.0);
 										 vec2 off_y = vec2(0.0, off);
 										 
-										 //calculate the gradient
-										 float gradx; float grady; float gradmag;
-										 gradx = texture(Obstacle, st2 - off_x).x - texture(Obstacle, st2 + off_x).x;
-										 grady = texture(Obstacle, st2 - off_y).x - texture(Obstacle, st2 + off_y).x;
-										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
+//										 //calculate the gradient
+//										 float gradx; float grady; float gradmag;
+//										 gradx = texture(Obstacle, st2 - off_x).x - texture(Obstacle, st2 + off_x).x;
+//										 grady = texture(Obstacle, st2 - off_y).x - texture(Obstacle, st2 + off_y).x;
+//										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
+//
+//										 vec2 edgeOffset;
+//										 float invObs = round(1.0 - texture(Obstacle, st2).x);
+//										 edgeOffset.x = invObs * round(gradx/gradmag);
+//										 edgeOffset.y = invObs * round(grady/gradmag);
+//										 bool hasOffset = bool(max(abs(edgeOffset.x), abs(edgeOffset.y)));
+//										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
+//
+//										 fragColor = vec4(edgeOffset, posNegOrZero, 0);
 										 
-										 vec2 edgeOffset;
-										 float invObs = round(1.0 - texture(Obstacle, st2).x);
-										 edgeOffset.x = invObs * round(gradx/gradmag);
-										 edgeOffset.y = invObs * round(grady/gradmag);
-										 bool hasOffset = bool(max(abs(edgeOffset.x), abs(edgeOffset.y)));
-										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
+										 fragColor = vec4(0);
 										 
-										 fragColor = vec4(edgeOffset, posNegOrZero, 0);
+										 // neighboring obstacles
+										 fragColor.x = textureOffset(Obstacle, st, + ivec2(0,1)).x;
+										 fragColor.y = textureOffset(Obstacle, st, - ivec2(0,1)).x;
+										 fragColor.z = textureOffset(Obstacle, st, + ivec2(1,0)).x;
+										 fragColor.w = textureOffset(Obstacle, st, - ivec2(1,0)).x;
+										 
+										 
 									 }
 									 );
 			

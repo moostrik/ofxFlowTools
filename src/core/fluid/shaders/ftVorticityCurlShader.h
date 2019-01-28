@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftVorticityVelocityShader : public ftShader {
+	class ftVorticityCurlShader : public ftShader {
 	public:
-		ftVorticityVelocityShader() {
+		ftVorticityCurlShader() {
             bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftVorticityVelocityShader";
+			string shaderName = "ftVorticityCurlShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");

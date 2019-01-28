@@ -12,7 +12,7 @@
 #include "ftJacobiEdgeShader.h"
 #include "ftSubstractGradientShader.h"
 #include "ftSmokeBuoyancyShader.h"
-#include "ftVorticityVelocityShader.h"
+#include "ftVorticityCurlShader.h"
 #include "ftVorticityConfinementShader.h"
 
 #include "ftObstacleShader.h"
@@ -127,7 +127,7 @@ namespace flowTools {
 		ftJacobiEdgeShader			jacobiEdgeShader;
 		ftSubstractGradientShader	substractGradientShader;
 		ftSmokeBuoyancyShader		smokeBuoyancyShader;
-		ftVorticityVelocityShader	vorticityVelocityShader;
+		ftVorticityCurlShader	vorticityCurlShader;
 		ftVorticityConfinementShader vorticityConfinementShader;
 		
 		ftObstacleShader 			obstacleShader;
@@ -143,7 +143,7 @@ namespace flowTools {
 		ftPingPongFbo	pressureFbo;
 		ofFbo			divergenceFbo;
 		ftPingPongFbo	vorticityVelocityFbo;
-		ofFbo			vorticityConfinementFbo;
+		ftPingPongFbo			vorticityConfinementFbo;
 		ofFbo			smokeBuoyancyFbo;
 		ftPingPongFbo	obstacleFbo;
 		ofFbo			edgeFbo;

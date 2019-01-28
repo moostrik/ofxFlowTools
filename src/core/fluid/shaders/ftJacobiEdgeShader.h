@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftJacobiEdgeShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -76,7 +76,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divTexture, ofTexture& _edgTexture){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divTexture, ofTexture& _edgTexture, float _speed){
 			_fbo.begin();
 			begin();
 //			setUniform1f("Alpha", -_cellSize * _cellSize);
@@ -84,6 +84,9 @@ namespace flowTools {
 			setUniformTexture("Pressure", _backTex, 0);
 			setUniformTexture("Divergence", _divTexture, 1);
 			setUniformTexture("Edge", _edgTexture, 2);
+//			setUniform1f( "Alpha", -((1.0/_speed) * 1.0/_speed)));
+			setUniform1f( "Speed", _speed);
+			setUniform1f( "Beta", 0.25);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

@@ -73,9 +73,9 @@ namespace flowTools {
 			setUniform1f		("rdx",				1.0f / _gridScale);
 			setUniform1f		("dissipation",		_dissipation);
 			setUniform2f		("scale",			_velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
-			setUniformTexture	("tex_velocity",	_velTex, 0);
-			setUniformTexture	("tex_source",		_backTex, 1);
-			setUniformTexture	("tex_obstacleC",	_obsCTex, 2);
+			setUniformTexture	("tex_velocity",	_velTex,	0);
+			setUniformTexture	("tex_source",		_backTex,	1);
+			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

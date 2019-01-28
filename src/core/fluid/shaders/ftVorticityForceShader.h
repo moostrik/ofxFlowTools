@@ -90,8 +90,8 @@ namespace flowTools {
 			setUniform1f		("halfrdx",			0.5f / _gridScale);
 			setUniform1f		("timestep",		_timeStep);
 			setUniform1f		("vorticity",		_vorticity);
-			setUniformTexture	("tex_velocity",	_velTex, 0);
-			setUniformTexture	("tex_curl",		_curlTex, 1);
+			setUniformTexture	("tex_velocity",	_velTex,	0);
+			setUniformTexture	("tex_curl",		_curlTex,	1);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

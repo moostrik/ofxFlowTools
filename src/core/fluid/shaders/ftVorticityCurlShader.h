@@ -70,8 +70,8 @@ namespace flowTools {
 			_fbo.begin();
 			begin();
 			setUniform1f		("halfrdx",			0.5f / _gridScale);
-			setUniformTexture	("tex_velocity",	_velTex, 0);
-			setUniformTexture	("tex_obstacleC",	_obsCTex, 1);
+			setUniformTexture	("tex_velocity",	_velTex,	0);
+			setUniformTexture	("tex_obstacleC",	_obsCTex,	1);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

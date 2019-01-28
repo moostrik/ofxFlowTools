@@ -34,7 +34,6 @@ void main(){
 	} else {
 		vec2 velocity = texture(tex_velocity, posn).xy;
 		vec2 posn_back = posn - timestep * rdx * velocity;
-//		glFragColor = dissipation * texture(tex_source, posn_back);
 		glFragColor = dissipation * texture(tex_source, posn_back);
 	}
 }

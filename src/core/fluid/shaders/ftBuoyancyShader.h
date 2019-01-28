@@ -87,9 +87,9 @@ namespace flowTools {
 			setUniform1f		("timestep",			_timeStep);
 			setUniform1f		("fluid_buoyancy",		_smokeBuoyancy);
 			setUniform1f		("fluid_weight",		_smokeWeight);
-			setUniformTexture	("tex_velocity",		_velTex, 0);
-			setUniformTexture	("tex_temperature",		_temTex, 1);
-			setUniformTexture	("tex_density",			_denTex, 2);
+			setUniformTexture	("tex_velocity",		_velTex,	0);
+			setUniformTexture	("tex_temperature",		_temTex,	1);
+			setUniformTexture	("tex_density",			_denTex,	2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

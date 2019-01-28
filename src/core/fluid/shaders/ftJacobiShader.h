@@ -76,10 +76,10 @@ namespace flowTools {
 			
 			setUniform1f		("alpha",			_alpha);
 			setUniform1f		("rBeta",			_beta);
-			setUniformTexture	("tex_x",			_backTex, 0);
-			setUniformTexture	("tex_b",			_divTex,  1);
-			setUniformTexture	("tex_obstacleC",	_obsCTex, 2);
-			setUniformTexture	("tex_obstacleN",	_obsNTex, 3);
+			setUniformTexture	("tex_x",			_backTex,	0);
+			setUniformTexture	("tex_b",			_divTex,	1);
+			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
+			setUniformTexture	("tex_obstacleN",	_obsNTex,	3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

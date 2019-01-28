@@ -27,12 +27,13 @@ uniform vec2  scale;
 
 void main(){
 	vec2 posn = texCoordVarying;
+	vec2 posn2 = posn * scale;
 	
-	float oC = texture(tex_obstacleC, posn).x;
+	float oC = texture(tex_obstacleC, posn2).x;
 	if (oC == 1.0) {
 		glFragColor = vec4(0);
 	} else {
-		vec2 velocity = texture(tex_velocity, posn).xy;
+		vec2 velocity = texture(tex_velocity, posn2).xy;
 		vec2 posn_back = posn - timestep * rdx * velocity;
 		glFragColor = dissipation * texture(tex_source, posn_back);
 	}

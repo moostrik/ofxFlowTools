@@ -117,23 +117,27 @@ namespace flowTools {
 //		velocityFbo.swap();
 //		edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), edgeFbo.getTexture());
 		
-		// ADD FORCES: DIFFUSE
-		if (viscosity.get() > 0.0) {
-			for (int i = 0; i < numJacobiIterations.get(); i++) {
-				velocityFbo.swap();
-				diffuseShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), viscosity.get());
-			}
-//			velocityFbo.swap();
-//			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), edgeFbo.getTexture());
-		}
 		
 		// ADD FORCES: VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityVelocityShader.update(vorticityVelocityFbo.get(), velocityFbo.getTexture(), edgeFbo.getTexture());
-			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), timeStep, vorticity.get());
+//			float vorticityConfinement = timeStep * vorticity.get() / (simulationWidth * simulationHeight) * 1000000.0;
+			float vorticityConfinement = (timeStep * vorticity.get() * 200.0) / simulationWidth;
+			vorticityConfinementShader.update(vorticityConfinementFbo, vorticityVelocityFbo.getTexture(), vorticityConfinement);
 			addVelocity(vorticityConfinementFbo.getTexture());
 //			velocityFbo.swap();
 //			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), edgeFbo.getTexture());
+		}
+		
+		// ADD FORCES: DIFFUSE
+		if (viscosity.get() > 0.0) {
+			float viscosityStep = timeStep * viscosity.get();// * 1000;
+			for (int i = 0; i < numJacobiIterations.get(); i++) {
+				velocityFbo.swap();
+				diffuseShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), viscosityStep);
+			}
+			//			velocityFbo.swap();
+			//			edgesNegativeShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), edgeFbo.getTexture());
 		}
 		
 		// ADD FORCES:  SMOKE BUOYANCY
@@ -153,11 +157,9 @@ namespace flowTools {
 		}
 		
 		// PRESSURE: DIVERGENCE
-//		ftUtil::zero(divergenceFbo);
 		divergenceShader.update(divergenceFbo, velocityFbo.getTexture());
 		
 		// PRESSURE: JACOBI
-//		ftUtil::zero(pressureFbo);
 		pressureFbo.swap();
 		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), 1.0 - dissipationPrs.get());
 		for (int i = 0; i < numJacobiIterations.get(); i++) {

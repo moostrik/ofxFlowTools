@@ -22,7 +22,6 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect Vorticity;
 									 
-									 uniform float TimeStep;
 									 uniform float ConfinementScale;
 									 
 									 void main(){
@@ -35,7 +34,7 @@ namespace flowTools {
 										 vec2 force = 0.5 * vec2(abs(vorT) - abs(vorB), abs(vorR) - abs(vorL));
 										 const float EPSILON = 2.4414e-4; // 2^-12
 										 float magSqr = max(EPSILON, dot(force, force));
-										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.) * TimeStep;
+										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.);
 										 gl_FragColor = vec4(force, 0.0, 0.0);
 									 }
 									 );
@@ -48,7 +47,6 @@ namespace flowTools {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect Vorticity;
 									 
-									 uniform float TimeStep;
 									 uniform float ConfinementScale;
 									 
 									 in vec2 texCoordVarying;
@@ -64,7 +62,7 @@ namespace flowTools {
 										 vec2 force = 0.5 * vec2(abs(vorT) - abs(vorB), abs(vorR) - abs(vorL));
 										 const float EPSILON = 2.4414e-4; // 2^-12
 										 float magSqr = max(EPSILON, dot(force, force));
-										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.) * TimeStep;
+										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.);
 										 fragColor = vec4(force, 0.0, 0.0);
 									 }
 									 );
@@ -76,13 +74,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _timeStep, float _scale){
+		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _confinementScale){
 			_fbo.begin();
 			ofClear(0);
 			begin();
 			setUniformTexture( "Vorticity" , _vorticityTexture, 0 );
-			setUniform1f("TimeStep", _timeStep);
-			setUniform1f("ConfinementScale", _scale);
+			setUniform1f("ConfinementScale", _confinementScale);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

@@ -32,12 +32,13 @@ void main(){
 	float temperature = texture(tex_temperature, posn).x;
 	
 	float dtemp = temperature - temperature_ambient;
+	vec2 buoyancy = vec2(0.0);
 	if (dtemp != 0.0) {
 		float density = texture(tex_density, posn).a;
 		float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
-		velocity += vec2(0, 1) * buoyancy_force;
+		buoyancy = vec2(0, -1) * buoyancy_force;
 	}
 	
-	glFragColor = velocity;
+	glFragColor = buoyancy;
 }
 

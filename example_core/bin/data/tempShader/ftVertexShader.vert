@@ -1,4 +1,4 @@
-#version 150
+#version 410
 uniform mat4 modelViewProjectionMatrix;
 uniform mat4 textureMatrix;
 

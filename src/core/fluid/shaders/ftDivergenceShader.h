@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftDivergenceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -62,10 +62,13 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _gridScale){
 			_fbo.begin();
 			begin();
-			setUniformTexture("Velocity", _velTex, 1);
+			setUniform1f		("halfrdx",			0.5f / _gridScale);
+			setUniformTexture	("tex_velocity",	_velTex, 0);
+			setUniformTexture	("tex_obstacleC",	_obsCTex, 1);
+			setUniformTexture	("tex_obstacleN",	_obsNTex, 2);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

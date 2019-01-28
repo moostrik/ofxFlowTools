@@ -6,14 +6,15 @@
 
 namespace flowTools {
 	
-	class ftSmokeBuoyancyShader : public ftShader {
+	class ftBuoyancyShader : public ftShader {
 	public:
-		ftSmokeBuoyancyShader() {
-            bInitialized = 1;
+		ftBuoyancyShader() {
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftSmokeBuoyancyShader";
+			string shaderName = "ftBuoyancyShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -79,16 +80,16 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _temTex, ofTexture _colorTexture, float _ambientTemperature, float _timeStep, float _smokeBuoyancy, float _smokeWeight, glm::vec2 _gForce){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _smokeBuoyancy, float _smokeWeight, glm::vec2 _gForce){
 			_fbo.begin();
 			begin();
-			setUniform1f("AmbientTemperature", _ambientTemperature);
-			setUniform1f("TimeStep", _timeStep);
-			setUniform1f("Sigma", _smokeBuoyancy);
-			setUniform1f("Kappa", _smokeWeight);
-			setUniform2f("Gravity", _gForce);
-			setUniformTexture("Temperature", _temTex, 0);
-			setUniformTexture("Density", _colorTexture, 1);
+			setUniform1f		("temperature_ambient", _ambientTemperature);
+			setUniform1f		("timestep",			_timeStep);
+			setUniform1f		("fluid_buoyancy",		_smokeBuoyancy);
+			setUniform1f		("fluid_weight",		_smokeWeight);
+			setUniformTexture	("tex_velocity",		_velTex, 0);
+			setUniformTexture	("tex_temperature",		_temTex, 1);
+			setUniformTexture	("tex_density",			_denTex, 2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

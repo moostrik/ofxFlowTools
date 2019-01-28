@@ -9,12 +9,12 @@ namespace flowTools {
 	class ftJacobiShader : public ftShader {
 	public:
 		ftJacobiShader() {
-            bInitialized = 1;
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
 			string shaderName = "ftJacobiShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -70,13 +70,16 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divergenceTexture){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _alpha, float _beta){
 			_fbo.begin();
 			begin();
-//			setUniform1f("Alpha", -_cellSize * _cellSize);
-			//			setUniform1f("InverseBeta", _inverseBeta);
-			setUniformTexture("Pressure", _backTex, 0);
-			setUniformTexture("Divergence", _divergenceTexture, 1);
+			
+			setUniform1f		("alpha",			_alpha);
+			setUniform1f		("rBeta",			_beta);
+			setUniformTexture	("tex_x",			_backTex, 0);
+			setUniformTexture	("tex_b",			_divTex,  1);
+			setUniformTexture	("tex_obstacleC",	_obsCTex, 2);
+			setUniformTexture	("tex_obstacleN",	_obsNTex, 3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

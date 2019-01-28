@@ -6,15 +6,15 @@
 
 namespace flowTools {
 	
-	class ftSubstractGradientShader : public ftShader {
+	class ftGradientShader : public ftShader {
 	public:
-		ftSubstractGradientShader() {
-            bInitialized = 1;
+		ftGradientShader() {
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftSubstractGradientShader";
+			string shaderName = "ftGradientShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -66,11 +66,14 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& pressureTexture){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _prsTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _gridScale){
 			_fbo.begin();
 			begin();
-			setUniformTexture("Velocity", _backTex, 0);
-			setUniformTexture("Pressure", pressureTexture, 1);
+			setUniform1f		("halfrdx",			1.0f / _gridScale);
+			setUniformTexture	("tex_velocity",	_backTex, 0);
+			setUniformTexture	("tex_pressure",	_prsTex, 1);
+			setUniformTexture	("tex_obstacleC",	_obsCTex, 2);
+			setUniformTexture	("tex_obstacleN",	_obsNTex, 3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

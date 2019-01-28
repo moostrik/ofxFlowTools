@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftVorticityConfinementShader : public ftShader {
+	class ftVorticityForceShader : public ftShader {
 	public:
-		ftVorticityConfinementShader() {
-            bInitialized = 1;
+		ftVorticityForceShader() {
+			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftVorticityConfinementShader";
+			string shaderName = "ftVorticityForceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
@@ -83,13 +83,15 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _vorticityTexture, float _confinementScale, float _speed){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _curlTex, float _timeStep, float _gridScale, float _vorticity){
 			_fbo.begin();
 			ofClear(0);
 			begin();
-			setUniformTexture( "Vorticity" , _vorticityTexture, 0 );
-			setUniform1f("ConfinementScale", _confinementScale);
-			setUniform1f( "Speed", _speed);
+			setUniform1f		("halfrdx",			0.5f / _gridScale);
+			setUniform1f		("timestep",		_timeStep);
+			setUniform1f		("vorticity",		_vorticity);
+			setUniformTexture	("tex_velocity",	_velTex, 0 );
+			setUniformTexture	("tex_curl",		_curlTex, 0 );
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

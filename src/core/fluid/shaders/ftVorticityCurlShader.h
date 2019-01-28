@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftVorticityCurlShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -66,11 +66,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _edgTex){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _obsCTex, float _gridScale){
 			_fbo.begin();
 			begin();
-			setUniformTexture("Velocity", _velTex, 0);
-			setUniformTexture("Edge", _edgTex, 1);
+			setUniform1f		("halfrdx",			0.5f / _gridScale);
+			setUniformTexture	("tex_velocity",	_velTex, 0);
+			setUniformTexture	("tex_obstacleC",	_obsCTex, 1);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

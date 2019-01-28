@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftAdvectShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -66,14 +66,16 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex,  ofTexture& _velTex, float _timeStep, float _dissipation){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _velTex, ofTexture& _obsCTex, float _timeStep, float _gridScale, float _dissipation){
 			_fbo.begin();
 			begin();
-			setUniform1f("TimeStep", _timeStep);
-			setUniform1f("Dissipation", _dissipation);
-			setUniform2f("Scale", _velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
-			setUniformTexture("Backbuffer", _backTex, 0);
-			setUniformTexture("Velocity", _velTex, 1);
+			setUniform1f		("timestep",		_timeStep);
+			setUniform1f		("rdx",				1.0f / _gridScale);
+			setUniform1f		("dissipation",		_dissipation);
+			setUniform2f		("scale",			_velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
+			setUniformTexture	("tex_velocity",	_velTex, 0);
+			setUniformTexture	("tex_source",		_backTex, 1);
+			setUniformTexture	("tex_obstacleC",	_obsCTex, 2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

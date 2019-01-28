@@ -6,15 +6,15 @@
 
 namespace flowTools {
 	
-	class ftEdgesFromObstacleShader : public ftShader {
+	class ftObstacleBoundsShader : public ftShader {
 	public:
-		ftEdgesFromObstacleShader() {
+		ftObstacleBoundsShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftEdgesFromObstacleShader";
+			string shaderName = "ftObstacleBoundsShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:

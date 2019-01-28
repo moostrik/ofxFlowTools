@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftVorticityForceShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -45,34 +45,42 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL410(
-									 uniform sampler2DRect Vorticity;
-									 
-									 uniform float ConfinementScale;
-									 uniform float Speed;
+									 precision mediump float;
+									 precision mediump int;
 									 
 									 in vec2 texCoordVarying;
-									 out vec4 fragColor;
+									 out vec2 glFragColor;
+									 
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_curl;
+									 
+									 uniform float halfrdx;
+									 uniform float timestep;
+									 uniform float vorticity;
 									 
 									 void main(){
-										 vec2 st = texCoordVarying;
-										 float vorL = texture(Vorticity, st - vec2(1, 0)).x;
-										 float vorR = texture(Vorticity, st + vec2(1, 0)).x;
-										 float vorB = texture(Vorticity, st - vec2(0, 1)).x;
-										 float vorT = texture(Vorticity, st + vec2(0, 1)).x;
-										 float vorC = texture(Vorticity, st).x;
+										 vec2 posn = texCoordVarying;
 										 
-										 vec2 dW = normalize(1.0 * vec2(vorT - vorB, vorR - vorL) + TINY) * vec2(-1,1);
+										 // velocity
+										 vec2 vOld = texture(tex_velocity, posn).xy;
 										 
-										 vec2 force = dW * vorC * vec2(ConfinementScale);
+										 // curl
+										 float cT = abs(textureOffset(tex_curl    , posn, + ivec2(0,1)).x);
+										 float cB = abs(textureOffset(tex_curl    , posn, - ivec2(0,1)).x);
+										 float cR = abs(textureOffset(tex_curl    , posn, + ivec2(1,0)).x);
+										 float cL = abs(textureOffset(tex_curl    , posn, - ivec2(1,0)).x);
+										 float cC =     texture      (tex_curl    , posn              ).x;
 										 
+										 // normalize
+										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
 										 
+										 // vorticity confinement
+										 vec2 fvc = dw * cC *  timestep * vorticity;
 										 
+										 // add to velocity
+										 vec2 vNew = vOld + fvc;
 										 
-//										 vec2 force = 0.5 * vec2(abs(vorT) - abs(vorB), abs(vorR) - abs(vorL));
-//										 const float EPSILON = 2.4414e-4; // 2^-12
-//										 float magSqr = max(EPSILON, dot(force, force));
-//										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.);
-										 fragColor = vec4(force, 0.0, 0.0);
+										 glFragColor = vNew;
 									 }
 									 );
 			

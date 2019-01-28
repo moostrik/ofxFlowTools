@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftBuoyancyShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -48,28 +48,36 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL410(
-									 uniform sampler2DRect Temperature;
-									 uniform sampler2DRect Density;
-									 
-									 uniform float AmbientTemperature;
-									 uniform float TimeStep;
-									 uniform float Sigma;
-									 uniform float Kappa;
-									 
-									 uniform vec2  Gravity;
+									 precision mediump float;
+									 precision mediump int;
 									 
 									 in vec2 texCoordVarying;
-									 out vec4 fragColor;
+									 out vec2 glFragColor;
+									 
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_temperature;
+									 uniform sampler2DRect tex_density;
+									 
+									 uniform float temperature_ambient;
+									 uniform float timestep;
+									 uniform float fluid_buoyancy;
+									 uniform float fluid_weight;
 									 
 									 void main(){
-										 vec2 st = texCoordVarying;
-										 float temp = texture(Temperature, st).r;
+										 vec2 posn = texCoordVarying;
+										 
+										 vec2  velocity    = texture(tex_velocity   , posn).xy;
+										 float temperature = texture(tex_temperature, posn).x;
+										 
+										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
-										 if (temp > AmbientTemperature) {
-											 float D = length(texture(Density, st).rgb);
-											 buoyancy = vec2((TimeStep * (temp - AmbientTemperature) * Sigma - D * Kappa ) * Gravity);
-										 }
-										 fragColor = vec4(buoyancy, 0.0, 0.0);
+										 //	if (dtemp == 0.0) {
+										 float density = texture(tex_density, posn).a;
+										 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
+										 buoyancy = vec2(0, -1) * buoyancy_force;
+										 //	}
+										 
+										 glFragColor = buoyancy;
 									 }
 									 );
 			

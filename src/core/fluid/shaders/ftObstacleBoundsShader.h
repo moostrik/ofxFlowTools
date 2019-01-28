@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftObstacleBoundsShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -52,45 +52,21 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL410(
-									 uniform sampler2DRect	Obstacle;
-									 
-									 uniform vec2 Scale;
+									 precision mediump float;
+									 precision mediump int;
 									 
 									 in vec2 texCoordVarying;
-									 out vec4 fragColor;
+									 out vec4 glFragColor;
 									 
-									 void main() {
-										 vec2 st = texCoordVarying;
-										 vec2 st2 = st * Scale;
-										 
-										 float off = 1;
-										 vec2 off_x = vec2(off, 0.0);
-										 vec2 off_y = vec2(0.0, off);
-										 
-//										 //calculate the gradient
-//										 float gradx; float grady; float gradmag;
-//										 gradx = texture(Obstacle, st2 - off_x).x - texture(Obstacle, st2 + off_x).x;
-//										 grady = texture(Obstacle, st2 - off_y).x - texture(Obstacle, st2 + off_y).x;
-//										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
-//
-//										 vec2 edgeOffset;
-//										 float invObs = round(1.0 - texture(Obstacle, st2).x);
-//										 edgeOffset.x = invObs * round(gradx/gradmag);
-//										 edgeOffset.y = invObs * round(grady/gradmag);
-//										 bool hasOffset = bool(max(abs(edgeOffset.x), abs(edgeOffset.y)));
-//										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
-//
-//										 fragColor = vec4(edgeOffset, posNegOrZero, 0);
-										 
-										 fragColor = vec4(0);
-										 
-										 // neighboring obstacles
-										 fragColor.x = textureOffset(Obstacle, st, + ivec2(0,1)).x;
-										 fragColor.y = textureOffset(Obstacle, st, - ivec2(0,1)).x;
-										 fragColor.z = textureOffset(Obstacle, st, + ivec2(1,0)).x;
-										 fragColor.w = textureOffset(Obstacle, st, - ivec2(1,0)).x;
-										 
-										 
+									 uniform sampler2DRect tex_obstacleC;
+									 
+									 void main(){
+										 vec2 posn = texCoordVarying;
+										 glFragColor = vec4(0);
+										 glFragColor.x = textureOffset(tex_obstacleC, posn, + ivec2(0,1)).x;
+										 glFragColor.y = textureOffset(tex_obstacleC, posn, - ivec2(0,1)).x;
+										 glFragColor.z = textureOffset(tex_obstacleC, posn, + ivec2(1,0)).x;
+										 glFragColor.w = textureOffset(tex_obstacleC, posn, - ivec2(1,0)).x;
 									 }
 									 );
 			

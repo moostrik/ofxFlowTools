@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftVorticityCurlShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -41,21 +41,32 @@ namespace flowTools {
 		
 		void glThree() {
 			fragmentShader = GLSL410(
-									 uniform sampler2DRect Velocity;
-									 uniform sampler2DRect Edge;
+									 precision mediump float;
+									 precision mediump int;
 									 
 									 in vec2 texCoordVarying;
-									 out vec4 fragColor;
+									 out float glFragColor;
+									 
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_obstacleC;
+									 // uniform sampler2DRect tex_obstacleN;
+									 
+									 uniform float halfrdx;
 									 
 									 void main(){
-										 vec2 st = texCoordVarying;
-										 vec2 vL = texture(Velocity, st - vec2(1, 0)).xy;
-										 vec2 vR = texture(Velocity, st + vec2(1, 0)).xy;
-										 vec2 vB = texture(Velocity, st - vec2(0, 1)).xy;
-										 vec2 vT = texture(Velocity, st + vec2(0, 1)).xy;
-										 float vorticity = 0.5 * ((vR.y - vL.y) - (vT.x - vB.x));
-										 float posOrZero = max(0.0, texture(Edge, st).z);
-										 fragColor = vec4(vorticity * posOrZero, 0.0, 0.0, 0.0);
+										 
+										 vec2 posn = texCoordVarying;
+										 
+										 if (texture(tex_obstacleC, posn).x == 1.0) { glFragColor = 0.0; return; }
+										 
+										 // velocity
+										 vec2 vT = textureOffset(tex_velocity, posn, + ivec2(0,1)).xy;
+										 vec2 vB = textureOffset(tex_velocity, posn, - ivec2(0,1)).xy;
+										 vec2 vR = textureOffset(tex_velocity, posn, + ivec2(1,0)).xy;
+										 vec2 vL = textureOffset(tex_velocity, posn, - ivec2(1,0)).xy;
+										 vec2 vC = texture      (tex_velocity, posn              ).xy;
+										 
+										 glFragColor = halfrdx * ((vT.x - vB.x) - (vR.y - vL.y));
 									 }
 									 );
 			

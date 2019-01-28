@@ -58,7 +58,7 @@ namespace flowTools {
 		void	drawDivergence(int _x, int _y, int _w, int _h)			{ visualizationField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawObstacle(int _x, int _y, int _w, int _h)			{ obstacleCFbo.draw(_x, _y, _w, _h); }
 		void	drawObstacleEdges(int _x, int _y, int _w, int _h)		{ obstacleNFbo.draw(_x, _y, _w, _h); }
-		void	drawVorticityVelocity(int _x, int _y, int _w, int _h)	{ visualizationField.draw(vorticityCurlFbo.getTexture(), _x, _y, _w, _h); }
+		void	drawVorticity(int _x, int _y, int _w, int _h)			{ visualizationField.draw(vorticityForceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawBuoyancy(int _x, int _y, int _w, int _h)			{ visualizationField.draw(buoyancyFbo.getTexture(), _x, _y, _w, _h); }
 			
 		int		getSimulationWidth()				{ return simulationWidth; }
@@ -126,6 +126,7 @@ namespace flowTools {
 		ofFbo			obstacleNFbo;
 		ofFbo			divergenceFbo;
 		ofFbo			vorticityCurlFbo;
+		ofFbo			vorticityForceFbo;
 		ofFbo			buoyancyFbo;
 		
 		int		numJacobiIterationsProjection;

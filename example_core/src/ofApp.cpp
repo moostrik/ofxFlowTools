@@ -2,8 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofSetFrameRate(30);
-	ofSetVerticalSync(false);
+	ofSetVerticalSync(true);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	densityWidth = 1280;
@@ -53,9 +52,9 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
-	gui.add(outputWidth.set("output width", 1280, 128, 1920));
-	gui.add(outputHeight.set("output height", 720, 72, 1080));
-	gui.add(simulationScale.set("simulation scale", 2, 1, 8));
+	gui.add(outputWidth.set("output width", 1280, 256, 1920));
+	gui.add(outputHeight.set("output height", 720, 144, 1080));
+	gui.add(simulationScale.set("simulation scale", 2, 1, 4));
 	gui.add(simulationFPS.set("simulation fps", 30, 1, 60));
 	outputWidth.addListener(this, &ofApp::simulationResolutionListener);
 	outputHeight.addListener(this, &ofApp::simulationResolutionListener);
@@ -156,7 +155,7 @@ void ofApp::draw(){
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
 		case OBST_EDGE:		fluidFlow.drawObstacleEdges(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VORT:	fluidFlow.drawVorticityVelocity(0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluidFlow.drawVorticity(0, 0, windowWidth, windowHeight); break;
 		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
 		case FLUID_TMP:		fluidFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
 		case FLUID_PRS:		fluidFlow.drawPressure(0, 0, windowWidth, windowHeight); break;

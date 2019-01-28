@@ -88,8 +88,10 @@ namespace flowTools {
 		ftUtil::zero(pressureFbo);
 		divergenceFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
 		ftUtil::zero(divergenceFbo);
-		vorticityCurlFbo.allocate(simulationWidth, simulationHeight, GL_R32F);
+		vorticityCurlFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
 		ftUtil::zero(vorticityCurlFbo);
+		vorticityForceFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
+		ftUtil::zero(vorticityForceFbo);
 		buoyancyFbo.allocate(simulationWidth, simulationHeight, GL_RG32F);
 		ftUtil::zero(buoyancyFbo);
 		obstacleCFbo.allocate(simulationWidth, simulationHeight, GL_R8);
@@ -124,7 +126,7 @@ namespace flowTools {
 		temperatureFbo.swap();
 		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleCFbo.getTexture(), timeStep, gridScale, tD);
 		
-		float pD = 1.0 - _deltaTime * dissipationPrs.get();
+		float pD = 1.0 - dissipationPrs.get();
 		pressureFbo.swap();
 		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), pD);
 		
@@ -157,8 +159,8 @@ namespace flowTools {
 		// VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityCurlShader.update(vorticityCurlFbo, velocityFbo.getTexture(), obstacleCFbo.getTexture(), gridScale);
-			velocityFbo.swap();
-			vorticityForceShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), vorticityCurlFbo.getTexture(), timeStep, gridScale, vorticity.get());
+			vorticityForceShader.update(vorticityForceFbo, vorticityCurlFbo.getTexture(), timeStep, gridScale, vorticity.get());
+			addVelocity(vorticityForceFbo.getTexture());
 		}
 		
 		// BUOYANCY

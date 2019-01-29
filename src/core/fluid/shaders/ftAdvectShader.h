@@ -22,7 +22,7 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex_velocity;
 									 uniform sampler2DRect tex_source;
-									 uniform sampler2DRect tex_obstacleC;
+									 uniform sampler2DRect tex_obstacle;
 									 
 									 uniform float timestep;
 									 uniform float rdx;
@@ -30,16 +30,16 @@ namespace flowTools {
 									 uniform vec2  scale;
 									 
 									 void main(){
-										 vec2 posn = gl_TexCoord[0].st;
-										 vec2 posn2 = posn * scale;
+										 vec2 st = gl_TexCoord[0].st;
+										 vec2 st2 = st * scale;
 										 
-										 float oC = texture2DRect(tex_obstacleC, posn2).x;
+										 float oC = texture2DRect(tex_obstacle, st2).x;
 										 if (oC == 1.0) {
 											 gl_FragColor = vec4(0.0);
 										 } else {
-											 vec2 velocity = texture2DRect(tex_velocity, posn2).xy;
-											 vec2 posn_back = posn - timestep * rdx * velocity / scale;
-											 gl_FragColor = dissipation * texture2DRect(tex_source, posn_back);
+											 vec2 velocity = texture2DRect(tex_velocity, st2).xy;
+											 vec2 st_back = st - timestep * rdx * velocity / scale;
+											 gl_FragColor = dissipation * texture2DRect(tex_source, st_back);
 										 }
 									 }
 									 );
@@ -58,7 +58,7 @@ namespace flowTools {
 									 
 									 uniform sampler2DRect tex_velocity;
 									 uniform sampler2DRect tex_source;
-									 uniform sampler2DRect tex_obstacleC;
+									 uniform sampler2DRect tex_obstacle;
 									 
 									 uniform float timestep;
 									 uniform float rdx;
@@ -66,16 +66,16 @@ namespace flowTools {
 									 uniform vec2  scale;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
-										 vec2 posn2 = posn * scale;
+										 vec2 st = texCoordVarying;
+										 vec2 st2 = st * scale;
 										 
-										 float oC = texture(tex_obstacleC, posn2).x;
+										 float oC = texture(tex_obstacle, st2).x;
 										 if (oC == 1.0) {
 											 glFragColor = vec4(0);
 										 } else {
-											 vec2 velocity = texture(tex_velocity, posn2).xy;
-											 vec2 posn_back = posn - timestep * rdx * velocity / scale;
-											 glFragColor = dissipation * texture(tex_source, posn_back);
+											 vec2 velocity = texture(tex_velocity, st2).xy;
+											 vec2 st_back = st - timestep * rdx * velocity / scale;
+											 glFragColor = dissipation * texture(tex_source, st_back);
 										 }
 									 }
 									 );
@@ -96,7 +96,7 @@ namespace flowTools {
 			setUniform2f		("scale",			_velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());
 			setUniformTexture	("tex_velocity",	_velTex,	0);
 			setUniformTexture	("tex_source",		_backTex,	1);
-			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
+			setUniformTexture	("tex_obstacle",	_obsCTex,	2);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

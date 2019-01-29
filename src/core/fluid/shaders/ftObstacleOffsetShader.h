@@ -20,15 +20,15 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect tex_obstacleC;
+									 uniform sampler2DRect tex_obstacle;
 									 
 									 void main(){
-										 vec2 posn = gl_TexCoord[0].st;
+										 vec2 st = gl_TexCoord[0].st;
 										 gl_FragColor = vec4(0.0);
-										 gl_FragColor.x = texture2DRect(tex_obstacleC, posn + ivec2(0,1)).x;
-										 gl_FragColor.y = texture2DRect(tex_obstacleC, posn - ivec2(0,1)).x;
-										 gl_FragColor.z = texture2DRect(tex_obstacleC, posn + ivec2(1,0)).x;
-										 gl_FragColor.w = texture2DRect(tex_obstacleC, posn - ivec2(1,0)).x;
+										 gl_FragColor.x = texture2DRect(tex_obstacle, st + ivec2(0,1)).x;
+										 gl_FragColor.y = texture2DRect(tex_obstacle, st - ivec2(0,1)).x;
+										 gl_FragColor.z = texture2DRect(tex_obstacle, st + ivec2(1,0)).x;
+										 gl_FragColor.w = texture2DRect(tex_obstacle, st - ivec2(1,0)).x;
 									 }
 									 );
 			
@@ -44,15 +44,15 @@ namespace flowTools {
 									 in vec2 texCoordVarying;
 									 out vec4 glFragColor;
 									 
-									 uniform sampler2DRect tex_obstacleC;
+									 uniform sampler2DRect tex_obstacle;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
+										 vec2 st = texCoordVarying;
 										 glFragColor = vec4(0.0);
-										 glFragColor.x = textureOffset(tex_obstacleC, posn, + ivec2(0,1)).x;
-										 glFragColor.y = textureOffset(tex_obstacleC, posn, - ivec2(0,1)).x;
-										 glFragColor.z = textureOffset(tex_obstacleC, posn, + ivec2(1,0)).x;
-										 glFragColor.w = textureOffset(tex_obstacleC, posn, - ivec2(1,0)).x;
+										 glFragColor.x = textureOffset(tex_obstacle, st, + ivec2(0,1)).x;
+										 glFragColor.y = textureOffset(tex_obstacle, st, - ivec2(0,1)).x;
+										 glFragColor.z = textureOffset(tex_obstacle, st, + ivec2(1,0)).x;
+										 glFragColor.w = textureOffset(tex_obstacle, st, - ivec2(1,0)).x;
 									 }
 									 );
 			

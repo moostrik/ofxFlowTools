@@ -27,14 +27,14 @@ namespace flowTools {
 									 uniform float vorticity;
 									 
 									 void main(){
-										 vec2 posn = gl_TexCoord[0].st;
+										 vec2 st = gl_TexCoord[0].st;
 										 
 										 // curl
-										 float cT = abs(texture2DRect(tex_curl , posn + ivec2(0,1)).x);
-										 float cB = abs(texture2DRect(tex_curl , posn - ivec2(0,1)).x);
-										 float cR = abs(texture2DRect(tex_curl , posn + ivec2(1,0)).x);
-										 float cL = abs(texture2DRect(tex_curl , posn - ivec2(1,0)).x);
-										 float cC =     texture2DRect(tex_curl , posn              ).x;
+										 float cT = abs(texture2DRect(tex_curl , st + ivec2(0,1)).x);
+										 float cB = abs(texture2DRect(tex_curl , st - ivec2(0,1)).x);
+										 float cR = abs(texture2DRect(tex_curl , st + ivec2(1,0)).x);
+										 float cL = abs(texture2DRect(tex_curl , st - ivec2(1,0)).x);
+										 float cC =     texture2DRect(tex_curl , st              ).x;
 										 
 										 // normalize
 										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
@@ -65,14 +65,14 @@ namespace flowTools {
 									 uniform float vorticity;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
+										 vec2 st = texCoordVarying;
 										 
 										 // curl
-										 float cT = abs(textureOffset(tex_curl , posn, + ivec2(0,1)).x);
-										 float cB = abs(textureOffset(tex_curl , posn, - ivec2(0,1)).x);
-										 float cR = abs(textureOffset(tex_curl , posn, + ivec2(1,0)).x);
-										 float cL = abs(textureOffset(tex_curl , posn, - ivec2(1,0)).x);
-										 float cC =     texture      (tex_curl , posn              ).x;
+										 float cT = abs(textureOffset(tex_curl , st, + ivec2(0,1)).x);
+										 float cB = abs(textureOffset(tex_curl , st, - ivec2(0,1)).x);
+										 float cR = abs(textureOffset(tex_curl , st, + ivec2(1,0)).x);
+										 float cL = abs(textureOffset(tex_curl , st, - ivec2(1,0)).x);
+										 float cC =     texture      (tex_curl , st              ).x;
 										 
 										 // normalize
 										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);

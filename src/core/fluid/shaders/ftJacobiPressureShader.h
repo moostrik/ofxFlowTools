@@ -22,35 +22,34 @@ namespace flowTools {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex_source;
 									 uniform sampler2DRect tex_divergence;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float alpha;
 									 uniform float beta;
 									 
 									 void main(){
+										 vec2 st = gl_TexCoord[0].st;
 										 
-										 vec2 posn = gl_TexCoord[0].st;
-										 
-										 float oC = texture2DRect(tex_obstacleC, posn).x;
+										 float oC = texture2DRect(tex_obstacle, st).x;
 										 if (oC == 1.0) {
 											 gl_FragColor = vec4(0.0);
 											 return;
 										 }
 										 
 										 // tex b
-										 vec4 bC = texture2DRect(tex_divergence, posn);
+										 vec4 bC = texture2DRect(tex_divergence, st);
 										 
 										 // tex x
-										 vec4 xT = texture2DRect(tex_source, posn + ivec2(0,1));
-										 vec4 xB = texture2DRect(tex_source, posn - ivec2(0,1));
-										 vec4 xR = texture2DRect(tex_source, posn + ivec2(1,0));
-										 vec4 xL = texture2DRect(tex_source, posn - ivec2(1,0));
-										 vec4 xC = texture2DRect(tex_source, posn);
+										 vec4 xT = texture2DRect(tex_source, st + ivec2(0,1));
+										 vec4 xB = texture2DRect(tex_source, st - ivec2(0,1));
+										 vec4 xR = texture2DRect(tex_source, st + ivec2(1,0));
+										 vec4 xL = texture2DRect(tex_source, st - ivec2(1,0));
+										 vec4 xC = texture2DRect(tex_source, st);
 										 
 										 // pure Neumann pressure boundary
 										 // use center x (pressure) if neighbor is an obstacle
-										 vec4 oN = texture2DRect(tex_obstacleN, posn);
+										 vec4 oN = texture2DRect(tex_obstacleOffset, st);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
@@ -74,32 +73,32 @@ namespace flowTools {
 									 
 									 uniform sampler2DRect tex_source;
 									 uniform sampler2DRect tex_divergence;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float alpha;
 									 uniform float beta;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
+										 vec2 st = texCoordVarying;
 										 
-										 float oC = texture(tex_obstacleC, posn).x;
+										 float oC = texture(tex_obstacle, st).x;
 										 if (oC == 1.0) {
 											 glFragColor = vec4(0.0);
 											 return;
 										 }
 										 
-										 vec4 bC = texture(tex_divergence, posn);
+										 vec4 bC = texture(tex_divergence, st);
 										 
-										 vec4 xT = textureOffset(tex_source, posn, + ivec2(0,1));
-										 vec4 xB = textureOffset(tex_source, posn, - ivec2(0,1));
-										 vec4 xR = textureOffset(tex_source, posn, + ivec2(1,0));
-										 vec4 xL = textureOffset(tex_source, posn, - ivec2(1,0));
-										 vec4 xC = texture      (tex_source, posn);
+										 vec4 xT = textureOffset(tex_source, st, + ivec2(0,1));
+										 vec4 xB = textureOffset(tex_source, st, - ivec2(0,1));
+										 vec4 xR = textureOffset(tex_source, st, + ivec2(1,0));
+										 vec4 xL = textureOffset(tex_source, st, - ivec2(1,0));
+										 vec4 xC = texture      (tex_source, st);
 										 
 										 // pure Neumann pressure boundary
 										 // use center x (pressure) if neighbor is an obstacle
-										 vec4 oN = texture(tex_obstacleN, posn);
+										 vec4 oN = texture(tex_obstacleOffset, st);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
@@ -126,8 +125,8 @@ namespace flowTools {
 			setUniform1f		("beta",			beta);
 			setUniformTexture	("tex_source",		_backTex,	0);
 			setUniformTexture	("tex_divergence",	_divTex,	1);
-			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
-			setUniformTexture	("tex_obstacleN",	_obsNTex,	3);
+			setUniformTexture	("tex_obstacle",	_obsCTex,	2);
+			setUniformTexture	("tex_obstacleOffset",	_obsNTex,	3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

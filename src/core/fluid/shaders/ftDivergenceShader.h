@@ -21,31 +21,30 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex_velocity;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float halfrdx;
 									 
 									 void main(){
+										 vec2 st = gl_TexCoord[0].st;
 										 
-										 vec2 posn = gl_TexCoord[0].st;
-										 
-										 float oC = texture2DRect(tex_obstacleC, posn).x;
+										 float oC = texture2DRect(tex_obstacle, st).x;
 										 if (oC == 1.0) {
 											 gl_FragColor = vec4(0.0);
 											 return;
 										 }
 										 
 										 // velocity
-										 vec2 vT = texture2DRect(tex_velocity, posn + ivec2(0,1)).xy;
-										 vec2 vB = texture2DRect(tex_velocity, posn - ivec2(0,1)).xy;
-										 vec2 vR = texture2DRect(tex_velocity, posn + ivec2(1,0)).xy;
-										 vec2 vL = texture2DRect(tex_velocity, posn - ivec2(1,0)).xy;
-										 vec2 vC = texture2DRect(tex_velocity, posn).xy;
+										 vec2 vT = texture2DRect(tex_velocity, st + ivec2(0,1)).xy;
+										 vec2 vB = texture2DRect(tex_velocity, st - ivec2(0,1)).xy;
+										 vec2 vR = texture2DRect(tex_velocity, st + ivec2(1,0)).xy;
+										 vec2 vL = texture2DRect(tex_velocity, st - ivec2(1,0)).xy;
+										 vec2 vC = texture2DRect(tex_velocity, st).xy;
 										 
 										 // no-slip (zero) velocity boundary conditions
 										 // use negative center velocity if neighbor is an obstacle
-										 vec4 oN = texture2DRect(tex_obstacleN, posn);
+										 vec4 oN = texture2DRect(tex_obstacleOffset, st);
 										 vT = mix(vT, -vC, oN.x);
 										 vB = mix(vB, -vC, oN.y);
 										 vR = mix(vR, -vC, oN.z);
@@ -69,31 +68,30 @@ namespace flowTools {
 									 out float glFragColor;
 									 
 									 uniform sampler2DRect tex_velocity;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float halfrdx;
 									 
 									 void main(){
+										 vec2 st = texCoordVarying;
 										 
-										 vec2 posn = texCoordVarying;
-										 
-										 float oC = texture(tex_obstacleC, posn).x;
+										 float oC = texture(tex_obstacle, st).x;
 										 if (oC == 1.0) {
 											 glFragColor = 0.0;
 											 return;
 										 }
 										 
 										 // velocity
-										 vec2 vT = textureOffset(tex_velocity, posn, + ivec2(0,1)).xy;
-										 vec2 vB = textureOffset(tex_velocity, posn, - ivec2(0,1)).xy;
-										 vec2 vR = textureOffset(tex_velocity, posn, + ivec2(1,0)).xy;
-										 vec2 vL = textureOffset(tex_velocity, posn, - ivec2(1,0)).xy;
-										 vec2 vC = texture      (tex_velocity, posn).xy;
+										 vec2 vT = textureOffset(tex_velocity, st, + ivec2(0,1)).xy;
+										 vec2 vB = textureOffset(tex_velocity, st, - ivec2(0,1)).xy;
+										 vec2 vR = textureOffset(tex_velocity, st, + ivec2(1,0)).xy;
+										 vec2 vL = textureOffset(tex_velocity, st, - ivec2(1,0)).xy;
+										 vec2 vC = texture      (tex_velocity, st).xy;
 										 
 										 // no-slip (zero) velocity boundary conditions
 										 // use negative center velocity if neighbor is an obstacle
-										 vec4 oN = texture(tex_obstacleN, posn);
+										 vec4 oN = texture(tex_obstacleOffset, st);
 										 vT = mix(vT, -vC, oN.x);
 										 vB = mix(vB, -vC, oN.y);
 										 vR = mix(vR, -vC, oN.z);
@@ -115,8 +113,8 @@ namespace flowTools {
 			begin();
 			setUniform1f		("halfrdx",			0.5f / _gridScale);
 			setUniformTexture	("tex_velocity",	_velTex,	0);
-			setUniformTexture	("tex_obstacleC",	_obsCTex,	1);
-			setUniformTexture	("tex_obstacleN",	_obsNTex,	2);
+			setUniformTexture	("tex_obstacle",	_obsCTex,	1);
+			setUniformTexture	("tex_obstacleOffset",	_obsNTex,	2);
 			renderFrame(_fbo.getWidth(),_fbo.getHeight());
 			end();
 			_fbo.end();

@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftBuoyancyShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -30,15 +30,15 @@ namespace flowTools {
 									 uniform float fluid_weight;
 									 
 									 void main(){
-										 vec2 posn = gl_TexCoord[0].st;
+										 vec2 st = gl_TexCoord[0].st;
 										 
-										 vec2  velocity    = texture2DRect(tex_velocity   , posn).xy;
-										 float temperature = texture2DRect(tex_temperature, posn).x;
+										 vec2  velocity    = texture2DRect(tex_velocity   , st).xy;
+										 float temperature = texture2DRect(tex_temperature, st).x;
 										 
 										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
 										 if (dtemp != 0.0) {
-											 float density = texture2DRect(tex_density, posn).a;
+											 float density = texture2DRect(tex_density, st).a;
 											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }
@@ -69,15 +69,15 @@ namespace flowTools {
 									 uniform float fluid_weight;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
+										 vec2 st = texCoordVarying;
 										 
-										 vec2  velocity    = texture(tex_velocity   , posn).xy;
-										 float temperature = texture(tex_temperature, posn).x;
+										 vec2  velocity    = texture(tex_velocity   , st).xy;
+										 float temperature = texture(tex_temperature, st).x;
 										 
 										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
 										 if (dtemp != 0.0) {
-											 float density = texture(tex_density, posn).a;
+											 float density = texture(tex_density, st).a;
 											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }

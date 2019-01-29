@@ -21,8 +21,8 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex_source;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float alpha;
 									 uniform float beta;
@@ -30,21 +30,21 @@ namespace flowTools {
 									 
 									 void main(){
 										 
-										 vec2 posn = gl_TexCoord[0].st;
+										 vec2 st = gl_TexCoord[0].st;
 										 
-										 float oC = texture2DRect(tex_obstacleC, posn).x;
+										 float oC = texture2DRect(tex_obstacle, st).x;
 										 if (oC == 1.0) {
 											 gl_FragColor = vec4(0.0);
 											 return;
 										 }
 										 
-										 vec4 xT = texture2DRect(tex_source, posn + ivec2(0,1));
-										 vec4 xB = texture2DRect(tex_source, posn - ivec2(0,1));
-										 vec4 xR = texture2DRect(tex_source, posn + ivec2(1,0));
-										 vec4 xL = texture2DRect(tex_source, posn - ivec2(1,0));
-										 vec4 xC = texture2DRect(tex_source, posn);
+										 vec4 xT = texture2DRect(tex_source, st + ivec2(0,1));
+										 vec4 xB = texture2DRect(tex_source, st - ivec2(0,1));
+										 vec4 xR = texture2DRect(tex_source, st + ivec2(1,0));
+										 vec4 xL = texture2DRect(tex_source, st - ivec2(1,0));
+										 vec4 xC = texture2DRect(tex_source, st);
 										 
-										 vec4 oN = texture2DRect(tex_obstacleN, posn);
+										 vec4 oN = texture2DRect(tex_obstacleOffset, st);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
@@ -67,30 +67,30 @@ namespace flowTools {
 									 out vec4 glFragColor;
 									 
 									 uniform sampler2DRect tex_source;
-									 uniform sampler2DRect tex_obstacleC;
-									 uniform sampler2DRect tex_obstacleN;
+									 uniform sampler2DRect tex_obstacle;
+									 uniform sampler2DRect tex_obstacleOffset;
 									 
 									 uniform float alpha;
 									 uniform float beta;
 									 uniform vec2  scale;
 									 
 									 void main(){
-										 vec2 posn = texCoordVarying;
-										 vec2 posn2 = posn * scale;
+										 vec2 st = texCoordVarying;
+										 vec2 st2 = st * scale;
 										 
-										 float oC = texture(tex_obstacleC, posn2).x;
+										 float oC = texture(tex_obstacle, st2).x;
 										 if (oC == 1.0) {
 											 glFragColor = vec4(0.0);
 											 return;
 										 }
 										 
-										 vec4 xT = textureOffset(tex_source, posn, + ivec2(0,1));
-										 vec4 xB = textureOffset(tex_source, posn, - ivec2(0,1));
-										 vec4 xR = textureOffset(tex_source, posn, + ivec2(1,0));
-										 vec4 xL = textureOffset(tex_source, posn, - ivec2(1,0));
-										 vec4 xC = texture      (tex_source, posn);
+										 vec4 xT = textureOffset(tex_source, st, + ivec2(0,1));
+										 vec4 xB = textureOffset(tex_source, st, - ivec2(0,1));
+										 vec4 xR = textureOffset(tex_source, st, + ivec2(1,0));
+										 vec4 xL = textureOffset(tex_source, st, - ivec2(1,0));
+										 vec4 xC = texture      (tex_source, st);
 										 
-										 vec4 oN = texture(tex_obstacleN, posn2);
+										 vec4 oN = texture(tex_obstacleOffset, st2);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
@@ -117,8 +117,8 @@ namespace flowTools {
 			setUniform1f		("beta",			beta);
 			setUniform2f		("scale",			_obsCTex.getWidth() / _fbo.getWidth(), _obsCTex.getHeight()/ _fbo.getHeight());
 			setUniformTexture	("tex_source",		_backTex,	0);
-			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
-			setUniformTexture	("tex_obstacleN",	_obsNTex,	3);
+			setUniformTexture	("tex_obstacle",	_obsCTex,	2);
+			setUniformTexture	("tex_obstacleOffset",	_obsNTex,	3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();
 			_fbo.end();

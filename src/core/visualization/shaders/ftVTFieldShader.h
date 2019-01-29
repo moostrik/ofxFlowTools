@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftVTFieldShader() {
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftVTFieldShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -108,7 +108,7 @@ namespace flowTools {
 						bInitialized *= linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			string geometryShader;
 			
 			vertexShader = GLSL410(

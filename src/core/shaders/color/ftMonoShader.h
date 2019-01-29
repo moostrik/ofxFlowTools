@@ -11,7 +11,7 @@ namespace flowTools {
 			bInitialized = 1;
 			
 			if (ofIsGLProgrammableRenderer())
-				glThree();
+				glFour();
 			else
 				glTwo();
 			
@@ -43,7 +43,7 @@ namespace flowTools {
 			
 		}
 		
-		void glThree() {
+		void glFour() {
 			
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect tex0;

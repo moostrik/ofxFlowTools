@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftInitPositionShader() {
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftInitPositionShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -31,7 +31,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			fragmentShader = GLSL410(
 									 uniform vec2 Dimensions;
 									 

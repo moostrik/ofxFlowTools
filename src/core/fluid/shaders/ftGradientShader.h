@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftGradientShader() {
 			bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftGradientShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -63,7 +63,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			fragmentShader = GLSL410(
 									 precision mediump float;
 									 precision mediump int;

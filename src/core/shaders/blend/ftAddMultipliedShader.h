@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftAddMultipliedShader() {
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftAddMultipiedShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -40,7 +40,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect baseTex;
 									 uniform sampler2DRect blendTex;

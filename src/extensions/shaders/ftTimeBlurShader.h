@@ -13,7 +13,7 @@ namespace flowTools {
 		ftTimeBlurShader(){
 			internalFormat = GL_RGBA;
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftTimeBlurShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -80,7 +80,7 @@ namespace flowTools {
 			bInitialized *= blurShader[1].linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			string fragmentHorizontalBlurShader = GLSL410(
 														  uniform sampler2DRect backbuffer;
 														  uniform float radius;

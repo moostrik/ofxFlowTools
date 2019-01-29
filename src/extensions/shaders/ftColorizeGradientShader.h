@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftColorizeLuminanceShader() {
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftColorizeGradientShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -33,7 +33,7 @@ namespace flowTools {
 			
 		}
 		
-		void glThree() {
+		void glFour() {
 			
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect SourceTexture;

@@ -10,7 +10,7 @@ namespace flowTools {
 	public:
 		ftDrawParticleShader() {
             bInitialized = 1;
-			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
+			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
 			string shaderName = "ftDrawParticleShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
@@ -48,7 +48,7 @@ namespace flowTools {
 			bInitialized *= linkProgram();
 		}
 		
-		void glThree() {
+		void glFour() {
 			vertexShader = GLSL410(
 								   uniform	mat4 modelViewProjectionMatrix;
 								   uniform	mat4 textureMatrix;

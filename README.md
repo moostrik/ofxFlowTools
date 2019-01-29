@@ -24,7 +24,7 @@ This addon started out as an expansion to ofxFluid by Patricio Gonzalez Vivo als
 
 The Fluid shaders are adapted from various sources. Unfortunately I can't remember all, but the most important ones:
 - Mark J Harris: Various online sources
-- Patricio Gonzalez Vivo (http://www.patriciogonzalezvivo.com): ofxFluid
+- Thomas Diewald (http://thomasdiewald.com) PixelFlow
 
 The Optical Flow Shader is based on a Quartz Composer patch, but was also inspired by ofxMIOFlowGLSL by Princemio
 

@@ -63,7 +63,7 @@ namespace flowTools {
 		
 		void								setupParameters();
 		ofParameter<float>					pMagnitudeNormalization;
-		ofParameter<float>					pAreaNormalization;
+//		ofParameter<float>					pAreaNormalization;
 		ofParameter<float>					pHighComponentBoost;
 		ofParameter<bool>					pPauze;
 		ofParameterGroup					roiParameters;

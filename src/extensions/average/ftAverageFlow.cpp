@@ -41,8 +41,8 @@ namespace flowTools {
 		string name = "average " + ftFlowForceNames[type];
 		if (averageFlowCount > 1) name += " " + ofToString(averageFlowCount - 1);
 		parameters.setName(name);
-		parameters.add(pMagnitudeNormalization.set("mag normalization", .025, .01, 1));
-		parameters.add(pAreaNormalization.set("area normalization", .1, .001, .02));
+		parameters.add(pMagnitudeNormalization.set("mag normalization", .5, .01, 1));
+//		parameters.add(pAreaNormalization.set("area normalization", .1, .001, .02));
 		if (type == FT_VELOCITY_SPLIT) {
 			parameters.add(pHighComponentBoost.set("boost directionality", 0, 0, 5));
 		}	else { pHighComponentBoost.set(0); }
@@ -90,91 +90,93 @@ namespace flowTools {
 	//--------------------------------------------------------------
 
 	void ftAverageFlow::update(ofFloatPixels& _pixels) {
-		int pixelWidth = _pixels.getWidth();
-		int pixelHeight = _pixels.getHeight();
-		ofRectangle roiRect = ofRectangle(roi.x * pixelWidth, roi.y * pixelHeight, int(roi.width * pixelWidth), int(roi.height * pixelHeight));
-		
-		int numRoiPixels = roiRect.width * roiRect.height;
-//		if (roiPixels.getWidth() < roiRect.width || roiPixels.getHeight() < roiRect.height) {
-//			roiPixels.allocate(roiRect.width, roiRect.height, numChannels);
-//		}
-		getRoiData(_pixels, roiPixels, roiRect);
-		float* pixelData = roiPixels.getData();
-		
-		vector<float> totalVelocity;
-		totalVelocity.resize(numChannels, 0);
-		
-		int magnitudeAreaCounter = 0;
-		vector<int> componentAreaCounter;
-		componentAreaCounter.resize(numChannels, 0);
-
-		pixelMagnitudes.resize(numRoiPixels);
-		for (int i=0; i<numRoiPixels; i++) {
-			float mag = 0;
-			bool bCountArea = 0;
-			for (int j=0; j<numChannels; j++) {
-				float vel = pixelData[i * numChannels + j];
-				if (vel > 0) {
-					componentAreaCounter[j]++;
-					bCountArea = 1;
+		if (!pPauze.get()) {
+			int pixelWidth = _pixels.getWidth();
+			int pixelHeight = _pixels.getHeight();
+			ofRectangle roiRect = ofRectangle(roi.x * pixelWidth, roi.y * pixelHeight, int(roi.width * pixelWidth), int(roi.height * pixelHeight));
+			
+			int numRoiPixels = roiRect.width * roiRect.height;
+//			if (roiPixels.getWidth() < roiRect.width || roiPixels.getHeight() < roiRect.height) {
+//				roiPixels.allocate(roiRect.width, roiRect.height, numChannels);
+			//		}
+			getRoiData(_pixels, roiPixels, roiRect);
+			float* pixelData = roiPixels.getData();
+			
+			vector<float> totalVelocity;
+			totalVelocity.resize(numChannels, 0);
+			
+			int magnitudeAreaCounter = 0;
+			vector<int> componentAreaCounter;
+			componentAreaCounter.resize(numChannels, 0);
+			
+			pixelMagnitudes.resize(numRoiPixels);
+			for (int i=0; i<numRoiPixels; i++) {
+				float mag = 0;
+				bool bCountArea = 0;
+				for (int j=0; j<numChannels; j++) {
+					float vel = pixelData[i * numChannels + j];
+					if (vel > 0) {
+						componentAreaCounter[j]++;
+						bCountArea = 1;
+					}
+					totalVelocity[j] += vel;
+					mag += vel * vel;
 				}
-				totalVelocity[j] += vel;
-				mag += vel * vel;
+				if (bCountArea) { magnitudeAreaCounter++; }
+				pixelMagnitudes[i] = sqrt(mag);
 			}
-			if (bCountArea) { magnitudeAreaCounter++; }
-			pixelMagnitudes[i] = sqrt(mag);
-		}
-		
-		magnitude = accumulate(pixelMagnitudes.begin(), pixelMagnitudes.end(), 0.0) / (float)pixelMagnitudes.size();
-		magnitude *= 4.0; // magnitude / 255 * 1000
-		magnitude /= pMagnitudeNormalization.get();
-		magnitude = ofClamp(magnitude, 0, 1);
-		
-//		magnitudeArea = magnitudeAreaCounter / (float)numRoiPixels / pAreaNormalization;
-		
-		
-		float totalMagnitude = 0;
-		for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }
-		totalMagnitude = sqrt(totalMagnitude);
-		
-		vector<float>	direction;
-		direction.resize(numChannels, 0);
-		
-		for (int i=0; i<numChannels; i++) {
-			if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
-			else { direction[i] = 0; }
-			velocity[i] = direction[i] * magnitude;
-//			velocityArea[i] = componentAreaCounter[i] / (float)numRoiPixels  / pAreaNormalization;
-		}
-		
-		// normalize to highest component and apply boost
-		if (pHighComponentBoost.get() > 0 && type == FT_VELOCITY_SPLIT) {
-			float highVelocity = 0;
-			float P = 1;
+			
+			magnitude = accumulate(pixelMagnitudes.begin(), pixelMagnitudes.end(), 0.0) / (float)pixelMagnitudes.size();
+			magnitude *= 4.0; // magnitude / 255 * 1000
+			magnitude /= pMagnitudeNormalization.get();
+			magnitude = ofClamp(magnitude, 0, 1);
+			
+//			magnitudeArea = magnitudeAreaCounter / (float)numRoiPixels / pAreaNormalization;
+			
+			
+			float totalMagnitude = 0;
+			for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }
+			totalMagnitude = sqrt(totalMagnitude);
+			
+			vector<float>	direction;
+			direction.resize(numChannels, 0);
+			
 			for (int i=0; i<numChannels; i++) {
-				if (fabs(velocity[i]) > highVelocity) {
-					highVelocity = fabs(velocity[i]);
-					if (velocity[i] < 0) P = -1;
+				if (totalMagnitude > 0) { direction[i] = totalVelocity[i] / totalMagnitude; }
+				else { direction[i] = 0; }
+				velocity[i] = direction[i] * magnitude;
+//				velocityArea[i] = componentAreaCounter[i] / (float)numRoiPixels  / pAreaNormalization;
+			}
+			
+			// normalize to highest component and apply boost
+			if (pHighComponentBoost.get() > 0 && type == FT_VELOCITY_SPLIT) {
+				float highVelocity = 0;
+				float P = 1;
+				for (int i=0; i<numChannels; i++) {
+					if (fabs(velocity[i]) > highVelocity) {
+						highVelocity = fabs(velocity[i]);
+						if (velocity[i] < 0) P = -1;
+					}
+				}
+				for (int i=0; i<numChannels; i++) {
+					velocity[i] /= highVelocity;
+					velocity[i] = powf(fabs(velocity[i]), pHighComponentBoost.get()) * P;
+					velocity[i] *= highVelocity;
 				}
 			}
+			
+			// use only 2 decimals
+			
+			pMagnitude.set(int(magnitude * 100) / 100.0);
+//	pMagnitudeArea.set(int(magnitudeArea * 100) / 100.0);
+			
 			for (int i=0; i<numChannels; i++) {
-				velocity[i] /= highVelocity;
-				velocity[i] = powf(fabs(velocity[i]), pHighComponentBoost.get()) * P;
-				velocity[i] *= highVelocity;
+				pVelocity[i] = int(velocity[i] * 100) / 100.0;
+//				pVelocityArea[i] = int(velocityArea[i] * 100) / 100.0;
 			}
+			
+			bUpdateVisualizer = true;
 		}
-		
-		// use only 2 decimals
-		
-		pMagnitude.set(int(magnitude * 100) / 100.0);
-//		pMagnitudeArea.set(int(magnitudeArea * 100) / 100.0);
-		
-		for (int i=0; i<numChannels; i++) {
-			pVelocity[i] = int(velocity[i] * 100) / 100.0;
-//			pVelocityArea[i] = int(velocityArea[i] * 100) / 100.0;
-		}
-		
-		bUpdateVisualizer = true;
 	}
 	
 	//--------------------------------------------------------------

@@ -251,15 +251,6 @@ namespace flowTools {
 		ftUtil::zero(vorticityCurlFbo);
 		ftUtil::zero(buoyancyFbo);
 		initObstacle();
-		
-		advectShader			= ftAdvectShader();
-		buoyancyShader 			= ftBuoyancyShader();
-		divergenceShader		= ftDivergenceShader();
-		gradientShader			= ftGradientShader();
-		jacobiDiffusionShader	= ftJacobiDiffusionShader();
-		obstacleOffsetShader	= ftObstacleOffsetShader();
-		vorticityCurlShader		= ftVorticityCurlShader();
-		vorticityForceShader	= ftVorticityForceShader();
 	}
 }
 

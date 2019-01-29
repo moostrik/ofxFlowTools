@@ -87,10 +87,9 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _velTex, ofTexture& _obsCTex, float _timeStep, float _gridScale, float _dissipation){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _velTex, ofTexture& _obsCTex, float _gridScale, float _timeStep, float _dissipation){
 			_fbo.begin();
 			begin();
-			setUniform1f		("timestep",		_timeStep);
 			setUniform1f		("rdx",				1.0f / _gridScale);
 			setUniform1f		("dissipation",		_dissipation);
 			setUniform2f		("scale",			_velTex.getWidth() / _fbo.getWidth(), _velTex.getHeight()/ _fbo.getHeight());

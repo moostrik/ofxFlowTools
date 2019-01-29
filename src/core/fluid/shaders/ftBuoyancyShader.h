@@ -24,10 +24,9 @@ namespace flowTools {
 									 uniform sampler2DRect tex_temperature;
 									 uniform sampler2DRect tex_density;
 									 
-									 uniform float temperature_ambient;
-									 uniform float timestep;
-									 uniform float fluid_buoyancy;
-									 uniform float fluid_weight;
+									 uniform float sigma;
+									 uniform float weight;
+									 uniform float ambient_temperature;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
@@ -35,11 +34,11 @@ namespace flowTools {
 										 vec2  velocity    = texture2DRect(tex_velocity   , st).xy;
 										 float temperature = texture2DRect(tex_temperature, st).x;
 										 
-										 float dtemp = temperature - temperature_ambient;
+										 float dtemp = temperature - ambient_temperature;
 										 vec2 buoyancy = vec2(0.0);
 										 if (dtemp != 0.0) {
 											 float density = texture2DRect(tex_density, st).a;
-											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
+											 float buoyancy_force = timestep * dtemp * sigma - density * weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }
 										 
@@ -63,10 +62,9 @@ namespace flowTools {
 									 uniform sampler2DRect tex_temperature;
 									 uniform sampler2DRect tex_density;
 									 
-									 uniform float temperature_ambient;
-									 uniform float timestep;
-									 uniform float fluid_buoyancy;
-									 uniform float fluid_weight;
+									 uniform float sigma;
+									 uniform float weight;
+									 uniform float ambient_temperature;
 									 
 									 void main(){
 										 vec2 st = texCoordVarying;
@@ -74,11 +72,11 @@ namespace flowTools {
 										 vec2  velocity    = texture(tex_velocity   , st).xy;
 										 float temperature = texture(tex_temperature, st).x;
 										 
-										 float dtemp = temperature - temperature_ambient;
+										 float dtemp = temperature - ambient_temperature;
 										 vec2 buoyancy = vec2(0.0);
 										 if (dtemp != 0.0) {
 											 float density = texture(tex_density, st).a;
-											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
+											 float buoyancy_force = dtemp * sigma - density * weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }
 										 
@@ -93,13 +91,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _buoyancy, float _weight){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _sigma, float _weight, float _ambientTemperature){
 			_fbo.begin();
 			begin();
-			setUniform1f		("temperature_ambient", _ambientTemperature);
-			setUniform1f		("timestep",			_timeStep);
-			setUniform1f		("fluid_buoyancy",		_buoyancy);
-			setUniform1f		("fluid_weight",		_weight);
+			setUniform1f		("sigma",				_sigma);
+			setUniform1f		("weight",				_weight);
+			setUniform1f		("ambient_temperature", _ambientTemperature);
 			setUniformTexture	("tex_velocity",		_velTex,	0);
 			setUniformTexture	("tex_temperature",		_temTex,	1);
 			setUniformTexture	("tex_density",			_denTex,	2);

@@ -107,7 +107,7 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _timeStep, float _gridScale){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _gridScale, float _timeStep){
 			float alpha = (_gridScale * _gridScale) / (_timeStep);
 			float beta = 1.0f / (4.0f + alpha);
 			

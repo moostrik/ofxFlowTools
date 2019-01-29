@@ -20,25 +20,30 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Temperature;
-									 uniform sampler2DRect Density;
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_temperature;
+									 uniform sampler2DRect tex_density;
 									 
-									 uniform float AmbientTemperature;
-									 uniform float TimeStep;
-									 uniform float Sigma;
-									 uniform float Kappa;
-									 
-									 uniform vec2  Gravity;
+									 uniform float temperature_ambient;
+									 uniform float timestep;
+									 uniform float fluid_buoyancy;
+									 uniform float fluid_weight;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 float temp = texture2DRect(Temperature, st).r;
+										 vec2 posn = gl_TexCoord[0].st;
+										 
+										 vec2  velocity    = texture2DRect(tex_velocity   , posn).xy;
+										 float temperature = texture2DRect(tex_temperature, posn).x;
+										 
+										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
-										 if (temp > AmbientTemperature) {
-											 float D = length(texture2DRect(Density, st).rgb);
-											 buoyancy = vec2((TimeStep * (temp - AmbientTemperature) * Sigma - D * Kappa ) * Gravity);
+										 if (dtemp == 0.0) {
+											 float density = texture2DRect(tex_density, posn).a;
+											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
+											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }
-										 gl_FragColor = vec4(buoyancy, 0.0, 0.0);
+										 
+										 gl_FragColor = vec4(buoyancy, 0.0, 0.0);;
 									 }
 									 );
 			
@@ -71,11 +76,11 @@ namespace flowTools {
 										 
 										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
-										 //	if (dtemp == 0.0) {
-										 float density = texture(tex_density, posn).a;
-										 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
-										 buoyancy = vec2(0, -1) * buoyancy_force;
-										 //	}
+										 if (dtemp == 0.0) {
+											 float density = texture(tex_density, posn).a;
+											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
+											 buoyancy = vec2(0, -1) * buoyancy_force;
+										 }
 										 
 										 glFragColor = buoyancy;
 									 }

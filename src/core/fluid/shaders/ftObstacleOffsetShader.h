@@ -20,29 +20,15 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Obstacle;
+									 uniform sampler2DRect tex_obstacleC;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 
-										 float off = 1;
-										 vec2 off_x = vec2(off, 0.0);
-										 vec2 off_y = vec2(0.0, off);
-										 
-										// calculate the gradient
-										 float gradx; float grady; float gradmag;
-										 gradx = texture2DRect(Obstacle, st - off_x).x - texture2DRect(Obstacle, st + off_x).x;
-										 grady = texture2DRect(Obstacle, st - off_y).x - texture2DRect(Obstacle, st + off_y).x;
-										 gradmag = sqrt((gradx*gradx) + (grady*grady) + 0.0001);
-										 
-										 vec2 edgeOffset;
-										 float invObs = floor(1.0 - texture2DRect(Obstacle, st).x + 0.5);
-										 edgeOffset.x = invObs * floor(gradx/gradmag + 0.5);
-										 edgeOffset.y = invObs * floor(grady/gradmag + 0.5);
-										 float hasOffset = max(abs(edgeOffset.x), abs(edgeOffset.y));
-										 float posNegOrZero = mix(invObs, -1.0, hasOffset);
-										 
-										 gl_FragColor = vec4(edgeOffset, posNegOrZero, 0);
+										 vec2 posn = gl_TexCoord[0].st;
+										 gl_FragColor = vec4(0.0);
+										 gl_FragColor.x = texture2DRect(tex_obstacleC, posn + ivec2(0,1)).x;
+										 gl_FragColor.y = texture2DRect(tex_obstacleC, posn - ivec2(0,1)).x;
+										 gl_FragColor.z = texture2DRect(tex_obstacleC, posn + ivec2(1,0)).x;
+										 gl_FragColor.w = texture2DRect(tex_obstacleC, posn - ivec2(1,0)).x;
 									 }
 									 );
 			
@@ -62,7 +48,7 @@ namespace flowTools {
 									 
 									 void main(){
 										 vec2 posn = texCoordVarying;
-										 glFragColor = vec4(0);
+										 glFragColor = vec4(0.0);
 										 glFragColor.x = textureOffset(tex_obstacleC, posn, + ivec2(0,1)).x;
 										 glFragColor.y = textureOffset(tex_obstacleC, posn, - ivec2(0,1)).x;
 										 glFragColor.z = textureOffset(tex_obstacleC, posn, + ivec2(1,0)).x;

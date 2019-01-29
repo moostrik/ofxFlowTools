@@ -20,16 +20,39 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Velocity;
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_obstacleC;
+									 uniform sampler2DRect tex_obstacleN;
+									 
+									 uniform float halfrdx;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 vec2 vL = texture2DRect(Velocity, st - vec2(1, 0)).xy;
-										 vec2 vR = texture2DRect(Velocity, st + vec2(1, 0)).xy;
-										 vec2 vB = texture2DRect(Velocity, st - vec2(0, 1)).xy;
-										 vec2 vT = texture2DRect(Velocity, st + vec2(0, 1)).xy;
-										 float divergence = 0.5 * (vR.x - vL.x + vT.y - vB.y);
-										 gl_FragColor = vec4(divergence, 0, 0, 0);
+										 
+										 vec2 posn = gl_TexCoord[0].st;
+										 
+										 float oC = texture2DRect(tex_obstacleC, posn).x;
+										 if (oC == 1.0) {
+											 gl_FragColor = vec4(0.0);
+											 return;
+										 }
+										 
+										 // velocity
+										 vec2 vT = texture2DRect(tex_velocity, posn + ivec2(0,1)).xy;
+										 vec2 vB = texture2DRect(tex_velocity, posn - ivec2(0,1)).xy;
+										 vec2 vR = texture2DRect(tex_velocity, posn + ivec2(1,0)).xy;
+										 vec2 vL = texture2DRect(tex_velocity, posn - ivec2(1,0)).xy;
+										 vec2 vC = texture2DRect(tex_velocity, posn).xy;
+										 
+										 // no-slip (zero) velocity boundary conditions
+										 // use negative center velocity if neighbor is an obstacle
+										 vec4 oN = texture2DRect(tex_obstacleN, posn);
+										 vT = mix(vT, -vC, oN.x);
+										 vB = mix(vB, -vC, oN.y);
+										 vR = mix(vR, -vC, oN.z);
+										 vL = mix(vL, -vC, oN.w);
+										 
+										 vec2 divergence = vec2(halfrdx) * ((vR.x - vL.x) + (vT.y - vB.y));
+										 gl_FragColor = vec4(divergence, 0.0, 0.0);
 									 }
 									 );
 			
@@ -71,12 +94,12 @@ namespace flowTools {
 										 // no-slip (zero) velocity boundary conditions
 										 // use negative center velocity if neighbor is an obstacle
 										 vec4 oN = texture(tex_obstacleN, posn);
-										 vT = mix(vT, -vC, oN.x);  // if(oT > 0.0) vT = -vC;
-										 vB = mix(vB, -vC, oN.y);  // if(oB > 0.0) vB = -vC;
-										 vR = mix(vR, -vC, oN.z);  // if(oR > 0.0) vR = -vC;
-										 vL = mix(vL, -vC, oN.w);  // if(oL > 0.0) vL = -vC;
+										 vT = mix(vT, -vC, oN.x);
+										 vB = mix(vB, -vC, oN.y);
+										 vR = mix(vR, -vC, oN.z);
+										 vL = mix(vL, -vC, oN.w);
 										 
-										 glFragColor = halfrdx  * ((vR.x - vL.x) + (vT.y - vB.y));
+										 glFragColor = halfrdx * ((vR.x - vL.x) + (vT.y - vB.y));
 									 }
 									 );
 			

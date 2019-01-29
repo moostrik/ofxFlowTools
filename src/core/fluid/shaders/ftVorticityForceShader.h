@@ -20,22 +20,29 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Vorticity;
+									 uniform sampler2DRect tex_curl;
 									 
-									 uniform float ConfinementScale;
+									 uniform float halfrdx;
+									 uniform float timestep;
+									 uniform float vorticity;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 float vorL = texture2DRect(Vorticity, st - vec2(1, 0)).x;
-										 float vorR = texture2DRect(Vorticity, st + vec2(1, 0)).x;
-										 float vorB = texture2DRect(Vorticity, st - vec2(0, 1)).x;
-										 float vorT = texture2DRect(Vorticity, st + vec2(0, 1)).x;
-										 float vorC = texture2DRect(Vorticity, st).x;
-										 vec2 force = 0.5 * vec2(abs(vorT) - abs(vorB), abs(vorR) - abs(vorL));
-										 const float EPSILON = 2.4414e-4; // 2^-12
-										 float magSqr = max(EPSILON, dot(force, force));
-										 force *= inversesqrt(magSqr) * ConfinementScale * vorC * vec2(1., -1.);
-										 gl_FragColor = vec4(force, 0.0, 0.0);
+										 vec2 posn = gl_TexCoord[0].st;
+										 
+										 // curl
+										 float cT = abs(texture2DRect(tex_curl , posn + ivec2(0,1)).x);
+										 float cB = abs(texture2DRect(tex_curl , posn - ivec2(0,1)).x);
+										 float cR = abs(texture2DRect(tex_curl , posn + ivec2(1,0)).x);
+										 float cL = abs(texture2DRect(tex_curl , posn - ivec2(1,0)).x);
+										 float cC =     texture2DRect(tex_curl , posn              ).x;
+										 
+										 // normalize
+										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
+										 
+										 // vorticity confinement
+										 vec2 fvc = dw * cC *  timestep * vorticity;
+										 
+										 gl_FragColor = vec4(fvc, 0.0, 0.0);
 									 }
 									 );
 			
@@ -51,7 +58,6 @@ namespace flowTools {
 									 in vec2 texCoordVarying;
 									 out vec2 glFragColor;
 									 
-//									 uniform sampler2DRect tex_velocity;
 									 uniform sampler2DRect tex_curl;
 									 
 									 uniform float halfrdx;
@@ -61,24 +67,18 @@ namespace flowTools {
 									 void main(){
 										 vec2 posn = texCoordVarying;
 										 
-										 // velocity
-//										 vec2 vOld = texture(tex_velocity, posn).xy;
-										 
 										 // curl
-										 float cT = abs(textureOffset(tex_curl    , posn, + ivec2(0,1)).x);
-										 float cB = abs(textureOffset(tex_curl    , posn, - ivec2(0,1)).x);
-										 float cR = abs(textureOffset(tex_curl    , posn, + ivec2(1,0)).x);
-										 float cL = abs(textureOffset(tex_curl    , posn, - ivec2(1,0)).x);
-										 float cC =     texture      (tex_curl    , posn              ).x;
+										 float cT = abs(textureOffset(tex_curl , posn, + ivec2(0,1)).x);
+										 float cB = abs(textureOffset(tex_curl , posn, - ivec2(0,1)).x);
+										 float cR = abs(textureOffset(tex_curl , posn, + ivec2(1,0)).x);
+										 float cL = abs(textureOffset(tex_curl , posn, - ivec2(1,0)).x);
+										 float cC =     texture      (tex_curl , posn              ).x;
 										 
 										 // normalize
 										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
 										 
 										 // vorticity confinement
 										 vec2 fvc = dw * cC *  timestep * vorticity;
-										 
-										 // add to velocity
-//										 vec2 vNew = vOld + fvc;
 										 
 										 glFragColor = fvc;
 									 }

@@ -14,24 +14,33 @@ namespace flowTools {
 			string shaderName = "ftAdvectShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Backbuffer;
-									 uniform sampler2DRect Velocity;
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_source;
+									 uniform sampler2DRect tex_obstacleC;
 									 
-									 uniform float	TimeStep;
-									 uniform float	Dissipation;
-									 uniform vec2	Scale;
+									 uniform float timestep;
+									 uniform float rdx;
+									 uniform float dissipation;
+									 uniform vec2  scale;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 vec2 st2 = st * Scale;
-										 vec2 u = texture2DRect(Velocity, st2).rg / Scale;
-										 gl_FragColor = Dissipation * texture2DRect(Backbuffer,  st - TimeStep * u);
+										 vec2 posn = gl_TexCoord[0].st;
+										 vec2 posn2 = posn * scale;
+										 
+										 float oC = texture2DRect(tex_obstacleC, posn2).x;
+										 if (oC == 1.0) {
+											 gl_FragColor = vec4(0.0);
+										 } else {
+											 vec2 velocity = texture2DRect(tex_velocity, posn2).xy;
+											 vec2 posn_back = posn - timestep * rdx * velocity;
+											 gl_FragColor = dissipation * texture2DRect(tex_source, posn_back);
+										 }
 									 }
 									 );
 			

@@ -20,18 +20,29 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect Velocity;
-									 uniform sampler2DRect Edge;
+									 uniform sampler2DRect tex_velocity;
+									 uniform sampler2DRect tex_obstacleC;
+									 
+									 uniform float halfrdx;
 									 
 									 void main(){
-										 vec2 st = gl_TexCoord[0].st;
-										 vec2 vL = texture2DRect(Velocity, st - vec2(1, 0)).xy;
-										 vec2 vR = texture2DRect(Velocity, st + vec2(1, 0)).xy;
-										 vec2 vB = texture2DRect(Velocity, st - vec2(0, 1)).xy;
-										 vec2 vT = texture2DRect(Velocity, st + vec2(0, 1)).xy;
-										 float vorticity = 0.5 * ((vR.y - vL.y) - (vT.x - vB.x));
-										 float posOrZero = max(0.0, texture2DRect(Edge, st).z);
-										 gl_FragColor = vec4(vorticity * posOrZero, 0.0, 0.0, 0.0);
+										 
+										 vec2 posn = gl_TexCoord[0].st;
+										 
+										 if (texture2DRect(tex_obstacleC, posn).x == 1.0) {
+											 gl_FragColor = vec4(0.0);
+											 return;
+										 }
+										 
+										 // velocity
+										 vec2 vT = texture2DRect(tex_velocity, posn + ivec2(0,1)).xy;
+										 vec2 vB = texture2DRect(tex_velocity, posn - ivec2(0,1)).xy;
+										 vec2 vR = texture2DRect(tex_velocity, posn + ivec2(1,0)).xy;
+										 vec2 vL = texture2DRect(tex_velocity, posn - ivec2(1,0)).xy;
+										 vec2 vC = texture2DRect(tex_velocity, posn             ).xy;
+//
+										 vec2 curl = vec2(halfrdx) * ((vT.x - vB.x) - (vR.y - vL.y));
+										 gl_FragColor = vec4(curl, 0.0, 0.0);
 									 }
 									 );
 			
@@ -49,7 +60,6 @@ namespace flowTools {
 									 
 									 uniform sampler2DRect tex_velocity;
 									 uniform sampler2DRect tex_obstacleC;
-									 // uniform sampler2DRect tex_obstacleN;
 									 
 									 uniform float halfrdx;
 									 
@@ -57,7 +67,10 @@ namespace flowTools {
 										 
 										 vec2 posn = texCoordVarying;
 										 
-										 if (texture(tex_obstacleC, posn).x == 1.0) { glFragColor = 0.0; return; }
+										 if (texture(tex_obstacleC, posn).x == 1.0) {
+											 glFragColor = 0.0;
+											 return;
+										 }
 										 
 										 // velocity
 										 vec2 vT = textureOffset(tex_velocity, posn, + ivec2(0,1)).xy;

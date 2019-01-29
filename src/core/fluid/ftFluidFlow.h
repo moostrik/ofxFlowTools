@@ -58,7 +58,6 @@ namespace flowTools {
 		void	drawTemperature(int _x, int _y, int _w, int _h)		{ visualizationField.draw(temperatureFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawDivergence(int _x, int _y, int _w, int _h)		{ visualizationField.draw(divergenceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawObstacle(int _x, int _y, int _w, int _h)		{ obstacleFbo.draw(_x, _y, _w, _h); }
-		void	drawObstacleOffset(int _x, int _y, int _w, int _h)	{ obstacleOffsetFbo.draw(_x, _y, _w, _h); }
 		void	drawVorticity(int _x, int _y, int _w, int _h)		{ visualizationField.draw(vorticityForceFbo.getTexture(), _x, _y, _w, _h); }
 		void	drawBuoyancy(int _x, int _y, int _w, int _h)		{ visualizationField.draw(buoyancyFbo.getTexture(), _x, _y, _w, _h); }
 			

@@ -15,9 +15,9 @@ namespace flowTools {
 	public:
 		ftBridgeFlow() {
 			parameters.setName("bridge");
-			parameters.add(trailWeight.set("trail", .25, 0, .99));
-			parameters.add(blurRadius.set("blur", 2.5, 0, 10));
-			parameters.add(speed.set("speed", .25, 0, 1));
+			parameters.add(trailWeight.set("trail"	, 0.3, 0.0, 0.99));
+			parameters.add(blurRadius.set("blur"	, 3.0, 0.0, 10.0));
+			parameters.add(speed.set("speed"		, 0.3, 0.0, 1.0 ));
 		}
 		
 		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex);}

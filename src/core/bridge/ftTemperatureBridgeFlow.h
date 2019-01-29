@@ -13,7 +13,7 @@ namespace flowTools {
 	public:
 		ftTemperatureBridgeFlow() {
 			parameters.setName("temperature bridge");
-			speed.setMin(-1);
+			speed.setMin(-1.0);
 		}
 		
 		void setup(int _simulationWidth, int _simulationHeight)	{

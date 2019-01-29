@@ -55,7 +55,7 @@ void ofApp::setupGui() {
 	gui.add(outputWidth.set("output width", 1280, 256, 1920));
 	gui.add(outputHeight.set("output height", 720, 144, 1080));
 	gui.add(simulationScale.set("simulation scale", 2, 1, 4));
-	gui.add(simulationFPS.set("simulation fps", 30, 1, 60));
+	gui.add(simulationFPS.set("simulation fps", 60, 1, 60));
 	outputWidth.addListener(this, &ofApp::simulationResolutionListener);
 	outputHeight.addListener(this, &ofApp::simulationResolutionListener);
 	simulationScale.addListener(this, &ofApp::simulationResolutionListener);

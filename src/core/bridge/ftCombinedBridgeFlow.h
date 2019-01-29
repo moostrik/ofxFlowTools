@@ -16,9 +16,9 @@ namespace flowTools {
 		ftCombinedBridgeFlow() {
 			parameters.setName("combined bridge");
 			speed.setName("velocity speed");
-			parameters.add(densitySpeed.set("density speed", .25, 0, 1));
-			parameters.add(densitySaturation.set("density saturation", 1, 0, 3));
-			parameters.add(temperatureSpeed.set("temperature speed", .25, -1, 1));
+			parameters.add(densitySpeed.set("density speed"				, 0.3, 0.0, 1.0));
+			parameters.add(densitySaturation.set("density saturation"	, 2.5, 0.0, 5.0));
+			parameters.add(temperatureSpeed.set("temperature speed"		, 0.3, -1., 1.0));
 		}
 		
 		void setup(int _simulationWidth, int _simulationHeight)	{ setup(_simulationWidth, _simulationHeight, _simulationWidth, _simulationHeight); }
@@ -42,7 +42,7 @@ namespace flowTools {
 			outputFbo.swap();
 			HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, densitySaturation.get(), 1.0);
 			
-			float temperatureTimeStep = _deltaTime * temperatureSpeed.get() * 100;
+			float temperatureTimeStep = _deltaTime * temperatureSpeed.get() * 10;
 			temperatureBridgeShader.update(temperatureFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), temperatureTimeStep);
 			
 			ofPopStyle();

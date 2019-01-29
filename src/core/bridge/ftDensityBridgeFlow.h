@@ -15,7 +15,7 @@ namespace flowTools {
 	public:
 		ftDensityBridgeFlow() {
 			parameters.setName("density bridge");
-			parameters.add(saturation.set("saturation", 1, 0, 3));
+			parameters.add(saturation.set("saturation", 2.5, 0.0, 5.0));
 			//		parameters.add(hue.set("hue", 0, -.5, .5));
 		}
 		

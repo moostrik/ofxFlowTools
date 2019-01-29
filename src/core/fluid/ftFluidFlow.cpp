@@ -40,23 +40,23 @@ namespace flowTools {
 	
 	ftFluidFlow::ftFluidFlow(){
 		parameters.setName("fluid");
-		parameters.add(speed.set("speed", .5, 0, 1));
+		parameters.add(speed.set("speed"							, 0.5, 0.0, 1.0));
 		dissipationParameters.setName("dissipation");
-		dissipationParameters.add(dissipationVel.set("velocity"		, .25, 0, 1));
-		dissipationParameters.add(dissipationDen.set("density"		, .25, 0, 1));
-		dissipationParameters.add(dissipationTmp.set("temperature"	, .25, 0, 1));
-		dissipationParameters.add(dissipationPrs.set("pressure"		, .25, 0, 1));
+		dissipationParameters.add(dissipationVel.set("velocity"		, 0.1, 0.0, 1.0));
+		dissipationParameters.add(dissipationDen.set("density"		, 0.1, 0.0, 1.0));
+		dissipationParameters.add(dissipationTmp.set("temperature"	, 0.1, 0.0, 1.0));
+		dissipationParameters.add(dissipationPrs.set("pressure"		, 0.1, 0.0, 1.0));
 		parameters.add(dissipationParameters);
 		viscosityParameters.setName("viscosity");
-		viscosityParameters.add(viscosityVel.set("velocity"		, 0, 0, 1));
-		viscosityParameters.add(viscosityDen.set("density"		, 0, 0, 1));
-		viscosityParameters.add(viscosityTmp.set("temperature"	, 0, 0, 1));
+		viscosityParameters.add(viscosityVel.set("velocity"			, 0.5, 0.0, 1.0));
+		viscosityParameters.add(viscosityDen.set("density"			, 0.0, 0.0, 1.0));
+		viscosityParameters.add(viscosityTmp.set("temperature"		, 0.0, 0.0, 1.0));
 		parameters.add(viscosityParameters);
-		parameters.add(vorticity.set("vorticity", 0.0, 0.0, 1));
+		parameters.add(vorticity.set("vorticity"					, 1.0, 0.0, 1.0));
 		buoyancyParameters.setName("smoke buoyancy");
-		buoyancyParameters.add(buoyancySigma.set("buoyancy", 0.5, 0.0, 1.0));
-		buoyancyParameters.add(buoyancyWeight.set("weight", 0.05, 0.0, 1.0));
-		buoyancyParameters.add(buoyancyAmbientTemperature.set("ambient temperature", 0.75, 0.0, 1.0));
+		buoyancyParameters.add(buoyancySigma.set("buoyancy"			, 0.5, 0.0, 1.0));
+		buoyancyParameters.add(buoyancyWeight.set("weight"			, 0.05, 0.0, 1.0));
+		buoyancyParameters.add(buoyancyAmbientTemperature.set("ambient temperature", 0.5, 0.0, 1.0));
 		parameters.add(buoyancyParameters);
 		
 		numJacobiIterationsProjection = 40;

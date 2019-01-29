@@ -68,7 +68,6 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleMouseDraw.set("draw mouse (M)", true));
 	gui.add(toggleAverageDraw.set("draw average (A)", true));
-	gui.add(toggleAveragePauze.set("pauze average (P)", false));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
 	
@@ -155,12 +154,10 @@ void ofApp::update(){
 	for (auto flow: mouseFlows) { if (flow->didChange()) { fluidFlow.addFlow(flow->getType(), flow->getTexture()); } }
 	fluidFlow.update(dt);
 	
-	if (!toggleAveragePauze.get()) {
-		pixelFlow.setInput(opticalFlow.getVelocity());
-		for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { pixelFlow.addInput(flow->getTexture()); } }
-		pixelFlow.update();
-		for (auto& f : averageFlows) { f.update(pixelFlow.getPixels()); }
-	}
+	pixelFlow.setInput(opticalFlow.getVelocity());
+	for (auto flow: mouseFlows) { if (flow->didChange() && flow->getType() == FT_VELOCITY) { pixelFlow.addInput(flow->getTexture()); } }
+	pixelFlow.update();
+	for (auto& f : averageFlows) { f.update(pixelFlow.getPixels()); }
 }
 
 //--------------------------------------------------------------
@@ -260,7 +257,6 @@ void ofApp::keyPressed(int key){
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
 		case 'R': toggleReset.set(!toggleReset.get()); break;
 		case 'A': toggleAverageDraw.set(!toggleAverageDraw.get()); break;
-		case 'P': toggleAveragePauze.set(!toggleAveragePauze.get()); break;
 			break;
 	}
 }

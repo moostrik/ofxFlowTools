@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftBuoyancyShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -37,7 +37,7 @@ namespace flowTools {
 										 
 										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
-										 if (dtemp == 0.0) {
+										 if (dtemp != 0.0) {
 											 float density = texture2DRect(tex_density, posn).a;
 											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
@@ -76,7 +76,7 @@ namespace flowTools {
 										 
 										 float dtemp = temperature - temperature_ambient;
 										 vec2 buoyancy = vec2(0.0);
-										 if (dtemp == 0.0) {
+										 if (dtemp != 0.0) {
 											 float density = texture(tex_density, posn).a;
 											 float buoyancy_force = timestep * dtemp * fluid_buoyancy - density * fluid_weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
@@ -93,13 +93,13 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _smokeBuoyancy, float _smokeWeight){
+		void update(ofFbo& _fbo, ofTexture& _velTex, ofTexture& _temTex, ofTexture _denTex, float _timeStep, float _ambientTemperature, float _buoyancy, float _weight){
 			_fbo.begin();
 			begin();
 			setUniform1f		("temperature_ambient", _ambientTemperature);
 			setUniform1f		("timestep",			_timeStep);
-			setUniform1f		("fluid_buoyancy",		_smokeBuoyancy);
-			setUniform1f		("fluid_weight",		_smokeWeight);
+			setUniform1f		("fluid_buoyancy",		_buoyancy);
+			setUniform1f		("fluid_weight",		_weight);
 			setUniformTexture	("tex_velocity",		_velTex,	0);
 			setUniformTexture	("tex_temperature",		_temTex,	1);
 			setUniformTexture	("tex_density",			_denTex,	2);

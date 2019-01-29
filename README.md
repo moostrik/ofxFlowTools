@@ -33,9 +33,6 @@ My interest in, and knowledge of, fluid simulation was hugely inspired by the wo
 
 FUTURE ADDITIONS / TODO
 
-later:
-- visualization: better normalization
-- rebuild the fluidFlow
 - rebuild the particleFlow
 
 maybe later:

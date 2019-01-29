@@ -36,7 +36,7 @@ namespace flowTools {
 	
 	ftParticleFlow::ftParticleFlow(){
 		parameters.setName("particles");
-		parameters.add(speed.set("speed", 20, 0, 100));
+		parameters.add(speed.set("speed", .3, 0, 1));
 		cellSize.set("cell size", 1, 0.0, 2.0);
 //		parameters.add(cellSize.set("cell size", 1, 0.0, 2.0));
 		parameters.add(birthChance.set("birth chance", 0.5, 0, 1));
@@ -98,7 +98,7 @@ namespace flowTools {
 	}
 	
 	void ftParticleFlow::update(float _deltaTime) {
-		float timeStep = _deltaTime * speed.get() * simulationWidth;
+		float timeStep = _deltaTime * speed.get() * 100;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);

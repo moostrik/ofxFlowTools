@@ -25,7 +25,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 			resetOutput();
 			
-			float timeStep = _deltaTime * speed.get() * 100;
+			float timeStep = _deltaTime * speed.get() * 200;
 			multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), timeStep);
 
 			ofPopStyle();

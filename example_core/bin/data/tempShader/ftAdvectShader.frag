@@ -34,7 +34,7 @@ void main(){
 		glFragColor = vec4(0);
 	} else {
 		vec2 velocity = texture(tex_velocity, posn2).xy;
-		vec2 posn_back = posn - timestep * rdx * velocity;
+		vec2 posn_back = posn - timestep * rdx * velocity / scale;
 		glFragColor = dissipation * texture(tex_source, posn_back);
 	}
 }

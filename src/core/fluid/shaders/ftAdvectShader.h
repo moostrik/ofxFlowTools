@@ -14,7 +14,7 @@ namespace flowTools {
 			string shaderName = "ftAdvectShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
-//			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
+			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
 		}
 		
 	protected:
@@ -38,7 +38,7 @@ namespace flowTools {
 											 gl_FragColor = vec4(0.0);
 										 } else {
 											 vec2 velocity = texture2DRect(tex_velocity, posn2).xy;
-											 vec2 posn_back = posn - timestep * rdx * velocity;
+											 vec2 posn_back = posn - timestep * rdx * velocity / scale;
 											 gl_FragColor = dissipation * texture2DRect(tex_source, posn_back);
 										 }
 									 }
@@ -74,7 +74,7 @@ namespace flowTools {
 											 glFragColor = vec4(0);
 										 } else {
 											 vec2 velocity = texture(tex_velocity, posn2).xy;
-											 vec2 posn_back = posn - timestep * rdx * velocity;
+											 vec2 posn_back = posn - timestep * rdx * velocity / scale;
 											 glFragColor = dissipation * texture(tex_source, posn_back);
 										 }
 									 }

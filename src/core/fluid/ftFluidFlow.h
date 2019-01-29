@@ -8,7 +8,8 @@
 #include "ftBuoyancyShader.h"
 #include "ftDivergenceShader.h"
 #include "ftGradientShader.h"
-#include "ftJacobiShader.h"
+#include "ftJacobiDiffusionShader.h"
+#include "ftJacobiPressureShader.h"
 #include "ftObstacleOffsetShader.h"
 #include "ftVorticityCurlShader.h"
 #include "ftVorticityForceShader.h"
@@ -112,7 +113,8 @@ namespace flowTools {
 		ftBuoyancyShader			buoyancyShader;
 		ftDivergenceShader			divergenceShader;
 		ftGradientShader			gradientShader;
-		ftJacobiShader				jacobiShader;
+		ftJacobiDiffusionShader		jacobiDiffusionShader;
+		ftJacobiPressureShader		jacobiPressureShader;
 		ftObstacleOffsetShader		obstacleOffsetShader;
 		ftVorticityCurlShader		vorticityCurlShader;
 		ftVorticityForceShader		vorticityForceShader;

@@ -6,12 +6,12 @@
 
 namespace flowTools {
 	
-	class ftJacobiShader : public ftShader {
+	class ftJacobiDiffusionShader : public ftShader {
 	public:
-		ftJacobiShader() {
+		ftJacobiDiffusionShader() {
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glThree(); } else { glTwo(); }
-			string shaderName = "ftJacobiShader";
+			string shaderName = "ftJacobiDiffusionShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 //			load("tempShader/ftVertexShader.vert", "tempShader/" + shaderName + ".frag");
@@ -20,13 +20,13 @@ namespace flowTools {
 	protected:
 		void glTwo() {
 			fragmentShader = GLSL120(
-									 uniform sampler2DRect tex_x;
-									 uniform sampler2DRect tex_b;
+									 uniform sampler2DRect tex_source;
 									 uniform sampler2DRect tex_obstacleC;
 									 uniform sampler2DRect tex_obstacleN;
 									 
 									 uniform float alpha;
-									 uniform float rBeta;
+									 uniform float beta;
+									 uniform vec2  scale;
 									 
 									 void main(){
 										 
@@ -38,25 +38,19 @@ namespace flowTools {
 											 return;
 										 }
 										 
-										 // tex b
-										 vec4 bC = texture2DRect(tex_b, posn);
+										 vec4 xT = texture2DRect(tex_source, posn + ivec2(0,1));
+										 vec4 xB = texture2DRect(tex_source, posn - ivec2(0,1));
+										 vec4 xR = texture2DRect(tex_source, posn + ivec2(1,0));
+										 vec4 xL = texture2DRect(tex_source, posn - ivec2(1,0));
+										 vec4 xC = texture2DRect(tex_source, posn);
 										 
-										 // tex x
-										 vec4 xT = texture2DRect(tex_x, posn + ivec2(0,1));
-										 vec4 xB = texture2DRect(tex_x, posn - ivec2(0,1));
-										 vec4 xR = texture2DRect(tex_x, posn + ivec2(1,0));
-										 vec4 xL = texture2DRect(tex_x, posn - ivec2(1,0));
-										 vec4 xC = texture2DRect(tex_x, posn);
-										 
-										 // pure Neumann pressure boundary
-										 // use center x (pressure) if neighbor is an obstacle
 										 vec4 oN = texture2DRect(tex_obstacleN, posn);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
 										 xL = mix(xL, xC, oN.w);
 										 
-										 gl_FragColor = (xL + xR + xB + xT + alpha * bC) * rBeta;
+										 gl_FragColor = (xL + xR + xB + xT + alpha * xC) * beta;
 									 }
 									 );
 			
@@ -72,43 +66,37 @@ namespace flowTools {
 									 in vec2 texCoordVarying;
 									 out vec4 glFragColor;
 									 
-									 uniform sampler2DRect tex_x;
-									 uniform sampler2DRect tex_b;
+									 uniform sampler2DRect tex_source;
 									 uniform sampler2DRect tex_obstacleC;
 									 uniform sampler2DRect tex_obstacleN;
 									 
 									 uniform float alpha;
-									 uniform float rBeta;
+									 uniform float beta;
+									 uniform vec2  scale;
 									 
 									 void main(){
-										 
 										 vec2 posn = texCoordVarying;
+										 vec2 posn2 = posn * scale;
 										 
-										 float oC = texture(tex_obstacleC, posn).x;
+										 float oC = texture(tex_obstacleC, posn2).x;
 										 if (oC == 1.0) {
 											 glFragColor = vec4(0.0);
 											 return;
 										 }
 										 
-										 // tex b
-										 vec4 bC = texture(tex_b, posn);
+										 vec4 xT = textureOffset(tex_source, posn, + ivec2(0,1));
+										 vec4 xB = textureOffset(tex_source, posn, - ivec2(0,1));
+										 vec4 xR = textureOffset(tex_source, posn, + ivec2(1,0));
+										 vec4 xL = textureOffset(tex_source, posn, - ivec2(1,0));
+										 vec4 xC = texture      (tex_source, posn);
 										 
-										 // tex x
-										 vec4 xT = textureOffset(tex_x, posn, + ivec2(0,1));
-										 vec4 xB = textureOffset(tex_x, posn, - ivec2(0,1));
-										 vec4 xR = textureOffset(tex_x, posn, + ivec2(1,0));
-										 vec4 xL = textureOffset(tex_x, posn, - ivec2(1,0));
-										 vec4 xC = texture      (tex_x, posn);
-										 
-										 // pure Neumann pressure boundary
-										 // use center x (pressure) if neighbor is an obstacle
-										 vec4 oN = texture(tex_obstacleN, posn);
+										 vec4 oN = texture(tex_obstacleN, posn2);
 										 xT = mix(xT, xC, oN.x);
 										 xB = mix(xB, xC, oN.y);
 										 xR = mix(xR, xC, oN.z);
 										 xL = mix(xL, xC, oN.w);
 										 
-										 glFragColor = (xL + xR + xB + xT + alpha * bC) * rBeta;
+										 glFragColor = (xL + xR + xB + xT + alpha * xC) * beta;
 									 }
 									 );
 			
@@ -119,14 +107,16 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _divTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _alpha, float _beta){
+		void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _obsCTex, ofTexture& _obsNTex, float _timeStep, float _gridScale){
+			float alpha = (_gridScale * _gridScale) / (_timeStep);
+			float beta = 1.0f / (4.0f + alpha);
+			
 			_fbo.begin();
 			begin();
-			
-			setUniform1f		("alpha",			_alpha);
-			setUniform1f		("rBeta",			_beta);
-			setUniformTexture	("tex_x",			_backTex,	0);
-			setUniformTexture	("tex_b",			_divTex,	1);
+			setUniform1f		("alpha",			alpha);
+			setUniform1f		("beta",			beta);
+			setUniform2f		("scale",			_obsCTex.getWidth() / _fbo.getWidth(), _obsCTex.getHeight()/ _fbo.getHeight());
+			setUniformTexture	("tex_source",		_backTex,	0);
 			setUniformTexture	("tex_obstacleC",	_obsCTex,	2);
 			setUniformTexture	("tex_obstacleN",	_obsNTex,	3);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());

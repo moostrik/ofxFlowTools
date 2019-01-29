@@ -16,8 +16,8 @@ precision mediump int;
 in vec2 texCoordVarying;
 out vec4 glFragColor;
 
-uniform sampler2DRect tex_x;
-uniform sampler2DRect tex_b;
+uniform sampler2DRect tex_source;
+uniform sampler2DRect tex_divergence;
 uniform sampler2DRect tex_obstacleC;
 uniform sampler2DRect tex_obstacleN;
 
@@ -34,15 +34,13 @@ void main(){
 		return;
 	}
 	
-	// tex b
-	vec4 bC = texture(tex_b, posn);
+	vec4 bC = texture(tex_divergence, posn);
 	
-	// tex x
-	vec4 xT = textureOffset(tex_x, posn, + ivec2(0,1));
-	vec4 xB = textureOffset(tex_x, posn, - ivec2(0,1));
-	vec4 xR = textureOffset(tex_x, posn, + ivec2(1,0));
-	vec4 xL = textureOffset(tex_x, posn, - ivec2(1,0));
-	vec4 xC = texture      (tex_x, posn);
+	vec4 xT = textureOffset(tex_source, posn, + ivec2(0,1));
+	vec4 xB = textureOffset(tex_source, posn, - ivec2(0,1));
+	vec4 xR = textureOffset(tex_source, posn, + ivec2(1,0));
+	vec4 xL = textureOffset(tex_source, posn, - ivec2(1,0));
+	vec4 xC = texture      (tex_source, posn);
 	
 	// pure Neumann pressure boundary
 	// use center x (pressure) if neighbor is an obstacle

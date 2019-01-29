@@ -13,21 +13,15 @@ void ofApp::setup(){
 	windowHeight = ofGetWindowHeight();
 	
 	opticalFlow.setup(simulationWidth, simulationHeight);
-//	velocityBridgeFlow.setup(simulationWidth, simulationHeight);
-//	densityBridgeFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
-//	temperatureBridgeFlow.setup(simulationWidth, simulationHeight);
 	combinedBridgeFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	fluidFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	
 	flows.push_back(&opticalFlow);
-//	flows.push_back(&velocityBridgeFlow);
-//	flows.push_back(&densityBridgeFlow);
-//	flows.push_back(&temperatureBridgeFlow);
 	flows.push_back(&combinedBridgeFlow);
 	flows.push_back(&fluidFlow);
 	
 	flowToolsLogo.load("flowtools.png");
-	fluidFlow.addObstacle(flowToolsLogo.getTexture());
+	fluidFlow.setObstacle(flowToolsLogo.getTexture());
 	
 	simpleCam.setup(densityWidth, densityHeight, true);
 	cameraFbo.allocate(densityWidth, densityHeight);
@@ -117,15 +111,6 @@ void ofApp::update(){
 	combinedBridgeFlow.setDensity(cameraFbo.getTexture());
 	combinedBridgeFlow.update(dt);
 	
-//	velocityBridgeFlow.setVelocity(opticalFlow.getVelocity());
-//	velocityBridgeFlow.update(dt);
-//	densityBridgeFlow.setDensity(cameraFbo.getTexture());
-//	densityBridgeFlow.setVelocity(opticalFlow.getVelocity());
-//	densityBridgeFlow.update(dt);
-//	temperatureBridgeFlow.setDensity(cameraFbo.getTexture());
-//	temperatureBridgeFlow.setVelocity(opticalFlow.getVelocity());
-//	temperatureBridgeFlow.update(dt);
-	
 	fluidFlow.addVelocity(combinedBridgeFlow.getVelocity());
 	fluidFlow.addDensity(combinedBridgeFlow.getDensity());
 	fluidFlow.addTemperature(combinedBridgeFlow.getTemperature());
@@ -153,7 +138,6 @@ void ofApp::draw(){
 		case BRIDGE_TMP:	combinedBridgeFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
-		case OBST_OFFSET:	fluidFlow.drawObstacleOffset(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
 		case FLUID_VORT:	fluidFlow.drawVorticity(0, 0, windowWidth, windowHeight); break;
 		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
@@ -165,7 +149,7 @@ void ofApp::draw(){
 	}
 	
 	ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-//	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
+	flowToolsLogo.draw(0, 0, windowWidth, windowHeight);
 	
 	if (toggleGuiDraw) {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
@@ -225,7 +209,7 @@ void ofApp::keyPressed(int key){
 void ofApp::toggleResetListener(bool& _value) {
 	if (_value) {
 		for (auto flow : flows) { flow->reset(); }
-		fluidFlow.addObstacle(flowToolsLogo.getTexture());
+		fluidFlow.setObstacle(flowToolsLogo.getTexture());
 	}
 	_value = false;
 }

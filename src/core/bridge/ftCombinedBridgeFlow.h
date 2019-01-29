@@ -18,7 +18,7 @@ namespace flowTools {
 			speed.setName("velocity speed");
 			parameters.add(densitySpeed.set("density speed"				, 0.3, 0.0, 1.0));
 			parameters.add(densitySaturation.set("density saturation"	, 2.5, 0.0, 5.0));
-			parameters.add(temperatureSpeed.set("temperature speed"		, 0.3, -1., 1.0));
+			parameters.add(temperatureSpeed.set("temperature speed"		, 0.5, -1., 1.0));
 		}
 		
 		void setup(int _simulationWidth, int _simulationHeight)	{ setup(_simulationWidth, _simulationHeight, _simulationWidth, _simulationHeight); }

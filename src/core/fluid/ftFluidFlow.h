@@ -93,6 +93,7 @@ namespace flowTools {
 		
 	protected:
 		ofParameter<float>		speed;
+		ofParameter<int>		gridScale;
 		ofParameter<float>		vorticity;
 		ofParameterGroup		dissipationParameters;
 		ofParameter<float>		dissipationVel;
@@ -133,7 +134,7 @@ namespace flowTools {
 		int		simulationWidth, simulationHeight, densityWidth, densityHeight;
 		int		numJacobiIterationsProjection;
 		int		numJacobiIterationsDiffuse;
-		int		gridScale;
+//		int		gridScale;
 		
 		void	allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override ;
 		

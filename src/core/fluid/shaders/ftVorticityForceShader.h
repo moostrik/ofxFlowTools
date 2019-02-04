@@ -23,7 +23,7 @@ namespace flowTools {
 									 uniform sampler2DRect tex_curl;
 									 
 									 uniform float halfrdx;
-									 uniform float vorticity;
+									 uniform float timestep;
 									 
 									 void main(){
 										 vec2 st = gl_TexCoord[0].st;
@@ -39,7 +39,7 @@ namespace flowTools {
 										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
 										 
 										 // vorticity confinement
-										 vec2 fvc = dw * cC * vorticity;
+										 vec2 fvc = dw * cC * timestep;
 										 
 										 gl_FragColor = vec4(fvc, 0.0, 0.0);
 									 }
@@ -60,7 +60,7 @@ namespace flowTools {
 									 uniform sampler2DRect tex_curl;
 									 
 									 uniform float halfrdx;
-									 uniform float vorticity;
+									 uniform float timestep;
 									 
 									 void main(){
 										 vec2 st = texCoordVarying;
@@ -76,7 +76,7 @@ namespace flowTools {
 										 vec2 dw = normalize(halfrdx * vec2(cT - cB, cR - cL) + 0.000001) * vec2(-1, 1);
 										 
 										 // vorticity confinement
-										 vec2 fvc = dw * cC * vorticity;
+										 vec2 fvc = dw * cC * timestep;
 										 
 										 glFragColor = fvc;
 									 }
@@ -89,12 +89,12 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _fbo, ofTexture& _curlTex, float _gridScale, float _vorticity){
+		void update(ofFbo& _fbo, ofTexture& _curlTex, float _gridScale, float _timeStep){
 			_fbo.begin();
 			ofClear(0);
 			begin();
 			setUniform1f		("halfrdx",			0.5f / _gridScale);
-			setUniform1f		("vorticity",		_vorticity);
+			setUniform1f		("timestep",		_timeStep);
 			setUniformTexture	("tex_curl",		_curlTex,	1);
 			renderFrame(_fbo.getWidth(), _fbo.getHeight());
 			end();

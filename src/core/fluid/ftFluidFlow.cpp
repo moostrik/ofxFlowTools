@@ -41,6 +41,7 @@ namespace flowTools {
 	ftFluidFlow::ftFluidFlow(){
 		parameters.setName("fluid");
 		parameters.add(speed.set("speed"							, 0.3, 0.0, 1.0));
+		parameters.add(gridScale.set("gridScale"					, 1  , 1  , 100));
 		dissipationParameters.setName("dissipation");
 		dissipationParameters.add(dissipationVel.set("velocity"		, 0.1, 0.0, 1.0));
 		dissipationParameters.add(dissipationDen.set("density"		, 0.1, 0.0, 1.0));
@@ -61,7 +62,7 @@ namespace flowTools {
 		
 		numJacobiIterationsProjection = 40;
 		numJacobiIterationsDiffuse = 20;
-		gridScale = 1;
+//		gridScale = 1;
 	}
 	
 	//--------------------------------------------------------------
@@ -103,7 +104,7 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::update(float _deltaTime){
-		float timeStep = _deltaTime * speed.get() * 100;
+		float timeStep = speed.get() * 5;
 		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -112,55 +113,57 @@ namespace flowTools {
 		ftPingPongFbo& densityFbo = outputFbo;
 		
 		// ADVECT & DISSEPATE
-		float vDis = 1.0 - _deltaTime * dissipationVel.get();
+		float disVel = 1.0 - _deltaTime * dissipationVel.get();
 		velocityFbo.swap();
-		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), gridScale, timeStep, vDis);
+		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), gridScale, timeStep, disVel);
 		
-		float dDis = 1.0 - _deltaTime * dissipationDen.get();
+		float disDen = 1.0 - _deltaTime * dissipationDen.get();
 		densityFbo.swap();
-		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, timeStep, dDis);
+		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, timeStep, disDen);
 		
-		float tDis = 1.0 - _deltaTime * dissipationTmp.get();
+		float disTmp = 1.0 - _deltaTime * dissipationTmp.get();
 		temperatureFbo.swap();
-		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, timeStep, tDis);
+		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, timeStep, disTmp);
 		
-		float pDis = 1.0 - dissipationPrs.get();
+		float disPrs = 1.0 - dissipationPrs.get();
 		pressureFbo.swap();
-		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), pDis);
+		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), disPrs);
 		
 		// DIFFUSE
 		if (viscosityVel.get() > 0.0) {
-			float vDif = timeStep * viscosityVel.get();
+			float visDifStep = 0.25 * viscosityVel.get();
 			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
 				velocityFbo.swap();
-				jacobiDiffusionShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, vDif);
+				jacobiDiffusionShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, visDifStep);
 			}
 		}
 		if (viscosityDen.get() > 0.0) {
-			float dDif = timeStep * viscosityDen.get();
+			float visDenStep = _deltaTime * 20 * viscosityDen.get();
 			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
 				densityFbo.swap();
-				jacobiDiffusionShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, dDif);
+				jacobiDiffusionShader.update(densityFbo.get(), densityFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, visDenStep);
 			}
 		}
 		if (viscosityTmp.get() > 0.0) {
-			float tDif = timeStep * viscosityTmp.get();
+			float visTmpStep = timeStep * viscosityTmp.get();
 			for (int i = 0; i < numJacobiIterationsDiffuse; i++) {
 				temperatureFbo.swap();
-				jacobiDiffusionShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, tDif);
+				jacobiDiffusionShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale, visTmpStep);
 			}
 		}
 		
 		// VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
+			float vorticityStep = timeStep * vorticity.get();
 			vorticityCurlShader.update(vorticityCurlFbo, velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale);
-			vorticityForceShader.update(vorticityForceFbo, vorticityCurlFbo.getTexture(), gridScale, timeStep * vorticity.get());
+			vorticityForceShader.update(vorticityForceFbo, vorticityCurlFbo.getTexture(), gridScale, vorticityStep);
 			addVelocity(vorticityForceFbo.getTexture());
 		}
 		
 		// BUOYANCY
 		if (buoyancySigma.get() > 0.0 && buoyancyWeight.get() > 0.0 ) {
-			buoyancyShader.update(buoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), timeStep * buoyancySigma.get(), buoyancyWeight.get(), buoyancyAmbientTemperature );
+			float bouyStep = timeStep * buoyancySigma.get();
+			buoyancyShader.update(buoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), bouyStep, buoyancyWeight.get(), buoyancyAmbientTemperature );
 			addVelocity(buoyancyFbo.getTexture());
 		}
 		

@@ -50,8 +50,9 @@ namespace flowTools {
 		parameters.add(velParameters);
 		
 		prsParameters.setName(					"pressure");
-		prsParameters.add(prsIterations.set(	"iterations"		,  40,   0, 100));
+		prsParameters.add(prsSpeed.set(			"speed"				, 0.0, 0.0, 1.0));
 		prsParameters.add(prsDissipation.set(	"dissipation"		, 0.1, 0.0, 1.0));
+		prsParameters.add(prsIterations.set(	"iterations"		,  40,   0, 100));
 		parameters.add(prsParameters);
 		
 		denParameters.setName(					"density");
@@ -108,37 +109,27 @@ namespace flowTools {
 	
 	//--------------------------------------------------------------
 	void ftFluidFlow::update(float _deltaTime){
-//		gridScale = gridScale.get();
-		
-//		float timeStep = speed.get() * 5;
-		
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 
 		ftPingPongFbo& velocityFbo = inputFbo;
 		ftPingPongFbo& densityFbo = outputFbo;
 		
-		// ADVECT & DISSIPATE
-		float advVelStep = _deltaTime * velSpeed.get() * 100 * gridScale;
-		float disVel = 1.0 - _deltaTime * velDissipation.get();
-		velocityFbo.swap();
-		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), gridScale, advVelStep, disVel);
 		
+		// DENSITY ADVECT & DISSIPATE
 		float advDenStep = _deltaTime * denSpeed.get() * 100 * gridScale;
 		float disDen = 1.0 - _deltaTime * denDissipation.get();
 		densityFbo.swap();
 		advectShader.update(densityFbo.get(), densityFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, advDenStep, disDen);
 		
-		float advTmpStep = _deltaTime * tmpSpeed.get() * 100 * gridScale;
-		float disTmp = 1.0 - _deltaTime * tmpDissipation.get();
-		temperatureFbo.swap();
-		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, advTmpStep, disTmp);
 		
-		float disPrs = 1.0 - prsDissipation.get();
-		pressureFbo.swap();
-		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), disPrs);
+		// VELOCITY ADVECT & DISSIPATE
+		float advVelStep = _deltaTime * velSpeed.get() * 100 * gridScale;
+		float disVel = 1.0 - _deltaTime * velDissipation.get();
+		velocityFbo.swap();
+		advectShader.update(velocityFbo.get(), velocityFbo.getBackTexture(), velocityFbo.getBackTexture(), obstacleFbo.getTexture(), gridScale, advVelStep, disVel);
 		
-		// DIFFUSE
+		// VELOCITY DIFFUSE
 		if (velViscosity.get() > 0.0) {
 			float viscosityStep = .25 * velViscosity.get();
 			for (int i = 0; i < velViscosityIter.get(); i++) {
@@ -147,7 +138,7 @@ namespace flowTools {
 			}
 		}
 		
-		// VORTEX CONFINEMENT
+		// VELOCITY VORTEX CONFINEMENT
 		if (velVorticity.get() > 0.0) {
 			float vorticityStep = velVorticity.get() * gridScale;
 			vorticityCurlShader.update(vorticityCurlFbo, velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale);
@@ -155,12 +146,27 @@ namespace flowTools {
 			addVelocity(vorticityForceFbo.getTexture());
 		}
 		
-		// BUOYANCY
+		
+		// TEMPERATURE ADVECT & DISSIPATE
+		float advTmpStep = _deltaTime * tmpSpeed.get() * 100 * gridScale;
+		float disTmp = 1.0 - _deltaTime * tmpDissipation.get();
+		temperatureFbo.swap();
+		advectShader.update(temperatureFbo.get(), temperatureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, advTmpStep, disTmp);
+		
+		// TEMPERATURE BUOYANCY
 		if (tmpBuoyancy.get() > 0.0 && tmpWeight.get() > 0.0 ) {
 			float bouyStep = tmpBuoyancy.get();
 			buoyancyShader.update(buoyancyFbo, velocityFbo.getTexture(), temperatureFbo.getTexture(), densityFbo.getTexture(), bouyStep, tmpWeight.get(), tmpAmbient );
 			addVelocity(buoyancyFbo.getTexture());
 		}
+		
+		
+		// PRESSURE ADVECT & DISSIPATE
+		float advPrsStep = _deltaTime * prsSpeed.get() * 100 * gridScale;
+		float disPrs = 1.0 - prsDissipation.get() * prsDissipation.get();
+		pressureFbo.swap();
+		//		multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), disPrs);
+		advectShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, advPrsStep, disPrs);
 		
 		// PRESSURE
 		divergenceShader.update(divergenceFbo, velocityFbo.getTexture(), obstacleFbo.getTexture(), obstacleOffsetFbo.getTexture(), gridScale);

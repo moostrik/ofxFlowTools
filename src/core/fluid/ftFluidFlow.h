@@ -71,9 +71,8 @@ namespace flowTools {
 		float	getDissipationDen()					{ return dissipationDen.get(); }
 		float	getDissipationTmp()					{ return dissipationTmp.get(); }
 		float	getDissipationPrs()					{ return dissipationPrs.get(); }
-		float	getViscosityVel()					{ return viscosityVel.get(); }
-		float	getViscosityDen()					{ return viscosityDen.get(); }
-		float	getViscosityTmp()					{ return viscosityTmp.get(); }
+		float	getViscosity()						{ return viscosity.get(); }
+		float	getViscosityIterations()			{ return viscosityIterations.get(); }
 		float	getVorticity()						{ return vorticity.get(); }
 		float	getBuoyancySigma()					{ return buoyancySigma.get(); }
 		float	getBuoyancyWeight()					{ return buoyancyWeight.get(); }
@@ -84,30 +83,38 @@ namespace flowTools {
 		void	setDissipationVel(float value)		{ dissipationVel.set(value); }
 		void	setDissipationDen(float value)		{ dissipationDen.set(value); }
 		void	setDissipationTmp(float value)		{ dissipationTmp.set(value); }
-		float	setViscosityVel(float value)		{ viscosityVel.set(value); }
-		float	setViscosityDen(float value)		{ viscosityDen.set(value); }
-		float	setViscosityTmp(float value)		{ viscosityTmp.set(value); }
+		float	setViscosity(float value)			{ viscosity.set(value); }
+		float	setViscosityIterations(float value)	{ viscosityIterations.set(value); }
 		void	setBuoyancySigma(float value)		{ buoyancySigma.set(value); }
 		void	setBuoyancyWeight(float value)		{ buoyancyWeight.set(value); }
 		void	setBuoyancyAmbientTemperature(float value)	{ buoyancyAmbientTemperature.set(value); }
 		
 	protected:
+		ofParameter<float>		gridScale;
 		ofParameter<float>		speed;
-		ofParameter<int>		gridScale;
-		ofParameter<float>		vorticity;
-		ofParameterGroup		dissipationParameters;
-		ofParameter<float>		dissipationVel;
-		ofParameter<float>		dissipationDen;
-		ofParameter<float>		dissipationTmp;
-		ofParameter<float>		dissipationPrs;
-		ofParameterGroup		viscosityParameters;
-		ofParameter<float>		viscosityVel;
-		ofParameter<float>		viscosityDen;
-		ofParameter<float>		viscosityTmp;
-		ofParameterGroup		buoyancyParameters;
-		ofParameter<float>		buoyancySigma;
-		ofParameter<float>		buoyancyWeight;
-		ofParameter<float>		buoyancyAmbientTemperature;
+		ofParameter<float>		dissipation;
+		
+		ofParameterGroup		pressureParameters;
+		ofParameter<float>		pressureDissipation;
+		ofParameter<int>		pressureIterations;
+		
+		ofParameterGroup		velocityParameters;
+		ofParameter<float>		velocitySpeedOffset;
+		ofParameter<float>		velocityDissipationOffset;
+		ofParameter<float>		velocityVorticity;
+		ofParameter<float>		velocityViscosity;
+		ofParameter<int>		velocityViscosityIterations;
+		
+		ofParameterGroup		densityParameters;
+		ofParameter<float>		densitySpeedOffset;
+		ofParameter<float>		densityDissipationOffset;
+		
+		ofParameterGroup		temperatureParameters;
+		ofParameter<float>		temperatureSpeedOffset;
+		ofParameter<float>		temperatureDissipationOffset;
+		ofParameter<float>		temperatureBuoyancySigma;
+		ofParameter<float>		temperatureBuoyancyWeight;
+		ofParameter<float>		temperatureBuoyancyAmbience;
 		
 		ftAdvectShader				advectShader;
 		ftBuoyancyShader			buoyancyShader;
@@ -132,9 +139,7 @@ namespace flowTools {
 		ofFbo			buoyancyFbo;
 		
 		int		simulationWidth, simulationHeight, densityWidth, densityHeight;
-		int		numJacobiIterationsProjection;
-		int		numJacobiIterationsDiffuse;
-//		int		gridScale;
+		float		gridScale;
 		
 		void	allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override ;
 		

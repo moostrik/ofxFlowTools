@@ -11,12 +11,10 @@ namespace flowTools {
 	public:
 		void setup(int _width, int _height, ftFlowForceType _type) {
 			type = _type;
-			GLint internalFormat = ftUtil::getInternalFormatFromType(type);
-			ftFlow::allocate(_width, _height, internalFormat);
-			numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
-			
-			floatPixels.allocate(inputWidth, inputHeight, numChannels);
 			roi = ofRectangle(0,0,1,1);
+			
+			GLint internalFormat = ftUtil::getInternalFormatFromType(type);
+			allocate(_width, _height, internalFormat, _width * roi.width, _height * roi.height, internalFormat);
 			
 			parameters.setName("pixels");
 			roiParameters.setName("region of interest");
@@ -51,6 +49,7 @@ namespace flowTools {
 			float h = min(_rect.height, maxH);
 			
 			roi = ofRectangle(x, y, w, h);
+			allocate(inputWidth, inputHeight, inputInternalFormat, inputWidth * w, inputHeight * h, inputInternalFormat);
 			
 			if (pRoi[0] != x) { pRoi[0].set(x); }
 			if (pRoi[1] != y) { pRoi[1].set(y); }
@@ -73,6 +72,28 @@ namespace flowTools {
 		ofRectangle							roi;
 		vector< ofParameter<float> >		pRoi;
 		void pRoiListener(float& _value)	{ setRoi(pRoi[0], pRoi[1], pRoi[2], pRoi[3]); }
+		
+		void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override {
+			
+			if (inputWidth != _inputWidth || inputHeight != _inputHeight || inputInternalFormat != _inputInternalFormat) {
+				inputWidth = _inputWidth;
+				inputHeight = _inputHeight;
+				inputInternalFormat = _inputInternalFormat;
+				inputFbo.allocate(inputWidth, inputHeight, inputInternalFormat);
+				ftUtil::zero(inputFbo);
+			}
+			
+			if (_outputWidth != outputWidth || _outputHeight != outputHeight || _outputInternalFormat != outputInternalFormat) {
+				numChannels = ftUtil::getNumChannelsFromInternalFormat(_inputInternalFormat);
+				floatPixels.allocate(_outputWidth, _outputHeight, numChannels);
+				
+				outputWidth = _outputWidth;
+				outputHeight = _outputHeight;
+				outputInternalFormat = _outputInternalFormat;
+				outputFbo.allocate(outputWidth, outputHeight, outputInternalFormat);
+				ftUtil::zero(outputFbo);
+			}
+		}
 		
 	};
 }

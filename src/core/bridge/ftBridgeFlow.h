@@ -14,9 +14,9 @@ namespace flowTools {
 	public:
 		ftBridgeFlow() {
 			parameters.setName("bridge");
-			parameters.add(trailWeight.set("trail"	, 0.3, 0.0, 0.99));
-			parameters.add(blurRadius.set("blur"	, 3.0, 0.0, 10.0));
-			parameters.add(speed.set("speed"		, 0.3, 0.0, 1.0 ));
+			parameters.add(trailWeight.set(	"optical flow trail", 0.3, 0.0, 0.99));
+			parameters.add(blurRadius.set(	"optical flow blur"	, 3.0, 0.0, 10.0));
+			parameters.add(speed.set(		"speed"				, 0.3, 0.0, 1.0 ));
 		}
 		
 		void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex);}
@@ -32,7 +32,6 @@ namespace flowTools {
 			velocityTrailFbo.swap();
 			bridgeShader.update(velocityTrailFbo.get(), velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
 			if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo.get(), 1, blurRadius.get()); }
-//			ftUtil::zero(velocityInputFbo);
 			ofPopStyle();
 		}
 		

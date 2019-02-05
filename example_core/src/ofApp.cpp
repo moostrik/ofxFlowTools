@@ -63,6 +63,8 @@ void ofApp::setupGui() {
 	toggleVisualizationScalar.addListener(this, &ofApp::toggleVisualizationScalarListener);
 	visualizationScale.addListener(this, &ofApp::visualizationScaleListener);
 	
+	combinedBridgeFlow.getParameters().setName("optical flow 2 fluid");
+	
 	bool s = true;
 	switchGuiColor(s = !s);
 	gui.add(visualizationParameters);
@@ -136,7 +138,6 @@ void ofApp::draw(){
 		case BRIDGE_VEL:	combinedBridgeFlow.drawVelocity(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_DEN:	combinedBridgeFlow.drawDensity(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_TMP:	combinedBridgeFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
 		case FLUID_VORT:	fluidFlow.drawVorticity(0, 0, windowWidth, windowHeight); break;
@@ -224,6 +225,6 @@ void ofApp::simulationResolutionListener(int &_value){
 	combinedBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	
 	fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
-	fluidFlow.addObstacle(flowToolsLogo.getTexture());
+	fluidFlow.setObstacle(flowToolsLogo.getTexture());
 }
 

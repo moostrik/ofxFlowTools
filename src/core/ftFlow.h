@@ -14,9 +14,6 @@ namespace flowTools {
 		virtual void setInput(ofTexture &_tex)							{ set(inputFbo, _tex); }
 		virtual void addInput(ofTexture &_tex, float _strength = 1.0)	{ add(inputFbo, _tex, _strength); }
 		
-//		virtual void setOutput(ofTexture &_tex)							{ set(outputFbo, _tex); }
-//		virtual void addOutput(ofTexture &_tex, float _strength = 1.0)	{ add(outputFbo, _tex, _strength); }
-		
 		virtual ofTexture& getInput()	{ return inputFbo.getTexture(); }
 		virtual ofTexture& getOutput()	{ return outputFbo.getTexture(); }
 	
@@ -26,6 +23,13 @@ namespace flowTools {
 		
 		void resize(int _width, int _height) { resize(_width, _height, _width, _height); }
 		void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight);
+		
+		int		getInputWidth()			{ return inputWidth; }
+		int		getInputHeight()		{ return inputHeight; }
+		GLint	getInputInternalFormat(){ return inputInternalFormat; }
+		int		getOutputWidth()		{ return outputWidth; }
+		int		getOutputHeight()		{ return outputHeight; }
+		GLint	getOutputInternalFormat(){return outputInternalFormat; }
 		
 		void draw(int _x, int _y, int _w, int _h)		{ drawOutput(_x, _y, _w, _h); }
 		virtual void drawInput(int _x, int _y, int _w, int _h) 	{ visualizationField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
@@ -50,7 +54,7 @@ namespace flowTools {
 		
 		ftVisualizationField	visualizationField;
 		
-		void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
+		virtual void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
 		virtual void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat);
 		
 		void set(ftPingPongFbo &_fbo, ofTexture &_inputTex);

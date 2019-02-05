@@ -2,8 +2,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxFlowTools.h"
 
+#include "ftFlow.h"
 #include "ftAdvectShader.h"
 #include "ftBuoyancyShader.h"
 #include "ftDivergenceShader.h"

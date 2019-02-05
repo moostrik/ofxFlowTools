@@ -56,7 +56,7 @@ namespace flowTools {
 		mousePositionsSet = false;
 		force = glm::vec4(0,0,0,0);
 		
-		parameters.add(pSpeed.set("speed", 50, 0, 100));
+		parameters.add(pSpeed.set("speed", .3, 0, 1));
 		parameters.add(pPersistent.set("persistent", false));
 		pPersistent.addListener(this, &ftMouseFlow::pPersistentListener);
 		parameters.add(pRadius.set("radius", 0.035, 0, .1));
@@ -102,14 +102,16 @@ namespace flowTools {
 			
 			switch (type) {
 				case FT_DENSITY:
-					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * mag;
+					force = glm::vec4(pColor->r, pColor->g, pColor->b, pColor->a) * mag * 100;
 					break;
 				case FT_VELOCITY:
-					force = glm::vec4(vel, 0, 0);
+					force = glm::vec4(vel, 0, 0) * 1000.0;
 					break;
 				case FT_PRESSURE:
+					force = glm::vec4(mag, 0, 0, 0)  * 100000.0;
+					break;
 				case FT_TEMPERATURE:
-					force = glm::vec4(mag, 0, 0, 0);
+					force = glm::vec4(mag, 0, 0, 0)  * 100;
 					break;
 				case FT_OBSTACLE:
 					force = pInverse? glm::vec4(0, 0, 0, 0): glm::vec4(1, 0, 0, 0);
@@ -135,7 +137,7 @@ namespace flowTools {
 				addInput(inputFbo.getBackTexture());
 			} else {
 				resetOutput();
-				add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime * ofGetFrameRate());
+				add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime * 1000.0 / radius);
 			}
 			
 			ofPopStyle();

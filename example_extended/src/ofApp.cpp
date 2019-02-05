@@ -16,8 +16,8 @@ void ofApp::setup(){
 	bridgeFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	fluidFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
 	particleFlow.setup(simulationWidth, simulationHeight, densityWidth, densityHeight);
-	densityMouseFlow.setup(densityWidth, densityHeight, FT_PRESSURE);
-	velocityMouseFlow.setup(simulationWidth, simulationHeight, FT_OBSTACLE);
+	densityMouseFlow.setup(densityWidth, densityHeight, FT_DENSITY);
+	velocityMouseFlow.setup(simulationWidth, simulationHeight, FT_VELOCITY);
 	
 	flows.push_back(&opticalFlow);
 	flows.push_back(&bridgeFlow);

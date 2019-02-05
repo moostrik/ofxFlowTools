@@ -79,7 +79,7 @@ namespace flowTools {
 			case FT_OBSTACLE:
 				parameters.setName("mouse obstacle");
 				pSmooth.set(0);
-				parameters.remove("inverse");
+//				parameters.remove("inverse");
 				parameters.remove("smooth");
 				parameters.remove("speed");
 				break;
@@ -137,7 +137,7 @@ namespace flowTools {
 				addInput(inputFbo.getBackTexture());
 			} else {
 				resetOutput();
-				add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime * 1000.0 / radius);
+				add(outputFbo, inputFbo.getTexture(), pSpeed.get() * _deltaTime * 1000.0 / radius); // change radius to area (pi * rad * rad) * (1.0 - smooth)
 			}
 			
 			ofPopStyle();

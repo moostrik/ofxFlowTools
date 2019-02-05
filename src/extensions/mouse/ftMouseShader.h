@@ -28,7 +28,7 @@ namespace flowTools {
 										 vec4 color = Value;
 										 float d = distance(Point, gl_TexCoord[0].st);
 										 float a = max((Radius - d) / Radius, 0.0);
-										 a = pow(a, max(EdgeSmooth, 0.00001));
+										 a = pow(a, max(EdgeSmooth, TINY));
 										 gl_FragColor = color * a;
 										 
 									 }
@@ -52,7 +52,7 @@ namespace flowTools {
 										 vec4 color = Value;
 										 float d = distance(Point, texCoordVarying);
 										 float a = max((Radius - d) / Radius, 0.0);
-										 a = pow(a, max(EdgeSmooth, 0.00001));
+										 a = pow(a, max(EdgeSmooth, TINY));
 										 fragColor = color * a;
 									 }
 									 );

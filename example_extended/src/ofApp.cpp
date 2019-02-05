@@ -277,9 +277,9 @@ void ofApp::simulationResolutionListener(int &_value){
 	int sH = fluidFlow.getSimulationHeight();
 	
 	if (densityWidth != dW || densityHeight != dH || simulationWidth != sW || simulationHeight != sH) {
-		opticalFlow.resize(simulationWidth, simulationHeight);
-		bridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
-		fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		for (auto flow : flows) {
+			flow->resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		}
 		fluidFlow.setObstacle(flowToolsLogo.getTexture());
 	}
 }

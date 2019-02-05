@@ -37,5 +37,8 @@ namespace flowTools {
 	protected:
 		ftMultiplyForceShader		multiplyShader;
 		
+		void allocate (int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override {
+			ftBridgeFlow::allocate(_inputWidth, _inputHeight, _inputInternalFormat, _inputWidth, _inputHeight, _inputInternalFormat);
+		}
 	};
 }

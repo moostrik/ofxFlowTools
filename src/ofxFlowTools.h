@@ -41,6 +41,7 @@
 #include "ftTemperatureBridgeFlow.h"
 #include "ftCombinedBridgeFlow.h"
 #include "ftFluidFlow.h"
+#include "ftSimpleFluidFlow.h"
 
 // EXTENTION
 #include "ftMouseFlow.h"

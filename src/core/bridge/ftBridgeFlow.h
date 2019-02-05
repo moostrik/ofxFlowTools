@@ -2,7 +2,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxFlowTools.h"
 
 #include "ftFlow.h"
 #include "ftBridgeShader.h"

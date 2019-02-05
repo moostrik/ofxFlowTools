@@ -2,13 +2,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofSetVerticalSync(true);
+	ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	simulationWidth = densityWidth / 2;
-	simulationHeight = densityHeight / 2;
+	simulationScale = 2;
+	simulationWidth = densityWidth / simulationScale;
+	simulationHeight = densityHeight / simulationScale;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -48,12 +49,11 @@ void ofApp::setupGui() {
 	gui.add(toggleCameraDraw.set("draw camera (C)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
-	gui.add(outputWidth.set("output width", 1280, 256, 1920));
-	gui.add(outputHeight.set("output height", 720, 144, 1080));
-	gui.add(simulationScale.set("simulation scale", 2, 1, 4));
-	gui.add(simulationFPS.set("simulation fps", 60, 1, 60));
-	outputWidth.addListener(this, &ofApp::simulationResolutionListener);
-	outputHeight.addListener(this, &ofApp::simulationResolutionListener);
+	gui.add(densityWidth.set("density width", densityWidth, 256, 1920));	// already set in setup
+	gui.add(densityHeight.set("density height", densityHeight, 144, 1080));	// already set in setup
+	gui.add(simulationScale.set("simulation scale", simulationScale, 1, 4));// already set in setup
+	densityWidth.addListener(this, &ofApp::simulationResolutionListener);
+	densityHeight.addListener(this, &ofApp::simulationResolutionListener);
 	simulationScale.addListener(this, &ofApp::simulationResolutionListener);
 	
 	visualizationParameters.setName("visualization");
@@ -95,7 +95,6 @@ void ofApp::switchGuiColor(bool _switch) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	ofSetFrameRate(simulationFPS);
 	float dt = 1.0 / max(ofGetFrameRate(), 1.f); // more smooth as 'real' deltaTime.
 	
 	simpleCam.update();
@@ -211,15 +210,20 @@ void ofApp::toggleResetListener(bool& _value) {
 }
 
 void ofApp::simulationResolutionListener(int &_value){
-	densityWidth = outputWidth;
-	densityHeight = outputHeight;
 	simulationWidth = densityWidth / simulationScale;
 	simulationHeight = densityHeight / simulationScale;
 	
-	opticalFlow.resize(simulationWidth, simulationHeight);
-	velocityBridgeFlow.resize(simulationWidth, simulationHeight);
-	densityBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
-	fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
-	fluidFlow.setObstacle(flowToolsLogo.getTexture());
+	int dW = fluidFlow.getDensityWidth();
+	int dH = fluidFlow.getDensityHeight();
+	int sW = fluidFlow.getSimulationWidth();
+	int sH = fluidFlow.getSimulationHeight();
+	
+	if (densityWidth != dW || densityHeight != dH || simulationWidth != sW || simulationHeight != sH) {
+		opticalFlow.resize(simulationWidth, simulationHeight);
+		velocityBridgeFlow.resize(simulationWidth, simulationHeight);
+		densityBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		fluidFlow.setObstacle(flowToolsLogo.getTexture());
+	}
 }
 

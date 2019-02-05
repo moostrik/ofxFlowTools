@@ -17,30 +17,29 @@ public:
 	void	draw();
 	void	keyPressed(int key);
 	
-	int		densityWidth, densityHeight, simulationWidth, simulationHeight, windowWidth, windowHeight;
+	int		simulationWidth, simulationHeight, windowWidth, windowHeight;
 	
-	vector< ftFlow* >		flows;
-	ftOpticalFlow			opticalFlow;
-	ftVelocityBridgeFlow 	velocityBridgeFlow;
-	ftDensityBridgeFlow 	densityBridgeFlow;
-	ftSimpleFluidFlow		fluidFlow;
+	ofParameter<int>	densityWidth;
+	ofParameter<int>	densityHeight;
+	ofParameter<int>	simulationScale;
+	void 				simulationResolutionListener(int &_value);
 	
-	ofImage					flowToolsLogo;
+	vector< ftFlow* >	flows;
+	ftOpticalFlow		opticalFlow;
+	ftVelocityBridgeFlow velocityBridgeFlow;
+	ftDensityBridgeFlow	densityBridgeFlow;
+	ftSimpleFluidFlow	fluidFlow;
 	
-	ofParameter<int>		outputWidth;
-	ofParameter<int>		outputHeight;
-	ofParameter<int>		simulationScale;
-	ofParameter<int>		simulationFPS;
-	void simulationResolutionListener(int &_value);
+	ofImage				flowToolsLogo;
 	
-	ofParameterGroup		visualizationParameters;
-	ofParameter<int>		visualizationMode;
-	ofParameter<string>		visualizationName;
-	ofParameter<float>		visualizationScale;
-	ofParameter<bool>		toggleVisualizationScalar;
-	void visualizationModeListener(int& _value) 			{ visualizationName.set(visualizationNames[_value]); }
-	void visualizationScaleListener(float& _value)			{ for (auto flow : flows) { flow->setVisualizationScale(_value); } }
-	void toggleVisualizationScalarListener(bool &_value)	{ for (auto flow : flows) { flow->setVisualizationToggleScalar(_value); } }
+	ofParameterGroup	visualizationParameters;
+	ofParameter<int>	visualizationMode;
+	ofParameter<string>	visualizationName;
+	ofParameter<float>	visualizationScale;
+	ofParameter<bool>	toggleVisualizationScalar;
+	void 				visualizationModeListener(int& _value) { visualizationName.set(visualizationNames[_value]); }
+	void 				visualizationScaleListener(float& _value) { for (auto flow : flows) { flow->setVisualizationScale(_value); } }
+	void 				toggleVisualizationScalarListener(bool &_value)	{ for (auto flow : flows) { flow->setVisualizationToggleScalar(_value); } }
 	
 	ofVideoGrabber		simpleCam;
 	ofFbo				cameraFbo;

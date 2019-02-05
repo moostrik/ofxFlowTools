@@ -2,8 +2,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	
-	// ofSetVerticalSync(false);
 	ofSetLogLevel(OF_LOG_NOTICE);
 	
 	numRegios = 4;
@@ -11,11 +9,12 @@ void ofApp::setup(){
 	
 	densityWidth = 1280;
 	densityHeight = 720;
-	simulationWidth = densityWidth;
-	simulationHeight = densityHeight;
-	// process the average on 16th resolution
-	avgWidth = densityWidth / 4;
-	avgHeight = densityHeight / 4;
+	simulationScale = 2;
+	simulationWidth = densityWidth / simulationScale;
+	simulationHeight = densityHeight / simulationScale;
+	areaScale = 4;
+	avgWidth = densityWidth / areaScale;
+	avgHeight = densityHeight / areaScale;
 	windowWidth = ofGetWindowWidth();
 	windowHeight = ofGetWindowHeight();
 	
@@ -70,6 +69,14 @@ void ofApp::setupGui() {
 	gui.add(toggleAverageDraw.set("draw average (A)", true));
 	gui.add(toggleReset.set("reset (R)", false));
 	toggleReset.addListener(this, &ofApp::toggleResetListener);
+	gui.add(densityWidth.set("density width", densityWidth, 256, 1920));	// already set in setup
+	gui.add(densityHeight.set("density height", densityHeight, 144, 1080));	// already set in setup
+	gui.add(simulationScale.set("simulation scale", simulationScale, 1, 4));// already set in setup
+	gui.add(areaScale.set("area scale", 4, 1, 16));
+	densityWidth.addListener(this, &ofApp::simulationResolutionListener);
+	densityHeight.addListener(this, &ofApp::simulationResolutionListener);
+	simulationScale.addListener(this, &ofApp::simulationResolutionListener);
+	areaScale.addListener(this, &ofApp::simulationResolutionListener);
 	
 	visualizationParameters.setName("visualization");
 	visualizationParameters.add(visualizationMode.set("mode", FLUID_DEN, INPUT_FOR_DEN, FLUID_DEN));
@@ -179,9 +186,7 @@ void ofApp::draw(){
 		case BRIDGE_VEL:	velocityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_DEN:	densityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
 		case BRIDGE_TMP:	temperatureBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_PRS:	break;
 		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
-		case OBST_OFFSET:	fluidFlow.drawObstacleOffset(0, 0, windowWidth, windowHeight); break;
 		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
 		case FLUID_VORT:	fluidFlow.drawVorticity(0, 0, windowWidth, windowHeight); break;
 		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
@@ -267,4 +272,22 @@ void ofApp::toggleResetListener(bool& _value) {
 		for (auto flow : flows) { flow->reset(); }
 	}
 	_value = false;
+}
+
+void ofApp::simulationResolutionListener(int &_value){
+	simulationWidth = densityWidth / simulationScale;
+	simulationHeight = densityHeight / simulationScale;
+	
+	int dW = fluidFlow.getDensityWidth();
+	int dH = fluidFlow.getDensityHeight();
+	int sW = fluidFlow.getSimulationWidth();
+	int sH = fluidFlow.getSimulationHeight();
+	
+	if (densityWidth != dW || densityHeight != dH || simulationWidth != sW || simulationHeight != sH) {
+		opticalFlow.resize(simulationWidth, simulationHeight);
+		velocityBridgeFlow.resize(simulationWidth, simulationHeight);
+		densityBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		temperatureBridgeFlow.resize(simulationWidth, simulationHeight);
+		fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+	}
 }

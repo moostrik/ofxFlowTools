@@ -67,11 +67,15 @@ namespace flowTools {
 	//--------------------------------------------------------------
 
 	void ftAverageFlow::update(ofFloatPixels& _pixels) {
+		if (_pixels.getNumChannels() != numChannels) {
+			ofLogWarning("ftAverageFlow::update") << "wrong channel count";
+			return;
+		}
 		if (!pPauze.get()) {
 			int pixelWidth = _pixels.getWidth();
 			int pixelHeight = _pixels.getHeight();
-			ofRectangle roiReal = ofRectangle(roi.x * pixelWidth, roi.y * pixelHeight, int(roi.width * pixelWidth), int(roi.height * pixelHeight));
 			
+			ofRectangle roiReal = ofRectangle(roi.x * pixelWidth, roi.y * pixelHeight, int(roi.width * pixelWidth), int(roi.height * pixelHeight));
 			
 			int numRoiPixels = roiReal.width * roiReal.height;
 			float* pixelData = _pixels.getData();
@@ -100,7 +104,6 @@ namespace flowTools {
 			magnitude *= 4.0; // magnitude / 255 * 1000
 			magnitude /= pMagnitudeNormalization.get();
 			magnitude = ofClamp(magnitude, 0, 1);
-			
 			
 			float totalMagnitude = 0;
 			for (auto tv : totalVelocity) { totalMagnitude += tv * tv; }

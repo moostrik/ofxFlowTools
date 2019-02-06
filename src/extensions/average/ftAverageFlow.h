@@ -38,25 +38,24 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		
-		ftFlowForceType	type;
-		int 			numChannels;
+		ftFlowForceType		type;
+		int 				numChannels;
 		
-		int 			inputWidth;
-		int 			inputHeight;
+		int 				inputWidth;
+		int 				inputHeight;
 		
 		
-		static int		averageFlowCount;
+		static int			averageFlowCount;
 		
-		ofRectangle		roi;
-		void			getRoiData(ofFloatPixels& _srcPixels, ofFloatPixels& _roiPixels, ofRectangle _rect);
+		ofRectangle			roi;
 		
-		vector<float>	pixelMagnitudes;
+		vector<float>		pixelMagnitudes;
 		
-		float			magnitude;
+		float				magnitude;
 		
-		vector<float>	velocity;
+		vector<float>		velocity;
 		
-		void			getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
+		void				getMeanStDev(vector<float> &_v, float &_mean, float &_stDev);
 		
 		void								setupParameters();
 		ofParameter<float>					pMagnitudeNormalization;

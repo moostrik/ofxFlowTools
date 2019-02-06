@@ -12,10 +12,6 @@ namespace flowTools {
 		numChannels = ftUtil::getNumChannelsFromInternalFormat(internalFormat);
 		
 		roi = ofRectangle(0,0,1,1);
-		
-//		pixelMagnitudes.reserve(inputWidth * inputHeight);
-//		pixelMagnitudes.resize(inputWidth * inputHeight, 0);
-//		magnitude = 0;
 		velocity.resize(numChannels, 0);
 		
 		// move draw graph out of average;
@@ -76,34 +72,28 @@ namespace flowTools {
 			int pixelHeight = _pixels.getHeight();
 			ofRectangle roiReal = ofRectangle(roi.x * pixelWidth, roi.y * pixelHeight, int(roi.width * pixelWidth), int(roi.height * pixelHeight));
 			
+			
 			int numRoiPixels = roiReal.width * roiReal.height;
-			ofFloatPixels roiPixels;
-			roiPixels.allocate(roiReal.getWidth(), roiReal.getHeight(), numChannels);
-			getRoiData(_pixels, roiPixels, roiReal);
-			float* pixelData = roiPixels.getData();
+			float* pixelData = _pixels.getData();
 			
 			vector<float> totalVelocity;
 			totalVelocity.resize(numChannels, 0);
 			
-			int magnitudeAreaCounter = 0;
-			vector<int> componentAreaCounter;
-			componentAreaCounter.resize(numChannels, 0);
-			
 			pixelMagnitudes.resize(numRoiPixels);
-			for (int i=0; i<numRoiPixels; i++) {
-				float mag = 0;
-				bool bCountArea = 0;
-				for (int j=0; j<numChannels; j++) {
-					float vel = pixelData[i * numChannels + j];
-					if (vel > 0) {
-						componentAreaCounter[j]++;
-						bCountArea = 1;
+			
+			for (int x=0; x<roiReal.width; x++) {
+				for (int y=0; y<roiReal.height; y++) {
+					int pixelIndex = (x + roiReal.x + (y + roiReal.y) * pixelWidth) * numChannels;
+					int roiIndex = x + y * roiReal.width;
+					
+					float mag = 0;
+					for (int c=0; c<numChannels; c++) {
+						float vel = pixelData[pixelIndex + c];
+						totalVelocity[c] += vel;
+						mag += vel * vel;
 					}
-					totalVelocity[j] += vel;
-					mag += vel * vel;
+					pixelMagnitudes[roiIndex] = sqrt(mag);
 				}
-				if (bCountArea) { magnitudeAreaCounter++; }
-				pixelMagnitudes[i] = sqrt(mag);
 			}
 			
 			magnitude = accumulate(pixelMagnitudes.begin(), pixelMagnitudes.end(), 0.0) / (float)pixelMagnitudes.size();
@@ -167,27 +157,6 @@ namespace flowTools {
 	}
 	
 	//--------------------------------------------------------------
-	void ftAverageFlow::getRoiData(ofFloatPixels &_pixels, ofFloatPixels& _subPixels, ofRectangle _section) {
-		int x = _section.x;
-		int y = _section.y;
-		int w = _section.width;
-		int h = _section.height;
-		int c = numChannels;
-		float* srcPixelData = _pixels.getData();
-		float* subPixelData = _subPixels.getData();
-		
-		for (int iY=0; iY<h; iY++) {
-			for (int iX=0; iX<w; iX++) {
-				for (int iC=0; iC<c; iC++) {
-					int subI = ((iY * w) + iX) * c + iC;
-					int srcI = (((y+iY) * _pixels.getWidth()) + (x+iX)) * c + iC;
-					subPixelData[subI] = srcPixelData[srcI];
-				}
-			}
-		}
-	}
-
-	//--------------------------------------------------------------
 	void ftAverageFlow::setRoi(ofRectangle _rect) {
 		float x = ofClamp(_rect.x, 0, 1);
 		float y = ofClamp(_rect.y, 0, 1);
@@ -209,19 +178,11 @@ namespace flowTools {
 	//--------------------------------------------------------------
 	void ftAverageFlow::reset() {
 		magnitude = 0;
-//		magnitudeArea = 0;
-		
 		pMagnitude.set(0);
-//		pMagnitudeArea.set(0);
-		
 		for (int i=0; i<numChannels; i++) {
 			velocity[i] = 0;
-//			velocityArea[i] = 0;
-			
 			pVelocity[i] = 0;
-//			pVelocityArea[i] = 0;
 		}
-		
 		bUpdateVisualizer = true;
 	}
 	

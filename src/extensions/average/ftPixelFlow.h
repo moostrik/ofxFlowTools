@@ -62,6 +62,16 @@ namespace flowTools {
 		ofRectangle	getRoi()		{ return roi; }
 		ofPoint		getRoiCentre()	{ return ofPoint(roi.x + roi.width / 2, roi.y + roi.height / 2); }
 		
+		int getWidth()	{ return inputWidth; }
+		int getHeight()	{ return inputHeight; }
+		
+		void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight) override {
+			resize(_inputWidth, _inputHeight);
+		}
+		void resize(int _width, int _height) override {
+			allocate(_width, _height, inputInternalFormat, _width * roi.width, _height * roi.height, outputInternalFormat);
+		}
+		
 		
 	protected:
 		ftFlowForceType		type;

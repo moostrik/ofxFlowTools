@@ -51,7 +51,8 @@ namespace flowTools {
 			return;
 		}
 		type = _type;
-		ftFlow::allocate(_width, _height, ftUtil::getInternalFormatFromType(type));
+		GLint internalFormat = ftUtil::getInternalFormatFromType(type);
+		ftFlow::allocate(_width, _height, internalFormat, _width, _height, internalFormat);
 		
 		mousePositionsSet = false;
 		force = glm::vec4(0,0,0,0);

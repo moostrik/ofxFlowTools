@@ -21,8 +21,8 @@ namespace flowTools {
 		virtual void resetInput()		{ ftUtil::zero(inputFbo); }
 		virtual void resetOutput()		{ ftUtil::zero(outputFbo); }
 		
-		void resize(int _width, int _height) { resize(_width, _height, _width, _height); }
-		void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight);
+		virtual void resize(int _width, int _height) { resize(_width, _height, _width, _height); }
+		virtual void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight);
 		
 		int		getInputWidth()			{ return inputWidth; }
 		int		getInputHeight()		{ return inputHeight; }
@@ -54,7 +54,7 @@ namespace flowTools {
 		
 		ftVisualizationField	visualizationField;
 		
-		virtual void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
+//		void allocate(int _width, int _height, GLint _internalFormat)  { allocate(_width, _height, _internalFormat, _width, _height, _internalFormat); }
 		virtual void allocate(int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat);
 		
 		void set(ftPingPongFbo &_fbo, ofTexture &_inputTex);

@@ -2,9 +2,9 @@
 
 namespace flowTools {
 	
-	void ftAverageFlowWatcher::setup(int _width, int _height, flowTools::ftFlowForceType _type)   {
+	void ftAverageFlowWatcher::setup(flowTools::ftFlowForceType _type)   {
 		
-		ftAverageFlow::setup(_width, _height, _type);
+		ftAverageFlow::setup(_type);
 		
 		magnitudeEvent = 0;
 		magnitudeHigh = 0;

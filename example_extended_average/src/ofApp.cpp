@@ -28,7 +28,7 @@ void ofApp::setup(){
 	pixelFlow.setup(avgWidth, avgHeight, FT_VELOCITY);
 	averageFlows.resize(numRegios);
 	for (int i=0; i<numRegios; i++) {
-		averageFlows[i].setup(avgWidth, avgHeight, FT_VELOCITY);
+		averageFlows[i].setup(FT_VELOCITY);
 		averageFlows[i].setRoi(1.0 / (numRegios + 1.0) * (i + 1), .2, 1.0 / (numRegios + 2.0), .6);
 	}
 	
@@ -39,7 +39,8 @@ void ofApp::setup(){
 	flows.push_back(&fluidFlow);
 	flows.push_back(&densityMouseFlow);
 	flows.push_back(&velocityMouseFlow);
-	for (auto& f : averageFlows) { flows.push_back(&f); }
+//	flows.push_back(&pixelFlow);
+//	for (auto& f : averageFlows) { flows.push_back(&f); }
 	
 	for (auto flow : flows) { flow->setVisualizationFieldSize(glm::vec2(simulationWidth / 2, simulationHeight / 2)); }
 	
@@ -181,19 +182,19 @@ void ofApp::draw(){
 	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	switch(visualizationMode.get()) {
 		case INPUT_FOR_DEN:	densityBridgeFlow.drawInput(0, 0, windowWidth, windowHeight); break;
-		case INPUT_FOR_VEL: opticalFlow.drawInput(0, 0, windowWidth, windowHeight); break;
-		case FLOW_VEL:		opticalFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_VEL:	velocityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_DEN:	densityBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case BRIDGE_TMP:	temperatureBridgeFlow.draw(0, 0, windowWidth, windowHeight); break;
-		case OBSTACLE:		fluidFlow.drawObstacle(0, 0, windowWidth, windowHeight); break;
-		case FLUID_BUOY:	fluidFlow.drawBuoyancy(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VORT:	fluidFlow.drawVorticity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DIVE:	fluidFlow.drawDivergence(0, 0, windowWidth, windowHeight); break;
-		case FLUID_TMP:		fluidFlow.drawTemperature(0, 0, windowWidth, windowHeight); break;
-		case FLUID_PRS:		fluidFlow.drawPressure(0, 0, windowWidth, windowHeight); break;
-		case FLUID_VEL:		fluidFlow.drawVelocity(0, 0, windowWidth, windowHeight); break;
-		case FLUID_DEN:		fluidFlow.draw(0, 0, windowWidth, windowHeight); break;
+		case INPUT_FOR_VEL: opticalFlow.drawInput(		0, 0, windowWidth, windowHeight); break;
+		case FLOW_VEL:		opticalFlow.draw(			0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_VEL:	velocityBridgeFlow.draw(	0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_DEN:	densityBridgeFlow.draw(		0, 0, windowWidth, windowHeight); break;
+		case BRIDGE_TMP:	temperatureBridgeFlow.draw(	0, 0, windowWidth, windowHeight); break;
+		case OBSTACLE:		fluidFlow.drawObstacle(		0, 0, windowWidth, windowHeight); break;
+		case FLUID_BUOY:	fluidFlow.drawBuoyancy(		0, 0, windowWidth, windowHeight); break;
+		case FLUID_VORT:	fluidFlow.drawVorticity(	0, 0, windowWidth, windowHeight); break;
+		case FLUID_DIVE:	fluidFlow.drawDivergence(	0, 0, windowWidth, windowHeight); break;
+		case FLUID_TMP:		fluidFlow.drawTemperature(	0, 0, windowWidth, windowHeight); break;
+		case FLUID_PRS:		fluidFlow.drawPressure(		0, 0, windowWidth, windowHeight); break;
+		case FLUID_VEL:		fluidFlow.drawVelocity(		0, 0, windowWidth, windowHeight); break;
+		case FLUID_DEN:		fluidFlow.draw(				0, 0, windowWidth, windowHeight); break;
 		default: break;
 	}
 	
@@ -256,7 +257,7 @@ void ofApp::keyPressed(int key){
 		case '8': visualizationMode.set(FLUID_PRS); break;
 		case '9': visualizationMode.set(FLUID_VEL); break;
 		case '0': visualizationMode.set(FLUID_DEN); break;
-		case 'G':toggleGuiDraw = !toggleGuiDraw; break;
+		case 'G': toggleGuiDraw = !toggleGuiDraw; break;
 		case 'F': toggleFullScreen.set(!toggleFullScreen.get()); break;
 		case 'C': toggleCameraDraw.set(!toggleCameraDraw.get()); break;
 		case 'M': toggleMouseDraw.set(!toggleMouseDraw.get()); break;
@@ -278,16 +279,17 @@ void ofApp::simulationResolutionListener(int &_value){
 	simulationWidth = densityWidth / simulationScale;
 	simulationHeight = densityHeight / simulationScale;
 	
-	int dW = fluidFlow.getDensityWidth();
-	int dH = fluidFlow.getDensityHeight();
-	int sW = fluidFlow.getSimulationWidth();
-	int sH = fluidFlow.getSimulationHeight();
+	if (densityWidth != fluidFlow.getDensityWidth() || densityHeight != fluidFlow.getDensityHeight() ||
+		simulationWidth != fluidFlow.getSimulationWidth() || simulationHeight != fluidFlow.getSimulationHeight()) {
+		for (auto flow : flows) {
+			flow->resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+		}
+	}
 	
-	if (densityWidth != dW || densityHeight != dH || simulationWidth != sW || simulationHeight != sH) {
-		opticalFlow.resize(simulationWidth, simulationHeight);
-		velocityBridgeFlow.resize(simulationWidth, simulationHeight);
-		densityBridgeFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
-		temperatureBridgeFlow.resize(simulationWidth, simulationHeight);
-		fluidFlow.resize(simulationWidth, simulationHeight, densityWidth, densityHeight);
+	avgWidth = densityWidth / areaScale;
+	avgHeight = densityHeight / areaScale;
+	
+	if (avgWidth != pixelFlow.getWidth() || avgHeight != pixelFlow.getHeight()) {
+		pixelFlow.resize(avgWidth, avgHeight);
 	}
 }

@@ -24,13 +24,6 @@ namespace flowTools {
 		virtual void resize(int _width, int _height) { resize(_width, _height, _width, _height); }
 		virtual void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight);
 		
-		int		getInputWidth()			{ return inputWidth; }
-		int		getInputHeight()		{ return inputHeight; }
-		GLint	getInputInternalFormat(){ return inputInternalFormat; }
-		int		getOutputWidth()		{ return outputWidth; }
-		int		getOutputHeight()		{ return outputHeight; }
-		GLint	getOutputInternalFormat(){return outputInternalFormat; }
-		
 		void draw(int _x, int _y, int _w, int _h)		{ drawOutput(_x, _y, _w, _h); }
 		virtual void drawInput(int _x, int _y, int _w, int _h) 	{ visualizationField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
 		virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizationField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }

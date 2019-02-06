@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftAverageFlowWatcher: public ftAverageFlow {
 	public:
 		
-		void setup(int _width, int _height, ftFlowForceType _type) override;
+		void setup(ftFlowForceType _type) override;
 		
 		void update(ofFloatPixels& _pixels) override;
 		

@@ -36,9 +36,9 @@ namespace flowTools {
 		
 		void 	addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
 		void	addVelocity(ofTexture& _tex, float _strength  = 1.0)	{ addInput(_tex, _strength); }
-		void	addDensity(ofTexture& _tex, float _strength  = 1.0)		{ add(outputFbo, _tex); }
-		void	addTemperature(ofTexture& _tex, float _strength  = 1.0)	{ add(temperatureFbo, _tex); }
-		void	addPressure(ofTexture& _tex, float _strength  = 1.0)	{ add(pressureFbo, _tex); }
+		void	addDensity(ofTexture& _tex, float _strength  = 1.0)		{ add(outputFbo, _tex, _strength); }
+		void	addTemperature(ofTexture& _tex, float _strength  = 1.0)	{ add(temperatureFbo, _tex, _strength); }
+		void	addPressure(ofTexture& _tex, float _strength  = 1.0)	{ add(pressureFbo, _tex, _strength); }
 		void	addObstacle(ofTexture& _tex);
 		
 		ofTexture&	getDensity()				{ return getOutput(); }

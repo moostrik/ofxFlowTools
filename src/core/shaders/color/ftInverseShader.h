@@ -5,12 +5,12 @@
 
 namespace flowTools {
 	
-	class ftDarkenShader : public ftShader {
+	class ftInverseShader : public ftShader {
 	public:
-		ftDarkenShader(){
+		ftInverseShader(){
 			bInitialized = 1;
 			if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
-			string shaderName = "ftDarkenShader";
+			string shaderName = "ftInverseShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
 		}
@@ -19,14 +19,10 @@ namespace flowTools {
 		void glTwo() {
 			fragmentShader = GLSL120(
 									 uniform sampler2DRect tex0;
-									 uniform float treshold;
 									 
 									 void main(){
 										 vec4 color = texture2DRect(tex0,gl_TexCoord[0].st);
-										 float invT = 1.0 - treshold;
-										 color.x = max(0, color.x - treshold) / invT;
-										 color.y = max(0, color.y - treshold) / invT;
-										 color.z = max(0, color.z - treshold) / invT;
+										 color.xyz = vec3(1.0) - color.xyz;
 										 gl_FragColor = color;
 									 }
 									 );
@@ -40,17 +36,13 @@ namespace flowTools {
 			
 			fragmentShader = GLSL410(
 									 uniform sampler2DRect tex0;
-									 uniform float treshold;
 									 
 									 in vec2 texCoordVarying;
 									 out vec4 fragColor;
 									 
 									 void main(){
 										 vec4 color = texture(tex0, texCoordVarying);
-										 float invT = 1.0 - treshold;
-										 color.x = max(0, color.x - treshold) / invT;
-										 color.y = max(0, color.y - treshold) / invT;
-										 color.z = max(0, color.z - treshold) / invT;
+										 color.xyz = vec3(1.0) - color.xyz;
 										 fragColor = color;
 									 }
 									 );
@@ -63,11 +55,10 @@ namespace flowTools {
 		}
 		
 	public:
-		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture, float _treshold){
+		void update(ofFbo& _drawBuffer, ofTexture& _srcTexture){
 			_drawBuffer.begin();
 			begin();
 			setUniformTexture( "tex0" , _srcTexture, 0 );
-			setUniform1f("treshold", _treshold);
 			renderFrame(_drawBuffer.getWidth(), _drawBuffer.getHeight());
 			end();
 			_drawBuffer.end();

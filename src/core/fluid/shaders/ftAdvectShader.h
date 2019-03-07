@@ -70,7 +70,7 @@ namespace flowTools {
 										 vec2 st2 = st * scale;
 										 
 										 float oC = texture(tex_obstacle, st2).x;
-										 if (oC == 1.0) {
+										 if (oC > 0.5) {
 											 glFragColor = vec4(0);
 										 } else {
 											 vec2 velocity = texture(tex_velocity, st2).xy;

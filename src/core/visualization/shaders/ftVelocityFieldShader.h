@@ -41,7 +41,7 @@ namespace flowTools {
 											
 											float alpha = 0.3 + 0.3 * (1.0 - length(line) / arrowSize);
 											vec4 color = baseColor;
-											color.w *= alpha;
+											color.w = 1.0;//*= alpha;
 											
 											float arrowLength = 0.75 * length(line);
 											
@@ -140,7 +140,7 @@ namespace flowTools {
 										 
 										 float alpha = 0.3 + 0.3 * (1.0 - length(line) / arrowSize);
 										 vec4 color = baseColor;
-										 color.w *= alpha;
+										 color.w = 1.0;//*= alpha;
 										 
 										 float arrowLength = 0.75 * length(line);
 										 

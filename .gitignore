@@ -79,6 +79,10 @@ ipch/
 [Rr]elease*/
 Ankh.NoLoad
 
+# LINUX
+libmodex.so
+
+
 #########################
 # PROJECT
 #########################

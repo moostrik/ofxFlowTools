@@ -38,7 +38,7 @@ namespace flowTools {
 										 vec2 buoyancy = vec2(0.0);
 										 if (dtemp != 0.0) {
 											 float density = texture2DRect(tex_density, st).a;
-											 float buoyancy_force = timestep * dtemp * sigma - density * weight;
+											 float buoyancy_force = dtemp * sigma - density * weight;
 											 buoyancy = vec2(0, -1) * buoyancy_force;
 										 }
 										 

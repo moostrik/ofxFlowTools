@@ -87,6 +87,7 @@ namespace flowTools {
 		void reset() override { ftFlow::reset(); bFirstFrame = true; bInputSet = false; }
 		
 		void		setStrength(float value)	{strength.set(value);}
+		void		setBoost(float value)		{boost.set(value);}
 		void		setOffset(int value)		{offset.set(value);}
 		void		setThreshold(float value)	{threshold.set(value);}
 		void		setInverseX(bool value)		{doInverseX.set(value);}
@@ -95,7 +96,8 @@ namespace flowTools {
 		ofTexture&	getVelocity()	{ return getOutput(); }
 		
 		float		getStrength()	{return strength.get();}
-		int			getOffset()		{return offset.get();}
+		float		getBoost()	{return boost.get();}
+		int		getOffset()	{return offset.get();}
 		float		getThreshold()	{return threshold.get();}
 		bool		getInverseX()	{return doInverseX.get();}
 		bool		getInverseY()	{return doInverseY.get();}

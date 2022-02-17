@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "ftShader.h"
+#include "ftUtil.h"
 
 namespace flowTools {
 
@@ -14,6 +15,7 @@ namespace flowTools {
 			string shaderName = "ftGaussianBlurShader";
 			if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
 			else { ofLogWarning(shaderName + " failed to initialize"); }
+			allocate(128,128);
 		}
 		
 	protected:
@@ -149,7 +151,7 @@ namespace flowTools {
 		
 	public:
 		void update(ofFbo& _fbo, int _passes, int _radius){
-			if (pingPong.getWidth() != _fbo.getWidth() ||
+			if (!pingPong.get().isAllocated() || pingPong.getWidth() != _fbo.getWidth() ||
 				pingPong.getHeight() != _fbo.getHeight() ||
 				ftUtil::getInternalFormat(pingPong.get()) != ftUtil::getInternalFormat(_fbo)) {
 				allocate(_fbo.getWidth(),  _fbo.getHeight(), ftUtil::getInternalFormat(_fbo) );

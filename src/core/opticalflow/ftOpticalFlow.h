@@ -21,7 +21,7 @@ public:
     parameters.setName("optical flow");
     offset.set("offset", 3, 1, 10);
     threshold.set("threshold", 0.1, 0, 0.2);
-    strength.set("force", 3, .1, 10);      // 3 is best for normalization
+    strength.set("strength", glm::vec2(3, 3), glm::vec2(0, 0), glm::vec2(10, 10));      // 3 is best for normalization
     boost.set("boost", 0.0, 0.0, .9);      //
     doInverseX.set("inverse x", true);       // flow velocity is inverse to fluid velocity
     doInverseY.set("inverse y", true);       // flow velocity is inverse to fluid velocity
@@ -50,7 +50,7 @@ public:
         ftUtil::stretch(opticalFlowFbo.get(), opticalFlowFbo.getBackTexture());
       }
 
-      opticalFlowShader.update(outputFbo.get(), opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  glm::vec2(strength.get()),  1.0 - boost.get(), doInverseX.get(), doInverseY.get());
+      opticalFlowShader.update(outputFbo.get(), opticalFlowFbo.getTexture(), opticalFlowFbo.getBackTexture(), offset.get(), threshold.get(),  strength.get(),  1.0 - boost.get(), doInverseX.get(), doInverseY.get());
 
       ofPopStyle();
     }
@@ -86,7 +86,8 @@ public:
 
   void reset() override { ftFlow::reset(); bFirstFrame = true; bInputSet = false; }
 
-  void  setStrength(float value)  {strength.set(value);}
+  void  setStrength(float value)  {strength.set(glm::vec2(value, value));}
+  void  setStrength(glm::vec2 value)  {strength.set(value);}
   void  setBoost(float value)     {boost.set(value);}
   void  setOffset(int value)      {offset.set(value);}
   void  setThreshold(float value) {threshold.set(value);}
@@ -95,7 +96,7 @@ public:
 
   ofTexture&  getVelocity()  { return getOutput(); }
 
-  float getStrength()   {return strength.get();}
+  glm::vec2 getStrength()   {return strength.get();}
   float getBoost()      {return boost.get();}
   int   getOffset()     {return offset.get();}
   float getThreshold()  {return threshold.get();}
@@ -105,7 +106,7 @@ public:
 protected:
   ofParameter<float>  threshold;
   ofParameter<int>    offset;
-  ofParameter<float>  strength;
+  ofParameter<glm::vec2>  strength;
   ofParameter<float>  boost;
   ofParameter<bool>   doInverseX;
   ofParameter<bool>   doInverseY;

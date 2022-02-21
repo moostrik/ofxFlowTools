@@ -19,12 +19,12 @@ public:
 protected:
   void glTwo() {
     fragmentShader = GLSL120(
-    uniform sampler2DRect	tex0;
-    uniform sampler2DRect	tex1;
-    uniform float			offset;
-    uniform float			threshold;
-    uniform vec2			force;
-    uniform float			power;
+    uniform sampler2DRect tex0;
+    uniform sampler2DRect tex1;
+    uniform float         offset;
+    uniform float         threshold;
+    uniform vec2          force;
+    uniform float         power;
 
     void main(){
       vec2 st = gl_TexCoord[0].st;
@@ -69,12 +69,12 @@ protected:
 
   void glFour() {
     fragmentShader = GLSL410(
-    uniform sampler2DRect	tex0;
-    uniform sampler2DRect	tex1;
-    uniform float			offset;
-    uniform float			threshold;
-    uniform vec2			force;
-    uniform float			power;
+    uniform sampler2DRect tex0;
+    uniform sampler2DRect tex1;
+    uniform float         offset;
+    uniform float         threshold;
+    uniform vec2          force;
+    uniform float         power;
 
     in vec2 texCoordVarying;
     out vec4 fragColor;

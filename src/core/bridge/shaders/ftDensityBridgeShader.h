@@ -8,7 +8,7 @@ namespace flowTools {
 
 class ftDensityBridgeShader : public ftShader {
 public:
-  ftDensityBridgeShader() {\
+  ftDensityBridgeShader() {
     bInitialized = 1;
     if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
     string shaderName = "ftDensityBridgeShader";

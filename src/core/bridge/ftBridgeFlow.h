@@ -14,7 +14,7 @@ class ftBridgeFlow : public ftFlow {
 public:
   ftBridgeFlow() {
     parameters.setName("bridge");
-    parameters.add(trailWeight.set(	"optical flow trail", 0.3, 0.0, 0.99));
+    parameters.add(trailWeight.set(  "optical flow trail", 0.3, 0.0, 0.99));
     parameters.add(blurRadius.set(  "optical flow blur" , 3.0, 0.0, 10.0));
     parameters.add(speed.set(       "speed"             , 0.3, 0.0, 1.0 ));
   }
@@ -23,7 +23,7 @@ public:
 
   void addVelocity(ofTexture &_inputTex, float _strength) { add(velocityInputFbo, _inputTex, _strength);}
 
-  virtual ofTexture&	getVelocity()	{ return getOutput(); }
+  virtual ofTexture&  getVelocity()  { return getOutput(); }
 
   virtual void update(float _deltaTime)  {
     ofPushStyle();
@@ -37,13 +37,13 @@ public:
 
   virtual void reset() override { ftFlow::reset(); ftUtil::zero(velocityInputFbo); ftUtil::zero(velocityTrailFbo); }
 
-  void	setTrailWeight(float value) { trailWeight.set(value); }
-  void	setBlurRadius(float value)  { blurRadius.set(value); }
-  void	setSpeed(float value)       { speed.set(value); }
+  void  setTrailWeight(float value) { trailWeight.set(value); }
+  void  setBlurRadius(float value)  { blurRadius.set(value); }
+  void  setSpeed(float value)       { speed.set(value); }
 
-  float	getTrailWeight()  { return trailWeight.get(); }
-  float	getBlurRadius()   { return blurRadius.get(); }
-  float	getSpeed()        { return speed.get(); }
+  float  getTrailWeight()  { return trailWeight.get(); }
+  float  getBlurRadius()   { return blurRadius.get(); }
+  float  getSpeed()        { return speed.get(); }
 
 protected:
   ofParameter<float>    trailWeight;

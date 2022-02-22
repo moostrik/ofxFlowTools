@@ -16,7 +16,7 @@ public:
   }
 
 protected:
-  ftSvToScalarShader	toScalarShader;
+  ftSvToScalarShader  toScalarShader;
 };
 }
 

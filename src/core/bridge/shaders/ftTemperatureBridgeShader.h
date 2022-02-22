@@ -19,8 +19,8 @@ public:
 protected:
   void glTwo() {
     fragmentShader = GLSL120(
-    uniform sampler2DRect	tex0;
-    uniform sampler2DRect	tex1;
+    uniform sampler2DRect  tex0;
+    uniform sampler2DRect  tex1;
     uniform vec2 scale0;
     uniform vec2 scale1;
     uniform float speed;

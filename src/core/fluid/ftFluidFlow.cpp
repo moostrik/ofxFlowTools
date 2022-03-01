@@ -249,6 +249,7 @@ void ftFluidFlow::reset() {
   ftUtil::zero(temperatureFbo);
   ftUtil::zero(divergenceFbo);
   ftUtil::zero(vorticityCurlFbo);
+  ftUtil::zero(vorticityForceFbo);
   ftUtil::zero(buoyancyFbo);
   initObstacle();
 

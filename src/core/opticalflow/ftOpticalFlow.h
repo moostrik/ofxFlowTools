@@ -21,7 +21,7 @@ public:
     parameters.setName("optical flow");
     offset.set("offset", 3, 1, 10);
     threshold.set("threshold", 0.1, 0, 0.2);
-    strength.set("strength", glm::vec2(3, 3), glm::vec2(0, 0), glm::vec2(10, 10));      // 3 is best for normalization
+    strength.set("strength", glm::vec2(3, 3), glm::vec2(0, 0), glm::vec2(10, 10));      // 3 is best for normalization --> WHY?
     boost.set("boost", 0.0, 0.0, .9);      //
     doInverseX.set("inverse x", true);       // flow velocity is inverse to fluid velocity
     doInverseY.set("inverse y", true);       // flow velocity is inverse to fluid velocity

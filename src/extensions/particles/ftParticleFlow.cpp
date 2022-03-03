@@ -39,8 +39,8 @@ ftParticleFlow::ftParticleFlow(){
   parameters.add(speed.set("speed", .3, 0, 1));
   cellSize.set("cell size", 1, 0.0, 2.0);
   //    parameters.add(cellSize.set("cell size", 1, 0.0, 2.0));
-  parameters.add(birthChance.set("birth chance", 0.5, 0, 1));
-  parameters.add(birthVelocityChance.set("birth velocity chance", 0.5, 0, 1));
+  parameters.add(birthChance.set("birth chance", 0.2, 0, 1));
+  parameters.add(birthVelocityThreshold.set("birth velocity threshold", 0.2, 0, 2));
   parameters.add(lifeSpan.set("lifespan", 5, 0, 10));
   parameters.add(lifeSpanSpread.set("lifespan spread", .25, 0, 1));
   parameters.add(mass.set("mass", 1.3, 0, 2));
@@ -113,7 +113,7 @@ void ftParticleFlow::update(float _deltaTime) {
                             obstacleFbo.getTexture(),
                             _deltaTime,  // should this not be timeStep?
                             birthChance.get(),
-                            birthVelocityChance.get(),
+                            birthVelocityThreshold.get(),
                             lifeSpan.get(), lifeSpanSpread.get(),
                             mass.get(), massSpread.get(),
                             size.get(), sizeSpread.get());

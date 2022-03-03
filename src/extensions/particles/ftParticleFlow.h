@@ -41,7 +41,7 @@ public:
   float  getSpeed() { return speed.get(); }
   float  getCellSize() { return cellSize.get(); }
   float  getBirthChance() { return birthChance.get(); }
-  float  getBirthVelocityChance() { return birthVelocityChance.get(); }
+  float  getBirthVelocityChance() { return birthVelocityThreshold.get(); }
   float  getLifeSpan() { return lifeSpan.get(); }
   float  getLifeSpanSpread() { return lifeSpanSpread.get(); }
   float  getMass() { return mass.get(); }
@@ -53,7 +53,7 @@ public:
   void  setSpeed(float value) { speed.set(value); }
   void  setCellSize(float value) { cellSize.set(value); }
   void  setBirthChance(float value) { birthChance.set(value); }
-  void  setBirthVelocityChance(float value) { birthVelocityChance.set(value); }
+  void  setBirthVelocityChance(float value) { birthVelocityThreshold.set(value); }
   void  setLifeSpan(float value) { lifeSpan.set(value); }
   void  setLifeSpanSpread(float value) { lifeSpanSpread.set(value); }
   void  setMass(float value) { mass.set(value); }
@@ -66,7 +66,7 @@ private:
   ofParameter<float>    speed;
   ofParameter<float>    cellSize;
   ofParameter<float>    birthChance;
-  ofParameter<float>    birthVelocityChance;
+  ofParameter<float>    birthVelocityThreshold;
   ofParameter<float>    lifeSpan;
   ofParameter<float>    lifeSpanSpread;
   ofParameter<float>    mass;

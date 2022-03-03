@@ -27,7 +27,7 @@ protected:
     uniform float GlobalTime;
     uniform float DeltaTime;
     uniform float BirthChance;
-    uniform float BirthVelocityChance;
+    uniform float BirthVelocityThreshold;
     uniform float LifeSpan;
     uniform float LifeSpanSpread;
     uniform float Mass;
@@ -59,10 +59,11 @@ protected:
       }
 
       if (p_age == 0.0) {
-        float birthRandom = noise( st * GlobalTime + 304.5) / BirthChance;
-        float speed = length(texture2DRect(Velocity, st2).rg / Scale);
-        float birthFromVelocity = speed * BirthVelocityChance;
-        if (birthRandom > 0.001 && birthRandom < birthFromVelocity ) {
+        float birthRandom = noise( st * GlobalTime + 304.5);
+        float velSpeed = length(texture(Velocity, st2).rg / Scale);
+        velSpeed = max(velSpeed - BirthVelocityThreshold, 0.f);
+        float velChance = 1.f - BirthChance * velSpeed;
+        if (birthRandom > velChance) {
           p_age = 0.001;
           float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
           p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
@@ -100,7 +101,7 @@ protected:
     uniform float GlobalTime;
     uniform float DeltaTime;
     uniform float BirthChance;
-    uniform float BirthVelocityChance;
+    uniform float BirthVelocityThreshold;
     uniform float LifeSpan;
     uniform float LifeSpanSpread;
     uniform float Mass;
@@ -135,10 +136,11 @@ protected:
       }
 
       if (p_age == 0.0) {
-        float birthRandom = noise( st * GlobalTime + 304.5) / BirthChance;
-        float speed = length(texture(Velocity, st2).rg / Scale);
-        float birthFromVelocity = speed * BirthVelocityChance;
-        if (birthRandom > 0.001 && birthRandom < birthFromVelocity ) {
+        float birthRandom = noise( st * GlobalTime + 304.5);
+        float velSpeed = length(texture(Velocity, st2).rg / Scale);
+        velSpeed = max(velSpeed - BirthVelocityThreshold, 0.f);
+        float velChance = 1.f - BirthChance * velSpeed;
+        if (birthRandom > velChance) {
           p_age = 0.001;
           float lifeRandom =  noise( st * GlobalTime + 137.34) * 2.0 - 1.0;
           p_life = LifeSpan + LifeSpan * LifeSpanSpread * lifeRandom;
@@ -169,7 +171,7 @@ protected:
 
 public:
   void update(ofFbo& _fbo, ofTexture& _backTex, ofTexture& _posTex, ofTexture& _velTex, ofTexture& _denTex, ofTexture& _obstacleTexture,
-              float _deltaTime, float _birthChance, float _birthVelocityChance, float _lifeSpan, float _lifeSpanSpread, float _mass, float _massSpread, float _size, float _sizeSpread){
+              float _deltaTime, float _birthChance, float _birthVelocityThreshold, float _lifeSpan, float _lifeSpanSpread, float _mass, float _massSpread, float _size, float _sizeSpread){
 
     _fbo.begin();
     ofClear(0,0);
@@ -184,7 +186,7 @@ public:
     setUniform1f("GlobalTime", modf(ofGetElapsedTimef(), &modTime));
     setUniform1f("DeltaTime", _deltaTime);
     setUniform1f("BirthChance", _birthChance * _deltaTime);
-    setUniform1f("BirthVelocityChance", _birthVelocityChance);
+    setUniform1f("BirthVelocityThreshold", _birthVelocityThreshold);
     setUniform1f("LifeSpan", _lifeSpan);
     setUniform1f("LifeSpanSpread", _lifeSpanSpread);
     setUniform1f("Mass", _mass);

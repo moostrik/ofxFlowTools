@@ -21,15 +21,13 @@ public:
     allocate(_simulationWidth, _simulationHeight, GL_RG32F, _simulationWidth, _simulationHeight, GL_R32F);
   };
 
-  void update(float _deltaTime) override {
-    ftBridgeFlow::update(_deltaTime);
+  void update() override {
 
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
     resetOutput();
 
-    float timeStep = _deltaTime * speed.get() * 10;
-    temperatureBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), timeStep);
+    temperatureBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), speed.get());
 
     ofPopStyle();
   }

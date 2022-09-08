@@ -18,16 +18,13 @@ public:
     ftBridgeFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RG32F);
   };
 
-  void update(float _deltaTime) override {
-    ftBridgeFlow::update(_deltaTime);
+  void update() override {
+    ftBridgeFlow::update();
 
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
     resetOutput();
-
-    float timeStep = _deltaTime * speed.get() * 200;
-    multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), timeStep);
-
+    multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), speed.get());
     ofPopStyle();
   }
 

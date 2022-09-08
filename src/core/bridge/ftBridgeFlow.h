@@ -25,7 +25,7 @@ public:
 
   virtual ofTexture&  getVelocity()  { return velocityTrailFbo.getTexture(); }
 
-  virtual void update(float _deltaTime)  {
+  virtual void update()  {
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 

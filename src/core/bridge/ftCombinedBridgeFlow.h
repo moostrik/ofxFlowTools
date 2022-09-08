@@ -27,23 +27,20 @@ public:
     allocate(_simulationWidth, _simulationHeight, GL_RG32F, _densityWidth, _densityHeight, GL_RGBA32F);
   };
 
-  void update(float _deltaTime) override {
-    ftBridgeFlow::update(_deltaTime);
+  void update() override {
+    ftBridgeFlow::update();
 
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
     resetOutput();
 
-    float velocityTimeStep = _deltaTime * speed.get() * 200;
-    multiplyShader.update(velocityFbo, velocityTrailFbo.getTexture(), velocityTimeStep);
+    multiplyShader.update(velocityFbo, velocityTrailFbo.getTexture(), speed.get());
 
-    float densityTimeStep = _deltaTime * densitySpeed.get() * 10;
-    densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), densityTimeStep);
+    densityBridgeShader.update(outputFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), densitySpeed.get());
     outputFbo.swap();
     HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, densitySaturation.get(), 1.0);
 
-    float temperatureTimeStep = _deltaTime * temperatureSpeed.get() * 10;
-    temperatureBridgeShader.update(temperatureFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), temperatureTimeStep);
+    temperatureBridgeShader.update(temperatureFbo.get(), inputFbo.getTexture(), velocityTrailFbo.getTexture(), temperatureSpeed.get());
 
     ofPopStyle();
   }

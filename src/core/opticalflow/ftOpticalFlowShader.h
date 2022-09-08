@@ -46,17 +46,17 @@ protected:
       flow.x = scr_dif*(gradx/gradmag);
       flow.y = scr_dif*(grady/gradmag);
 
-      // apply force (to normalize)
-      flow *= force;
+      flow *= 3.0; // weird normalisation
 
-      // apply treshold and clamp
       float magnitude = length(flow);
       magnitude = max(magnitude, threshold);
       magnitude -= threshold;
       magnitude /= (1-threshold);
       magnitude = pow(magnitude, power);
       flow += TINY; // flow length cannot be 0 for normalization to work on windows
-      flow = normalize(flow) * vec2(min(magnitude, 1));
+      flow = normalize(flow) * vec2(min(max(magnitude, 0), 1));
+
+      flow *= force;
 
       // set color
       gl_FragColor = vec4(flow, 0.0, 1.0);
@@ -100,17 +100,18 @@ protected:
       flow.x = scr_dif*(gradx/gradmag);
       flow.y = scr_dif*(grady/gradmag);
 
-      // apply force (to normalize)
-      flow *= force;
+      flow *= 3.0; // weird normalisation
 
-      // apply treshold and clamp
       float magnitude = length(flow);
       magnitude = max(magnitude, threshold);
       magnitude -= threshold;
       magnitude /= (1-threshold);
       magnitude = pow(magnitude, power);
+
       flow += TINY; // flow length cannot be 0 for normalization to work on windows
       flow = normalize(flow) * vec2(min(max(magnitude, 0), 1));
+
+      flow *= force;
 
       // set color
       fragColor = vec4(flow, 0.0, 1.0);

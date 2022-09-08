@@ -21,16 +21,13 @@ public:
   }
 
   bool loadFromFile() {
-    auto vertexFile = "shaders/" + shaderName + ".vert";
-    auto fragmentFile = "shaders/" + shaderName + ".frag";
-    if (std::filesystem::exists(ofFilePath::getAbsolutePath(vertexFile)) &&
-        std::filesystem::exists(ofFilePath::getAbsolutePath(fragmentFile))) {
-      if (load(vertexFile, fragmentFile)) {
-        ofLogNotice("ftShader") << "loaded " << shaderName << "from file";
-        return true;
-      }
-    }
-    ofLogNotice("ftShader") << "could not load " << shaderName << "from file";
+    std::filesystem::path vertexFile = "shaders/" + shaderName + ".vert";
+    if (! std::filesystem::exists(ofFilePath::getAbsolutePath(vertexFile))) return false;
+    std::filesystem::path  fragmentFile = "shaders/" + shaderName + ".frag";
+    if (! std::filesystem::exists(ofFilePath::getAbsolutePath(fragmentFile))) return false;
+    std::filesystem::path  geometryFile = "shaders/" + shaderName + ".geom";
+    if (!std::filesystem::exists(ofFilePath::getAbsolutePath(geometryFile))) geometryFile = std::string();
+    if (load(vertexFile, fragmentFile, geometryFile)) return true;
     return false;
   }
 

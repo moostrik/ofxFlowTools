@@ -23,7 +23,7 @@ public:
 
   void addVelocity(ofTexture &_inputTex, float _strength) { add(velocityInputFbo, _inputTex, _strength);}
 
-  virtual ofTexture&  getVelocity()  { return getOutput(); }
+  virtual ofTexture&  getVelocity()  { return velocityTrailFbo.getTexture(); }
 
   virtual void update(float _deltaTime)  {
     ofPushStyle();

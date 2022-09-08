@@ -25,8 +25,8 @@ public:
   virtual void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight);
 
   void draw(int _x, int _y, int _w, int _h)               { drawOutput(_x, _y, _w, _h); }
-  virtual void drawInput(int _x, int _y, int _w, int _h)  { visualizationField.draw(inputFbo.getTexture(), _x, _y, _w, _h); }
-  virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizationField.draw(outputFbo.getTexture(), _x, _y, _w, _h); }
+  virtual void drawInput(int _x, int _y, int _w, int _h)  { visualizationField.draw(getInput(), _x, _y, _w, _h); }
+  virtual void drawOutput(int _x, int _y, int _w, int _h) { visualizationField.draw(getOutput(), _x, _y, _w, _h); }
 
   virtual void setVisualizationScale(float _value)        { visualizationField.setScale(_value); }
   virtual void setVisualizationFieldSize(int _w, int _h)  { visualizationField.setupField(_w, _h); }

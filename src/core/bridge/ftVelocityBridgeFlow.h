@@ -31,14 +31,10 @@ public:
     ofPopStyle();
   }
 
-  ofTexture& getVelocity() override { return getOutput(); }
   void setInput(ofTexture &_texture) override { setVelocity(_texture); }
+  ofTexture& getInput() override { return velocityInputFbo.getTexture(); }
 
 protected:
   ftMultiplyForceShader multiplyShader;
-
-  void allocate (int _inputWidth, int _inputHeight, GLint _inputInternalFormat, int _outputWidth, int _outputHeight, GLint _outputInternalFormat) override {
-    ftBridgeFlow::allocate(_inputWidth, _inputHeight, _inputInternalFormat, _inputWidth, _inputHeight, _inputInternalFormat);
-  }
 };
 }

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ftVisualizationField.h"
 
 namespace flowTools {
 

@@ -20,6 +20,20 @@ public:
     quad.setMode(OF_PRIMITIVE_TRIANGLE_FAN);
   }
 
+  bool loadFromFile() {
+    auto vertexFile = "shaders/" + shaderName + ".vert";
+    auto fragmentFile = "shaders/" + shaderName + ".frag";
+    if (std::filesystem::exists(ofFilePath::getAbsolutePath(vertexFile)) &&
+        std::filesystem::exists(ofFilePath::getAbsolutePath(fragmentFile))) {
+      if (load(vertexFile, fragmentFile)) {
+        ofLogNotice("ftShader") << "loaded " << shaderName << "from file";
+        return true;
+      }
+    }
+    ofLogNotice("ftShader") << "could not load " << shaderName << "from file";
+    return false;
+  }
+
 protected:
   void initGlTwo()  {
     vertexShader = GLSL120(
@@ -93,6 +107,7 @@ protected:
   string    fragmentShader;
   string    vertexShader;
   int      bInitialized;
+  std::string shaderName;
 };
 
 }

@@ -67,25 +67,25 @@ public:
     ofPopMatrix();
   }
 
-  int    getFieldWidth()        { return fieldWidth; }
-  int    getFieldHeight()      { return fieldHeight; }
+  int    getFieldWidth()              { return fieldWidth; }
+  int    getFieldHeight()             { return fieldHeight; }
 
-  void   setToggleScalar(int _value) { pToggleScalar.set(_value); }
-  bool   getToggleScalar()       { return pToggleScalar.get(); }
+  void   setToggleScalar(int _value)  { pToggleScalar.set(_value); }
+  bool   getToggleScalar()            { return pToggleScalar.get(); }
 
-  ofParameterGroup&  getParameters() { return parameters; }
+  ofParameterGroup&  getParameters()  { return parameters; }
 
 protected:
   ofParameter<bool>  pToggleScalar;
 
-  int          fieldWidth;
-  int          fieldHeight;
+  int           fieldWidth;
+  int           fieldHeight;
   ofMesh        fieldMesh;
-  ofVbo        fieldVbo;
-  ofFloatColor    fieldColor;
+  ofVbo         fieldVbo;
+  ofFloatColor  fieldColor;
 
-  ftTemperatureFieldShader   temperatureFieldShader;
-  ftVelocityFieldShader    velocityFieldShader;
+  ftTemperatureFieldShader  temperatureFieldShader;
+  ftVelocityFieldShader     velocityFieldShader;
 
 };
 }

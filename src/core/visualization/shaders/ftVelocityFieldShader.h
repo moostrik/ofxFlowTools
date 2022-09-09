@@ -124,7 +124,7 @@ protected:
     uniform sampler2DRect fieldTexture;
     uniform vec2 texResolution;
     uniform vec4 baseColor;
-    uniform float arrowSize;
+    uniform vec2 arrowSize;
 
     layout (points) in;
     layout (line_strip) out;
@@ -135,10 +135,11 @@ protected:
     void main(){
       vec4 lineStart = gl_in[0].gl_Position;
       vec2 uv = lineStart.xy * texResolution;
-      vec2 line = texture(fieldTexture, uv).xy * arrowSize;
+      vec2 velocity = texture(fieldTexture, uv).xy;
+      vec2 line = velocity * arrowSize;
       vec4 lineEnd = lineStart + vec4(line, 0.0, 0.0);
 
-      float alpha = 0.3 + 0.3 * (1.0 - length(line) / arrowSize);
+      float alpha = 0.3 + 0.3 * (1.0 - length(line) / arrowSize.x);
       vec4 color = baseColor;
       color.w = 1.0;//*= alpha;
 
@@ -198,14 +199,14 @@ protected:
   }
 
 public:
-  void update(ofVbo& _fieldVbo, ofTexture& _floatTex, float _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
+  void update(ofVbo& _fieldVbo, ofTexture& _floatTex, glm::vec2 _arrowSize, ofFloatColor _color = ofFloatColor(1,1,1,1)){
     int width = _floatTex.getWidth();
     int height = _floatTex.getHeight();
     begin();
     setUniformTexture("fieldTexture", _floatTex,0);
     setUniform2f("texResolution", width, height);
     setUniform4f("baseColor", _color.r, _color.g, _color.b, _color.a);
-    setUniform1f("arrowSize", _arrowSize);
+    setUniform2f("arrowSize", _arrowSize);
     _fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
     end();
   }

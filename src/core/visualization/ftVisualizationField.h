@@ -60,8 +60,8 @@ public:
       float barWidth = _width / (float)fieldWidth * 0.25;
       temperatureFieldShader.update(fieldVbo, _tex, pScale.get() * 0.1, barHeight, barWidth);
     } else {
-      float arrowLength = _width / (float)fieldWidth;
-      float scale = (1.0 / _width) * arrowLength  * pScale.get();
+      glm::vec2 unitLength = glm::vec2(_width / (float)fieldWidth, _height / (float) fieldHeight);
+      glm::vec2  scale = glm::vec2(1.0 / _width, 1.0 / _height) * unitLength * pScale.get();
       velocityFieldShader.update(fieldVbo, _tex, scale, fieldColor);
     }
     ofPopMatrix();

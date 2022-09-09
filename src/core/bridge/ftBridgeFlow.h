@@ -16,7 +16,7 @@ public:
     parameters.setName("bridge");
     parameters.add(trailWeight.set(  "optical flow trail", 0.3, 0.0, 0.99));
     parameters.add(blurRadius.set(  "optical flow blur" , 3.0, 0.0, 10.0));
-    parameters.add(speed.set(       "speed"             , 0.3, 0.0, 1.0 ));
+    parameters.add(speed.set(       "speed"             , 1.0, 0.0, 1.0 ));
   }
 
   void setVelocity(ofTexture &_inputTex) { set(velocityInputFbo, _inputTex);}

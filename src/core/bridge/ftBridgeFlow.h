@@ -25,13 +25,15 @@ public:
 
   virtual ofTexture&  getVelocity()  { return velocityTrailFbo.getTexture(); }
 
-  virtual void update()  {
+  virtual void update(float deltaTime) {
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 
     velocityTrailFbo.swap();
-    bridgeShader.update(velocityTrailFbo.get(), velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), trailWeight.get());
-    if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo.get(), 1, blurRadius.get()); }
+    auto weight = powf(trailWeight.get(), deltaTime);
+    bridgeShader.update(velocityTrailFbo.get(), velocityTrailFbo.getBackTexture(), velocityInputFbo.getTexture(), weight);
+    int passes = 120.f * deltaTime;
+    if (blurRadius.get() > 0) { blurShader.update(velocityTrailFbo.get(), passes,  blurRadius.get()); }
     ofPopStyle();
   }
 

@@ -18,8 +18,8 @@ public:
     ftBridgeFlow::allocate(_width, _height, GL_RG32F, _width, _height, GL_RG32F);
   };
 
-  void update() override {
-    ftBridgeFlow::update();
+  void update(float deltaTime) override {
+    ftBridgeFlow::update(deltaTime);
 
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);

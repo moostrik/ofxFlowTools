@@ -21,7 +21,8 @@ public:
     allocate(_simulationWidth, _simulationHeight, GL_RG32F, _simulationWidth, _simulationHeight, GL_R32F);
   };
 
-  void update() override {
+  void update(float deltaTime) override {
+    ftBridgeFlow::update(deltaTime);
 
     ofPushStyle();
     ofEnableBlendMode(OF_BLENDMODE_DISABLED);

@@ -54,17 +54,24 @@ public:
     ofPushMatrix();
     ofTranslate(_x, _y);
     ofScale(_width, _height);
+
+    glm::vec2 unitLength = glm::vec2(_width / (float)fieldWidth, _height / (float) fieldHeight);
+
     int numChannels = ftUtil::getNumChannelsFromInternalFormat(_tex.getTextureData().glInternalFormat);
     if (numChannels == 1) {
-      float barHeight = _height / (float)fieldHeight;
-      float barWidth = _width / (float)fieldWidth * 0.25;
-      temperatureFieldShader.update(fieldVbo, _tex, pScale.get() * 0.1, barHeight, barWidth);
+      glm::vec2 scale = glm::vec2(1.0 / _width, (1.0 / _height) * pScale.get()) * unitLength;
+      temperatureFieldShader.update(fieldVbo, _tex, scale);
     } else {
-      glm::vec2 unitLength = glm::vec2(_width / (float)fieldWidth, _height / (float) fieldHeight);
-      glm::vec2  scale = glm::vec2(1.0 / _width, 1.0 / _height) * unitLength * pScale.get();
-      velocityFieldShader.update(fieldVbo, _tex, scale, fieldColor);
+      glm::vec2 scale = glm::vec2(1.0 / _width, 1.0 / _height) * unitLength * pScale.get();
+      velocityFieldShader.update(fieldVbo, _tex, scale);
     }
     ofPopMatrix();
+  }
+
+  virtual void reload() override {
+    ftVisualization::reload();
+    temperatureFieldShader.loadFromFile();
+    velocityFieldShader.loadFromFile();
   }
 
   int    getFieldWidth()              { return fieldWidth; }

@@ -10,74 +10,15 @@ class ftTemperatureFieldShader : public ftShader {
 public:
   ftTemperatureFieldShader() {
     bInitialized = 1;
-    if (ofIsGLProgrammableRenderer()) { glFour(); } else { glTwo(); }
-    string shaderName = "ftTemperatureFieldShader";
+    shaderName = "ftTemperatureFieldShader";
+    if (loadFromFile()) {
+      ofLogNotice("ftShader") << "loaded " << shaderName << " from file";
+    } else glFour();
     if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
     else { ofLogWarning(shaderName + " failed to initialize"); }
   }
 
 protected:
-  void glTwo() {
-    string geometryShader;
-
-    vertexShader = GLSL120(
-          void main() {
-            gl_Position = gl_Vertex;
-            gl_FrontColor = gl_Color;
-          }
-          );
-
-    fragmentShader = GLSL120(
-          void main() {
-            gl_FragColor = gl_Color;
-          }
-          );
-
-    geometryShader = GLSL120GEO(
-    uniform sampler2DRect temperatureTexture;
-    uniform vec2 texResolution;
-    uniform float temperatureScale;
-    uniform float maxHeight;
-
-    void main(){
-      vec4 lineStart = gl_PositionIn[0];
-      vec2 uv = lineStart.xy * texResolution;
-
-      float temperature = texture2DRect(temperatureTexture, uv).x * temperatureScale;
-      temperature = min(temperature, maxHeight);
-      temperature = max(temperature, -maxHeight);
-
-      vec4 lineEnd = lineStart + vec4(0.0, -temperature, 0.0, 0.0);
-
-      float alpha = 0.5 + 0.5 * (abs(temperature) / maxHeight);
-      float red = max(0.0, temperature * 1000.);
-      float blue = max(0.0, -temperature * 1000.);
-      vec4 color = vec4(red, 0.0, blue, alpha);
-
-      float arrowLength = 0.75 * temperature;
-
-      gl_Position = gl_ModelViewProjectionMatrix * lineStart;
-      gl_FrontColor = vec4(1.0,1.0,1.0,0.0);
-      EmitVertex();
-
-      gl_Position = gl_ModelViewProjectionMatrix * lineEnd;
-      gl_FrontColor = color;
-      EmitVertex();
-
-      EndPrimitive();
-    }
-    );
-    ofLogVerbose("Maximum number of output vertices support is: " + ofToString(getGeometryMaxOutputCount()));
-    setGeometryInputType(GL_POINTS);
-    setGeometryOutputType(GL_LINE_STRIP);
-    setGeometryOutputCount(2);
-
-    bInitialized *= setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-    bInitialized *= setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-    bInitialized *= setupShaderFromSource(GL_GEOMETRY_SHADER_EXT, geometryShader);
-    bInitialized *= linkProgram();
-  }
-
   void glFour() {
     string geometryShader;
 
@@ -102,55 +43,39 @@ protected:
 
     geometryShader = GLSL410(
     uniform mat4 modelViewProjectionMatrix;
-    uniform sampler2DRect temperatureTexture;
+    uniform sampler2DRect prsTexture;
     uniform vec2 texResolution;
-    uniform float temperatureScale;
-    uniform float maxHeight;
-    uniform float lineWidth;
+    uniform vec2 prsScale;
 
     layout (points) in;
     layout (triangle_strip) out;
-    layout (max_vertices=4) out;
+    layout (max_vertices=3) out;
 
     out vec4 colorVarying;
 
     void main(){
+      vec4 centre = gl_in[0].gl_Position;
+      vec2 uv = centre.xy * texResolution;
+      float prs = texture(prsTexture, uv).x;
+      float prsLineLength = prs * -prsScale.y;
+      float prsLineWidth = prsScale.x;
+      vec4 lineEnd = centre + vec4(0.0, prsLineLength, 0.0, 0.0);
 
-      vec4 lineStart = gl_in[0].gl_Position;
-      vec2 uv = lineStart.xy * texResolution;
+      vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+      color.r = (prs > 0)? 1.0 : (length(prs) > 1.0)? 0.0: length(prs);
+      color.g = (prs < 0)? 1.0 : (length(prs) > 1.0)? 0.0: length(prs);
+      color.b = color.g;
 
-      float temperature = texture(temperatureTexture, uv).x * temperatureScale;
-      temperature = min(temperature, maxHeight);
-      temperature = max(temperature, -maxHeight);
-
-      vec4 lineEnd = lineStart + vec4(0.0, -temperature, 0.0, 0.0);
-
-      float alpha = 0.5 + 0.5 * (abs(temperature) / maxHeight);
-      float red = max(0.0, temperature * 1000.);
-      float blue = max(0.0, -temperature * 1000.);
-      vec4 color = vec4(red, 0.0, blue, alpha);
-
-      float arrowLength = 0.75 * temperature;
-
-      lineStart.x -= lineWidth * 0.5;
-      gl_Position = modelViewProjectionMatrix * lineStart;
-      colorVarying = vec4(1.0,1.0,1.0,0.0);
+      gl_Position = modelViewProjectionMatrix * (centre + vec4(-0.5 * prsLineWidth, 0, 0, 0));
+      colorVarying = color;
       EmitVertex();
 
-
-      lineStart.x += lineWidth;
-      gl_Position = modelViewProjectionMatrix * lineStart;
-      colorVarying = vec4(1.0,1.0,1.0,0.0);
-      EmitVertex();
-
-      lineEnd.x -= lineWidth * 0.5;
       gl_Position = modelViewProjectionMatrix * lineEnd;
-      colorVarying= color;
+      colorVarying = color;
       EmitVertex();
 
-      lineEnd.x += lineWidth;
-      gl_Position = modelViewProjectionMatrix * lineEnd;
-      colorVarying= color;
+      gl_Position = modelViewProjectionMatrix * (centre + vec4(0.5 * prsLineWidth, 0, 0, 0));;
+      colorVarying = color;
       EmitVertex();
 
       EndPrimitive();
@@ -175,20 +100,15 @@ protected:
   }
 
 public:
-  void update(ofVbo& _fieldVbo, ofTexture& _temTex, float _temperatureScale, float _barHeight, float _barWidth){
-    int width = _temTex.getWidth();
-    int height = _temTex.getHeight();
+  void update(ofVbo& fieldVbo, ofTexture& prsTex, glm::vec2 scale){
+    int width = prsTex.getWidth();
+    int height = prsTex.getHeight();
 
     begin();
-    setUniformTexture("temperatureTexture", _temTex,0);
+    setUniformTexture("prsTexture", prsTex,0);
     setUniform2f("texResolution", width, height);
-    setUniform1f("temperatureScale", _temperatureScale);
-    setUniform1f("maxHeight", _barHeight);
-
-    glLineWidth(_barWidth); // for openGL 2
-    setUniform1f("lineWidth", _barWidth / ofGetWindowWidth());  // for openGL 3
-
-    _fieldVbo.draw(GL_POINTS, 0, _fieldVbo.getNumVertices());
+    setUniform2f("prsScale", scale);
+    fieldVbo.draw(GL_POINTS, 0, fieldVbo.getNumVertices());
     end();
 
     glFlush();

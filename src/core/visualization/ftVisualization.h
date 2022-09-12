@@ -34,6 +34,8 @@ public:
     scalarFbo.draw(_x, _y, _width, _height);
   }
 
+  virtual void reload() { toScalarShader.loadFromFile(); }
+
   void  setScale(float _value)  { pScale.set(_value); }
   float getScale()              { return pScale.get(); }
 

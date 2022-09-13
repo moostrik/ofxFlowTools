@@ -163,7 +163,7 @@ void ftFluidFlow::update(float _deltaTime){
 
   // PRESSURE ADVECT & DISSIPATE
   float advPrsStep = _deltaTime * prsSpeed.get() * 100 * gridScale;
-  float disPrs = 1.0 - prsDissipation.get() * prsDissipation.get();
+  float disPrs = 1.0 - prsDissipation.get();
   pressureFbo.swap();
   //    multiplyForceShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), disPrs);
   advectShader.update(pressureFbo.get(), pressureFbo.getBackTexture(), velocityFbo.getTexture(), obstacleFbo.getTexture(), gridScale, advPrsStep, disPrs);

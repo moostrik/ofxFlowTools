@@ -57,25 +57,35 @@ protected:
       vec4 centre = gl_in[0].gl_Position;
       vec2 uv = centre.xy * texResolution;
       float prs = texture(prsTexture, uv).x;
+
+      bool unNormal = (length(prs) > 1.0);
+
       float prsLineLength = prs * -prsScale.y;
-      float prsLineWidth = prsScale.x;
       vec4 lineEnd = centre + vec4(0.0, prsLineLength, 0.0, 0.0);
+      lineEnd.z = (unNormal)? length(prs) - 1.0 : 0;
 
-      vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
-      color.r = (prs > 0)? 1.0 : (length(prs) > 1.0)? 0.0: length(prs);
-      color.g = (prs < 0)? 1.0 : (length(prs) > 1.0)? 0.0: length(prs);
-      color.b = color.g;
+      float prsBaseWidth = prsScale.x * 0.5;
+      vec4 base0 = centre + vec4(-prsBaseWidth, 0, 0, 0);
+      vec4 base1 = centre + vec4( prsBaseWidth, 0, 0, 0);
 
-      gl_Position = modelViewProjectionMatrix * (centre + vec4(-0.5 * prsLineWidth, 0, 0, 0));
-      colorVarying = color;
+      vec4 lineColor = vec4(0.0, 0.0, 0.0, 1.0);
+      lineColor.r = (prs > 0)? 1.0 : (unNormal)? 0.0: length(prs);
+      lineColor.g = (prs < 0)? 1.0 : (unNormal)? 0.0: length(prs);
+      lineColor.b = lineColor.g;
+
+      vec4 baseColor = lineColor;
+      baseColor.a = (unNormal)? max(2.0 - length(prs), 0.0) : 1.0;
+
+      gl_Position = modelViewProjectionMatrix * base0;
+      colorVarying = baseColor;
       EmitVertex();
 
       gl_Position = modelViewProjectionMatrix * lineEnd;
-      colorVarying = color;
+      colorVarying = lineColor;
       EmitVertex();
 
-      gl_Position = modelViewProjectionMatrix * (centre + vec4(0.5 * prsLineWidth, 0, 0, 0));;
-      colorVarying = color;
+      gl_Position = modelViewProjectionMatrix * base1;
+      colorVarying = baseColor;
       EmitVertex();
 
       EndPrimitive();

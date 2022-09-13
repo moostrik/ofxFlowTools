@@ -34,7 +34,7 @@ public:
   void  setPressure(ofTexture& _tex)    { set(pressureFbo, _tex); }
   void  setObstacle(ofTexture& _tex);
 
-  void   addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
+  void  addFlow(ftFlowForceType _type, ofTexture& _tex, float _strength  = 1.0);
   void  addVelocity(ofTexture& _tex, float _strength  = 1.0)    { addInput(_tex, _strength); }
   void  addDensity(ofTexture& _tex, float _strength  = 1.0)     { add(outputFbo, _tex, _strength); }
   void  addTemperature(ofTexture& _tex, float _strength  = 1.0) { add(temperatureFbo, _tex, _strength); }

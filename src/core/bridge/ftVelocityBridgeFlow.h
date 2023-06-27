@@ -28,6 +28,10 @@ public:
     ofPopStyle();
   }
 
+  void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight) override {
+    allocate(_inputWidth, _inputHeight, inputInternalFormat, _inputWidth, _inputHeight, outputInternalFormat);
+  }
+
   void setInput(ofTexture &_texture) override { setVelocity(_texture); }
   ofTexture& getInput() override { return velocityInputFbo.getTexture(); }
 

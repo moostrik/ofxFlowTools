@@ -40,6 +40,7 @@
 #include "ftDensityBridgeFlow.h"
 #include "ftTemperatureBridgeFlow.h"
 #include "ftCombinedBridgeFlow.h"
+#include "ftColorBridgeFlow.h"
 #include "ftFluidFlow.h"
 #include "ftSimpleFluidFlow.h"
 

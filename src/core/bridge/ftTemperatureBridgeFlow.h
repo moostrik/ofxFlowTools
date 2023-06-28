@@ -33,6 +33,10 @@ public:
     ofPopStyle();
   }
 
+  void resize(int _inputWidth, int _inputHeight, int _outputWidth, int _outputHeight) override {
+    allocate(_inputWidth, _inputHeight, inputInternalFormat, _inputWidth, _inputHeight, outputInternalFormat);
+  }
+
   void setDensity(ofTexture& _inputTex)                        { setInput(_inputTex); }
   void addDensity(ofTexture& _inputTex, float _strength = 1.0) { addInput(_inputTex, _strength); }
 

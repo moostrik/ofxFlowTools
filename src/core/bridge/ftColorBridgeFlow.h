@@ -21,8 +21,6 @@ public:
     parameters.add(highColor.set( "high Color", ofFloatColor(1,1,1,1), ofFloatColor(0,0,0,0), ofFloatColor(1,1,1,1)));
   }
 
-  void reload() { colorBridgeShader.reload(); }
-
   void setup(int _simulationWidth, int _simulationHeight)  { setup(_simulationWidth, _simulationHeight, _simulationWidth, _simulationHeight); }
 
   void setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight){
@@ -38,13 +36,13 @@ public:
 
     multiplyShader.update(outputFbo.get(), velocityTrailFbo.getTexture(), 1.0);
 
-//    float timeStep = _deltaTime * speed.get() * 10;
-
     colorBridgeShader.update(visibleFbo, outputFbo.getTexture(), lowColor.get(), midColor.get(), highColor.get(), 1);
     multiplyShader.update(densityFbo, visibleFbo.getTexture(), speed.get());
 
-//    outputFbo.swap();
-//    HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
+    if (saturation.get() != 1.0) {
+      outputFbo.swap();
+      HSVShader.update(outputFbo.get(), outputFbo.getBackTexture(), 0, saturation.get(), 1.0);
+    }
 
     ofPopStyle();
   }

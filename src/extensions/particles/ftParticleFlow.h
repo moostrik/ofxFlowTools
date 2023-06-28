@@ -62,7 +62,14 @@ public:
   void  setSizeSpread(float value) { sizeSpread.set(value); }
   void  setGravity(glm::vec2 value) { gravity.set(value); }
 
+  bool  isEnabled() { return enabled.get(); }
+
 private:
+
+  int   numParticlesX, numParticlesY, numParticles;
+  int   simulationWidth;
+
+  ofParameter<bool>     enabled;
   ofParameter<float>    speed;
   ofParameter<float>    cellSize;
   ofParameter<float>    birthChance;
@@ -75,23 +82,20 @@ private:
   ofParameter<float>    sizeSpread;
   ofParameter<float>    twinkleSpeed;
   ofParameter<glm::vec2>  gravity;
-
-  int            numParticlesX, numParticlesY, numParticles;
-  int           simulationWidth;
-
-  ofVboMesh        particleMesh;
-
-  ofFbo          particleHomeFbo;
-  ftPingPongFbo      particleAgeLifespanMassSizeFbo;
-  ftPingPongFbo      particlePositionFbo;
-  ftPingPongFbo      particleColorFbo;
+  void  enabledListener(bool &value) { if (value) reset(); }
 
 
-  // inputs
-  ftPingPongFbo      flowVelocityFbo;
-  //    ftPingPongFbo      fluidVelocityFbo; // use inputFbo instead
-  ftPingPongFbo      densityFbo;
-  ftPingPongFbo      obstacleFbo;
+  ofVboMesh             particleMesh;
+
+  ofFbo                 particleHomeFbo;
+  ftPingPongFbo         particleAgeLifespanMassSizeFbo;
+  ftPingPongFbo         particlePositionFbo;
+  ftPingPongFbo         particleColorFbo;
+
+
+  ftPingPongFbo         flowVelocityFbo;
+  ftPingPongFbo         densityFbo;
+  ftPingPongFbo         obstacleFbo;
 
   ftInitPositionShader  initPositionShader;
   ftDrawParticleShader  drawParticleShader;

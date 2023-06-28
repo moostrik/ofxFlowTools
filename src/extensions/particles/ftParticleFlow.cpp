@@ -36,6 +36,7 @@ namespace flowTools {
 
 ftParticleFlow::ftParticleFlow(){
   parameters.setName("particles");
+  parameters.add(enabled.set("enabled", true));
   parameters.add(speed.set("speed", .3, 0, 1));
   cellSize.set("cell size", 1, 0.0, 2.0);
   //    parameters.add(cellSize.set("cell size", 1, 0.0, 2.0));
@@ -49,6 +50,8 @@ ftParticleFlow::ftParticleFlow(){
   parameters.add(sizeSpread.set("size spread", .75, 0, 1));
   parameters.add(twinkleSpeed.set("twinkle speed", 11, 0, 20));
   parameters.add(gravity.set("gravity", glm::vec2(0, 0), glm::vec2(-10,-10), glm::vec2(10,10)));
+
+  enabled.addListener(this, &ftParticleFlow::enabledListener);
 }
 
 void ftParticleFlow::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, int _numParticlesX, int _numParticlesY) {

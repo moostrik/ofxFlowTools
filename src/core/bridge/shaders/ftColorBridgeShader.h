@@ -14,11 +14,7 @@ public:
     string shaderName = "ftDensityBridgeShader";
     if (bInitialized) { ofLogVerbose(shaderName + " initialized"); }
     else { ofLogWarning(shaderName + " failed to initialize"); }
-
-    reload();
   }
-
-  void reload() { load("shaders/vertex.vert", "shaders/ftColorBridgeShader.frag"); }
 
 protected:
   void glTwo() {

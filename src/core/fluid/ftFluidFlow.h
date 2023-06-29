@@ -41,6 +41,8 @@ public:
   void  addPressure(ofTexture& _tex, float _strength  = 1.0)    { add(pressureFbo, _tex, _strength); }
   void  addObstacle(ofTexture& _tex);
 
+  void resetObstacle() { initObstacle(); }
+
   ofTexture&  getDensity()        { return getOutput(); }
   ofTexture&  getVelocity()       { return getInput(); }
   ofTexture&  getPressure()       { return pressureFbo.getTexture(); }

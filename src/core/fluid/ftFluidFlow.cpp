@@ -218,6 +218,7 @@ void ftFluidFlow::initObstacle(){
   int borderSize = 1;
   ofDrawRectangle(borderSize, borderSize, obstacleFbo.getWidth()-borderSize*2, obstacleFbo.getHeight()-borderSize*2);
   obstacleFbo.end();
+  obstacleOffsetShader.update(obstacleOffsetFbo, obstacleFbo.getTexture());
   ofPopStyle();
 }
 

@@ -85,9 +85,9 @@ namespace flowTools {
 		void	setDissipationVel(float value)		{ dissipationVel.set(value); }
 		void	setDissipationDen(float value)		{ dissipationDen.set(value); }
 		void	setDissipationTmp(float value)		{ dissipationTmp.set(value); }
-		float	setViscosityVel(float value)		{ viscosityVel.set(value); }
-		float	setViscosityDen(float value)		{ viscosityDen.set(value); }
-		float	setViscosityTmp(float value)		{ viscosityTmp.set(value); }
+		void	setViscosityVel(float value)		{ viscosityVel.set(value); }
+		void	setViscosityDen(float value)		{ viscosityDen.set(value); }
+		void	setViscosityTmp(float value)		{ viscosityTmp.set(value); }
 		void	setBuoyancySigma(float value)		{ buoyancySigma.set(value); }
 		void	setBuoyancyWeight(float value)		{ buoyancyWeight.set(value); }
 		void	setBuoyancyAmbientTemperature(float value)	{ buoyancyAmbientTemperature.set(value); }
